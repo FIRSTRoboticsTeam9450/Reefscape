@@ -31,18 +31,6 @@
         {
           "type": "path",
           "data": {
-            "pathName": "RK - Source to Reef ML"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RK - Reef ML to Source"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
             "pathName": "RK - Source to Start"
           }
         }
