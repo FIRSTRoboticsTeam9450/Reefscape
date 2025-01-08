@@ -29,7 +29,7 @@ public class TunerConstants {
     // p of 200 no change
     // d of 1 no good :(
     private static final Slot0Configs steerGains = new Slot0Configs() // steer
-        .withKP(50).withKI(0).withKD(.5) // kP = 100, kD = 0.5, kS = 0.1
+        .withKP(100).withKI(0).withKD(.5) // kP = 100, kD = 0.5, kS = 0.1
         .withKS(0.1).withKV(0).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
     // When using closed-loop control, the drive motor uses the control

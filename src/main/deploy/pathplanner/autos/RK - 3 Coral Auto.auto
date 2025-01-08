@@ -39,6 +39,12 @@
           "data": {
             "pathName": "RK - Reef ML to Source"
           }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Source to Start"
+          }
         }
       ]
     }
