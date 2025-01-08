@@ -1,0 +1,49 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Start to Reef UR"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Reef UR to Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Source to Reef UL"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Reef UL to Source"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Source to Reef ML"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "RK - Reef ML to Source"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
