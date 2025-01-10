@@ -9,10 +9,11 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 public class LimelightSubsystem extends SubsystemBase {
 
     NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
+    
     NetworkTableEntry tx = limelight.getEntry("tx");
     NetworkTableEntry ty = limelight.getEntry("ty");
     NetworkTableEntry ta = limelight.getEntry("ta");
-
+    NetworkTableEntry botPose = limelight.getEntry("botpose_targetspace");
     public static LimelightSubsystem yay;
 
     public static LimelightSubsystem getInstance() {
@@ -27,6 +28,13 @@ public class LimelightSubsystem extends SubsystemBase {
         return tx.getDouble(0);
     }
 
+    public double getTa() {
+        return ta.getDouble(0);
+    }
+
+    public double getYaw() {
+        return botPose.getDoubleArray(new double[6])[4];
+    }
     @Override
     public void periodic() {
         SmartDashboard.putNumber("limelight tx", tx.getDouble(0));
