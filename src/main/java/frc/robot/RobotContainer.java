@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.DriveInAutoCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoralIntakeSubsystem;
@@ -44,6 +45,8 @@ public class RobotContainer {
     private final SendableChooser<Command> autoChooser;
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
+
+    DriveInAutoCommand driveAuto = new DriveInAutoCommand(drivetrain);
 
     public RobotContainer() {
 
@@ -96,6 +99,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-       return autoChooser.getSelected();
+       return driveAuto;
     }
 }

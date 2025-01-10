@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import java.util.function.DoubleSupplier;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -15,6 +17,7 @@ import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -28,30 +31,31 @@ public class AlignCommand extends Command {
 
     double target;
     CommandSwerveDrivetrain drive;
+    double power = 0;
+    PIDController pid = new PIDController(0.01, 0, 0);
 
-    PIDController pid = new PIDController(0.04, 0, 0);
-
-    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric().withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+    private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
+    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     public AlignCommand(CommandSwerveDrivetrain drive, double target) {
         this.target = target;
         this.drive = drive;
-        addRequirements(drive);
+        pid.setSetpoint(target);
     }
 
     @Override
     public void execute() {
         double tx = limelight.getTx();
-        double power = pid.calculate(tx);
-        power = MathUtil.clamp(power, -0.1, 0.1);
-        SwerveRequest.FieldCentric driveRequestAlign = driveRequest.withVelocityX(0 * MaxSpeed) // Drive forward with negative Y (forward)
-        .withVelocityY(0.1 * MaxSpeed) // Drive left with negative X (left)
-        .withRotationalRate(0 * MaxAngularRate); // Drive counterclockwise with negative X (left)
-        drive.applyRequest(() -> driveRequestAlign);
-
+        power = pid.calculate(tx);
+        SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.1, 0.1) * MaxSpeed);
+        drive.setControl(driveAlign);
         SmartDashboard.putNumber("Power", power);
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
     }
 
 
