@@ -34,7 +34,8 @@ public class AlignCommand extends Command {
     double power = 0;
     double rotationPower = 0;
     PIDController pid = new PIDController(0.01, 0, 0);
-    PIDController pidRotation = new PIDController(0.03, 0, 0);
+    PIDController pidRotation = new PIDController(0.02, 0, 0);
+    PIDController pidForward = new PIDController(0.01, 0, 0);
 
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -45,15 +46,18 @@ public class AlignCommand extends Command {
         this.drive = drive;
         pid.setSetpoint(target);
         pidRotation.setSetpoint(target);
+        pidForward.setSetpoint(14.5);
     }
 
     @Override
     public void execute() {
         double tx = limelight.getTx();
         double yaw = limelight.getYaw();
+        double ta = limelight.getTa();
         power = pid.calculate(tx);
-        rotationPower = -pid.calculate(yaw);
-        SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.1, 0.1) * MaxSpeed).withRotationalRate(MathUtil.clamp(rotationPower, -1, 1));
+        rotationPower = -pidRotation.calculate(yaw);
+        double forwardPower = pidForward.calculate(ta);
+        SwerveRequest driveAlign = driveRequest.withVelocityX(MathUtil.clamp(forwardPower, -0.15, 0.15) * MaxSpeed).withVelocityY(MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withRotationalRate(MathUtil.clamp(rotationPower, -1, 1));
         drive.setControl(driveAlign);
         SmartDashboard.putNumber("Power", power);
     }
