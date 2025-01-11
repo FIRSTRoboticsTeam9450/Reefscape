@@ -17,7 +17,10 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class IntakeIDS {
-    public static final int kCoralIntakeLeftMotorID = 50;
-    public static final int kCoralIntakeRightMotorID = 51;
+  }
+
+  public static class WristIDs {
+    public static final int kDiffWristLeftMotorID = 50;
+    public static final int kDiffWristRightMotorID = 51;
   }
 }

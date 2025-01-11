@@ -15,6 +15,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -33,13 +34,14 @@ public class AlignCommand extends Command {
     CommandSwerveDrivetrain drive;
     double power = 0;
     double rotationPower = 0;
-    PIDController pid = new PIDController(0.01, 0, 0);
-    PIDController pidRotation = new PIDController(0.02, 0, 0);
-    PIDController pidForward = new PIDController(0.01, 0, 0);
+    PIDController pid = new PIDController(0.015, 0, 0.01);
+    PIDController pidRotation = new PIDController(0.015, 0, 0.005);
+    PIDController pidForward = new PIDController(0.035, 0, 0.01);
 
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
+
 
     public AlignCommand(CommandSwerveDrivetrain drive, double target) {
         this.target = target;
@@ -47,6 +49,11 @@ public class AlignCommand extends Command {
         pid.setSetpoint(target);
         pidRotation.setSetpoint(target);
         pidForward.setSetpoint(14.5);
+    }
+
+    @Override
+    public void initialize() {
+        SmartDashboard.putBoolean("Align command running?", true);
     }
 
     @Override
@@ -64,9 +71,26 @@ public class AlignCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return false;
+
+        if (
+            ((limelight.getTx() >= -2 && limelight.getTx() <= 2) && 
+            (limelight.getYaw() >= -2 && limelight.getYaw() <= 2) && 
+            (limelight.getTa() >= 13)) || 
+            (limelight.getTx() == 0.0 && 
+            limelight.getYaw() == 0.0 && 
+            limelight.getTa() == 0.0)) {
+
+                return true;
+
+        } else {
+            return false;
+        }
+
     }
 
-
+    @Override
+    public void end(boolean interrupted) {
+        SmartDashboard.putBoolean("Align command running?", false);
+    }
 
 }

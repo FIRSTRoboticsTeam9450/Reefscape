@@ -39,7 +39,7 @@ public class LimelightSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putNumber("limelight tx", tx.getDouble(0));
-        SmartDashboard.putNumber("limelight ty", ty.getDouble(0));
+        SmartDashboard.putNumber("limelight yaw", getYaw());
         SmartDashboard.putNumber("limelight ta", ta.getDouble(0));
     }
     
