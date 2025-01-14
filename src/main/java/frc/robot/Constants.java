@@ -17,14 +17,17 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class IntakeIDS {
+    public static final int kDualIntakeMotorID = 59; //temp
+    public static final int kDualIntakeCoralLaserID = 58; //temp
+    public static final int kDualIntakeAlgaeLaserID = 57; //temp
   }
 
   public static class WristIDs {
-    public static final int kDiffWristLeftMotorID = 50;
-    public static final int kDiffWristRightMotorID = 51;
+    public static final int kDiffWristLeftMotorID = 50; //temp
+    public static final int kDiffWristRightMotorID = 51; //temp
     public static final int kDiffWristPitchCANCoderID = 14; //temp
-    public static final int kDiffWristRollCANCoderID = 15;
-    public static final int KElbowWristMotorID = 52;
-    public static final int KElbowWristEncoderID = 53;
+    public static final int kDiffWristRollCANCoderID = 15; //temp
+    public static final int KElbowWristMotorID = 52; //temp
+    public static final int KElbowWristEncoderID = 53; //temp
   }
 }

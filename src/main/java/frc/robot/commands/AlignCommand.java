@@ -37,7 +37,6 @@ public class AlignCommand extends Command {
     //Swerve Drive stuff
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
-    private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
     /* ----- Initialization ----- */
 

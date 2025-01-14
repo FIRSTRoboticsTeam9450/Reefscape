@@ -15,6 +15,7 @@ public class ElbowCommand extends Command{
 
     @Override
     public void initialize() {
+        addRequirements(elbow);
         elbow.setSetpoint(setpoint);
     }
 
