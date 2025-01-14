@@ -10,7 +10,7 @@ public class DiffWristCommand extends Command {
     private double leftVoltage;
     private double rightVoltage;
     private double setpoint;
-    private boolean rollPID = false;
+    private boolean pitchPID = false;
 
 
     /**
@@ -26,20 +26,20 @@ public class DiffWristCommand extends Command {
     /**
      * Will set one of the two PIDs on the Different wrist to the given setpoint
      * @param setpoint setpoint to go to
-     * @param rollPID True if for the roll PID, false if for the Yaw pid
+     * @param pitchPID True if for the roll PID, false if for the Yaw pid
      */
-    public DiffWristCommand(double setpoint, boolean rollPID) {
+    public DiffWristCommand(double setpoint, boolean pitchPID) {
         this.setpoint = setpoint;
-        this.rollPID = rollPID;
+        this.pitchPID = pitchPID;
     }
 
     @Override
     public void initialize() {
         if (DW.runPID) {
-            if (rollPID) {
-                DW.setRollSetpoint(setpoint);
+            if (pitchPID) {
+                DW.setPitchSetpoint(setpoint);
             } else {
-                DW.setYawSetpoint(setpoint);
+                DW.setRollSetpoint(setpoint);
             }
         } else {
             DW.setVoltage(leftVoltage, rightVoltage);

@@ -22,5 +22,9 @@ public final class Constants {
   public static class WristIDs {
     public static final int kDiffWristLeftMotorID = 50;
     public static final int kDiffWristRightMotorID = 51;
+    public static final int kDiffWristPitchCANCoderID = 14; //temp
+    public static final int kDiffWristRollCANCoderID = 15;
+    public static final int KElbowWristMotorID = 52;
+    public static final int KElbowWristEncoderID = 53;
   }
 }

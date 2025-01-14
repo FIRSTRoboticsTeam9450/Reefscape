@@ -14,14 +14,13 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.DiffWristCommand;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoralIntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
 public class RobotContainer {
@@ -95,6 +94,10 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
+        m_driver2.povUp().onTrue(new ElevatorCommand(0));
+        m_driver2.povDown().onTrue(new ElevatorCommand(5));
+        m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
+        m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
 
         // m_driver1.a
     }

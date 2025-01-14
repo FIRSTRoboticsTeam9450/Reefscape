@@ -8,20 +8,33 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class LimelightSubsystem extends SubsystemBase {
 
+    //Limelight Data table
     NetworkTable limelight = NetworkTableInstance.getDefault().getTable("limelight");
     
+    //Limelight specific datas
     NetworkTableEntry tx = limelight.getEntry("tx");
     NetworkTableEntry ty = limelight.getEntry("ty");
     NetworkTableEntry ta = limelight.getEntry("ta");
     NetworkTableEntry botPose = limelight.getEntry("botpose_targetspace");
-    public static LimelightSubsystem yay;
+    public static LimelightSubsystem LL; 
+
+    /* ----- Updaters ----- */
+
+    @Override
+    public void periodic() {
+        SmartDashboard.putNumber("limelight tx", tx.getDouble(0));
+        SmartDashboard.putNumber("limelight yaw", getYaw());
+        SmartDashboard.putNumber("limelight ta", ta.getDouble(0));
+    }
+
+    /* ----- Getters & Setters ----- */
 
     public static LimelightSubsystem getInstance() {
-        if (yay == null) {
-            yay = new LimelightSubsystem();
+        if (LL == null) {
+            LL = new LimelightSubsystem();
         }
 
-        return yay;
+        return LL;
     }
 
     public double getTx() {
@@ -34,13 +47,6 @@ public class LimelightSubsystem extends SubsystemBase {
 
     public double getYaw() {
         return botPose.getDoubleArray(new double[6])[4];
-    }
-
-    @Override
-    public void periodic() {
-        SmartDashboard.putNumber("limelight tx", tx.getDouble(0));
-        SmartDashboard.putNumber("limelight yaw", getYaw());
-        SmartDashboard.putNumber("limelight ta", ta.getDouble(0));
     }
     
 }

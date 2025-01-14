@@ -6,30 +6,26 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
-import java.util.function.DoubleSupplier;
-
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.LimelightSubsystem;
 
 public class AlignCommand extends Command {
     
+    //Max Speeds
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
+    //Limelight
     LimelightSubsystem limelight = LimelightSubsystem.getInstance();
 
+    //Variables
     double target;
     CommandSwerveDrivetrain drive;
     double power = 0;
@@ -38,10 +34,12 @@ public class AlignCommand extends Command {
     PIDController pidRotation = new PIDController(0.015, 0, 0.005);
     PIDController pidForward = new PIDController(0.035, 0, 0.01);
 
+    //Swerve Drive stuff
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
 
+    /* ----- Initialization ----- */
 
     public AlignCommand(CommandSwerveDrivetrain drive, double target) {
         this.target = target;
@@ -49,12 +47,15 @@ public class AlignCommand extends Command {
         pid.setSetpoint(target);
         pidRotation.setSetpoint(target);
         pidForward.setSetpoint(14.5);
+        addRequirements(drive);
     }
 
     @Override
     public void initialize() {
         SmartDashboard.putBoolean("Align command running?", true);
     }
+
+    /* ----- Updaters ----- */
 
     @Override
     public void execute() {
@@ -64,10 +65,12 @@ public class AlignCommand extends Command {
         power = pid.calculate(tx);
         rotationPower = -pidRotation.calculate(yaw);
         double forwardPower = pidForward.calculate(ta);
-        SwerveRequest driveAlign = driveRequest.withVelocityX(MathUtil.clamp(forwardPower, -0.15, 0.15) * MaxSpeed).withVelocityY(MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withRotationalRate(MathUtil.clamp(rotationPower, -1, 1));
+        SwerveRequest driveAlign = driveRequest.withVelocityX(MathUtil.clamp(forwardPower, -0.15, 0.15) * MaxSpeed).withVelocityY(MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withRotationalRate(MathUtil.clamp(rotationPower, -1, 1) * MaxAngularRate);
         drive.setControl(driveAlign);
         SmartDashboard.putNumber("Power", power);
     }
+
+    /* ----- Finishers ----- */
 
     @Override
     public boolean isFinished() {
