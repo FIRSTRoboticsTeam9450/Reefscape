@@ -31,7 +31,6 @@ public class DualIntakeSubsystem extends SubsystemBase{
     MedianFilter medianDistance = new MedianFilter(3);
     double coralLaserDistance;
     double algaeLaserDistance;
-
     /* ----- Initialization ----- */
 
     /**

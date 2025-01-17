@@ -64,27 +64,22 @@ public class DiffWristSubsystem extends SubsystemBase {
      * Will update the volts to use calculated by the PID
      * @param pos current position
      */
-    public void updatePitchPID(double pos) {
-        double volts = pitchPID.calculate(pos);
-        // double volts = MathUtil.clamp(PID.calculate(pos), -0.125, 0.125);
-        SmartDashboard.putNumber("Reefscape/DiffWrist/pitchPIDVolts", volts);
-    }
-
-    public void updateRollPID(double pos) {
-        double volts = pitchPID.calculate(pos);
-        // double volts = MathUtil.clamp(PID.calculate(pos), -0.125, 0.125);
-        SmartDashboard.putNumber("Reefscape/DiffWrist/rollPIDVolts", volts);
+    public void updatePID(double pitchPos, double rollPos) {
+        double lVolts = pitchPID.calculate(pitchPos) + rollPID.calculate(rollPos);
+        double rVolts = (-1 * pitchPID.calculate(pitchPos)) + rollPID.calculate(rollPos);
+        setVoltage(lVolts, rVolts);
     }
 
     @Override
     public void periodic() {
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
+        double pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
+        double rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
         if (runPID) {
-            updatePitchPID(pitchEncoder.getPosition().getValueAsDouble());
-            updateRollPID(rollEncoder.getPosition().getValueAsDouble());
+            updatePID(pitchPos, rollPos);
         }
-        SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", pitchEncoder.getPosition().getValueAsDouble());
-        SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", rollEncoder.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", pitchPos);
+        SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", rollPos);
         SmartDashboard.putNumber("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
         SmartDashboard.putNumber("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
     }

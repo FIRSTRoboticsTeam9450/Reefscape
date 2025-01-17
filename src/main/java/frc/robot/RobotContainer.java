@@ -94,10 +94,10 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
-        m_driver2.povUp().onTrue(new ElevatorCommand(0));
-        m_driver2.povDown().onTrue(new ElevatorCommand(5));
-        m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
-        m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
+        // m_driver2.povUp().onTrue(new ElevatorCommand(0));
+        // m_driver2.povDown().onTrue(new ElevatorCommand(5));
+        // m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
+        // m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
 
         // m_driver1.a
     }
