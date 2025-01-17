@@ -27,7 +27,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     //Motor
     private TalonFX motor = new TalonFX(WristIDs.KElbowWristMotorID, "CantDrive");
-
+    
     //Encoder
     private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, "CantDrive");
 
