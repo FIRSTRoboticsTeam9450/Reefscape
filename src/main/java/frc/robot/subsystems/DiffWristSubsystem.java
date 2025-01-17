@@ -7,6 +7,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -18,8 +19,8 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(0.01, 0, 0);
-    private PIDController rollPID = new PIDController(0.01, 0, 0);
+    private PIDController pitchPID = new PIDController(15, 0, 0);
+    private PIDController rollPID = new PIDController(20, 0, 0);
 
     // // Motors
     // private SparkFlex leftMotor = new SparkFlex(WristIDs.kDiffWristLeftMotorID, MotorType.kBrushless);
@@ -54,8 +55,8 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         //Diff Wrist Start point
         if (runPID) {
-            pitchPID.setSetpoint(.5);
-            rollPID.setSetpoint(.45);
+            pitchPID.setSetpoint(0);
+            rollPID.setSetpoint(0);
         }
     }
 
@@ -66,8 +67,13 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param pos current position
      */
     public void updatePID(double pitchPos, double rollPos) {
-        double lVolts = pitchPID.calculate(pitchPos) + rollPID.calculate(rollPos);
-        double rVolts = (-1 * pitchPID.calculate(pitchPos)) + rollPID.calculate(rollPos);
+        double pitchVoltage = pitchPID.calculate(pitchPos);
+        double rollVoltage = rollPID.calculate(rollPos);
+
+        double lVolts = pitchVoltage - rollVoltage;
+        double rVolts = pitchVoltage + rollVoltage;
+        lVolts = MathUtil.clamp(lVolts, -2, 2);
+        rVolts = MathUtil.clamp(rVolts, -2, 2);
         setVoltage(lVolts, rVolts);
     }
 
@@ -101,8 +107,8 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param rightVoltage voltage to set right motor to
      */
     public void setVoltage(double leftVoltage, double rightVoltage) {
-        // leftMotor.setVoltage(leftVoltage);
-        // rightMotor.setVoltage(rightVoltage);
+        leftMotor.setVoltage(leftVoltage);
+        rightMotor.setVoltage(rightVoltage);
     }
 
     /**
@@ -110,6 +116,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param setpoint
      */
     public void setPitchSetpoint(double setpoint) {
+        setpoint /= 360;
         pitchPID.setSetpoint(setpoint);
     }
 
@@ -118,6 +125,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param setpoint
      */
     public void setRollSetpoint(double setpoint) {
+        setpoint /= 360;
         rollPID.setSetpoint(setpoint);
     }
 
