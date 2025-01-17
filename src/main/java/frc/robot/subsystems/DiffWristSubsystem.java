@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.WristIDs;
 
 public class DiffWristSubsystem extends SubsystemBase {
@@ -23,14 +24,14 @@ public class DiffWristSubsystem extends SubsystemBase {
     // // Motors
     // private SparkFlex leftMotor = new SparkFlex(WristIDs.kDiffWristLeftMotorID, MotorType.kBrushless);
     // private SparkFlex rightMotor = new SparkFlex(WristIDs.kDiffWristRightMotorID, MotorType.kBrushless);
-    private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, "CantDrive");
-    private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, "CantDrive");
+    private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
+    private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.CTRE_BUS);
 
     //Encoders
     // private AbsoluteEncoder pitchEncoder = leftMotor.getAbsoluteEncoder(); //Max: 0.35, 0.8    positions to go to: Score: .75, hold: .5
     // private AbsoluteEncoder rollEncoder = rightMotor.getAbsoluteEncoder(); //Max: .75, .16   Positions to go to:  Grab: .7,  Score: .2   hold: .45
-    private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, "CantDrive");
-    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, "CantDrive");
+    private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
+    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
 
     // Variables
     public static boolean runPID = true;

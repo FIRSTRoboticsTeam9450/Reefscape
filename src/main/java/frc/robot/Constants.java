@@ -30,4 +30,6 @@ public final class Constants {
     public static final int KElbowWristMotorID = 52; //temp
     public static final int KElbowWristEncoderID = 53; //temp
   }
+
+  public static final String CTRE_BUS = "Rio";
 }

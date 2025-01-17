@@ -10,6 +10,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 
 public class ElevatorSubsystem extends SubsystemBase{
 
@@ -20,8 +21,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     private PIDController pid = new PIDController(0, 0, 0);
 
     //Motor instances
-    private TalonFX tempMotor1 = new TalonFX(60); //TEMPORARY MOTOR ID
-    private TalonFX tempMotor2 = new TalonFX(61); //TEMPORARY MOTOR ID
+    private TalonFX tempMotor1 = new TalonFX(60, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
+    private TalonFX tempMotor2 = new TalonFX(61, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
 
     /* ----- Initialization ----- */
 

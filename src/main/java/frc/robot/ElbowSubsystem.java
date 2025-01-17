@@ -26,10 +26,10 @@ public class ElbowSubsystem extends SubsystemBase {
     PIDController pid = new PIDController(0, 0, 0);
 
     //Motor
-    private TalonFX motor = new TalonFX(WristIDs.KElbowWristMotorID, "CantDrive");
-
+    private TalonFX motor = new TalonFX(WristIDs.KElbowWristMotorID, Constants.CTRE_BUS);
+    
     //Encoder
-    private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, "CantDrive");
+    private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, Constants.CTRE_BUS);
 
     public ElbowSubsystem() {
         TalonFXConfiguration config = new TalonFXConfiguration();
