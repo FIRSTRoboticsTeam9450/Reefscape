@@ -23,20 +23,22 @@ public class ElbowSubsystem extends SubsystemBase {
     private static ElbowSubsystem Elbow;
 
     //PID
-    PIDController pid = new PIDController(0, 0, 0);
+    PIDController pid = new PIDController(20, 0, 0);
 
     //Motor
-    private TalonFX motor = new TalonFX(WristIDs.KElbowWristMotorID, "CantDrive");
-
+    private TalonFX motor = new TalonFX(WristIDs.KElbowWristMotorID, Constants.CTRE_BUS);
+    
     //Encoder
-    private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, "CantDrive");
+    private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, Constants.CTRE_BUS);
 
     public ElbowSubsystem() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         TalonFXConfigurator configurator = motor.getConfigurator();
         config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         configurator.apply(config);
+
+        setSetpoint(0);
     }
 
     @Override
@@ -50,7 +52,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(voltage, -3, 3);
+        voltage = MathUtil.clamp(voltage, -1, 1);
         setVoltage(voltage);
     }
 
@@ -59,6 +61,7 @@ public class ElbowSubsystem extends SubsystemBase {
     }
 
     public void setSetpoint(double setpoint) {
+        setpoint /= -360;
         pid.setSetpoint(setpoint);
     }
 

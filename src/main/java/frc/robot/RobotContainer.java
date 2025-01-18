@@ -14,6 +14,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.commands.AlignCommand;
@@ -21,6 +22,7 @@ import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
 public class RobotContainer {
@@ -36,13 +38,17 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController m_driver2 = new CommandXboxController(0);
+    private final CommandXboxController m_driver2 = new CommandXboxController(1);
 
-    private final CommandXboxController m_driver1 = new CommandXboxController(1);
+    private final CommandXboxController m_driver1 = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
     private final SendableChooser<Command> autoChooser;
+
+    private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
+
+    private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
 
@@ -94,10 +100,42 @@ public class RobotContainer {
         drivetrain.registerTelemetry(logger::telemeterize);
 
         m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
-        m_driver2.povUp().onTrue(new ElevatorCommand(0));
-        m_driver2.povDown().onTrue(new ElevatorCommand(5));
-        m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
-        m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
+        
+        // m_driver1.povUp().onTrue(new InstantCommand(() -> wrist.setVoltage(0.5, 0.5)));
+        // m_driver1.povUp().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
+
+        // m_driver1.povDown().onTrue(new InstantCommand(() -> wrist.setVoltage(-0.5, -0.5)));
+        // m_driver1.povDown().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
+
+        // m_driver1.povLeft().onTrue(new InstantCommand(() -> wrist.setVoltage(-1.5, 1.5)));
+        // m_driver1.povLeft().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
+
+        // m_driver1.povRight().onTrue(new InstantCommand(() -> wrist.setVoltage(1.5, -1.5)));
+        // m_driver1.povRight().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
+
+        // m_driver1.a().onTrue(new InstantCommand(() -> elbow.setVoltage(0.8)));
+        // m_driver1.a().onFalse(new InstantCommand(() -> elbow.setVoltage(0)));
+
+        // m_driver1.y().onTrue(new InstantCommand(() -> elbow.setVoltage(-0.8)));
+        // m_driver1.y().onFalse(new InstantCommand(() -> elbow.setVoltage(0)));
+
+        m_driver1.a().onTrue(
+            new InstantCommand(() -> wrist.setPitchSetpoint(25))
+            .andThen(new InstantCommand(() -> wrist.setRollSetpoint(0)))
+            .andThen(new InstantCommand(() -> elbow.setSetpoint(-30)))
+        );
+        m_driver1.b().onTrue(
+            new InstantCommand(() -> wrist.setPitchSetpoint(-55))
+            .andThen(new InstantCommand(() -> wrist.setRollSetpoint(90)))
+            .andThen(new InstantCommand(() -> elbow.setSetpoint(60)))
+        );
+
+        m_driver1.x().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-90)));
+
+        // m_driver2.povUp().onTrue(new ElevatorCommand(0));
+        // m_driver2.povDown().onTrue(new ElevatorCommand(5));
+        // m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
+        // m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
 
         // m_driver1.a
     }

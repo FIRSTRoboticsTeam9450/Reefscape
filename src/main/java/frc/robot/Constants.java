@@ -52,4 +52,6 @@ public final class Constants {
     public static final double kGroundIntakeAlgaePitch = 0; // temp
     public static final double kGroundIntakeAlgaeElevator = 0; // temp
   }
+
+  public static final String CTRE_BUS = "Rio";
 }
