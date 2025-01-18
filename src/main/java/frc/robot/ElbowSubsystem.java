@@ -44,6 +44,10 @@ public class ElbowSubsystem extends SubsystemBase {
         updatePID(encoder.getPosition().getValueAsDouble());
     }
 
+    public double getEncoder() {
+        return encoder.getAbsolutePosition().getValueAsDouble();
+    }
+
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
         voltage = MathUtil.clamp(voltage, -3, 3);

@@ -99,6 +99,22 @@ public class DiffWristSubsystem extends SubsystemBase {
     }
 
     /**
+     * Finds the current encoder value for the wrist's pitch
+     * @return the current encoder value for pitch
+     */
+    public double getPitchEncoder() {
+        return pitchEncoder.getAbsolutePosition().getValueAsDouble();
+    }
+
+    /**
+     * Finds the current encoder value for the wrist's roll
+     * @return the current encoder value for roll
+     */
+    public double getRollEncoder() {
+        return rollEncoder.getAbsolutePosition().getValueAsDouble();
+    }
+
+    /**
      * Sets both of the motors is the Diff Wrist system to same voltage
      * Temporary way of usage, use till deemed safe to use a PID
      * @param leftVoltage voltage to set left motor to
