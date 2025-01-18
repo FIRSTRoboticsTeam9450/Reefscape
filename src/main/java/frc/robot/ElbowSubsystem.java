@@ -48,7 +48,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(voltage, -1, 1);
+        voltage = MathUtil.clamp(voltage, -2, 2);
         setVoltage(voltage);
     }
 

@@ -132,6 +132,17 @@ public class RobotContainer {
 
         m_driver1.x().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-90)));
 
+        m_driver1.y().onTrue(
+            new InstantCommand(() -> wrist.setPitchSetpoint(0))
+            .andThen(new InstantCommand(() -> wrist.setRollSetpoint(0)))
+            .andThen(new InstantCommand(() -> elbow.setSetpoint(0)))
+        );
+
+        m_driver1.povUp().onTrue(new InstantCommand(() -> elbow.setSetpoint(60)));
+        m_driver1.povDown().onTrue(new InstantCommand(() -> elbow.setSetpoint(-30)));
+        m_driver1.povLeft().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(60)));
+        m_driver1.povRight().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-60)));
+
         // m_driver2.povUp().onTrue(new ElevatorCommand(0));
         // m_driver2.povDown().onTrue(new ElevatorCommand(5));
         // m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
