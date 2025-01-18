@@ -31,5 +31,27 @@ public final class Constants {
     public static final int KElbowWristEncoderID = 53; //temp
   }
 
+  public static class ArmConstraints {
+    public static final double kRollHorizontal = 0; // temp
+    public static final double kRollVerticalCoralBottom = 0; // temp
+    public static final double kRollVerticalAlgaeBottom = 0; // temp
+    public static final double kPitchMax = 0; // temp
+    public static final double kPitchMin = 0; // temp
+    public static final double kElbowMax = 0; // temp
+    public static final double kElbowMin = 0; // temp
+  }
+
+  public static class ArmPositions {
+    public static final double kSourceElbow = 0; // temp
+    public static final double kSourcePitch = 0; // temp
+    public static final double kSourceElevator = 0; // temp
+    public static final double kGroundIntakeCoralElbow = 0; // temp
+    public static final double kGroundIntakeCoralPitch = 0; // temp
+    public static final double kGroundIntakeCoralElevator = 0; // temp
+    public static final double kGroundIntakeAlgaeElbow = 0; // temp
+    public static final double kGroundIntakeAlgaePitch = 0; // temp
+    public static final double kGroundIntakeAlgaeElevator = 0; // temp
+  }
+
   public static final String CTRE_BUS = "Rio";
 }
