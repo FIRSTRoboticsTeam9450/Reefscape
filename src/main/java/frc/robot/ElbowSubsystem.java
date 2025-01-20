@@ -65,6 +65,11 @@ public class ElbowSubsystem extends SubsystemBase {
         pid.setSetpoint(setpoint);
     }
 
+    // TEMP: CHANGE
+    public boolean atSetpoint() {
+        return false;
+    }
+
     public static ElbowSubsystem getInstance() {
         if (Elbow == null) {
             Elbow = new ElbowSubsystem();
