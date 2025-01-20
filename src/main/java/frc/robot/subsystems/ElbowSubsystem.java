@@ -1,4 +1,4 @@
-package frc.robot;
+package frc.robot.subsystems;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -9,8 +9,10 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristIDs;
+import frc.robot.Constants;
 
 
 /**
@@ -23,7 +25,7 @@ public class ElbowSubsystem extends SubsystemBase {
     private static ElbowSubsystem Elbow;
 
     //PID
-    PIDController pid = new PIDController(20, 0, 0);
+    PIDController pid = new PIDController(40, 0, 0);
 
     //Motor
     private TalonFX motor = new TalonFX(WristIDs.KElbowWristMotorID, Constants.CTRE_BUS);
@@ -31,10 +33,12 @@ public class ElbowSubsystem extends SubsystemBase {
     //Encoder
     private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, Constants.CTRE_BUS);
 
+    double angle;
+
     public ElbowSubsystem() {
         TalonFXConfiguration config = new TalonFXConfiguration();
         TalonFXConfigurator configurator = motor.getConfigurator();
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         configurator.apply(config);
 
@@ -43,16 +47,18 @@ public class ElbowSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        updatePID(encoder.getPosition().getValueAsDouble());
+        angle = encoder.getPosition().getValueAsDouble();
+        updatePID(angle);
+        SmartDashboard.putNumber("Elbow/encoder pos", getAngle());
     }
 
-    public double getEncoder() {
-        return encoder.getAbsolutePosition().getValueAsDouble();
+    public double getAngle() {
+        return angle * -360;
     }
 
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(voltage, -1, 1);
+        voltage = MathUtil.clamp(voltage, -2, 2);
         setVoltage(voltage);
     }
 

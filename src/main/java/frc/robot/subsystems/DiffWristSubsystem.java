@@ -19,8 +19,8 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(15, 0, 0);
-    private PIDController rollPID = new PIDController(20, 0, 0);
+    private PIDController pitchPID = new PIDController(10, 0, 0);
+    private PIDController rollPID = new PIDController(30, 0, 0);
 
     // // Motors
     // private SparkFlex leftMotor = new SparkFlex(WristIDs.kDiffWristLeftMotorID, MotorType.kBrushless);
@@ -33,6 +33,9 @@ public class DiffWristSubsystem extends SubsystemBase {
     // private AbsoluteEncoder rollEncoder = rightMotor.getAbsoluteEncoder(); //Max: .75, .16   Positions to go to:  Grab: .7,  Score: .2   hold: .45
     private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
     private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
+
+    private double pitchPos;
+    private double rollPos;
 
     // Variables
     public static boolean runPID = true;
@@ -48,7 +51,7 @@ public class DiffWristSubsystem extends SubsystemBase {
         TalonFXConfigurator leftConfigurator = leftMotor.getConfigurator();
         TalonFXConfigurator rightConfigurator = rightMotor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         leftConfigurator.apply(config);
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         rightConfigurator.apply(config);
@@ -70,26 +73,30 @@ public class DiffWristSubsystem extends SubsystemBase {
         double pitchVoltage = pitchPID.calculate(pitchPos);
         double rollVoltage = rollPID.calculate(rollPos);
 
+        //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
+        pitchVoltage *= 3;
+
         double lVolts = pitchVoltage - rollVoltage;
         double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -2, 2);
-        rVolts = MathUtil.clamp(rVolts, -2, 2);
+        lVolts = MathUtil.clamp(lVolts, -5, 5);
+        rVolts = MathUtil.clamp(rVolts, -5, 5);
         setVoltage(lVolts, rVolts);
     }
 
     @Override
     public void periodic() {
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
-        double pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
-        double rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
+        pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
+        rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
         if (runPID) {
             updatePID(pitchPos, rollPos);
         }
-        SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", pitchPos);
-        SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", rollPos);
+        SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
+        SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
         SmartDashboard.putNumber("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
         SmartDashboard.putNumber("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
     }
+
 
     /* ----- Setters & Getters ----- */
 
@@ -102,18 +109,18 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     /**
      * Finds the current encoder value for the wrist's pitch
-     * @return the current encoder value for pitch
+     * @return the current encoder value for pitch in degrees
      */
-    public double getPitchEncoder() {
-        return pitchEncoder.getAbsolutePosition().getValueAsDouble();
+    public double getPitchAngle() {
+        return pitchPos * 360;
     }
 
     /**
      * Finds the current encoder value for the wrist's roll
-     * @return the current encoder value for roll
+     * @return the current encoder value for roll in degrees
      */
-    public double getRollEncoder() {
-        return rollEncoder.getAbsolutePosition().getValueAsDouble();
+    public double getRollAngle() {
+        return rollPos * 360;
     }
 
     /**
