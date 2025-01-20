@@ -69,9 +69,12 @@ public class CoordinationSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        pitchEncoder = diffWrist.getPitchEncoder();
-        rollEncoder = diffWrist.getRollEncoder();
-        elbowEncoder = elbow.getEncoder();
+        pitchEncoder = diffWrist.getPitchAngle();
+        rollEncoder = diffWrist.getRollAngle();
+        elbowEncoder = elbow.getAngle();
+        elevatorEncoder = elevator.getPosition();
+
+        updatePosition();
         if(goToPosition) {
             boolean safe = checkSafe();
             if(safe && start) {
@@ -244,18 +247,5 @@ public class CoordinationSubsystem extends SubsystemBase {
             goToStoreAlgae();
         }
     }
-
-    @Override
-    public void periodic() {
-        pitchEncoder = diffWrist.getPitchAngle();
-        rollEncoder = diffWrist.getRollAngle();
-        elbowEncoder = elbow.getAngle();
-        elevatorEncoder = elevator.getPosition();
-
-        updatePosition();
-    }
-
-
-
     
 }
