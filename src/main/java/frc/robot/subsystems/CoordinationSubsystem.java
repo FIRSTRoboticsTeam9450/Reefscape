@@ -1,7 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.ElbowSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.Constants.ScorePos;
 import frc.robot.Constants;
 

@@ -1,7 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.DualIntakeSubsystem;
+import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class DualIntakeCommand extends Command{
 

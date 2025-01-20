@@ -28,6 +28,8 @@ import frc.robot.subsystems.CoordinationSubsystem;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
+import frc.robot.subsystems.ElbowSubsystem;
+import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
