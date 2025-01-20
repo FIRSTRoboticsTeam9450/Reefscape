@@ -14,12 +14,20 @@ public class DualIntakeCommand extends Command{
     private double coralTriggerDistance = 25.4; //unit is mm
     private double algaeTriggerDistance = 25.4; //units is mm
 
+    private boolean algae;
+
+    public DualIntakeCommand(boolean algae) {
+        this.algae = algae;
+    }
+
     /* ----- Initialization ----- */
 
     @Override
     public void initialize() {
         addRequirements(DI);
-        if (DI.getCoralLaserDistance() > coralTriggerDistance || DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
+        if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
+            DI.setVoltage(-1);
+        } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
             DI.setVoltage(1);
         }
     }
@@ -28,9 +36,9 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public void execute() {
-        if (DI.getCoralLaserDistance() > coralTriggerDistance || DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
-            DI.setVoltage(1);
-        }
+        // if (DI.getCoralLaserDistance() > coralTriggerDistance || DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
+        //     DI.setVoltage(1);
+        // }
     }
 
     /* ----- Finishers ----- */

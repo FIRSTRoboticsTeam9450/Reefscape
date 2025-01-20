@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import com.ctre.phoenix6.signals.NeutralModeValue;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -54,4 +56,14 @@ public final class Constants {
   }
 
   public static final String CTRE_BUS = "Rio";
+  public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake;
+  
+  public enum ScorePos {
+    INTAKE_CORAL,
+    INTAKE_ALGAE,
+    START,
+    STORE_CORAL,
+    SCORE_CORAL,
+    STORE_ALGAE
+  }
 }

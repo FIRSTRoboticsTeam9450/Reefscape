@@ -18,11 +18,13 @@ public class ElevatorSubsystem extends SubsystemBase{
     private static ElevatorSubsystem elev;
 
     //PID instance
-    private PIDController pid = new PIDController(0, 0, 0);
+    private PIDController pid = new PIDController(4, 0, 0);
 
     //Motor instances
     private TalonFX tempMotor1 = new TalonFX(60, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
     private TalonFX tempMotor2 = new TalonFX(61, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
+
+    double position;
 
     /* ----- Initialization ----- */
 
@@ -33,11 +35,13 @@ public class ElevatorSubsystem extends SubsystemBase{
         TalonFXConfiguration config = new TalonFXConfiguration();
         TalonFXConfigurator temp2 = tempMotor2.getConfigurator();
         TalonFXConfigurator temp1 = tempMotor1.getConfigurator();
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake;
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         temp1.apply(config);
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         temp2.apply(config);
+
+        setSetpoint(0);
 
         /* ----- END OF TESTING AREA ----- */
     }
@@ -46,14 +50,19 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        updatePID(tempMotor1.getPosition().getValueAsDouble());
+        position = tempMotor1.getPosition().getValueAsDouble(); 
+        updatePID(position);
         SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
-        SmartDashboard.putNumber("Reefscape/Elevator/pos", tempMotor1.getPosition().getValueAsDouble());
+        SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
+    }
+
+    public double getPosition() {
+        return position;
     }
 
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(pos, -1, 6);
+        voltage = MathUtil.clamp(voltage, -1, 3);
         setVoltage(voltage);
     }
 
