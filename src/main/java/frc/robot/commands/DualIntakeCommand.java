@@ -16,8 +16,11 @@ public class DualIntakeCommand extends Command{
 
     private boolean algae;
 
-    public DualIntakeCommand(boolean algae) {
+    private double voltage; //temp
+
+    public DualIntakeCommand(boolean algae, double temp) {
         this.algae = algae;
+        voltage = temp;
     }
 
     /* ----- Initialization ----- */
@@ -25,11 +28,12 @@ public class DualIntakeCommand extends Command{
     @Override
     public void initialize() {
         addRequirements(DI);
-        if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
-            DI.setVoltage(-1);
-        } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
-            DI.setVoltage(1);
-        }
+        // if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
+        //     DI.setVoltage(-1);
+        // } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
+        //     DI.setVoltage(1);
+        // }
+        DI.setVoltage(voltage);
     }
 
     /* ----- Updaters ----- */
@@ -45,12 +49,13 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
+        return true;
+        // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
     }
 
     @Override
     public void end(boolean interrupted) {
-        DI.setVoltage(0);
+        // DI.setVoltage(0);
     }
     
 }

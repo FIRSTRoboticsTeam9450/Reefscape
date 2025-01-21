@@ -116,8 +116,8 @@ public class CoordinationSubsystem extends SubsystemBase {
     }
 
     public void goToGroundIntakeCoral() { // elbow -12, pitch -43, roll 0
-        elbow.setSetpoint(-12);
-        diffWrist.setPitchSetpoint(-43);
+        elbow.setSetpoint(-18);
+        diffWrist.setPitchSetpoint(-108);
         if (elbowEncoder < 30) {
             diffWrist.setRollSetpoint(0);
         }
@@ -126,47 +126,69 @@ public class CoordinationSubsystem extends SubsystemBase {
         }
     }
 
-    public void goToGroundIntakeAlgae() { // elbow -43, pitch -38, roll 0
+    public void goToGroundIntakeAlgae() { //old:  elbow -43, pitch -38, roll 0
+                                          //new: elbow -48, pitch -130, roll 0
+        elevator.setSetpoint(6);
         if (elevatorEncoder > 5) {
-            diffWrist.setPitchSetpoint(-68);
-            elbow.setSetpoint(-43);
+            diffWrist.setPitchSetpoint(-130);
+            elbow.setSetpoint(-48);
         }
         if (elbowEncoder < 30) {
             diffWrist.setRollSetpoint(0);
         }
-        elevator.setSetpoint(6);
-        
+         //old: 6   
     }
 
     public void goToStoreAlgae() { // elbow 75, pitch -65, roll 0
-        diffWrist.setPitchSetpoint(-85);
-        elbow.setSetpoint(75);
-        if (elbowEncoder < 30) {
-            diffWrist.setRollSetpoint(0);
+        //p: -75
+        //elev: 7
+        //elbow: 30
+        //roll: 0;
+        elevator.setSetpoint(8);
+        diffWrist.setRollSetpoint(0);
+
+        double elevPos = elevatorEncoder;
+        double elevSetpoint = elevator.getSetpoint();
+
+        if ((elevPos > elevSetpoint - 0.05) && (elevPos < elevSetpoint + 0.05)) {
+            elbow.setSetpoint(30);
+            diffWrist.setPitchSetpoint(-75);
         }
     }
 
     public void goToStart() { // elbow 85, pitch -6, roll -90
-        diffWrist.setPitchSetpoint(-6);
-        diffWrist.setRollSetpoint(-90);
+
+        diffWrist.setPitchSetpoint(-91);
+        if (rollEncoder < 0) {
+            diffWrist.setRollSetpoint(-85);
+        } else if (rollEncoder > 0) {
+            diffWrist.setRollSetpoint(85);
+        }
+        if (pitchEncoder > 5) {
+            elbow.setSetpoint(0);
+        } else if (rollEncoder < -60 ) {
+            elbow.setSetpoint(97);
+        }
+        elevator.setSetpoint(0);
+    }
+
+    public void goToStoreCoral() { //Elb: 80, pitch: -22, roll: -90
+        diffWrist.setPitchSetpoint(-75);
+        if (rollEncoder < 0) {
+            diffWrist.setRollSetpoint(-85);
+        } else if (rollEncoder > 0) {
+            diffWrist.setRollSetpoint(85);
+        }
         if (rollEncoder < -60) {
-            elbow.setSetpoint(75);
+            elbow.setSetpoint(60);
         }
     }
 
-    public void goToStoreCoral() {
-        diffWrist.setPitchSetpoint(-22);
-        diffWrist.setRollSetpoint(-90);
-        if (rollEncoder < -60) {
-            elbow.setSetpoint(80);
-        }
-    }
 
-
-    public void goToScore() {
-        diffWrist.setPitchSetpoint(7);
-        diffWrist.setRollSetpoint(-90);
-        elbow.setSetpoint(25);
+    public void goToScoreCoral() {//Elb: 25, Pitch: 7, roll: -90
+        diffWrist.setPitchSetpoint(-52);
+        diffWrist.setRollSetpoint(0);
+        elbow.setSetpoint(-3.7);
     }
 
     public void goToPosition(ScorePos pos) {
@@ -181,7 +203,7 @@ public class CoordinationSubsystem extends SubsystemBase {
         } else if (position == ScorePos.STORE_CORAL) {
             goToStoreCoral();
         } else if (position == ScorePos.SCORE_CORAL) {
-            goToScore();
+            goToScoreCoral();
         } else if (position == ScorePos.INTAKE_ALGAE) {
             goToGroundIntakeAlgae();
         } else if (position == ScorePos.STORE_ALGAE) {

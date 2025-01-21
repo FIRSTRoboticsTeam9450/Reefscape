@@ -138,17 +138,23 @@ public class RobotContainer {
             new InstantCommand(() -> score.goToPosition(ScorePos.SCORE_CORAL))
         );
 
+
         m_driver1.a().onTrue(
             new InstantCommand(() -> score.goToPosition(ScorePos.INTAKE_CORAL))
         );
 
         m_driver1.x().onTrue(new InstantCommand(() -> score.goToPosition(ScorePos.INTAKE_ALGAE)));
 
-        m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(5)));
+        m_driver1.povUp().onTrue(new InstantCommand(() -> score.goToPosition(ScorePos.STORE_ALGAE)));
+
+        m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
         m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
 
-        m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-5)));
+        m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-9)));
         m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
+
+
+        m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
 
 
         // m_driver1.b().onTrue(
@@ -171,11 +177,6 @@ public class RobotContainer {
         //     .andThen(new InstantCommand(() -> wrist.setRollSetpoint(0)))
         //     .andThen(new InstantCommand(() -> elbow.setSetpoint(0)))
         // );
-
-        m_driver1.povUp().onTrue(new InstantCommand(() -> score.goToPosition(ScorePos.STORE_ALGAE)));
-        m_driver1.povDown().onTrue(new InstantCommand(() -> elbow.setSetpoint(-30)));
-        m_driver1.povLeft().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(60)));
-        m_driver1.povRight().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-60)));
 
         // m_driver2.povUp().onTrue(new ElevatorCommand(0));
         // m_driver2.povDown().onTrue(new ElevatorCommand(5));

@@ -56,7 +56,7 @@ public final class Constants {
   }
 
   public static final String CTRE_BUS = "Rio";
-  public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake;
+  public static final NeutralModeValue defaultNeutral = NeutralModeValue.Coast; //normally brake, temporarly coast
   
   public enum ScorePos {
     INTAKE_CORAL,
