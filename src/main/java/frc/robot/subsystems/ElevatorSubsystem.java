@@ -79,6 +79,10 @@ public class ElevatorSubsystem extends SubsystemBase{
         pid.setSetpoint(setpoint);
     }
 
+    public boolean atSetpoint() {
+        return false;
+    }
+
     public void setVoltage(double voltage) {
         tempMotor1.setVoltage(voltage);
         tempMotor2.setVoltage(voltage);

@@ -143,6 +143,9 @@ public class DiffWristSubsystem extends SubsystemBase {
         pitchPID.setSetpoint(setpoint);
     }
 
+    public boolean atPitchSetpoint() {
+        return false;
+    }
     /**
      * sets the target position of the roll PID
      * @param setpoint
@@ -150,6 +153,10 @@ public class DiffWristSubsystem extends SubsystemBase {
     public void setRollSetpoint(double setpoint) {
         setpoint /= 360;
         rollPID.setSetpoint(setpoint);
+    }
+
+    public boolean atRollSetpoint() {
+        return false;
     }
 
 }
