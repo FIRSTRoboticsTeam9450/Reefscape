@@ -170,4 +170,20 @@ public class DiffWristSubsystem extends SubsystemBase {
         return false;
     }
 
+    /**
+     * Used for getting the current target of the Pitch
+     * @return angle of pitch
+     */
+    public double getPitchSetpoint() {
+        return pitchPID.getSetpoint() * 360;
+    }
+
+    /**
+     * Used for getting the current target of the Roll
+     * @return angle of roll
+     */
+    public double getRollSetpoint() {
+        return rollPID.getSetpoint() * 360;
+    }
+
 }

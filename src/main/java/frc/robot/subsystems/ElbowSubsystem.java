@@ -88,4 +88,12 @@ public class ElbowSubsystem extends SubsystemBase {
         return Elbow;
     }
 
+    /**
+     * Used for getting current target of the elbow
+     * @return angle of Elbow
+     */
+    public double getSetpoint() {
+        return pid.getSetpoint() * 360;
+    }
+
 }

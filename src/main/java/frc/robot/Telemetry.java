@@ -19,6 +19,7 @@ import edu.wpi.first.wpilibj.smartdashboard.MechanismLigament2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj.util.Color8Bit;
+import frc.robot.Constants.debugging;
 
 public class Telemetry {
     private final double MaxSpeed;
@@ -113,12 +114,14 @@ public class Telemetry {
         fieldPub.set(m_poseArray);
 
         /* Telemeterize the module states to a Mechanism2d */
-        for (int i = 0; i < 4; ++i) {
-            m_moduleSpeeds[i].setAngle(state.ModuleStates[i].angle);
-            m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
-            m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
+        if (debugging.SwerveDebugging) {
+            for (int i = 0; i < 4; ++i) {
+                m_moduleSpeeds[i].setAngle(state.ModuleStates[i].angle);
+                m_moduleDirections[i].setAngle(state.ModuleStates[i].angle);
+                m_moduleSpeeds[i].setLength(state.ModuleStates[i].speedMetersPerSecond / (2 * MaxSpeed));
 
-            SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
+                SmartDashboard.putData("Module " + i, m_moduleMechanisms[i]);
+            }
         }
     }
 }

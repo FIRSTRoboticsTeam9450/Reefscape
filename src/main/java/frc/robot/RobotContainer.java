@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -72,7 +73,6 @@ public class RobotContainer {
         configureBindings();
 
         boolean isCompetition = false;
-
 
         //if isComp... is true, it will only use auto's that name starts with "comp"
         autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
@@ -144,11 +144,9 @@ public class RobotContainer {
         );
 
 
-        m_driver1.a().onTrue(
-            new InstantCommand(() -> score.goToPosition(ScorePos.INTAKE_CORAL))
-        );
+        m_driver1.a().onTrue(new CoordTestingCommand(testingPos.INTAKE_CORAL));
 
-        m_driver1.x().onTrue(new InstantCommand(() -> score.goToPosition(ScorePos.INTAKE_ALGAE)));
+        m_driver1.x().onTrue(new CoordTestingCommand(testingPos.INTAKE_ALGAE));
 
         m_driver1.povUp().onTrue(new InstantCommand(() -> score.goToPosition(ScorePos.STORE_ALGAE)));
 

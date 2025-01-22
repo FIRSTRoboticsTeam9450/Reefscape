@@ -77,4 +77,11 @@ public final class Constants {
     ALGAE_STORE
   }
 
+  public static class debugging {
+    public static final boolean SwerveDebugging = false;
+    public static final boolean LimelightDebugging = false;
+    public static final boolean CoordAllowedPathsDebugging = true;
+    public static final boolean CoordPositionDebugging = true;
+  }
+
 }

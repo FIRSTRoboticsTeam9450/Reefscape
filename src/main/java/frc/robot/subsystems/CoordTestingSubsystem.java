@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Set;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants.debugging;
 import frc.robot.Constants.testingPos;
 
 public class CoordTestingSubsystem extends SubsystemBase{
@@ -23,32 +27,54 @@ public class CoordTestingSubsystem extends SubsystemBase{
     /* ----- Current / Targeting position ----- */
     private testingPos pos = testingPos.START;
     
-    public Map<testingPos, testingPos> allowedPaths = new HashMap<>();
+    public Map<testingPos, Set<testingPos>> allowedPaths = new HashMap<>();
+    private Set<testingPos> Start_Set = new HashSet<>();
+    private Set<testingPos> Coral_Store_Set = new HashSet<>();
+    private Set<testingPos> Coral_Intake_Set = new HashSet<>();
+    private Set<testingPos> Source_Intake_Set = new HashSet<>();
+    private Set<testingPos> Algae_Intake_Set = new HashSet<>();
+    private Set<testingPos> Algae_Store_Set = new HashSet<>();
 
     /**
      * gets the starting angle / position of the encoders
      */
     public CoordTestingSubsystem() {
 
+        pos = testingPos.START;
+
         pitchEncoder = DW.getPitchAngle();
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
 
-        allowedPaths.put(testingPos.START, testingPos.CORAL_STORE);
+        Start_Set.add(testingPos.CORAL_STORE);
 
-        allowedPaths.put(testingPos.CORAL_STORE, testingPos.INTAKE_ALGAE);
-        allowedPaths.put(testingPos.CORAL_STORE,testingPos.INTAKE_ALGAE);
-        allowedPaths.put(testingPos.CORAL_STORE, testingPos.INTAKE_SOURCE);
+        Coral_Store_Set.add(testingPos.INTAKE_CORAL);
+        Coral_Store_Set.add(testingPos.INTAKE_ALGAE);
+        Coral_Store_Set.add(testingPos.INTAKE_SOURCE);
 
-        allowedPaths.put(testingPos.INTAKE_CORAL, testingPos.CORAL_STORE);
-        allowedPaths.put(testingPos.INTAKE_CORAL, testingPos.INTAKE_SOURCE);
+        Coral_Intake_Set.add(testingPos.CORAL_STORE);
+        Coral_Intake_Set.add(testingPos.INTAKE_SOURCE);
 
-        allowedPaths.put(testingPos.INTAKE_SOURCE, testingPos.CORAL_STORE);
-        allowedPaths.put(testingPos.INTAKE_SOURCE, testingPos.INTAKE_CORAL);
+        Source_Intake_Set.add(testingPos.CORAL_STORE);
+        Source_Intake_Set.add(testingPos.INTAKE_CORAL);
 
-        allowedPaths.put(testingPos.INTAKE_ALGAE, testingPos.CORAL_STORE);
-        allowedPaths.put(testingPos.INTAKE_ALGAE, testingPos.ALGAE_STORE);
+        Algae_Intake_Set.add(testingPos.CORAL_STORE);
+        Algae_Intake_Set.add(testingPos.ALGAE_STORE);
+
+        Algae_Store_Set.add(testingPos.CORAL_STORE);
+
+        allowedPaths.put(testingPos.START, Start_Set);
+
+        allowedPaths.put(testingPos.CORAL_STORE, Coral_Store_Set);
+
+        allowedPaths.put(testingPos.INTAKE_CORAL, Coral_Intake_Set);
+
+        allowedPaths.put(testingPos.INTAKE_SOURCE, Source_Intake_Set);
+
+        allowedPaths.put(testingPos.INTAKE_ALGAE, Algae_Intake_Set);
+
+        allowedPaths.put(testingPos.ALGAE_STORE, Algae_Store_Set);
 
     }
 
@@ -59,7 +85,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
 
-        updatePosition();        
+        updatePosition();
+
+        if (debugging.CoordPositionDebugging) {
+            debugger();
+        }
     }
 
     public void updatePosition() {
@@ -139,7 +169,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
         DW.setPitchSetpoint(-118);
         DW.setRollSetpoint(0);
         Elbow.setSetpoint(-18);
-        Elev.setSetpoint(0);
+        Elev.setSetpoint(1);
     }
 
     public void goToAlgaeIntake() {
@@ -170,4 +200,31 @@ public class CoordTestingSubsystem extends SubsystemBase{
         this.pos = pos;
     }
 
+    /* ----------- DEBUGGING ----------- */
+
+    /**
+     * Debugger
+     */
+    public void debugger() {
+
+        SmartDashboard.putNumber("Reefscape/Debugging/Elbow Angle", elbowEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Pitch Angle", pitchEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Roll Angle", rollEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Elevator Revolutions", elevEncoder);
+
+        SmartDashboard.putNumber("Reefscape/Debugging/Elbow Setpoint", Elbow.getSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Pitch Setpoint", DW.getPitchSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Roll Setpoint", DW.getRollSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Elevator Setpoint", Elev.getSetpoint());
+
+        SmartDashboard.putBoolean("Reefscape/Debugging/Elbow atSetpoint?", Elbow.atSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/Pitch atSetpoint?", DW.atPitchSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/Roll atSetpoint?", DW.atRollSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/Elevator atSetpoint?", Elev.atSetpoint());
+
+        SmartDashboard.putString("Reefscape/Debugging/Start Paths", allowedPaths.get(testingPos.START).toString());
+        SmartDashboard.putString("Reefscape/Debugging/Coral Store Paths", allowedPaths.get(testingPos.CORAL_STORE).toString());
+        SmartDashboard.putString("Reefscape/Debugging/Coral Intake Paths", allowedPaths.get(testingPos.INTAKE_CORAL).toString());
+
+    }
 }
