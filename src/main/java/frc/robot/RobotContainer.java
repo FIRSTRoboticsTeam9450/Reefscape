@@ -18,7 +18,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ScorePos;
+import frc.robot.Constants.testingPos;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -30,6 +32,7 @@ import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.DualIntakeSubsystem;
+import frc.robot.commands.CoordTestingCommand;;
 
 public class RobotContainer {
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -131,9 +134,11 @@ public class RobotContainer {
         // m_driver1.y().onTrue(new InstantCommand(() -> elbow.setVoltage(-0.8)));
         // m_driver1.y().onFalse(new InstantCommand(() -> elbow.setVoltage(0)));
 
-        m_driver1.b().onTrue(
-            new InstantCommand(() -> score.goToPosition(ScorePos.STORE_CORAL))
-        );
+        // m_driver1.b().onTrue(
+        //     new InstantCommand(() -> score.goToPosition(ScorePos.STORE_CORAL))
+        // );
+        m_driver1.b().onTrue(new CoordTestingCommand(testingPos.CORAL_STORE));
+
         m_driver1.y().onTrue(
             new InstantCommand(() -> score.goToPosition(ScorePos.SCORE_CORAL))
         );
@@ -166,7 +171,7 @@ public class RobotContainer {
 
         m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
-        m_driver1.rightBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(8)));
+        m_driver1.rightBumper().onTrue(new CoordTestingCommand(testingPos.INTAKE_SOURCE));
 
 
 

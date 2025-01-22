@@ -144,8 +144,14 @@ public class DiffWristSubsystem extends SubsystemBase {
     }
 
     public boolean atPitchSetpoint() {
+        double pitchAnlge = getPitchAngle();
+        double pitchSetpoint = pitchPID.getSetpoint();
+        if ((rollPos > pitchSetpoint - 0.1) && (rollPos < pitchSetpoint + 0.1)) {
+            return true;
+        }
         return false;
     }
+
     /**
      * sets the target position of the roll PID
      * @param setpoint
@@ -156,6 +162,11 @@ public class DiffWristSubsystem extends SubsystemBase {
     }
 
     public boolean atRollSetpoint() {
+        double rollAngle = getRollAngle();
+        double rollSetpoint = rollPID.getSetpoint();
+        if ((rollAngle > rollSetpoint - 0.1) && (rollAngle < rollSetpoint + 0.1)) {
+            return true;
+        }
         return false;
     }
 

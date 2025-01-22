@@ -74,7 +74,7 @@ public class CoordinationSubsystem extends SubsystemBase {
         elbowEncoder = elbow.getAngle();
         elevatorEncoder = elevator.getPosition();
 
-        updatePosition();
+        // updatePosition();
         if(goToPosition) {
             boolean safe = checkSafe();
             if(safe && start) {

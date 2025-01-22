@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 /**
@@ -66,4 +67,14 @@ public final class Constants {
     SCORE_CORAL,
     STORE_ALGAE
   }
+
+  public enum testingPos {
+    START,
+    INTAKE_CORAL,
+    INTAKE_ALGAE,
+    INTAKE_SOURCE,
+    CORAL_STORE,
+    ALGAE_STORE
+  }
+
 }

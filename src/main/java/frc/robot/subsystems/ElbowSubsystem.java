@@ -73,6 +73,11 @@ public class ElbowSubsystem extends SubsystemBase {
 
     // TEMP: CHANGE
     public boolean atSetpoint() {
+        double elbowAngle = getAngle();
+        double setpoint = pid.getSetpoint();
+        if ((elbowAngle > setpoint - 0.1) && (elbowAngle < setpoint + 0.1)) {
+            return true;
+        }
         return false;
     }
 
