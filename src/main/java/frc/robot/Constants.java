@@ -75,7 +75,8 @@ public final class Constants {
     INTAKE_SOURCE,
     CORAL_STORE,
     ALGAE_STORE,
-    SCORE_NET
+    SCORE_NET,
+    SCORE_PROCESSOR
   }
 
   public static class debugging {

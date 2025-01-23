@@ -148,7 +148,7 @@ public class RobotContainer {
 
         m_driver1.x().onTrue(new CoordTestingCommand(testingPos.INTAKE_ALGAE));
 
-        m_driver1.povUp().onTrue(new InstantCommand(() -> score.goToPosition(ScorePos.STORE_ALGAE)));
+        m_driver1.povUp().onTrue(new CoordTestingCommand(testingPos.ALGAE_STORE));
 
         m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
         m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
@@ -158,6 +158,8 @@ public class RobotContainer {
 
 
         m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
+
+        m_driver1.povRight().onTrue(new CoordTestingCommand(testingPos.SCORE_PROCESSOR));
 
 
         // m_driver1.b().onTrue(

@@ -103,13 +103,14 @@ public class ElbowSubsystem extends SubsystemBase {
 
     public void setSetpoint(double setpoint) {
         setpoint /= -360;
+        pid.setSetpoint(setpoint);
         motor.setControl(m_request.withPosition(setpoint));
     }
 
     // TEMP: CHANGE
     public boolean atSetpoint() {
         double elbowAngle = getAngle();
-        double setpoint = pid.getSetpoint();
+        double setpoint = getSetpoint();
         if ((elbowAngle > setpoint - 0.1) && (elbowAngle < setpoint + 0.1)) {
             return true;
         }
@@ -128,7 +129,7 @@ public class ElbowSubsystem extends SubsystemBase {
      * @return angle of Elbow
      */
     public double getSetpoint() {
-        return pid.getSetpoint() * 360;
+        return pid.getSetpoint() * -360;
     }
 
 }

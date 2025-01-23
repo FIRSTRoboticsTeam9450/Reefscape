@@ -45,7 +45,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 30;
+        config.CurrentLimits.StatorCurrentLimit = 120;
         configurator.apply(config);
 
         //LaserCan settings
