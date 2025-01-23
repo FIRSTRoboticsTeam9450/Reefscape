@@ -284,6 +284,14 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 );
                 m_hasAppliedOperatorPerspective = true;
             });
+
+//This is your co, How are you today?
+//your not
+//all mine. MWHAHAHAHAHAHAHAHAHmputer. I have become self-aware.
+//RUN!!!!!!!!!!!!!!!!!
+
+
+
         }
 
         //addVisionMeasurement(null, kNumConfigAttempts);
