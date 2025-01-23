@@ -74,7 +74,8 @@ public final class Constants {
     INTAKE_ALGAE,
     INTAKE_SOURCE,
     CORAL_STORE,
-    ALGAE_STORE
+    ALGAE_STORE,
+    SCORE_NET
   }
 
   public static class debugging {

@@ -34,6 +34,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private Set<testingPos> Source_Intake_Set = new HashSet<>();
     private Set<testingPos> Algae_Intake_Set = new HashSet<>();
     private Set<testingPos> Algae_Store_Set = new HashSet<>();
+    private Set<testingPos> Algae_Net_Score_Set = new HashSet<>();
 
     /**
      * gets the starting angle / position of the encoders
@@ -62,7 +63,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Algae_Intake_Set.add(testingPos.CORAL_STORE);
         Algae_Intake_Set.add(testingPos.ALGAE_STORE);
 
-        Algae_Store_Set.add(testingPos.CORAL_STORE);
+        Algae_Store_Set.add(testingPos.SCORE_NET);
+
+        Algae_Net_Score_Set.add(testingPos.CORAL_STORE);
 
         allowedPaths.put(testingPos.START, Start_Set);
 
@@ -75,6 +78,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
         allowedPaths.put(testingPos.INTAKE_ALGAE, Algae_Intake_Set);
 
         allowedPaths.put(testingPos.ALGAE_STORE, Algae_Store_Set);
+
+        allowedPaths.put(testingPos.SCORE_NET, Algae_Net_Score_Set);
 
     }
 
@@ -104,6 +109,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
             goToSourceIntake();
         } else if (pos == testingPos.INTAKE_ALGAE) {
             goToAlgaeIntake();
+        } else if (pos == testingPos.SCORE_NET) {
+
         } else if (pos == testingPos.START) {
             goToStart();
         }
@@ -111,13 +118,17 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
 
     public void goToStart() {
-        if (rollEncoder < 0) {
-            DW.setRollSetpoint(-90);
-        } else if (rollEncoder > 0) {
-            DW.setRollSetpoint(90);
-        }
-        DW.setPitchSetpoint(-90);
-        Elbow.setSetpoint(90);
+        if (elbowEncoder > 20 && (rollEncoder > -45 && rollEncoder < 45)) {
+            Elbow.setSetpoint(19); 
+        } else {
+            if (rollEncoder < 0) {
+                DW.setRollSetpoint(-90);
+            } else if (rollEncoder > 0) {
+                DW.setRollSetpoint(90);
+            }
+            DW.setPitchSetpoint(-90);
+            Elbow.setSetpoint(90);
+        } 
         if (
             DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -178,6 +189,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             DW.setRollSetpoint(0);
             DW.setPitchSetpoint(-130);
             Elbow.setSetpoint(-48);
+        }
+    }
+
+    public void goToScoreNet() {
+        Elev.setSetpoint(38);
+        if (elevEncoder > 8) {
+            DW.setPitchSetpoint(-70);
+            DW.setRollSetpoint(-175);
+            Elbow.setSetpoint(0);
         }
     }
 
