@@ -7,6 +7,7 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
@@ -24,6 +25,8 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTableEntry botPoseField = limelight.getEntry("botpose_wpiblue");
     public static LimelightSubsystem LL; 
 
+    Field2d field = new Field2d();
+
     /* ----- Updaters ----- */
 
     @Override
@@ -33,6 +36,12 @@ public class LimelightSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("limelight yaw", getYaw());
             SmartDashboard.putNumber("limelight ta", ta.getDouble(0));
         }
+        field.setRobotPose(getPose());
+
+    }
+
+    public LimelightSubsystem() {
+        SmartDashboard.putData("Limelight Pose", field);
     }
 
     /* ----- Getters & Setters ----- */
@@ -59,8 +68,8 @@ public class LimelightSubsystem extends SubsystemBase {
 
     public Pose2d getPose() {
         double[] poseArray = botPoseField.getDoubleArray(new double[6]);
-        Rotation2d rotation = new Rotation2d(poseArray[3], poseArray[4]);
-        Pose2d out = new Pose2d(poseArray[0], poseArray[1], rotation);
+        //Rotation2d rotation = new Rotation2d(poseArray[3], poseArray[4]);
+        Pose2d out = new Pose2d(poseArray[0], poseArray[1], new Rotation2d());
         return out;
     }
     
