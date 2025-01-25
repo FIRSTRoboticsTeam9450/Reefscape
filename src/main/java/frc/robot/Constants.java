@@ -81,7 +81,7 @@ public final class Constants {
 
   public static class debugging {
     public static final boolean SwerveDebugging = false;
-    public static final boolean LimelightDebugging = false;
+    public static final boolean LimelightDebugging = true;
     public static final boolean CoordAllowedPathsDebugging = true;
     public static final boolean CoordPositionDebugging = true;
   }

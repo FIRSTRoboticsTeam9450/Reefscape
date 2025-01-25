@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Rotation;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
@@ -26,6 +28,7 @@ public class LimelightSubsystem extends SubsystemBase {
     public static LimelightSubsystem LL; 
 
     Field2d field = new Field2d();
+    double[] poseArray = new double[10];
 
     /* ----- Updaters ----- */
 
@@ -35,7 +38,10 @@ public class LimelightSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("limelight tx", tx.getDouble(0));
             SmartDashboard.putNumber("limelight yaw", getYaw());
             SmartDashboard.putNumber("limelight ta", ta.getDouble(0));
+            SmartDashboard.putNumber("pose ta", poseArray[9]);
         }
+        Logger.recordOutput("Limelight Pose", getPose());
+        poseArray = botPoseField.getDoubleArray(new double[10]);
         field.setRobotPose(getPose());
 
     }
@@ -66,10 +72,13 @@ public class LimelightSubsystem extends SubsystemBase {
         return botPose.getDoubleArray(new double[6])[4];
     }
 
+    public double getTagCount() {
+        return poseArray[7];
+    }
+
     public Pose2d getPose() {
-        double[] poseArray = botPoseField.getDoubleArray(new double[6]);
-        //Rotation2d rotation = new Rotation2d(poseArray[3], poseArray[4]);
-        Pose2d out = new Pose2d(poseArray[0], poseArray[1], new Rotation2d());
+        Rotation2d rot = new Rotation2d(poseArray[5] * Math.PI / 180);
+        Pose2d out = new Pose2d(poseArray[0], poseArray[1], rot);
         return out;
     }
     

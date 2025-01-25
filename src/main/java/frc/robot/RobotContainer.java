@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ScorePos;
 import frc.robot.Constants.testingPos;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.AlignCommand2;
 import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
@@ -114,7 +115,7 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
+        m_driver2.y().onTrue(new AlignCommand2(drivetrain));
         
         // m_driver1.povUp().onTrue(new InstantCommand(() -> wrist.setVoltage(0.5, 0.5)));
         // m_driver1.povUp().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
