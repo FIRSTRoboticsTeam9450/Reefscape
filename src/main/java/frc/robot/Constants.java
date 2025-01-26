@@ -76,7 +76,11 @@ public final class Constants {
     CORAL_STORE,
     ALGAE_STORE,
     SCORE_NET,
-    SCORE_PROCESSOR
+    SCORE_PROCESSOR,
+    CORAL_SCOREL1,
+    CORAL_SCOREL2,
+    CORAL_SCOREL3,
+    CORAL_SCOREL4
   }
 
   public static class debugging {

@@ -35,7 +35,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         TalonFXConfiguration config = new TalonFXConfiguration();
         TalonFXConfigurator temp2 = tempMotor2.getConfigurator();
         TalonFXConfigurator temp1 = tempMotor1.getConfigurator();
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake; //temp for when default neutral mode is coast
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral; //temp for when default neutral mode is coast
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         temp1.apply(config);
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;

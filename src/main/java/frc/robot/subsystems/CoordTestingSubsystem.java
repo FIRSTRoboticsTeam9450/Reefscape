@@ -36,6 +36,12 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private Set<testingPos> Algae_Store_Set = new HashSet<>();
     private Set<testingPos> Algae_Net_Score_Set = new HashSet<>();
     private Set<testingPos> Algae_Processor_Score_Set = new HashSet<>();
+    private Set<testingPos> Coral_ScoreL1_Set = new HashSet<>();
+    private Set<testingPos> Coral_ScoreL2_Set = new HashSet<>();
+    private Set<testingPos> Coral_ScoreL3_Set = new HashSet<>();
+    private Set<testingPos> Coral_ScoreL4_Set = new HashSet<>();
+
+    
 
     /**
      * gets the starting angle / position of the encoders
@@ -50,6 +56,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
         elevEncoder = Elev.getPosition();
 
         Start_Set.add(testingPos.CORAL_STORE);
+
+        Coral_Store_Set.add(testingPos.CORAL_SCOREL1);
+        Coral_Store_Set.add(testingPos.CORAL_SCOREL2);
+        Coral_Store_Set.add(testingPos.CORAL_SCOREL3);
+        Coral_Store_Set.add(testingPos.CORAL_SCOREL4);
 
         Coral_Store_Set.add(testingPos.INTAKE_CORAL);
         Coral_Store_Set.add(testingPos.INTAKE_ALGAE);
@@ -68,6 +79,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Algae_Store_Set.add(testingPos.SCORE_PROCESSOR);
         Algae_Store_Set.add(testingPos.INTAKE_ALGAE); //temp... maybe
         Algae_Store_Set.add(testingPos.CORAL_STORE); //temp
+
+        Coral_ScoreL1_Set.add(testingPos.CORAL_STORE);
+        Coral_ScoreL2_Set.add(testingPos.CORAL_STORE);
+        Coral_ScoreL3_Set.add(testingPos.CORAL_STORE);
+        Coral_ScoreL4_Set.add(testingPos.CORAL_STORE);
 
         Algae_Net_Score_Set.add(testingPos.CORAL_STORE);
 
@@ -88,6 +104,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
         allowedPaths.put(testingPos.SCORE_NET, Algae_Net_Score_Set);
 
         allowedPaths.put(testingPos.SCORE_PROCESSOR, Algae_Processor_Score_Set);
+
+        allowedPaths.put(testingPos.CORAL_SCOREL1, Coral_ScoreL1_Set);
+        allowedPaths.put(testingPos.CORAL_SCOREL2, Coral_ScoreL2_Set);
+        allowedPaths.put(testingPos.CORAL_SCOREL3, Coral_ScoreL3_Set);
+        allowedPaths.put(testingPos.CORAL_SCOREL4, Coral_ScoreL4_Set);
 
     }
 
@@ -119,6 +140,14 @@ public class CoordTestingSubsystem extends SubsystemBase{
             goToAlgaeIntake();
         } else if (pos == testingPos.SCORE_NET) {
             goToScoreNet();
+        } else if(pos == testingPos.CORAL_SCOREL1) {
+            goToL1();;
+        } else if(pos == testingPos.CORAL_SCOREL2) {
+            goToL2();
+        } else if(pos == testingPos.CORAL_SCOREL3) {
+            goToL3();
+        } else if(pos == testingPos.CORAL_SCOREL4) {
+            goToL4();
         } else if (pos == testingPos.SCORE_PROCESSOR) {
 
         } else if (pos == testingPos.START) {
@@ -185,20 +214,20 @@ public class CoordTestingSubsystem extends SubsystemBase{
         //     Elbow.setSetpoint(0);
         // }
     }
-
+ 
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-118);
+        DW.setPitchSetpoint(-130);
         DW.setRollSetpoint(0);
-        Elbow.setSetpoint(-18);
+        Elbow.setSetpoint(-9);
         Elev.setSetpoint(1);
     }
 
     public void goToAlgaeIntake() {
-        Elev.setSetpoint(6);
+        Elev.setSetpoint(6.5);
         if (elevEncoder > 5.25) {
             DW.setRollSetpoint(0);
-            DW.setPitchSetpoint(-130);
-            Elbow.setSetpoint(-48);
+            DW.setPitchSetpoint(-159.78);
+            Elbow.setSetpoint(-33.13);
         }
     }
 
@@ -220,6 +249,43 @@ public class CoordTestingSubsystem extends SubsystemBase{
         }
     }
 
+    public void goToL1() {
+        DW.setPitchSetpoint(-128);
+        //DW.setRollSetpoint(0);
+        Elbow.setSetpoint(65);
+        if (DW.atPitchSetpoint() && DW.atRollSetpoint() && Elbow.atSetpoint()) {
+            Elev.setSetpoint(0);
+        }
+    }
+    
+    public void goToL2() {
+        Elev.setSetpoint(7.2);
+        if (elevEncoder > 6.8) {
+            DW.setPitchSetpoint(-110);
+            //DW.setRollSetpoint(90);
+            Elbow.setSetpoint(63);
+        }
+    }
+    
+    public void goToL3() {
+        Elev.setSetpoint(15.75);
+        if (elevEncoder > 8) {
+            DW.setPitchSetpoint(-110);
+            //DW.setRollSetpoint(90);
+            Elbow.setSetpoint(63);
+        }
+    }
+    public void goToL4() {
+        Elev.setSetpoint(30.5);
+        if (elevEncoder > 8) {
+            //DW.setPitchSetpoint(-139);
+            DW.setPitchSetpoint(-110);
+            //DW.setRollSetpoint(90);
+            //Elbow.setSetpoint(71.5);
+            Elbow.setSetpoint(63);
+            
+        }
+    }
     public void setPosition(testingPos pos) {
         this.pos = pos;
     }
