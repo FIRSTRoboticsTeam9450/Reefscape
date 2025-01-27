@@ -25,6 +25,7 @@ import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
@@ -34,12 +35,12 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordTestingCommand;;
 
 public class RobotContainer {
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    private double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
                                                             // changed to .6, originaly 1.5
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -63,6 +64,8 @@ public class RobotContainer {
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
+
+    private ClimbSubsystem climb = new ClimbSubsystem();
 
     public RobotContainer() {
 
@@ -139,7 +142,7 @@ public class RobotContainer {
 
         m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
 
-        m_driver1.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        //m_driver1.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
         m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
         m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
@@ -148,9 +151,15 @@ public class RobotContainer {
         m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
 
 
-        m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
+        //m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
 
         m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
+
+        m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)));
+        m_driver1.povUp().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        
+        m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-6)));
+        m_driver1.povDown().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
 
         // m_driver1.b().onTrue(
