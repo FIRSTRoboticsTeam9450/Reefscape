@@ -293,8 +293,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
 
         }
-
-        //addVisionMeasurement(null, kNumConfigAttempts);
     }
 
     private void startSimThread() {
