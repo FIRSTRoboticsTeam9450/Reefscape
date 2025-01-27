@@ -41,7 +41,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private Set<ScoringPos> Coral_ScoreL3_Set = new HashSet<>();
     private Set<ScoringPos> Coral_ScoreL4_Set = new HashSet<>();
 
-    
 
     /**
      * gets the starting angle / position of the encoders
@@ -148,7 +147,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
             goToL3();
         } else if(pos == ScoringPos.CORAL_SCOREL4) {
             goToL4();
-        } else if (pos == ScoringPos.SCORE_PROCESSOR) {
+        } else if(pos == ScoringPos.SCORE_CORAL) {
+            goToScoreCoral();
+        }else if (pos == ScoringPos.SCORE_PROCESSOR) {
 
         } else if (pos == ScoringPos.START) {
             goToStart();
@@ -281,6 +282,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
             
         }
     }
+
+    public void goToScoreCoral() {
+        Elbow.setSetpoint(55);
+    }
+
     public void setPosition(ScoringPos pos) {
         this.pos = pos;
     }

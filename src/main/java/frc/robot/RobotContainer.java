@@ -24,6 +24,7 @@ import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ScoringCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -177,7 +178,7 @@ public class RobotContainer {
         m_driver2.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL3));
         m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4));
         m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
-        m_driver2.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-1)));
+        m_driver2.rightTrigger().onTrue(new ScoringCommand());
         m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
         // m_driver1.x().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-90)));
 
