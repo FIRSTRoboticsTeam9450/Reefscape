@@ -58,17 +58,8 @@ public final class Constants {
 
   public static final String CTRE_BUS = "Rio";
   public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake; //normally brake, temporarly coast
-  
-  public enum ScorePos {
-    INTAKE_CORAL,
-    INTAKE_ALGAE,
-    START,
-    STORE_CORAL,
-    SCORE_CORAL,
-    STORE_ALGAE
-  }
 
-  public enum testingPos {
+  public enum ScoringPos {
     START,
     INTAKE_CORAL,
     INTAKE_ALGAE,
@@ -81,6 +72,10 @@ public final class Constants {
     CORAL_SCOREL2,
     CORAL_SCOREL3,
     CORAL_SCOREL4
+  }
+
+  public enum ScoringLevel {
+    
   }
 
   public static class debugging {

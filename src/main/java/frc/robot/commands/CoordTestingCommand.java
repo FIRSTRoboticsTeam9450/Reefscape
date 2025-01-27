@@ -5,7 +5,7 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.debugging;
-import frc.robot.Constants.testingPos;
+import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordTestingSubsystem;
 
 /**
@@ -16,10 +16,10 @@ public class CoordTestingCommand extends Command {
 
     private CoordTestingSubsystem CT = CoordTestingSubsystem.getInstance();
     
-    private testingPos targetPos;
-    private testingPos currentPos;
+    private ScoringPos targetPos;
+    private ScoringPos currentPos;
 
-    public CoordTestingCommand(testingPos pos) {
+    public CoordTestingCommand(ScoringPos pos) {
         this.targetPos = pos;
         currentPos = CT.getPos();
     }
@@ -28,7 +28,7 @@ public class CoordTestingCommand extends Command {
     public void initialize() {
         currentPos = CT.getPos(); 
         boolean temp;
-        Set<testingPos> testingSet = CT.allowedPaths.get(currentPos);
+        Set<ScoringPos> testingSet = CT.allowedPaths.get(currentPos);
         if (testingSet.contains(targetPos)) {
             CT.setPos(targetPos);
             temp = true;

@@ -18,8 +18,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
-import frc.robot.Constants.ScorePos;
-import frc.robot.Constants.testingPos;
+import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
@@ -27,7 +26,6 @@ import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoordinationSubsystem;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -59,8 +57,6 @@ public class RobotContainer {
     private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
 
     private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
-
-    private CoordinationSubsystem score = new CoordinationSubsystem();
 
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
@@ -137,18 +133,13 @@ public class RobotContainer {
         // m_driver1.b().onTrue(
         //     new InstantCommand(() -> score.goToPosition(ScorePos.STORE_CORAL))
         // );
-        m_driver1.b().onTrue(new CoordTestingCommand(testingPos.CORAL_STORE));
+        m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
-        m_driver1.y().onTrue(
-            new InstantCommand(() -> score.goToPosition(ScorePos.SCORE_CORAL))
-        );
+        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL));
 
+        m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
 
-        m_driver1.a().onTrue(new CoordTestingCommand(testingPos.INTAKE_CORAL));
-
-        m_driver1.x().onTrue(new CoordTestingCommand(testingPos.INTAKE_ALGAE));
-
-        m_driver1.povUp().onTrue(new CoordTestingCommand(testingPos.ALGAE_STORE));
+        m_driver1.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
         m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
         m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
@@ -159,7 +150,7 @@ public class RobotContainer {
 
         m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
 
-        m_driver1.povRight().onTrue(new CoordTestingCommand(testingPos.SCORE_PROCESSOR));
+        m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
 
 
         // m_driver1.b().onTrue(
@@ -171,14 +162,14 @@ public class RobotContainer {
 
         m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
-        m_driver1.rightBumper().onTrue(new CoordTestingCommand(testingPos.INTAKE_SOURCE));
+        m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE));
 
-        m_driver2.a().onTrue(new CoordTestingCommand(testingPos.CORAL_SCOREL2));
-        m_driver2.b().onTrue(new CoordTestingCommand(testingPos.CORAL_SCOREL3));
-        m_driver2.y().onTrue(new CoordTestingCommand(testingPos.CORAL_SCOREL4));
-        m_driver2.x().onTrue(new CoordTestingCommand(testingPos.CORAL_SCOREL1));
+        m_driver2.a().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL2));
+        m_driver2.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL3));
+        m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4));
+        m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
         m_driver2.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-1)));
-        m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(testingPos.CORAL_STORE)));
+        m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
         // m_driver1.x().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-90)));
 
         // m_driver1.y().onTrue(
