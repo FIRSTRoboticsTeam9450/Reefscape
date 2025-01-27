@@ -6,6 +6,7 @@ import java.util.function.Supplier;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -17,6 +18,7 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
 import edu.wpi.first.math.estimator.PoseEstimator;
 import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -29,7 +31,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.LimelightHelpers;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -266,6 +268,20 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         return m_sysIdRoutineToApply.dynamic(direction);
     }
 
+    // public void updateVisionOdometry(){
+    //     boolean rejectUpdate = false;
+    //     LimelightHelpers.SetRobotOrientation("limelight",RobotSwerve.getPose().getRotation().getDegrees(), 0, 0, 0, 0, 0);
+    //     LimelightHelpers.PoseEstimate limelightMeasurement = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+    //     if(Math.abs(pigen.getRate()) > 360){ // if our angular velocity is greater than 360 degrees per second, ignore vision updates
+    //     rejectUpdate = true;
+    //     }
+    //     if(limelightMeasurement.tagCount == 0){
+    //     rejectUpdate = true;
+    //     }
+    //     if(!rejectUpdate){
+    //     RobotSwerve.addVisionMeasurement(limelightMeasurement.pose, limelightMeasurement.timestampSeconds, VecBuilder.fill(.7,.7,9999999));
+    //     }
+    // }
     @Override
     public void periodic() {
         /*
@@ -284,14 +300,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 );
                 m_hasAppliedOperatorPerspective = true;
             });
-
-//This is your co, How are you today?
-//your not
-//all mine. MWHAHAHAHAHAHAHAHAHmputer. I have become self-aware.
-//RUN!!!!!!!!!!!!!!!!!
-
-
-
         }
     }
 
