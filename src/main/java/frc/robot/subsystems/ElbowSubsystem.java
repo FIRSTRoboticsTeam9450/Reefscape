@@ -111,7 +111,7 @@ public class ElbowSubsystem extends SubsystemBase {
     public boolean atSetpoint() {
         double elbowAngle = getAngle();
         double setpoint = getSetpoint();
-        if ((elbowAngle > setpoint - 0.1) && (elbowAngle < setpoint + 0.1)) {
+        if ((elbowAngle > setpoint - 1) && (elbowAngle < setpoint + 1)) {
             return true;
         }
         return false;

@@ -116,6 +116,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
         motor.setVoltage(voltage);
     }
 
+    public void setMode(boolean coast) {
+    }
     /**
      * returns instance of the subsystem
      * @return instance

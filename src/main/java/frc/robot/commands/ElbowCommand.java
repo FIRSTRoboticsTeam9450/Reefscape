@@ -10,6 +10,7 @@ public class ElbowCommand extends Command{
     private double setpoint;
 
     public ElbowCommand(double setpoint) {
+        System.out.println("Do you do stuff");
         this.setpoint = setpoint;
     }
 
