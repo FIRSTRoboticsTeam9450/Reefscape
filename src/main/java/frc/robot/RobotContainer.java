@@ -45,7 +45,6 @@ public class RobotContainer {
     private static double DefaultMaxSpeed = 2.5;
     private static double DefaultMaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
-    public static int scoringLevel = 2;
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()

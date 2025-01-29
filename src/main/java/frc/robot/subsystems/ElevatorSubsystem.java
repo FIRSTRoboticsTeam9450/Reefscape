@@ -19,6 +19,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.RobotContainer;
 
 public class ElevatorSubsystem extends SubsystemBase{
 
@@ -43,7 +44,6 @@ public class ElevatorSubsystem extends SubsystemBase{
     public ElevatorSubsystem() {
 
         /* ----- UNTESTED, MIGHT NOT WORK ----- */
-
         TalonFXConfiguration config1 = new TalonFXConfiguration();
         TalonFXConfiguration config2 = new TalonFXConfiguration();
         TalonFXConfigurator temp2 = tempMotor2.getConfigurator();
@@ -89,7 +89,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         SmartDashboard.putBoolean("Elevator at limit", atLimit);
 
         if (atLimit) {
-            tempMotor1.setPosition(0);
+            //tempMotor1.setPosition(0);
         }
     }
 
