@@ -36,12 +36,19 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordTestingCommand;;
 
 public class RobotContainer {
-    private double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
-    private double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-                                                            // changed to .6, originaly 1.5
+    private static double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
+    private static double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+
+    private static double LiftMaxSpeed = 1;
+    private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
+
+    private static double DefaultMaxSpeed = 2.5;
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    
+    
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.05) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -194,6 +201,16 @@ public class RobotContainer {
         // m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
 
         // m_driver1.a
+    }
+
+    public static void setLiftUp(boolean up) {
+        if (up) {
+            MaxSpeed = LiftMaxSpeed;
+            MaxAngularRate = LiftMaxAngularRate;
+        } else {
+            MaxSpeed = DefaultMaxSpeed;
+            MaxAngularRate = DefaultMaxAngularRate;
+        }
     }
 
     public Command getAutonomousCommand() {
