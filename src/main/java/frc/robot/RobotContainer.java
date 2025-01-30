@@ -150,6 +150,8 @@ public class RobotContainer {
 
         m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
 
+        m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+
         //m_driver1.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
         m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
@@ -163,11 +165,13 @@ public class RobotContainer {
 
         m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
 
-        m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)));
+        m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
         m_driver1.povUp().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
-        m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-6)));
+        m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
         m_driver1.povDown().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+
+        m_driver1.povLeft().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
 
 
         // m_driver1.b().onTrue(
@@ -187,7 +191,6 @@ public class RobotContainer {
         m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
         m_driver2.rightTrigger().onTrue(new ScoringCommand());
         m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
-        // m_driver1.x().onTrue(new InstantCommand(() -> wrist.setRollSetpoint(-90)));
 
         // m_driver1.y().onTrue(
         //     new InstantCommand(() -> wrist.setPitchSetpoint(0))

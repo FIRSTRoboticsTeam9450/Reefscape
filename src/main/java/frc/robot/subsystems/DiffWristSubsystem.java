@@ -31,7 +31,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     // private AbsoluteEncoder pitchEncoder = leftMotor.getAbsoluteEncoder(); //Max: 0.35, 0.8    positions to go to: Score: .75, hold: .5
     // private AbsoluteEncoder rollEncoder = rightMotor.getAbsoluteEncoder(); //Max: .75, .16   Positions to go to:  Grab: .7,  Score: .2   hold: .45
     private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
-    //private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
+    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
 
     private double pitchPos;
     private double rollPos;
@@ -70,13 +70,13 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void updatePID(double pitchPos, double rollPos) {
         double pitchVoltage = pitchPID.calculate(pitchPos);
-        //double rollVoltage = rollPID.calculate(rollPos);
+        double rollVoltage = rollPID.calculate(rollPos);
 
         //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
         pitchVoltage *= 3;
 
-        double lVolts = pitchVoltage /* - rollVoltage */;
-        double rVolts = pitchVoltage /* + rollVoltage */;
+        double lVolts = pitchVoltage - rollVoltage;
+        double rVolts = pitchVoltage + rollVoltage;
         lVolts = MathUtil.clamp(lVolts, -5, 5);
         rVolts = MathUtil.clamp(rVolts, -5, 5);
         setVoltage(lVolts, rVolts);
@@ -86,7 +86,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public void periodic() {
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
         pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
-        //rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
+        rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
         if (runPID) {
             updatePID(pitchPos, rollPos);
         }

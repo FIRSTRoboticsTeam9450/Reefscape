@@ -4,14 +4,11 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.ControlRequest;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
-import com.ctre.phoenix6.controls.StrictFollower;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.S1StateValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -20,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
+import frc.robot.Constants.ElevatorIDs;
 
 public class ElevatorSubsystem extends SubsystemBase{
 
@@ -30,24 +28,23 @@ public class ElevatorSubsystem extends SubsystemBase{
     private PIDController pid = new PIDController(4, 0, 0);
 
     //Motor instances
-    private TalonFX tempMotor1 = new TalonFX(60, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
-    private TalonFX tempMotor2 = new TalonFX(61, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
+    private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
+    private TalonFX rightMotor = new TalonFX(ElevatorIDs.kRightMotorID, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
 
     double position;
 
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
-    CANdi candi = new CANdi(34);
+    private CANdi candi = new CANdi(ElevatorIDs.kCANdiID);
 
     /* ----- Initialization ----- */
 
     public ElevatorSubsystem() {
 
-        /* ----- UNTESTED, MIGHT NOT WORK ----- */
         TalonFXConfiguration config1 = new TalonFXConfiguration();
         TalonFXConfiguration config2 = new TalonFXConfiguration();
-        TalonFXConfigurator temp2 = tempMotor2.getConfigurator();
-        TalonFXConfigurator temp1 = tempMotor1.getConfigurator();
+        TalonFXConfigurator temp2 = rightMotor.getConfigurator();
+        TalonFXConfigurator temp1 = leftMotor.getConfigurator();
         config1.MotorOutput.NeutralMode = Constants.defaultNeutral; //temp for when default neutral mode is coast
         config1.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         
@@ -71,16 +68,15 @@ public class ElevatorSubsystem extends SubsystemBase{
         config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         temp2.apply(config2);
 
-        tempMotor2.setControl(new Follower(tempMotor1.getDeviceID(), true));
+        rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
 
-        /* ----- END OF TESTING AREA ----- */
     }
 
     /* ----- Updaters ----- */
 
     @Override
     public void periodic() {
-        position = tempMotor1.getPosition().getValueAsDouble(); 
+        position = leftMotor.getPosition().getValueAsDouble(); 
         RobotContainer.setLiftUp(position > 9);
         boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         //updatePID(position);
@@ -89,7 +85,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         SmartDashboard.putBoolean("Elevator at limit", atLimit);
 
         if (atLimit) {
-            //tempMotor1.setPosition(0);
+            //leftMotor.setPosition(0);
         }
     }
 
@@ -114,7 +110,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void setSetpoint(double setpoint) {
         pid.setSetpoint(setpoint);
-        tempMotor1.setControl(m_request.withPosition(setpoint));
+        leftMotor.setControl(m_request.withPosition(setpoint));
     }
 
     public boolean atSetpoint() {
@@ -122,11 +118,15 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public void setVoltage(double voltage) {
-        tempMotor1.setVoltage(voltage);
+        leftMotor.setVoltage(voltage);
     }
 
     public double getSetpoint() {
         return pid.getSetpoint();
+    }
+
+    public boolean getAtLimit() {
+        return candi.getS1State().getValue() == S1StateValue.Low;
     }
 
 }

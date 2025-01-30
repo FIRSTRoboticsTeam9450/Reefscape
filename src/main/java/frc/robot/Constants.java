@@ -34,6 +34,12 @@ public final class Constants {
     public static final int KElbowWristEncoderID = 53; //temp
   }
 
+  public static class ElevatorIDs {
+    public static final int kLeftMotorID = 60;
+    public static final int kRightMotorID = 61;
+    public static final int kCANdiID = 34;
+  }
+
   public static class ArmConstraints {
     public static final double kRollHorizontal = 0; // temp
     public static final double kRollVerticalCoralBottom = 0; // temp

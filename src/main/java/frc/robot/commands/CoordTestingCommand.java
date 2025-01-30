@@ -25,7 +25,14 @@ public class CoordTestingCommand extends Command {
      * Target Pos
      */
     private ScoringPos targetPos;
+    /**
+     * current state
+     */
     private ScoringPos currentPos;
+    /**
+     * Forcefully go to the given state
+     */
+    private boolean forcePath;
 
     /* ----- Initilization ----- */
 
@@ -36,24 +43,24 @@ public class CoordTestingCommand extends Command {
 
     @Override
     public void initialize() {
+
         currentPos = CT.getPos(); 
-        boolean temp;
-        Set<ScoringPos> testingSet = CT.allowedPaths.get(currentPos);
-        if (testingSet.contains(targetPos)) {
+        boolean validPath = false;
+        Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);
+        if (connectedPathsSet.contains(targetPos)) {
             CT.setPos(targetPos);
-            temp = true;
-        } else {
+            validPath = true;
             if (debugging.CoordAllowedPathsDebugging) {
-                temp = false;
+                validPath = false;
                 System.out.println("Invalid Path");
             }
         }
         if (debugging.CoordAllowedPathsDebugging) {
-            SmartDashboard.putBoolean("Reefscape/Coordination/Valid Path?", temp);
+            SmartDashboard.putBoolean("Reefscape/Debugging/Coordination/Valid Path?", validPath);
         }
         if (debugging.CoordAllowedPathsDebugging) {
-            System.out.println(testingSet);
-            System.out.println(targetPos);
+            SmartDashboard.putString("Reefscape/Debugging/Paths", currentPos + "");
+            SmartDashboard.putString("Reefscape/Debugging/Paths", connectedPathsSet.toString());
         }
     }
 

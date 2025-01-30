@@ -62,6 +62,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL3);
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL4);
 
+        Coral_Store_Set.add(ScoringPos.START);
         Coral_Store_Set.add(ScoringPos.INTAKE_CORAL);
         Coral_Store_Set.add(ScoringPos.INTAKE_ALGAE);
         Coral_Store_Set.add(ScoringPos.INTAKE_SOURCE);
@@ -175,13 +176,13 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
 
     public void goToStart() {
-        if (elbowEncoder > 20 && (rollEncoder > -45 && rollEncoder < 45)) {
-            Elbow.setSetpoint(19); 
-        } else {
-            rollToClosestSide();
-            DW.setPitchSetpoint(-100);
-            Elbow.setSetpoint(98);
-        } 
+        // if (elbowEncoder > 20 && (rollEncoder > -45 && rollEncoder < 45)) {
+            // Elbow.setSetpoint(19); 
+        // } else {
+        rollToClosestSide();
+        DW.setPitchSetpoint(-100);
+        Elbow.setSetpoint(90);
+        // } 
         if (
             DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -215,14 +216,14 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
     public void goToAlgaeStore() {
         Elev.setSetpoint(12);
-        // DW.setPitchSetpoint(0);
-        // DW.setRollSetpoint(0);
-        // if (
-        //     DW.atPitchSetpoint()
-        //     && DW.atRollSetpoint()
-        //     ) {
-        //     Elbow.setSetpoint(0);
-        // }
+        DW.setPitchSetpoint(-159.78);
+        DW.setRollSetpoint(0);
+        if (
+            DW.atPitchSetpoint()
+            && DW.atRollSetpoint()
+            ) {
+            Elbow.setSetpoint(76);
+        }
     }
  
     public void goToCoralIntake() {
@@ -245,7 +246,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Elev.setSetpoint(38);
         if (elevEncoder > 8) {
             DW.setPitchSetpoint(-70);
-            DW.setRollSetpoint(-175);
+            DW.setRollSetpoint(0);
             Elbow.setSetpoint(0);
         }
     }
@@ -313,6 +314,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Elbow.setSetpoint(12.91);
     }
 
+    /* ----- Setters and Getters ----- */
+
     public void setPosition(ScoringPos pos) {
         this.pos = pos;
     }
@@ -347,24 +350,24 @@ public class CoordTestingSubsystem extends SubsystemBase{
      */
     public void debugger() {
 
-        SmartDashboard.putNumber("Reefscape/Debugging/Elbow Angle", elbowEncoder);
-        SmartDashboard.putNumber("Reefscape/Debugging/Pitch Angle", pitchEncoder);
-        SmartDashboard.putNumber("Reefscape/Debugging/Roll Angle", rollEncoder);
-        SmartDashboard.putNumber("Reefscape/Debugging/Elevator Revolutions", elevEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elbow Angle", elbowEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Pitch Angle", pitchEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Roll Angle", rollEncoder);
+        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elevator Revolutions", elevEncoder);
 
-        SmartDashboard.putNumber("Reefscape/Debugging/Elbow Setpoint", Elbow.getSetpoint());
-        SmartDashboard.putNumber("Reefscape/Debugging/Pitch Setpoint", DW.getPitchSetpoint());
-        SmartDashboard.putNumber("Reefscape/Debugging/Roll Setpoint", DW.getRollSetpoint());
-        SmartDashboard.putNumber("Reefscape/Debugging/Elevator Setpoint", Elev.getSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elbow Setpoint", Elbow.getSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Pitch Setpoint", DW.getPitchSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Roll Setpoint", DW.getRollSetpoint());
+        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elevator Setpoint", Elev.getSetpoint());
 
-        SmartDashboard.putBoolean("Reefscape/Debugging/Elbow atSetpoint?", Elbow.atSetpoint());
-        SmartDashboard.putBoolean("Reefscape/Debugging/Pitch atSetpoint?", DW.atPitchSetpoint());
-        SmartDashboard.putBoolean("Reefscape/Debugging/Roll atSetpoint?", DW.atRollSetpoint());
-        SmartDashboard.putBoolean("Reefscape/Debugging/Elevator atSetpoint?", Elev.atSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elbow atSetpoint?", Elbow.atSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Pitch atSetpoint?", DW.atPitchSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Roll atSetpoint?", DW.atRollSetpoint());
+        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elevator atSetpoint?", Elev.atSetpoint());
 
-        SmartDashboard.putString("Reefscape/Debugging/Start Paths", allowedPaths.get(ScoringPos.START).toString());
-        SmartDashboard.putString("Reefscape/Debugging/Coral Store Paths", allowedPaths.get(ScoringPos.CORAL_STORE).toString());
-        SmartDashboard.putString("Reefscape/Debugging/Coral Intake Paths", allowedPaths.get(ScoringPos.INTAKE_CORAL).toString());
+        SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Start Paths", allowedPaths.get(ScoringPos.START).toString());
+        SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Store Paths", allowedPaths.get(ScoringPos.CORAL_STORE).toString());
+        SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Intake Paths", allowedPaths.get(ScoringPos.INTAKE_CORAL).toString());
 
     }
 }
