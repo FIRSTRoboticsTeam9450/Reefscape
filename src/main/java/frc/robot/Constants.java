@@ -21,8 +21,8 @@ public final class Constants {
   }
   public static class IntakeIDS {
     public static final int kDualIntakeMotorID = 59; //temp
-    public static final int kDualIntakeCoralLaserID = 58; //temp
-    public static final int kDualIntakeAlgaeLaserID = 57; //temp
+    public static final int kDualIntakeCoralLaserID = 21;
+    public static final int kDualIntakeAlgaeLaserID = 20;
   }
 
   public static class WristIDs {

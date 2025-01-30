@@ -14,10 +14,20 @@ import frc.robot.subsystems.CoordTestingSubsystem;
  */
 public class CoordTestingCommand extends Command {
 
+    /* ----- Fields ----- */
+
+    /**
+     * Instance of the Coordintation subsystem that is used
+     */
     private CoordTestingSubsystem CT = CoordTestingSubsystem.getInstance();
     
+    /**
+     * Target Pos
+     */
     private ScoringPos targetPos;
     private ScoringPos currentPos;
+
+    /* ----- Initilization ----- */
 
     public CoordTestingCommand(ScoringPos pos) {
         this.targetPos = pos;

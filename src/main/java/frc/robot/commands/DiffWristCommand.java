@@ -36,7 +36,8 @@ public class DiffWristCommand extends Command {
     @Override
     public void initialize() {
         addRequirements(DW);
-        if (DW.runPID) {
+        boolean runPID = DW.getIfDoingPIDS();
+        if (runPID) {
             if (pitchPID) {
                 DW.setPitchSetpoint(setpoint);
             } else {

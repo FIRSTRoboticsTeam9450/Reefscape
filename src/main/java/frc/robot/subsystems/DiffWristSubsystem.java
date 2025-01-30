@@ -5,7 +5,6 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
-import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -38,7 +37,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private double rollPos;
 
     // Variables
-    public static boolean runPID = true;
+    private boolean runPID = true;
 
     /* ----- Initialization ----- */
 
@@ -184,6 +183,10 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public double getRollSetpoint() {
         return rollPID.getSetpoint() * 360;
+    }
+
+    public boolean getIfDoingPIDS() {
+        return runPID;
     }
 
 }
