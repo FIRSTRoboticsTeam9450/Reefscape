@@ -41,7 +41,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private Set<ScoringPos> Coral_ScoreL3_Set = new HashSet<>();
     private Set<ScoringPos> Coral_ScoreL4_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Score_Set = new HashSet<>();
-    private Set<ScoringPos> Elevator_Set = new HashSet<>();
+    private Set<ScoringPos> Score_L4_Set = new HashSet<>();
+    private Set<ScoringPos> Algae_L1_Set = new HashSet<>();
+    private Set<ScoringPos> Algae_L2_Set = new HashSet<>();
     public static boolean L4 = false;
     /**
      * gets the starting angle / position of the encoders
@@ -90,7 +92,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Coral_ScoreL2_Set.add(ScoringPos.SCORE_CORAL);
         Coral_ScoreL3_Set.add(ScoringPos.SCORE_CORAL);
 
-        Coral_ScoreL4_Set.add(ScoringPos.ELEV_DOWN);
+        Coral_ScoreL4_Set.add(ScoringPos.ScoreL4);
 
 
         Coral_Score_Set.add(ScoringPos.CORAL_STORE);
@@ -99,7 +101,13 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
         Algae_Processor_Score_Set.add(ScoringPos.CORAL_STORE);
 
-        Elevator_Set.add(ScoringPos.CORAL_STORE);
+        Score_L4_Set.add(ScoringPos.CORAL_STORE);
+
+        Algae_L1_Set.add(ScoringPos.ALGAE_STORE);
+        Algae_L1_Set.add(ScoringPos.SCORE_PROCESSOR);
+
+        Algae_L2_Set.add(ScoringPos.ALGAE_STORE);
+        Algae_L2_Set.add(ScoringPos.SCORE_PROCESSOR);
 
         allowedPaths.put(ScoringPos.START, Start_Set);
 
@@ -122,8 +130,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
         allowedPaths.put(ScoringPos.CORAL_SCOREL3, Coral_ScoreL3_Set);
         allowedPaths.put(ScoringPos.CORAL_SCOREL4, Coral_ScoreL4_Set);
 
-        allowedPaths.put(ScoringPos.ELEV_DOWN, Elevator_Set);
+        allowedPaths.put(ScoringPos.ScoreL4, Score_L4_Set);
         allowedPaths.put(ScoringPos.SCORE_CORAL, Coral_Score_Set);
+
+        allowedPaths.put(ScoringPos.ALGAEL1, Algae_L1_Set);
+        allowedPaths.put(ScoringPos.ALGAEL2, Algae_L2_Set);
 
     }
 
@@ -165,8 +176,12 @@ public class CoordTestingSubsystem extends SubsystemBase{
             goToL4();
         } else if(pos == ScoringPos.SCORE_CORAL) {
             goToScoreCoral();
-        } else if(pos == ScoringPos.ELEV_DOWN) {
-            goDownElev();
+        } else if(pos == ScoringPos.ScoreL4) {
+            goScoreL4();
+        } else if(pos == ScoringPos.ALGAEL1) {
+            goL1Algae();
+        } else if(pos == ScoringPos.ALGAEL2) {
+            goL2Algae();
         } else if (pos == ScoringPos.SCORE_PROCESSOR) {
 
         } else if (pos == ScoringPos.START) {
@@ -305,9 +320,32 @@ public class CoordTestingSubsystem extends SubsystemBase{
         }
     }
 
-    public void goDownElev() {
+    public void goScoreL4() {
         Elev.setSetpoint(21.37);
     }
+
+    public void goL1Algae() {
+        // !!!!CHANGE ALL VALUES!!!!
+        // Do not use
+        Elev.setSetpoint(9.419);
+        DW.setPitchSetpoint(-171.3);
+        Elbow.setSetpoint(37.09);
+        if(Elbow.atSetpoint()) {
+            DW.setRollSetpoint(0);
+        }
+    }
+
+    public void goL2Algae() {
+        // !!!!CHANGE ALL VALUES!!!!
+        // Do not use
+        Elev.setSetpoint(0);
+        DW.setPitchSetpoint(-142.47);
+        Elbow.setSetpoint(11.95);
+        if(Elbow.atSetpoint()) {
+            DW.setRollSetpoint(0);
+        }
+    }
+
     public void goToScoreCoral() {
 
         DW.setPitchSetpoint(-63.19);

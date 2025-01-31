@@ -191,6 +191,8 @@ public class RobotContainer {
         m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
         m_driver2.rightTrigger().onTrue(new ScoringCommand());
         m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
+        m_driver2.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
 
         // m_driver1.y().onTrue(
         //     new InstantCommand(() -> wrist.setPitchSetpoint(0))

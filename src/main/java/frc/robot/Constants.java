@@ -79,7 +79,9 @@ public final class Constants {
     CORAL_SCOREL3,
     CORAL_SCOREL4,
     SCORE_CORAL,
-    ELEV_DOWN
+    ScoreL4,
+    ALGAEL1,
+    ALGAEL2
   }
 
   public enum ScoringLevel {

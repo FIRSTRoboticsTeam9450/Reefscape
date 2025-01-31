@@ -11,7 +11,7 @@ public class ScoringCommand extends Command{ // DONT USE
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
     private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
     CoordTestingCommand score = new CoordTestingCommand(ScoringPos.SCORE_CORAL);
-    CoordTestingCommand elev = new CoordTestingCommand(ScoringPos.ELEV_DOWN);
+    CoordTestingCommand elev = new CoordTestingCommand(ScoringPos.ScoreL4);
     private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
     
     public ScoringCommand() {
