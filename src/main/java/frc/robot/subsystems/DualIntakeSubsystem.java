@@ -28,7 +28,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     private LaserCan.Measurement algaeMeasurement;
     // LaserCANs are configured with a medianfilter, which means the last 3 reults are averaged together
     // this smooths out the output nicely
-    MedianFilter medianDistance = new MedianFilter(3);
+    MedianFilter algaeMedianDistance = new MedianFilter(3);
+    MedianFilter coralMedianDistance = new MedianFilter(3);
     double coralLaserDistance;
     double algaeLaserDistance;
     /* ----- Initialization ----- */
@@ -43,7 +44,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 120;
+        config.CurrentLimits.StatorCurrentLimit = 80;
         configurator.apply(config);
 
         //LaserCan settings
@@ -52,9 +53,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
         try {
             coralLaserCan.setRangingMode(LaserCan.RangingMode.LONG);
             algaeLaserCan.setRangingMode(LaserCan.RangingMode.LONG);
-
-            coralLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 16, 16));
-            algaeLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 16, 16));
+            coralLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 8, 8));
+            algaeLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 8, 8));
             coralLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
             algaeLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
         } catch (ConfigurationFailedException e) {
@@ -73,11 +73,15 @@ public class DualIntakeSubsystem extends SubsystemBase{
         try {
             coralMeasurement = coralLaserCan.getMeasurement();
             algaeMeasurement = algaeLaserCan.getMeasurement();
-            if (coralMeasurement != null && coralMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-                coralLaserDistance = medianDistance.calculate(coralMeasurement.distance_mm);
+            if (coralMeasurement != null) {
+                coralLaserDistance = coralMedianDistance.calculate(coralMeasurement.distance_mm);
+            } else {
+                coralLaserDistance = 10000;
             }
             if (algaeMeasurement != null && algaeMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-                algaeLaserDistance = medianDistance.calculate(algaeMeasurement.distance_mm);
+                algaeLaserDistance = algaeMedianDistance.calculate(algaeMeasurement.distance_mm);
+            } else {
+                algaeLaserDistance = 10000;
             }
         } catch (Exception e) {
             e.printStackTrace();

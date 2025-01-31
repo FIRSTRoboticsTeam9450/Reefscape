@@ -11,6 +11,7 @@ import com.pathplanner.lib.auto.AutoBuilder;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -21,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.CoordTestingCommand;
+import frc.robot.commands.CoralIntakeCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -152,13 +154,17 @@ public class RobotContainer {
 
         m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
+
         //m_driver1.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
-        m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
-        m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
+        //m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
+        //m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
 
-        m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-9)));
-        m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
+        m_driver1.leftTrigger().onTrue(new DualIntakeCommand(false));
+        m_driver1.rightTrigger().onTrue(new DualIntakeCommand(true));
+
+        //m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-9)));
+        //m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
 
 
         //m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));

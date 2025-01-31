@@ -11,45 +11,53 @@ public class DualIntakeCommand extends Command{
     /* ----- Laser Can ----- */
     //The distance for the LaserCan to say it sees something
     //1inch = 25.4mm
-    private double coralTriggerDistance = 25.4; //unit is mm
+    private double coralTriggerDistance = 10; //unit is mm
     private double algaeTriggerDistance = 25.4; //units is mm
 
     private boolean algae;
 
-    private double voltage; //temp
+    private boolean finished;
 
-    public DualIntakeCommand(boolean algae, double temp) {
+    public DualIntakeCommand(boolean algae) {
         this.algae = algae;
-        voltage = temp;
     }
 
     /* ----- Initialization ----- */
 
     @Override
     public void initialize() {
+        finished = false;
         addRequirements(DI);
-        // if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
-        //     DI.setVoltage(-1);
-        // } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
-        //     DI.setVoltage(1);
-        // }
-        DI.setVoltage(voltage);
+        if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
+            DI.setVoltage(-5);
+        } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
+            DI.setVoltage(5);
+        }
     }
 
     /* ----- Updaters ----- */
 
     @Override
     public void execute() {
-        // if (DI.getCoralLaserDistance() > coralTriggerDistance || DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
-        //     DI.setVoltage(1);
-        // }
+        if (algae) {
+            if (DI.getAlgaeLaserDistance() < 10) {
+                DI.setVoltage(-5);
+                finished = true;
+            }
+        } else {
+            if (DI.getCoralLaserDistance() < coralTriggerDistance) {
+                DI.setVoltage(0);
+                finished = true;
+            }
+        }
+        
     }
 
     /* ----- Finishers ----- */
 
     @Override
     public boolean isFinished() {
-        return true;
+        return finished;
         // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
     }
 
