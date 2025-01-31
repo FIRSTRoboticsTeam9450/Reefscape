@@ -50,10 +50,9 @@ public class CoordTestingCommand extends Command {
         if (connectedPathsSet.contains(targetPos)) {
             CT.setPos(targetPos);
             validPath = true;
-            if (debugging.CoordAllowedPathsDebugging) {
-                validPath = false;
-                System.out.println("Invalid Path");
-            }
+        } else if (debugging.CoordAllowedPathsDebugging) {
+            validPath = false;
+            System.out.println("Invalid Path");
         }
         if (debugging.CoordAllowedPathsDebugging) {
             SmartDashboard.putBoolean("Reefscape/Debugging/Coordination/Valid Path?", validPath);

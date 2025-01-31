@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class DualIntakeCommand extends Command{
@@ -17,6 +18,8 @@ public class DualIntakeCommand extends Command{
     private boolean algae;
 
     private boolean finished;
+
+    Command wristUp = new CoordTestingCommand(ScoringPos.GRABBED_ALGAE);
 
     public DualIntakeCommand(boolean algae) {
         this.algae = algae;
@@ -40,9 +43,10 @@ public class DualIntakeCommand extends Command{
     @Override
     public void execute() {
         if (algae) {
-            if (DI.getAlgaeLaserDistance() < 10) {
+            if (DI.getAlgaeLaserDistance() < algaeTriggerDistance) {
                 DI.setVoltage(-5);
                 finished = true;
+                wristUp.schedule();
             }
         } else {
             if (DI.getCoralLaserDistance() < coralTriggerDistance) {

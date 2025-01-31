@@ -16,13 +16,13 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.CoordTestingCommand;
-import frc.robot.commands.CoralIntakeCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -195,10 +195,19 @@ public class RobotContainer {
         m_driver2.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL3));
         m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4));
         m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
-        m_driver2.rightTrigger().onTrue(new ScoringCommand());
-        m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
-        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
-        m_driver2.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
+        //m_driver2.rightTrigger().onTrue(new ScoringCommand());
+        //m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+
+
+        //m_driver2.leftBumper().onTrue((new CoordTestingCommand(ScoringPos.ALGAEL1)).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
+        m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
+        
+        
+        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
+        m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // USE DIFFERENT BUTTONS
+        
+        m_driver1.povRight().onTrue(new InstantCommand(() -> intake.setVoltage(0)).andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())));
 
         // m_driver1.y().onTrue(
         //     new InstantCommand(() -> wrist.setPitchSetpoint(0))

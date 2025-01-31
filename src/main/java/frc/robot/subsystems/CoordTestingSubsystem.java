@@ -8,6 +8,7 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
+import us.hebi.quickbuf.ProtoSink.OutOfSpaceException;
 import frc.robot.Constants.ScoringPos;
 
 public class CoordTestingSubsystem extends SubsystemBase{
@@ -44,6 +45,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private Set<ScoringPos> Score_L4_Set = new HashSet<>();
     private Set<ScoringPos> Algae_L1_Set = new HashSet<>();
     private Set<ScoringPos> Algae_L2_Set = new HashSet<>();
+    private Set<ScoringPos> Algae_Grabbed_Set = new HashSet<>();
     public static boolean L4 = false;
     /**
      * gets the starting angle / position of the encoders
@@ -69,6 +71,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Coral_Store_Set.add(ScoringPos.INTAKE_ALGAE);
         Coral_Store_Set.add(ScoringPos.INTAKE_SOURCE);
 
+        Coral_Store_Set.add(ScoringPos.ALGAEL1);
+        Coral_Store_Set.add(ScoringPos.ALGAEL2);
+
         Coral_Intake_Set.add(ScoringPos.CORAL_STORE);
         Coral_Intake_Set.add(ScoringPos.INTAKE_SOURCE);
 
@@ -82,7 +87,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Algae_Store_Set.add(ScoringPos.SCORE_PROCESSOR);
         Algae_Store_Set.add(ScoringPos.INTAKE_ALGAE); //temp... maybe
         Algae_Store_Set.add(ScoringPos.CORAL_STORE); //temp
-
+        Algae_Store_Set.add(ScoringPos.ALGAEL1);
+        Algae_Store_Set.add(ScoringPos.ALGAEL2);
+        
         Coral_ScoreL1_Set.add(ScoringPos.CORAL_STORE);
         Coral_ScoreL2_Set.add(ScoringPos.CORAL_STORE);
         Coral_ScoreL3_Set.add(ScoringPos.CORAL_STORE);
@@ -105,9 +112,13 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
         Algae_L1_Set.add(ScoringPos.ALGAE_STORE);
         Algae_L1_Set.add(ScoringPos.SCORE_PROCESSOR);
+        Algae_L1_Set.add(ScoringPos.GRABBED_ALGAE);
 
         Algae_L2_Set.add(ScoringPos.ALGAE_STORE);
         Algae_L2_Set.add(ScoringPos.SCORE_PROCESSOR);
+        Algae_L2_Set.add(ScoringPos.GRABBED_ALGAE);
+
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_STORE);
 
         allowedPaths.put(ScoringPos.START, Start_Set);
 
@@ -136,6 +147,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
         allowedPaths.put(ScoringPos.ALGAEL1, Algae_L1_Set);
         allowedPaths.put(ScoringPos.ALGAEL2, Algae_L2_Set);
 
+        allowedPaths.put(ScoringPos.GRABBED_ALGAE, Algae_Grabbed_Set);
+
     }
 
     @Override
@@ -144,8 +157,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
-
-        updatePosition();
+        
+        updatePosition(); 
 
         if (debugging.CoordPositionDebugging) {
             debugger();
@@ -186,6 +199,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
         } else if (pos == ScoringPos.START) {
             goToStart();
+        } else if (pos == ScoringPos.GRABBED_ALGAE) {
+            goToGrabed();
         }
 
     }
@@ -231,7 +246,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
     public void goToAlgaeStore() {
         Elev.setSetpoint(12);
-        DW.setPitchSetpoint(-159.78);
+        DW.setPitchSetpoint(-109.78);
         DW.setRollSetpoint(0);
         if (
             DW.atPitchSetpoint()
@@ -257,12 +272,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
         }
     }
 
+    /**
+     * [Insert good comments here]
+     */
     public void goToScoreNet() {
         Elev.setSetpoint(38);
         if (elevEncoder > 8) {
-            DW.setPitchSetpoint(-70);
+            DW.setPitchSetpoint(-152);
             DW.setRollSetpoint(0);
-            Elbow.setSetpoint(0);
+            Elbow.setSetpoint(76);
         }
     }
 
@@ -316,7 +334,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
             //DW.setRollSetpoint(90);
             //Elbow.setSetpoint(71.5);
             Elbow.setSetpoint(83.14);
-            
         }
     }
 
@@ -327,7 +344,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     public void goL1Algae() {
         // !!!!CHANGE ALL VALUES!!!!
         // Do not use
-        Elev.setSetpoint(9.419);
+        Elev.setSetpoint(12.419);
         DW.setPitchSetpoint(-171.3);
         Elbow.setSetpoint(37.09);
         if(Elbow.atSetpoint()) {
@@ -338,7 +355,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     public void goL2Algae() {
         // !!!!CHANGE ALL VALUES!!!!
         // Do not use
-        Elev.setSetpoint(0);
+        Elev.setSetpoint(20.131);
         DW.setPitchSetpoint(-142.47);
         Elbow.setSetpoint(11.95);
         if(Elbow.atSetpoint()) {
@@ -350,6 +367,10 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
         DW.setPitchSetpoint(-63.19);
         Elbow.setSetpoint(12.91);
+    }
+
+    public void goToGrabed() {
+        DW.setPitchSetpoint(-131.3);
     }
 
     /* ----- Setters and Getters ----- */
