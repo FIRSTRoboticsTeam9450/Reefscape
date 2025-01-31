@@ -24,6 +24,7 @@ public class ElevatorResetCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         elev.setVoltage(0);
+        elev.setAtLimit();
     }
 
 }

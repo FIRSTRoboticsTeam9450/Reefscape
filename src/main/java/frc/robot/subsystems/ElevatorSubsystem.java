@@ -129,4 +129,8 @@ public class ElevatorSubsystem extends SubsystemBase{
         return candi.getS1State().getValue() == S1StateValue.Low;
     }
 
+    public void setAtLimit() {
+        leftMotor.setPosition(0);
+    }
+
 }
