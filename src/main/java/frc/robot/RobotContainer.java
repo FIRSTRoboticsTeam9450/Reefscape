@@ -196,8 +196,8 @@ public class RobotContainer {
         m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4, true));
         m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1, true));
         m_driver2.povDown().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
-        m_driver2.rightTrigger().onTrue(new ScoringCommand());
-        m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        // m_driver2.rightTrigger().onTrue(new ScoringCommand()); // UNCOMMENT LATER
+        // m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
 
 
         //m_driver2.leftBumper().onTrue((new CoordTestingCommand(ScoringPos.ALGAEL1)).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
@@ -206,9 +206,12 @@ public class RobotContainer {
         
 
         
-        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
-        m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // USE DIFFERENT BUTTONS
+        // m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
+        // m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // UNCOMMENT LATER
+        //m_driver2.leftTrigger().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
+        //m_driver2.rightTrigger().onTrue(new InstantCommand(() -> elevator.setSetpoint(30)));
         
+
         m_driver1.povRight().onTrue(new InstantCommand(() -> intake.setVoltage(0)).andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())));
 
         // m_driver1.y().onTrue(
