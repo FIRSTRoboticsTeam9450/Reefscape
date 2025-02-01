@@ -50,6 +50,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
     private boolean allAtSetpoints = false;
     private boolean justFinished = false;
+    private boolean justChanged = false;
 
     private double elevOriginalSetpoint;
     private double elbowOriginalSetpoint;
@@ -60,6 +61,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private double elbowAllowedDifference = 10;
     private double pitchAllowedDifference = 10;
 
+    private boolean coralSideLeft;
 
     private double coralScoreElbow = 0;
     private double coralScoreElev = 0;
@@ -184,7 +186,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        if (!allAtSetpoints) {
+        if (!allAtSetpoints || justChanged) {
+            justChanged = false;
             updatePosition();
         } else if (allAtSetpoints && justFinished) {
             justFinished = false;
@@ -287,7 +290,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -302,14 +304,12 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (
             DW.atRollSetpoint()
             && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
             ) {
                 Elev.setSetpoint(0);
         }
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -327,7 +327,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -348,7 +347,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -364,7 +362,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -382,7 +379,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -403,7 +399,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -421,7 +416,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -468,7 +462,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -490,7 +483,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -508,7 +500,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -523,7 +514,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -536,7 +526,6 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
-            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;
@@ -548,14 +537,27 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
     public void setPosition(ScoringPos pos) {
         this.pos = pos;
+        justChanged = true;
         allAtSetpoints = false;
     }
 
     public void rollToClosestSide() {
         if (rollEncoder < 0) {
             DW.setRollSetpoint(-90);
+            coralSideLeft = false;
         } else if (rollEncoder > 0) {
             DW.setRollSetpoint(90);
+            coralSideLeft = true;
+        }
+    }
+
+    public void rollToOtherSide() {
+        if (coralSideLeft) {
+            DW.setRollSetpoint(-90);
+            coralSideLeft = false;
+        } else if (!coralSideLeft) {
+            DW.setRollSetpoint(90);
+            coralSideLeft = true;
         }
     }
 
@@ -570,8 +572,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
         return pos;
     }
 
-    public void setPos(ScoringPos pos) {
-        this.pos = pos;
+    public boolean getAllAtSetpoints() {
+        return allAtSetpoints;
     }
 
     /* ----------- DEBUGGING ----------- */
@@ -581,24 +583,29 @@ public class CoordTestingSubsystem extends SubsystemBase{
      */
     public void debugger() {
 
-        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elbow Angle", elbowEncoder);
-        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Pitch Angle", pitchEncoder);
-        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Roll Angle", rollEncoder);
-        SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elevator Revolutions", elevEncoder);
+        if (debugging.CoordPositionDebugging) {
+            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elbow Angle", elbowEncoder);
+            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Pitch Angle", pitchEncoder);
+            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Roll Angle", rollEncoder);
+            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elevator Revolutions", elevEncoder);
 
-        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elbow Setpoint", Elbow.getSetpoint());
-        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Pitch Setpoint", DW.getPitchSetpoint());
-        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Roll Setpoint", DW.getRollSetpoint());
-        SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elevator Setpoint", Elev.getSetpoint());
+            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elbow Setpoint", Elbow.getSetpoint());
+            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Pitch Setpoint", DW.getPitchSetpoint());
+            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Roll Setpoint", DW.getRollSetpoint());
+            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elevator Setpoint", Elev.getSetpoint());
 
-        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elbow atSetpoint?", Elbow.atSetpoint());
-        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Pitch atSetpoint?", DW.atPitchSetpoint());
-        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Roll atSetpoint?", DW.atRollSetpoint());
-        SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elevator atSetpoint?", Elev.atSetpoint());
+            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elbow atSetpoint?", Elbow.atSetpoint());
+            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Pitch atSetpoint?", DW.atPitchSetpoint());
+            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Roll atSetpoint?", DW.atRollSetpoint());
+            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elevator atSetpoint?", Elev.atSetpoint());
 
-        SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Start Paths", allowedPaths.get(ScoringPos.START).toString());
-        SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Store Paths", allowedPaths.get(ScoringPos.CORAL_STORE).toString());
-        SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Intake Paths", allowedPaths.get(ScoringPos.INTAKE_CORAL).toString());
+            SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Start Paths", allowedPaths.get(ScoringPos.START).toString());
+            SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Store Paths", allowedPaths.get(ScoringPos.CORAL_STORE).toString());
+            SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Intake Paths", allowedPaths.get(ScoringPos.INTAKE_CORAL).toString());
+        }
+        if (debugging.CoordAllAtSetpoint) {
+            SmartDashboard.putBoolean("Reefscape/Debugging/All At Setpoints", allAtSetpoints);
+        }
 
     }
 }

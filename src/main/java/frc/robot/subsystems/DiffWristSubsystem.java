@@ -145,7 +145,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public boolean atPitchSetpoint() {
         double pitchAngle = getPitchAngle();
         double pitchSetpoint = getPitchSetpoint();
-        if ((pitchAngle > pitchSetpoint - 3) && (pitchAngle < pitchSetpoint + 3)) {
+        if ((pitchAngle > pitchSetpoint - 7) && (pitchAngle < pitchSetpoint + 7)) {
             return true;
         }
         return false;
@@ -163,7 +163,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public boolean atRollSetpoint() {
         double rollAngle = getRollAngle();
         double rollSetpoint = getRollSetpoint();
-        if ((rollAngle > rollSetpoint - 0.1) && (rollAngle < rollSetpoint + 0.1)) {
+        if ((rollAngle > rollSetpoint - 0.2) && (rollAngle < rollSetpoint + 0.2)) {
             return true;
         }
         return false;
