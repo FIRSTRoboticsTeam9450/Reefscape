@@ -39,7 +39,8 @@ public class ElbowSubsystem extends SubsystemBase {
     //Encoder
     private CANcoder encoder = new CANcoder(WristIDs.KElbowWristEncoderID, Constants.CTRE_BUS);
 
-    double angle;
+    private double angle;
+    private double setpoint;
 
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
@@ -103,11 +104,11 @@ public class ElbowSubsystem extends SubsystemBase {
 
     public void setSetpoint(double setpoint) {
         setpoint /= -360;
+        this.setpoint = setpoint;
         pid.setSetpoint(setpoint);
         motor.setControl(m_request.withPosition(setpoint));
     }
 
-    // TEMP: CHANGE
     public boolean atSetpoint() {
         double elbowAngle = getAngle();
         double setpoint = getSetpoint();
@@ -129,7 +130,7 @@ public class ElbowSubsystem extends SubsystemBase {
      * @return angle of Elbow
      */
     public double getSetpoint() {
-        return pid.getSetpoint() * -360;
+        return setpoint;
     }
 
 }

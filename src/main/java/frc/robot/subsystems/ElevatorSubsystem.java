@@ -31,7 +31,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
     private TalonFX rightMotor = new TalonFX(ElevatorIDs.kRightMotorID, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
 
-    double position;
+    private double position;
+    private double setpoint;
 
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
@@ -89,10 +90,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
     }
 
-    public double getPosition() {
-        return position;
-    }
-
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
         voltage = MathUtil.clamp(voltage, -1, 3);
@@ -100,6 +97,10 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     /* ----- Getters & Setters ----- */
+
+    public double getPosition() {
+        return position;
+    }
 
     public static ElevatorSubsystem getInstance() {
         if (elev == null) {
@@ -110,6 +111,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void setSetpoint(double setpoint) {
         pid.setSetpoint(setpoint);
+        this.setpoint = setpoint;
         leftMotor.setControl(m_request.withPosition(setpoint));
     }
 
@@ -131,6 +133,17 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void setAtLimit() {
         leftMotor.setPosition(0);
+    }
+
+    /**
+     * Checks if the number of revolutions on the left elevator motor are withing 0.25 revolutions of the wanted setpoint
+     * @return 
+     */
+    public boolean getAtSetpoint() {
+        if ((position > setpoint - 0.25) && (position < setpoint + 0.25)) {
+            return true;
+        }
+        return false;
     }
 
 }

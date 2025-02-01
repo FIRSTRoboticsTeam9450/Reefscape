@@ -8,7 +8,6 @@ import java.util.Set;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
-import us.hebi.quickbuf.ProtoSink.OutOfSpaceException;
 import frc.robot.Constants.ScoringPos;
 
 public class CoordTestingSubsystem extends SubsystemBase{
@@ -48,6 +47,20 @@ public class CoordTestingSubsystem extends SubsystemBase{
     private Set<ScoringPos> Algae_Grabbed_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Score_Go_Set = new HashSet<>();
     public static boolean L4 = false;
+
+    private boolean allAtSetpoints = false;
+    private boolean justFinished = false;
+
+    private double elevOriginalSetpoint;
+    private double elbowOriginalSetpoint;
+    private double pitchOriginalSetpoint;
+    private double rollOriginalSetpoint;
+
+    private double elevAllowedDifference = 1.5;
+    private double elbowAllowedDifference = 10;
+    private double pitchAllowedDifference = 10;
+
+
     private double coralScoreElbow = 0;
     private double coralScoreElev = 0;
     private double coralScorePitch = 0;
@@ -171,12 +184,18 @@ public class CoordTestingSubsystem extends SubsystemBase{
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        updatePosition(); 
+        if (!allAtSetpoints) {
+            updatePosition();
+        } else if (allAtSetpoints && justFinished) {
+            justFinished = false;
+        }
 
         if (debugging.CoordPositionDebugging) {
             debugger();
         }
     }
+
+
 
     public void updatePosition() {
 
@@ -220,6 +239,36 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
     }
 
+    public void pitchManualMovement(double change) {
+        double changeTemp = Math.abs(change);
+        double setpoint = DW.getPitchSetpoint();
+        if (!(
+            (setpoint + changeTemp  > pitchOriginalSetpoint + pitchAllowedDifference)
+            || (setpoint - changeTemp < pitchOriginalSetpoint - pitchAllowedDifference)
+            )) 
+        {
+            DW.setPitchSetpoint(setpoint + change);
+        }
+    }
+
+    public void elevManualMovement(double change) {
+        double changeTemp = Math.abs(change);
+        double setpoint = Elev.getSetpoint();
+        if (!(
+            (setpoint + changeTemp > elevOriginalSetpoint + pitchAllowedDifference)
+            || (setpoint - changeTemp < elevOriginalSetpoint - elevAllowedDifference)
+            )) {
+                Elev.setSetpoint(setpoint + change);
+            }
+    }
+
+    public void recordSetpoints() {
+        elevOriginalSetpoint = Elev.getSetpoint();
+        elbowOriginalSetpoint = Elbow.getSetpoint();
+        pitchOriginalSetpoint = DW.getPitchSetpoint();
+        rollOriginalSetpoint = DW.getRollSetpoint();
+    }
+
     public void goToStart() {
         // if (elbowEncoder > 20 && (rollEncoder > -45 && rollEncoder < 45)) {
             // Elbow.setSetpoint(19); 
@@ -235,6 +284,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             ) {
                 Elev.setSetpoint(0);
         }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goToCoralStore() {
@@ -248,6 +306,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             ) {
                 Elev.setSetpoint(0);
         }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goToSourceIntake() {
@@ -256,6 +323,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             DW.setPitchSetpoint(-38);
             DW.setRollSetpoint(0);
             Elbow.setSetpoint(8.5);
+        }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
         }
     }
 
@@ -269,6 +345,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             ) {
             Elbow.setSetpoint(76);
         }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
  
     public void goToCoralIntake() {
@@ -276,6 +361,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
         DW.setRollSetpoint(0);
         Elbow.setSetpoint(0);
         Elev.setSetpoint(0);
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goToAlgaeIntake() {
@@ -284,6 +378,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             DW.setRollSetpoint(0);
             DW.setPitchSetpoint(-159.78);
             Elbow.setSetpoint(-33.13);
+        }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
         }
     }
 
@@ -297,6 +400,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
             DW.setRollSetpoint(0);
             Elbow.setSetpoint(76);
         }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goToScoreProcessor() {
@@ -305,6 +417,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
         Elbow.setSetpoint(-17);
         if (DW.atPitchSetpoint() && DW.atRollSetpoint() && Elbow.atSetpoint()) {
             Elev.setSetpoint(0);
+        }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
         }
     }
 
@@ -344,6 +465,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
         DW.setPitchSetpoint(coralScorePitch);
         rollToClosestSide();
         Elbow.setSetpoint(coralScoreElbow);
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goScoreL4() {
@@ -357,6 +487,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if(Elbow.atSetpoint()) {
             DW.setRollSetpoint(0);
         }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goL2Algae() {
@@ -366,22 +505,50 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if(Elbow.atSetpoint()) {
             DW.setRollSetpoint(0);
         }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goToScoreCoral() {
 
         DW.setPitchSetpoint(-63.19);
         Elbow.setSetpoint(12.91);
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     public void goToGrabed() {
         DW.setPitchSetpoint(-131.3);
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
     /* ----- Setters and Getters ----- */
 
     public void setPosition(ScoringPos pos) {
         this.pos = pos;
+        allAtSetpoints = false;
     }
 
     public void rollToClosestSide() {
