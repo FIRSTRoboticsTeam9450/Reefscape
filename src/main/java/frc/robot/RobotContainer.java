@@ -42,7 +42,7 @@ public class RobotContainer {
                                                             // changed to .6, originaly 1.5
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.05).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
@@ -92,8 +92,8 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-m_driver2.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-m_driver2.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                drive.withVelocityX((-m_driver2.getLeftY() * MaxSpeed)/5) // Drive forward with negative Y (forward)
+                    .withVelocityY((-m_driver2.getLeftX() * MaxSpeed)/5) // Drive left with negative X (left)
                     .withRotationalRate(-m_driver2.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
@@ -111,7 +111,7 @@ public class RobotContainer {
         m_driver2.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-            m_driver2.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+            m_driver2.povDown().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -138,31 +138,33 @@ public class RobotContainer {
         // m_driver1.b().onTrue(
         //     new InstantCommand(() -> score.goToPosition(ScorePos.STORE_CORAL))
         // );
-        m_driver1.b().onTrue(new CoordTestingCommand(testingPos.CORAL_STORE));
+        // m_driver1.b().onTrue(new CoordTestingCommand(testingPos.CORAL_STORE));
 
-        m_driver1.y().onTrue(
-            new InstantCommand(() -> score.goToPosition(ScorePos.SCORE_CORAL))
-        );
-
-
-        m_driver1.a().onTrue(new CoordTestingCommand(testingPos.INTAKE_CORAL));
-
-        m_driver1.x().onTrue(new CoordTestingCommand(testingPos.INTAKE_ALGAE));
-
-        m_driver1.povUp().onTrue(new CoordTestingCommand(testingPos.ALGAE_STORE));
-
-        m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
-        m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
-
-        m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-9)));
-        m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
+        // m_driver1.y().onTrue(
+        //     new InstantCommand(() -> score.goToPosition(ScorePos.SCORE_CORAL))
+        // );
 
 
-        m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
+        // m_driver1.a().onTrue(new CoordTestingCommand(testingPos.INTAKE_CORAL));
 
-        m_driver1.povRight().onTrue(new CoordTestingCommand(testingPos.SCORE_PROCESSOR));
+        // m_driver1.x().onTrue(new CoordTestingCommand(testingPos.INTAKE_ALGAE));
+
+        // m_driver1.povUp().onTrue(new CoordTestingCommand(testingPos.ALGAE_STORE));
+
+        // m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
+        // m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
+
+        // m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-9)));
+        // m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
 
 
+        // m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
+
+        // m_driver1.povRight().onTrue(new CoordTestingCommand(testingPos.SCORE_PROCESSOR));
+
+        m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(29)));
+        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
+        m_driver2.rightTrigger().onTrue(new InstantCommand(() -> elevator.setSetpoint(15)));
         // m_driver1.b().onTrue(
         //     new InstantCommand(() -> score.goToScore())
         // );

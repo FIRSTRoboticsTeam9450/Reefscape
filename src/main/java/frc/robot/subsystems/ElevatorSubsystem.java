@@ -62,7 +62,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void updatePID(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(voltage, -1, 3);
+        voltage = MathUtil.clamp(voltage, -1, 1);
         setVoltage(voltage);
     }
 
