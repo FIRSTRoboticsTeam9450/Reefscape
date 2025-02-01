@@ -33,12 +33,20 @@ public class CoordTestingCommand extends Command {
      * Forcefully go to the given state
      */
     private boolean forcePath;
+    private boolean mode;
 
     /* ----- Initilization ----- */
 
     public CoordTestingCommand(ScoringPos pos) {
         this.targetPos = pos;
         currentPos = CT.getPos();
+        this.mode = false;
+    }
+
+    public CoordTestingCommand(ScoringPos pos, boolean mode) {
+        this.targetPos = pos;
+        currentPos = CT.getPos();
+        this.mode = mode;
     }
 
     @Override
@@ -47,19 +55,24 @@ public class CoordTestingCommand extends Command {
         currentPos = CT.getPos(); 
         boolean validPath = false;
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);
-        if (connectedPathsSet.contains(targetPos)) {
+        if(mode == false) {
+            if (connectedPathsSet.contains(targetPos)) {
+                CT.setPos(targetPos);
+                validPath = true;
+            } else if (debugging.CoordAllowedPathsDebugging) {
+                validPath = false;
+                System.out.println("Invalid Path");
+            }
+            if (debugging.CoordAllowedPathsDebugging) {
+                SmartDashboard.putBoolean("Reefscape/Debugging/Coordination/Valid Path?", validPath);
+            }
+            if (debugging.CoordAllowedPathsDebugging) {
+                SmartDashboard.putString("Reefscape/Debugging/Paths", currentPos + "");
+                SmartDashboard.putString("Reefscape/Debugging/Paths", connectedPathsSet.toString());
+            }
+        } 
+        else {
             CT.setPos(targetPos);
-            validPath = true;
-        } else if (debugging.CoordAllowedPathsDebugging) {
-            validPath = false;
-            System.out.println("Invalid Path");
-        }
-        if (debugging.CoordAllowedPathsDebugging) {
-            SmartDashboard.putBoolean("Reefscape/Debugging/Coordination/Valid Path?", validPath);
-        }
-        if (debugging.CoordAllowedPathsDebugging) {
-            SmartDashboard.putString("Reefscape/Debugging/Paths", currentPos + "");
-            SmartDashboard.putString("Reefscape/Debugging/Paths", connectedPathsSet.toString());
         }
     }
 
