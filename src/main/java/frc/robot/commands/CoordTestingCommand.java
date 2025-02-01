@@ -29,10 +29,6 @@ public class CoordTestingCommand extends Command {
      * current state
      */
     private ScoringPos currentPos;
-    /**
-     * Forcefully go to the given state
-     */
-    private boolean forcePath;
     private boolean mode;
 
     /* ----- Initilization ----- */
@@ -57,7 +53,7 @@ public class CoordTestingCommand extends Command {
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);
         if(mode == false) {
             if (connectedPathsSet.contains(targetPos)) {
-                CT.setPos(targetPos);
+                CT.setPosition(targetPos);
                 validPath = true;
             } else if (debugging.CoordAllowedPathsDebugging) {
                 validPath = false;
@@ -72,7 +68,7 @@ public class CoordTestingCommand extends Command {
             }
         } 
         else {
-            CT.setPos(targetPos);
+            CT.setPosition(targetPos);
         }
     }
 

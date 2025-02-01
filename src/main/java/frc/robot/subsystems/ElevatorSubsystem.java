@@ -84,6 +84,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
         SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
         SmartDashboard.putBoolean("Elevator at limit", atLimit);
+        SmartDashboard.putBoolean("Reefscape/IDC ATM/ Elevator At setpoint", atSetpoint());
 
         if (atLimit) {
             //leftMotor.setPosition(0);
@@ -136,13 +137,15 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     /**
-     * Checks if the number of revolutions on the left elevator motor are withing 0.25 revolutions of the wanted setpoint
+     * Checks if the number of revolutions on the left elevator motor are withing a certain amount of revolutions of the wanted setpoint
      * @return 
      */
     public boolean getAtSetpoint() {
-        if ((position > setpoint - 0.25) && (position < setpoint + 0.25)) {
+        if ((position > setpoint - 1) && (position < setpoint + 1)) {
+            System.out.println("Elevator At Setpoint: Got to True");
             return true;
         }
+        System.out.println("Elevator At Setpoint: Got To False");
         return false;
     }
 

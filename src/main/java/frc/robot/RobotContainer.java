@@ -18,6 +18,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ScoringPos;
@@ -26,6 +27,7 @@ import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -106,10 +108,10 @@ public class RobotContainer {
             )
         );
 
-        // m_driver2.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // m_driver2.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-m_driver2.getLeftY(), -m_driver2.getLeftX()))
-        // ));
+        m_driver2.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        m_driver2.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-m_driver2.getLeftY(), -m_driver2.getLeftX()))
+        ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
@@ -119,113 +121,106 @@ public class RobotContainer {
         m_driver2.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-            m_driver2.povLeft().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+            m_driver2.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
+        // m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
+
+        /* ----- Main Driver Keybinds ----- */
+        /* Keybinds:
+         * B = Coral Store
+         * A = Coral Intake
+         * X = Algae Intake
+         * Y = Algae Store
+         * Left Trigger = Intake Motor (Coral)
+         * Right Trigger = Intake Motor (Algae)
+         * D-pad Right = Processor
+         * D-pad Up = Climbers in + Start
+         * D-pad Down = Climbers out
+         * D-pad Left = Net
+         * D-pad Right = Cancel All
+         * Left Bumper = Elevator Down
+         */
         
-        // m_driver1.povUp().onTrue(new InstantCommand(() -> wrist.setVoltage(0.5, 0.5)));
-        // m_driver1.povUp().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
-
-        // m_driver1.povDown().onTrue(new InstantCommand(() -> wrist.setVoltage(-0.5, -0.5)));
-        // m_driver1.povDown().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
-
-        // m_driver1.povLeft().onTrue(new InstantCommand(() -> wrist.setVoltage(-1.5, 1.5)));
-        // m_driver1.povLeft().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
-
-        // m_driver1.povRight().onTrue(new InstantCommand(() -> wrist.setVoltage(1.5, -1.5)));
-        // m_driver1.povRight().onFalse(new InstantCommand(() -> wrist.setVoltage(0, 0)));
-
-        // m_driver1.a().onTrue(new InstantCommand(() -> elbow.setVoltage(0.8)));
-        // m_driver1.a().onFalse(new InstantCommand(() -> elbow.setVoltage(0)));
-
-        // m_driver1.y().onTrue(new InstantCommand(() -> elbow.setVoltage(-0.8)));
-        // m_driver1.y().onFalse(new InstantCommand(() -> elbow.setVoltage(0)));
-
-        // m_driver1.b().onTrue(
-        //     new InstantCommand(() -> score.goToPosition(ScorePos.STORE_CORAL))
-        // );
         m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
-        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL));
+        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
 
         m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
 
         m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
-
-        //m_driver1.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
-
-        //m_driver1.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(9)));
-        //m_driver1.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
-
         m_driver1.leftTrigger().onTrue(new DualIntakeCommand(false));
         m_driver1.rightTrigger().onTrue(new DualIntakeCommand(true));
 
-        //m_driver1.rightTrigger().onTrue(new InstantCommand(() -> intake.setVoltage(-9)));
-        //m_driver1.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)));
-
-
-        //m_driver1.povDown().onTrue(new InstantCommand(() -> elevator.setSetpoint(29.25)));
-
         m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
 
-        m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
-        m_driver1.povUp().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
+        // m_driver1.povUp().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
-        m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
-        m_driver1.povDown().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
+        // m_driver1.povDown().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+
+        m_driver1.povUp().onTrue(new RollSideSwitcher());
 
         m_driver1.povLeft().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
-
-
-        // m_driver1.b().onTrue(
-        //     new InstantCommand(() -> score.goToScore())
-        // );
-
-
-        //m_driver1.leftBumper().onTrue(new DualIntakeCommand(false));
 
         m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
         m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE));
 
-        m_driver2.a().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL2, true));
-        m_driver2.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL3, true));
-        m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4, true));
-        m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1, true));
-        m_driver2.povDown().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
-        // m_driver2.rightTrigger().onTrue(new ScoringCommand()); // UNCOMMENT LATER
-        // m_driver2.rightTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
-
-
-        //m_driver2.leftBumper().onTrue((new CoordTestingCommand(ScoringPos.ALGAEL1)).andThen(new InstantCommand(() -> intake.setVoltage(1)))); // USE DIFFERENT BUTTONS
-        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
-        
-
-        
-        // m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
-        // m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // UNCOMMENT LATER
-        //m_driver2.leftTrigger().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
-        //m_driver2.rightTrigger().onTrue(new InstantCommand(() -> elevator.setSetpoint(30)));
-        
-
         m_driver1.povRight().onTrue(new InstantCommand(() -> intake.setVoltage(0)).andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())));
 
-        // m_driver1.y().onTrue(
-        //     new InstantCommand(() -> wrist.setPitchSetpoint(0))
-        //     .andThen(new InstantCommand(() -> wrist.setRollSetpoint(0)))
-        //     .andThen(new InstantCommand(() -> elbow.setSetpoint(0)))
-        // );
+        /* ----- Operator Driver Keybinds ----- */
+        /* Keybinds:
+         * A = Coral L2
+         * B = Coral L3
+         * Y = Coral L4
+         * X = Coral L1
+         * Left Bumper = Algae L1 + Intake
+         * Left Trigger = Algae L2 + Intake
+         */
 
-        // m_driver2.povUp().onTrue(new ElevatorCommand(0));
-        // m_driver2.povDown().onTrue(new ElevatorCommand(5));
-        // m_driver2.x().onTrue(new DiffWristCommand(0.55, true));
-        // m_driver2.b().onTrue(new DiffWristCommand(0.6, true));
+        m_driver2.a().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL2));
 
-        // m_driver1.a
+        m_driver2.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL3));
+
+        m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4));
+
+        m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
+
+        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)).andThen(new WaitCommand(.5)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
+
+        m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
+        
+        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
+        
+        m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // USE DIFFERENT BUTTONS
+        
+        /* ----- Main Driver Offical Keybinds ----- */
+        /* Keybinds:
+         * Right Trigger = Score
+         * Left Trigger = (gts?)
+         * Right Bumper = High Algae
+         * Left Bumper = Low Algae
+         * X = Cancel All
+         * A = Algae Net High
+         * D-pad Up = IMU Reset
+         */
+
+        /* ----- Operator Driver Offical Keybinds ----- */
+        /* Keybinds:
+         * Right Trigger = Coral Intake
+         * Left Trigger = Outtake
+         * Right Bumper = Roll Intake-System to right side
+         * Left Bumpber = Roll Intake-System to left side
+         * X = L1
+         * A = L2
+         * B = L3
+         * Y = L4
+         */
+
     }
 
     public static void setLiftUp(boolean up) {
