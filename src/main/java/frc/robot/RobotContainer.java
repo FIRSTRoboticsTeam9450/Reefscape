@@ -27,11 +27,13 @@ import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CoordTestingSubsystem;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
@@ -47,7 +49,7 @@ public class RobotContainer {
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
     private static double DefaultMaxSpeed = 2.5;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -74,6 +76,8 @@ public class RobotContainer {
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+
+    private CoordTestingSubsystem scoreSub = CoordTestingSubsystem.getInstance();
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
 
@@ -102,26 +106,25 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-m_driver2.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-m_driver2.getLeftX() * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-m_driver2.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-m_driver1.getLeftY() * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-m_driver1.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-m_driver1.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
-        m_driver2.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        m_driver2.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-m_driver2.getLeftY(), -m_driver2.getLeftX()))
+        m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
+            point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
         ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
-        m_driver2.back().and(m_driver2.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        m_driver2.back().and(m_driver2.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        m_driver2.start().and(m_driver2.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        m_driver2.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        m_driver1.back().and(m_driver2.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        m_driver1.back().and(m_driver2.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        m_driver1.start().and(m_driver2.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        m_driver1.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
         // reset the field-centric heading on left bumper press
-            m_driver2.leftBumper().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
@@ -129,74 +132,80 @@ public class RobotContainer {
 
         /* ----- Main Driver Keybinds ----- */
         /* Keybinds:
-         * B = Coral Store
-         * A = Coral Intake
-         * X = Algae Intake
-         * Y = Algae Store
-         * Left Trigger = Intake Motor (Coral)
-         * Right Trigger = Intake Motor (Algae)
-         * D-pad Right = Processor
-         * D-pad Up = Climbers in + Start
-         * D-pad Down = Climbers out
-         * D-pad Left = Net
-         * D-pad Right = Cancel All
-         * Left Bumper = Elevator Down
+         * Right Trigger = Score
+         * Left Trigger = Go To Scoring Pos
+         * Right Bumper = High Algae
+         * Left Bumper = Low Algae
+         * X = Cancel All
+         * A = Algae Net High
+         * B = Algae Store/processor
+         * D-pad Up = IMU Reset
          */
         
-        m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
+        m_driver1.rightTrigger().onTrue(new ScoringCommand());
+        m_driver1.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
+        m_driver1.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        m_driver1.x().onTrue(
+            new InstantCommand(() -> intake.setVoltage(0))
+            .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
+            .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+            ));
+        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
+        m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
 
-        m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
 
-        m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        //m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
 
-        m_driver1.leftTrigger().onTrue(new DualIntakeCommand(false));
-        m_driver1.rightTrigger().onTrue(new DualIntakeCommand(true));
+        //m_driver1.leftTrigger().onTrue(new DualIntakeCommand(false));
+        //m_driver1.rightTrigger().onTrue(new DualIntakeCommand(true));
 
-        m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
-
-        // m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
-        // m_driver1.povUp().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
-        // m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
-        // m_driver1.povDown().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povUp().onTrue(new RollSideSwitcher());
+        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
+        m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        
+        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
+        m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povLeft().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
 
-        m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
-        m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE));
+        //m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
-        m_driver1.povRight().onTrue(new InstantCommand(() -> intake.setVoltage(0)).andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())));
+        //m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE));
 
         /* ----- Operator Driver Keybinds ----- */
         /* Keybinds:
-         * A = Coral L2
-         * B = Coral L3
-         * Y = Coral L4
-         * X = Coral L1
-         * Left Bumper = Algae L1 + Intake
-         * Left Trigger = Algae L2 + Intake
+         * Right Trigger = Coral Intake
+         * Left Trigger = Outtake
+         * Right Bumper = Roll Intake-System to right side
+         * Left Bumpber = Roll Intake-System to left side
+         * X = L1
+         * A = L2
+         * B = L3
+         * Y = L4
          */
 
-        m_driver2.a().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL2));
+        m_driver2.rightTrigger().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.leftTrigger().onTrue(new OuttakeCommand());
+        m_driver2.leftBumper().onTrue(new RollSideSwitcher());
+        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
-        m_driver2.b().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL3));
+        m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
-        m_driver2.y().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL4));
 
-        m_driver2.x().onTrue(new CoordTestingCommand(ScoringPos.CORAL_SCOREL1));
 
-        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)).andThen(new WaitCommand(.5)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
 
-        m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
+        //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
         
-        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
+        //m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
         
-        m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // USE DIFFERENT BUTTONS
+        //m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // USE DIFFERENT BUTTONS
         
         /* ----- Main Driver Offical Keybinds ----- */
         /* Keybinds:
@@ -220,6 +229,13 @@ public class RobotContainer {
          * B = L3
          * Y = L4
          */
+
+
+        // ALGAE GROUND INTAKE - Prob not using :(
+        //m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
+
+        // NEED BUTTON
+        //m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
 
     }
 

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordTestingSubsystem;
@@ -12,21 +13,33 @@ public class ScoringCommand extends Command{ // DONT USE
     private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
     CoordTestingCommand score = new CoordTestingCommand(ScoringPos.SCORE_CORAL);
     CoordTestingCommand elev = new CoordTestingCommand(ScoringPos.ScoreL4);
+    CoordTestingCommand store = new CoordTestingCommand(ScoringPos.CORAL_STORE);
     private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
-    
+    CoordTestingSubsystem scoreSub = CoordTestingSubsystem.getInstance();
+
+    Timer timer = new Timer();
+
+    ScoringPos position;
+
     public ScoringCommand() {
     }
 
     @Override
     public void initialize() {
+        position = scoreSub.getPos();
         //score.schedule();
-        if(CoordTestingSubsystem.L4) {
+        timer.restart();
+        if (position == ScoringPos.SCORE_NET || position == ScoringPos.ALGAE_STORE) {
+            intake.setVoltage(5);
+        } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
-        }
-        else {
+            intake.setVoltage(-.25);
+        } else if (scoreSub.getScoringLevel() == 1) {
+            intake.setVoltage(-1.25);
+        } else {
             score.schedule();
+            intake.setVoltage(-.25);
         }
-        intake.setVoltage(-.5);
         
     }
 
@@ -40,11 +53,13 @@ public class ScoringCommand extends Command{ // DONT USE
         //     return true;
         // }
         // return false;
-        return true;
+        return timer.get() > 2;
     }
     @Override
     public void end(boolean interrupted) {
         // System.out.println("GOT HERE ______________");
-        //intake.setVoltage(0);
+        intake.setVoltage(0);
+        store.schedule();
+        
     }
 }

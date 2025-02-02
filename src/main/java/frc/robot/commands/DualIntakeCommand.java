@@ -23,6 +23,7 @@ public class DualIntakeCommand extends Command{
 
     public DualIntakeCommand(boolean algae) {
         this.algae = algae;
+        addRequirements(DI);
     }
 
     /* ----- Initialization ----- */
@@ -30,11 +31,10 @@ public class DualIntakeCommand extends Command{
     @Override
     public void initialize() {
         finished = false;
-        addRequirements(DI);
         if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
             DI.setVoltage(-5);
         } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
-            DI.setVoltage(5);
+            DI.setVoltage(12);
         }
     }
 
