@@ -4,17 +4,15 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordTestingSubsystem;
-import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.DualIntakeSubsystem;
-import frc.robot.subsystems.ElbowSubsystem;
-
-public class ScoringCommand extends Command{ // DONT USE
+/*
+ * Score a game piece - automatic for coral and algae
+ */
+public class ScoringCommand extends Command {
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
     CoordTestingCommand score = new CoordTestingCommand(ScoringPos.SCORE_CORAL);
     CoordTestingCommand elev = new CoordTestingCommand(ScoringPos.ScoreL4);
     CoordTestingCommand store = new CoordTestingCommand(ScoringPos.CORAL_STORE);
-    private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
     CoordTestingSubsystem scoreSub = CoordTestingSubsystem.getInstance();
 
     Timer timer = new Timer();
@@ -22,12 +20,12 @@ public class ScoringCommand extends Command{ // DONT USE
     ScoringPos position;
 
     public ScoringCommand() {
+    
     }
 
     @Override
     public void initialize() {
         position = scoreSub.getPos();
-        //score.schedule();
         timer.restart();
         if (position == ScoringPos.SCORE_NET || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(5);
@@ -49,16 +47,14 @@ public class ScoringCommand extends Command{ // DONT USE
 
     @Override
     public boolean isFinished() {
-        // if(elbow.atSetpoint() && wrist.atPitchSetpoint()) {
-        //     return true;
-        // }
-        // return false;
-        return timer.get() > 2;
+        // finish after one second
+        return timer.get() > 1;
     }
+    
     @Override
     public void end(boolean interrupted) {
-        // System.out.println("GOT HERE ______________");
         intake.setVoltage(0);
+        // go to store
         store.schedule();
         
     }

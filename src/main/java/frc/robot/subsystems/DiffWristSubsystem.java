@@ -18,7 +18,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(3, 0, 0);
+    private PIDController pitchPID = new PIDController(5, 0, 0);
     private PIDController rollPID = new PIDController(30, 0, 0);
 
     // // Motors
@@ -77,8 +77,8 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         double lVolts = pitchVoltage - rollVoltage;
         double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -5, 5);
-        rVolts = MathUtil.clamp(rVolts, -5, 5);
+        lVolts = MathUtil.clamp(lVolts, -8, 8);
+        rVolts = MathUtil.clamp(rVolts, -8, 8);
         setVoltage(lVolts, rVolts);
     }
 

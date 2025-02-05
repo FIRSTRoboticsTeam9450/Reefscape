@@ -58,7 +58,7 @@ public class ElbowSubsystem extends SubsystemBase {
         slot0Configs.kS = 0; // Add 0.25 V output to overcome static friction
         slot0Configs.kV = 0.32; // A velocity target of 1 rps results in 0.12 V output
         slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-        slot0Configs.kP = 16.8; // A position error of 2.5 rotations results in 12 V output
+        slot0Configs.kP = 21.8; // A position error of 2.5 rotations results in 12 V output
         slot0Configs.kI = 0; // no output for integrated error
         slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
 
@@ -69,9 +69,9 @@ public class ElbowSubsystem extends SubsystemBase {
 
         // set Motion Magic settings
         MotionMagicConfigs motionMagicConfigs = config.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 2; // Target cruise velocity of 80 rps
-        motionMagicConfigs.MotionMagicAcceleration = 4; // Target acceleration of 160 rps/s (0.5 seconds)
-        motionMagicConfigs.MotionMagicJerk = 32; // Target jerk of 1600 rps/s/s (0.1 seconds)
+        motionMagicConfigs.MotionMagicCruiseVelocity = 6; // Target cruise velocity of 80 rps
+        motionMagicConfigs.MotionMagicAcceleration = 24; // Target acceleration of 160 rps/s (0.5 seconds)
+        motionMagicConfigs.MotionMagicJerk = 256; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
         TalonFXConfigurator configurator = motor.getConfigurator();
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
