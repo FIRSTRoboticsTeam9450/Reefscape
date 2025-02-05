@@ -60,8 +60,8 @@ public class ElevatorSubsystem extends SubsystemBase{
         // set Motion Magic settings
         MotionMagicConfigs motionMagicConfigs = config1.MotionMagic;
         motionMagicConfigs.MotionMagicCruiseVelocity = 50; // Target cruise velocity of 80 rps
-        motionMagicConfigs.MotionMagicAcceleration = 90; // Target acceleration of 160 rps/s (0.5 seconds)
-        motionMagicConfigs.MotionMagicJerk = 270; // Target jerk of 1600 rps/s/s (0.1 seconds)
+        motionMagicConfigs.MotionMagicAcceleration = 140; // Target acceleration of 160 rps/s (0.5 seconds)
+        motionMagicConfigs.MotionMagicJerk = 600; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
         temp1.apply(config1);
 

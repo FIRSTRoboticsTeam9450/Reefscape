@@ -83,7 +83,8 @@ public final class Constants {
     ALGAEL1,
     ALGAEL2,
     GRABBED_ALGAE,
-    GO_SCORE_CORAL
+    GO_SCORE_CORAL,
+    INTAKE_VERTICAL_CORAL
   }
 
   public enum ScoringLevel {

@@ -84,7 +84,7 @@ public class RobotContainer {
     private ClimbSubsystem climb = new ClimbSubsystem();
 
     public RobotContainer() {
-
+        registeredCommands();
         configureBindings();
 
         boolean isCompetition = false;
@@ -198,6 +198,8 @@ public class RobotContainer {
 
         m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
+        m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+
 
 
 
@@ -247,6 +249,21 @@ public class RobotContainer {
             MaxSpeed = DefaultMaxSpeed;
             MaxAngularRate = DefaultMaxAngularRate;
         }
+    }
+
+    public void registeredCommands() {
+        autoChooser.addOption("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        autoChooser.addOption("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        autoChooser.addOption("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        autoChooser.addOption("Score", new ScoringCommand());
+        autoChooser.addOption("CoralStore", new CoordTestingCommand(ScoringPos.CORAL_STORE));
+        autoChooser.addOption("Cancel", new InstantCommand(() -> intake.setVoltage(0))
+        .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
+        .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+        ));
+        autoChooser.addOption("HighAlgae", new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        autoChooser.addOption("LowAlgae", new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        autoChooser.addOption("AlgaeProcesser", new CoordTestingCommand(ScoringPos.ALGAE_STORE));
     }
 
     public Command getAutonomousCommand() {

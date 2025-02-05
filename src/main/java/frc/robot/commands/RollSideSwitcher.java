@@ -4,6 +4,9 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordTestingSubsystem;
 
+/*
+ * Roll wrist to opposite side
+ */
 public class RollSideSwitcher extends Command{
     
     CoordTestingSubsystem CT = CoordTestingSubsystem.getInstance();
