@@ -8,6 +8,7 @@ import static edu.wpi.first.units.Units.*;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.AutoBuilder;
+import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -84,8 +85,8 @@ public class RobotContainer {
     private ClimbSubsystem climb = new ClimbSubsystem();
 
     public RobotContainer() {
-        registeredCommands();
         configureBindings();
+        registeredCommands();
 
         boolean isCompetition = false;
 
@@ -97,7 +98,6 @@ public class RobotContainer {
         );
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
-
     }
 
     private void configureBindings() {
@@ -252,18 +252,20 @@ public class RobotContainer {
     }
 
     public void registeredCommands() {
-        autoChooser.addOption("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
-        autoChooser.addOption("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
-        autoChooser.addOption("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        autoChooser.addOption("Score", new ScoringCommand());
-        autoChooser.addOption("CoralStore", new CoordTestingCommand(ScoringPos.CORAL_STORE));
-        autoChooser.addOption("Cancel", new InstantCommand(() -> intake.setVoltage(0))
+        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        NamedCommands.registerCommand("Score", new ScoringCommand());
+        NamedCommands.registerCommand("GoToScore", new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
+        NamedCommands.registerCommand("CoralStore", new CoordTestingCommand(ScoringPos.CORAL_STORE));
+        NamedCommands.registerCommand("Cancel", new InstantCommand(() -> intake.setVoltage(0))
         .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
         .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
         ));
-        autoChooser.addOption("HighAlgae", new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        autoChooser.addOption("LowAlgae", new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        autoChooser.addOption("AlgaeProcesser", new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        NamedCommands.registerCommand("HighAlgae", new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("LowAlgae", new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("AlgaeProcesser", new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        NamedCommands.registerCommand("Start", new CoordTestingCommand(ScoringPos.START));
     }
 
     public Command getAutonomousCommand() {

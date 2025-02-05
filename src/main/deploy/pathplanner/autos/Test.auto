@@ -3,7 +3,51 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": []
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "Start"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.75
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralStore"
+                }
+              },
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "Preload testing"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralL4"
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoToScore"
+          }
+        }
+      ]
     }
   },
   "resetOdom": true,
