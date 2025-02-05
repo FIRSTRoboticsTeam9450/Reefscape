@@ -3,14 +3,7 @@
   "command": {
     "type": "sequential",
     "data": {
-      "commands": [
-        {
-          "type": "path",
-          "data": {
-            "pathName": "RK - Start to Reef UR"
-          }
-        }
-      ]
+      "commands": []
     }
   },
   "resetOdom": true,
