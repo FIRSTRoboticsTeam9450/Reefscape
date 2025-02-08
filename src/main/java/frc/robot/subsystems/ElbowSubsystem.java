@@ -49,7 +49,7 @@ public class ElbowSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = 0.127685546875;
+        cc_cfg.MagnetSensor.MagnetOffset = -0.090576171875;
         encoder.getConfigurator().apply(cc_cfg);
 
         TalonFXConfiguration config = new TalonFXConfiguration();
