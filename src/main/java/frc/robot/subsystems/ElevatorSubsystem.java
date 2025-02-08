@@ -13,6 +13,7 @@ import com.ctre.phoenix6.signals.S1StateValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -36,7 +37,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     private boolean atLimit;
 
-    private boolean resetting;
+    private boolean resetting = true;
 
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
@@ -86,7 +87,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         position = leftMotor.getPosition().getValueAsDouble(); 
-        RobotContainer.setLiftUp(position > 9);
+        RobotContainer.setLiftUp(position > 22);
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
         SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
@@ -95,6 +96,15 @@ public class ElevatorSubsystem extends SubsystemBase{
 
         if (atLimit) {
             //leftMotor.setPosition(0);
+        }
+
+        if (resetting && DriverStation.isEnabled()) {
+            setSetpoint(getSetpoint() - 0.05);
+            if (atLimit) {
+                setAtLimit();
+                resetting = false;
+                setSetpoint(0);
+            }
         }
     }
 
@@ -135,6 +145,10 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void setAtLimit() {
         leftMotor.setPosition(0);
+    }
+
+    public void reset() {
+        resetting = true;
     }
 
     /**

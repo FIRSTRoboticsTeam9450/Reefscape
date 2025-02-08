@@ -20,24 +20,24 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class IntakeIDS {
-    public static final int kDualIntakeMotorID = 59; //temp
-    public static final int kDualIntakeCoralLaserID = 21;
-    public static final int kDualIntakeAlgaeLaserID = 20;
+    public static final int kDualIntakeMotorID = 25; //temp
+    public static final int kDualIntakeCoralLaserID = 34;
+    public static final int kDualIntakeAlgaeLaserID = 35;
   }
 
   public static class WristIDs {
-    public static final int kDiffWristLeftMotorID = 50; //temp
-    public static final int kDiffWristRightMotorID = 51; //temp
-    public static final int kDiffWristPitchCANCoderID = 14; //temp
-    public static final int kDiffWristRollCANCoderID = 15; //temp
-    public static final int KElbowWristMotorID = 52; //temp
-    public static final int KElbowWristEncoderID = 53; //temp
+    public static final int kDiffWristLeftMotorID = 23; //temp
+    public static final int kDiffWristRightMotorID = 24; //temp
+    public static final int kDiffWristPitchCANCoderID = 32; //temp
+    public static final int kDiffWristRollCANCoderID = 33; //temp
+    public static final int KElbowWristMotorID = 22; //temp
+    public static final int KElbowWristEncoderID = 31; //temp
   }
 
   public static class ElevatorIDs {
-    public static final int kLeftMotorID = 60;
-    public static final int kRightMotorID = 61;
-    public static final int kCANdiID = 34;
+    public static final int kLeftMotorID = 20;
+    public static final int kRightMotorID = 21;
+    public static final int kCANdiID = 30;
   }
 
   public static class ArmConstraints {
@@ -94,8 +94,8 @@ public final class Constants {
   public static class debugging {
     public static final boolean SwerveDebugging = false;
     public static final boolean LimelightDebugging = false;
-    public static final boolean CoordAllowedPathsDebugging = true;
-    public static final boolean CoordPositionDebugging = true;
+    public static final boolean CoordAllowedPathsDebugging = false;
+    public static final boolean CoordPositionDebugging = false;
     public static final boolean CoordAllAtSetpoint = true;
   }
 

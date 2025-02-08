@@ -72,6 +72,13 @@ public class AlignCommand2 extends Command {
         }
 
         double rotation = targetPos[2] - Math.PI;
+
+        if (rotation < -Math.PI) {
+            rotation += 2 * Math.PI;
+        } else if (rotation > Math.PI) {
+            rotation -= 2 * Math.PI;
+        }
+
         double x = targetPos[0] - tagForwardOffset * Math.cos(rotation) - tagLeftOffset * Math.sin(rotation);
         double y = targetPos[1] - tagForwardOffset * Math.sin(rotation) + tagLeftOffset * Math.cos(rotation);
 

@@ -19,7 +19,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
     private static DualIntakeSubsystem DI;
 
     /* ----- Motors ----- */
-    private TalonFX motor = new TalonFX(59, Constants.CTRE_BUS);
+    private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
 
     /* ----- Laser Can ----- */
     private LaserCan coralLaserCan;

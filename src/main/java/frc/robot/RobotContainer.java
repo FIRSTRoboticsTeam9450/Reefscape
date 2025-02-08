@@ -202,8 +202,8 @@ public class RobotContainer {
 
         m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
-        m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
-        
+        //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
+        m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
 
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS

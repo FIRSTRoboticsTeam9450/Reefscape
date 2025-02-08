@@ -9,6 +9,8 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableEntry;
 import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -25,10 +27,10 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTableEntry ta = limelight.getEntry("ta");
     NetworkTableEntry botPose = limelight.getEntry("botpose_targetspace");
     NetworkTableEntry tid = limelight.getEntry("tid");
-    NetworkTableEntry botPoseField = limelight.getEntry("botpose_wpiblue");
+    NetworkTableEntry botPoseFieldBlue = limelight.getEntry("botpose_wpiblue");
+    
     public static LimelightSubsystem LL; 
 
-    Field2d field = new Field2d();
     double[] poseArray = new double[10];
 
     /* ----- Updaters ----- */
@@ -42,13 +44,11 @@ public class LimelightSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("pose ta", poseArray[9]);
         }
         Logger.recordOutput("Limelight Pose", getPose());
-        poseArray = botPoseField.getDoubleArray(new double[10]);
-        field.setRobotPose(getPose());
-
+        poseArray = botPoseFieldBlue.getDoubleArray(new double[10]);
     }
 
     public LimelightSubsystem() {
-        SmartDashboard.putData("Limelight Pose", field);
+
     }
 
     /* ----- Getters & Setters ----- */
