@@ -34,6 +34,10 @@ public class ElevatorSubsystem extends SubsystemBase{
     private double position;
     private double setpoint;
 
+    private boolean atLimit;
+
+    private boolean resetting;
+
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
     private CANdi candi = new CANdi(ElevatorIDs.kCANdiID);
@@ -48,6 +52,8 @@ public class ElevatorSubsystem extends SubsystemBase{
         TalonFXConfigurator temp1 = leftMotor.getConfigurator();
         config1.MotorOutput.NeutralMode = Constants.defaultNeutral; //temp for when default neutral mode is coast
         config1.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config1.CurrentLimits.StatorCurrentLimitEnable = true;
+        config1.CurrentLimits.StatorCurrentLimit = 80;
         
         Slot0Configs slot0Configs = config1.Slot0;
         slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
@@ -67,6 +73,8 @@ public class ElevatorSubsystem extends SubsystemBase{
 
         config2.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        config2.CurrentLimits.StatorCurrentLimitEnable = true;
+        config2.CurrentLimits.StatorCurrentLimit = 80;
         temp2.apply(config2);
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
@@ -79,8 +87,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     public void periodic() {
         position = leftMotor.getPosition().getValueAsDouble(); 
         RobotContainer.setLiftUp(position > 9);
-        boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
-        //updatePID(position);
+        atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
         SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
         SmartDashboard.putBoolean("Elevator at limit", atLimit);
@@ -89,12 +96,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         if (atLimit) {
             //leftMotor.setPosition(0);
         }
-    }
-
-    public void updatePID(double pos) {
-        double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(voltage, -1, 3);
-        setVoltage(voltage);
     }
 
     /* ----- Getters & Setters ----- */
@@ -129,7 +130,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public boolean getAtLimit() {
-        return candi.getS1State().getValue() == S1StateValue.Low;
+        return atLimit;
     }
 
     public void setAtLimit() {

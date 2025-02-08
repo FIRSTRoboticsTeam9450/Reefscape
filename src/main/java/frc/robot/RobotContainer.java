@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
+import frc.robot.commands.AlignCommand2;
 import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
@@ -155,6 +156,9 @@ public class RobotContainer {
         m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
         m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
+        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
+        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, false));
+
 
 
         //m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
@@ -198,9 +202,8 @@ public class RobotContainer {
 
         m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
-        m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
-
-
+        m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
+        
 
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS

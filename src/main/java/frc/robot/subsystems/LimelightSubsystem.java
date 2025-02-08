@@ -24,6 +24,7 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTableEntry ty = limelight.getEntry("ty");
     NetworkTableEntry ta = limelight.getEntry("ta");
     NetworkTableEntry botPose = limelight.getEntry("botpose_targetspace");
+    NetworkTableEntry tid = limelight.getEntry("tid");
     NetworkTableEntry botPoseField = limelight.getEntry("botpose_wpiblue");
     public static LimelightSubsystem LL; 
 
@@ -67,6 +68,11 @@ public class LimelightSubsystem extends SubsystemBase {
     public double getTa() {
         return ta.getDouble(0);
     }
+
+    public int getTid() {
+        return (int) tid.getDouble(0);
+    }
+
 
     public double getYaw() {
         return botPose.getDoubleArray(new double[6])[4];

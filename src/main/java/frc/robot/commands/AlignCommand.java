@@ -55,7 +55,9 @@ public class AlignCommand extends Command {
     }
 
     /* ----- Updaters ----- */
-
+    // x = 4
+    // y = 5.2
+    // yaw -60
     @Override
     public void execute() {
         double tx = limelight.getTx();

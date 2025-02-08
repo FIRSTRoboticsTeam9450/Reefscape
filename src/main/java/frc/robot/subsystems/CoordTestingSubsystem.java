@@ -334,11 +334,11 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
 
     public void goToSourceIntake() {
-        Elev.setSetpoint(8);
-        if (elevEncoder > 6.5) {
-            DW.setPitchSetpoint(-38);
+        Elev.setSetpoint(6.4);
+        DW.setPitchSetpoint(-70);
+        Elbow.setSetpoint(33);
+        if (elbowEncoder < 60) {
             DW.setRollSetpoint(0);
-            Elbow.setSetpoint(8.5);
         }
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -476,8 +476,8 @@ public class CoordTestingSubsystem extends SubsystemBase{
                 rollToClosestSide();
                 break;
             case 4:
-                coralScorePitch = -153.63;
-                coralScoreElbow = 78.14;
+                coralScorePitch = -143.63;
+                coralScoreElbow = 70.14;
                 coralScoreElev = 35;
                 rollToClosestSide();
         }
