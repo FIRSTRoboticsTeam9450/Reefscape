@@ -50,7 +50,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             if (DI.getCoralLaserDistance() < coralTriggerDistance) {
-                DI.setVoltage(0);
+                DI.setVoltage(0.5);
                 finished = true;
             }
         }
@@ -67,7 +67,6 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        // DI.setVoltage(0);
     }
     
 }

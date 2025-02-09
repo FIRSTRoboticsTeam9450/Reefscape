@@ -10,7 +10,10 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants.AlignPos;
+import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.CoordTestingSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
 public class AlignCommand2 extends Command {
@@ -24,13 +27,14 @@ public class AlignCommand2 extends Command {
     CommandSwerveDrivetrain drive;
     LimelightSubsystem limelight = LimelightSubsystem.getInstance();
     boolean hasTarget;
-    boolean left;
+    AlignPos position;
+    CoordTestingSubsystem score = CoordTestingSubsystem.getInstance();
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    public AlignCommand2(CommandSwerveDrivetrain drive, boolean left) {
-        this.left = left;
+    public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
+        this.position = position;
         //                X,      Y,      Rotation
         double[] tag18 = {3.6576, 4.0259, Math.PI};
         double[] tag19 = {4.0739, 4.7455, 2 * Math.PI / 3.0};
@@ -52,6 +56,7 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
+
         int tid = limelight.getTid();
         if (map.containsKey(tid)) {
             hasTarget = true;
@@ -65,10 +70,13 @@ public class AlignCommand2 extends Command {
     }
 
     private double[] getAlignPos(double[] targetPos) {
-        double tagForwardOffset = 0.45;
+        double tagForwardOffset = 0.48;
         double tagLeftOffset = 0.17;
-        if (!left) {
+        if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.19;
+        } else if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
+            tagLeftOffset = 0;
+            tagForwardOffset = 0.75;
         }
 
         double rotation = targetPos[2] - Math.PI;

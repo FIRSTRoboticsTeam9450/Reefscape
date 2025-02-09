@@ -22,6 +22,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AlignCommand2;
@@ -29,6 +30,7 @@ import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
@@ -44,8 +46,8 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordTestingCommand;;
 
 public class RobotContainer {
-    private static double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
-    private static double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
+    public static double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private static double LiftMaxSpeed = 1;
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
@@ -58,6 +60,7 @@ public class RobotContainer {
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
             .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
+
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
     private final SwerveRequest.PointWheelsAt point = new SwerveRequest.PointWheelsAt();
 
@@ -156,8 +159,8 @@ public class RobotContainer {
         m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
         m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
-        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, false));
+        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
+        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
 
 
 
@@ -204,7 +207,8 @@ public class RobotContainer {
 
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
         m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
-
+        m_driver2.rightStick().onTrue(new AlignCommand(drivetrain, 15));
+        m_driver2.leftStick().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
         
@@ -255,7 +259,7 @@ public class RobotContainer {
     }
 
     public void registeredCommands() {
-        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
         NamedCommands.registerCommand("Score", new ScoringCommand());
@@ -269,6 +273,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("LowAlgae", new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
         NamedCommands.registerCommand("AlgaeProcesser", new CoordTestingCommand(ScoringPos.ALGAE_STORE));
         NamedCommands.registerCommand("Start", new CoordTestingCommand(ScoringPos.START));
+        NamedCommands.registerCommand("AlignAlgae", new AlignCommand(drivetrain, 12));
     }
 
     public Command getAutonomousCommand() {

@@ -87,6 +87,12 @@ public final class Constants {
     INTAKE_VERTICAL_CORAL
   }
 
+  public enum AlignPos {
+    LEFT,
+    RIGHT,
+    CENTER
+  }
+
   public enum ScoringLevel {
     
   }

@@ -253,7 +253,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void updateVision() {
-        if (limelight.getTagCount() >= 1) {
+        if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
             addVisionMeasurement(limelight.getPose(), Utils.getCurrentTimeSeconds());
         }
     }

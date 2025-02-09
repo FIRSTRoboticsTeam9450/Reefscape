@@ -28,7 +28,9 @@ public class LimelightSubsystem extends SubsystemBase {
     NetworkTableEntry botPose = limelight.getEntry("botpose_targetspace");
     NetworkTableEntry tid = limelight.getEntry("tid");
     NetworkTableEntry botPoseFieldBlue = limelight.getEntry("botpose_wpiblue");
-    
+    NetworkTableEntry activePipeline = limelight.getEntry("getpipe");
+    NetworkTableEntry pipelineToSet = limelight.getEntry("pipeline");
+
     public static LimelightSubsystem LL; 
 
     double[] poseArray = new double[10];
@@ -86,6 +88,18 @@ public class LimelightSubsystem extends SubsystemBase {
         Rotation2d rot = new Rotation2d(poseArray[5] * Math.PI / 180);
         Pose2d out = new Pose2d(poseArray[0], poseArray[1], rot);
         return out;
+    }
+
+    public int getActivePipeline() {
+        return (int)activePipeline.getDouble(2);
+    }
+
+    public void setAlgaeMode(boolean algae) {
+        if (algae) {
+            pipelineToSet.setNumber(1);
+        } else {
+            pipelineToSet.setNumber(0);
+        }
     }
     
 }
