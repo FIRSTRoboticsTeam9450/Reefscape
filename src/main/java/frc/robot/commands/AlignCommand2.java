@@ -13,22 +13,22 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoordTestingSubsystem;
+import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.LimelightSubsystem;
 
 public class AlignCommand2 extends Command {
 
-    HashMap<Integer, double[]> map = new HashMap<>();
+    private HashMap<Integer, double[]> map = new HashMap<>();
 
-    PIDController pidX = new PIDController(3, 0, 0);
-    PIDController pidY = new PIDController(3, 0, 0);
-    PIDController pidRotate = new PIDController(4, 0, 0);
+    private PIDController pidX = new PIDController(3, 0, 0);
+    private PIDController pidY = new PIDController(3, 0, 0);
+    private PIDController pidRotate = new PIDController(4, 0, 0);
 
-    CommandSwerveDrivetrain drive;
-    LimelightSubsystem limelight = LimelightSubsystem.getInstance();
-    boolean hasTarget;
-    AlignPos position;
-    CoordTestingSubsystem score = CoordTestingSubsystem.getInstance();
+    private CommandSwerveDrivetrain drive;
+    private LimelightSubsystem limelight = LimelightSubsystem.getInstance();
+    private boolean hasTarget;
+    private AlignPos position;
+    private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);

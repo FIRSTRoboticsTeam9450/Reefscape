@@ -19,7 +19,7 @@ public class DualIntakeCommand extends Command{
 
     private boolean finished;
 
-    Command wristUp = new CoordTestingCommand(ScoringPos.GRABBED_ALGAE);
+    Command wristUp = new CoordinationCommand(ScoringPos.GRABBED_ALGAE);
 
     public DualIntakeCommand(boolean algae) {
         this.algae = algae;

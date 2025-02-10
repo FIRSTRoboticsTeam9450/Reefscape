@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoordTestingSubsystem;
+import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class FieldCentricCommand extends Command {
@@ -25,7 +25,7 @@ public class FieldCentricCommand extends Command {
 
     CommandSwerveDrivetrain drive;
     DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    CoordTestingSubsystem score = CoordTestingSubsystem.getInstance();
+    CoordinationSubsytem score = CoordinationSubsytem.getInstance();
     
     public FieldCentricCommand(CommandSwerveDrivetrain drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
         addRequirements(drive);

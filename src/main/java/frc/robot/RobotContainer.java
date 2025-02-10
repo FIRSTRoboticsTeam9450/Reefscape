@@ -24,9 +24,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
-import frc.robot.commands.AlignCommand;
+import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand2;
-import frc.robot.commands.CoordTestingCommand;
+import frc.robot.commands.CoordinationCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -37,13 +37,13 @@ import frc.robot.commands.ScoringCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoordTestingSubsystem;
+import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 import frc.robot.subsystems.ElbowSubsystem;
 import frc.robot.subsystems.DualIntakeSubsystem;
-import frc.robot.commands.CoordTestingCommand;;
+import frc.robot.commands.CoordinationCommand;;
 
 public class RobotContainer {
     public static double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
@@ -82,7 +82,7 @@ public class RobotContainer {
 
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
-    private CoordTestingSubsystem scoreSub = CoordTestingSubsystem.getInstance();
+    private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
 
@@ -147,16 +147,16 @@ public class RobotContainer {
          */
         
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
-        m_driver1.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
-        m_driver1.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        m_driver1.leftTrigger().onTrue(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
+        m_driver1.leftBumper().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        m_driver1.rightBumper().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
         m_driver1.x().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))
-            .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
+            .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
             ));
-        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
-        m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
+        m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.ALGAE_STORE));
         m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
@@ -171,7 +171,7 @@ public class RobotContainer {
 
         
 
-        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
+        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordinationCommand(ScoringPos.START)));
         m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
         m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
@@ -195,7 +195,7 @@ public class RobotContainer {
          * Y = L4
          */
 
-        m_driver2.rightTrigger().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
         m_driver2.leftTrigger().onTrue(new OuttakeCommand());
         m_driver2.leftBumper().onTrue(new RollSideSwitcher());
         m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
@@ -203,12 +203,12 @@ public class RobotContainer {
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
-        m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
+        m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.CORAL_STORE));
 
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
         m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
-        m_driver2.rightStick().onTrue(new AlignCommand(drivetrain, 15));
-        m_driver2.leftStick().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.rightStick().onTrue(new AlgaeAlignCommand(drivetrain, 15));
+        m_driver2.leftStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
         
@@ -259,21 +259,21 @@ public class RobotContainer {
     }
 
     public void registeredCommands() {
-        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+        NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
         NamedCommands.registerCommand("Score", new ScoringCommand());
-        NamedCommands.registerCommand("GoToScore", new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
-        NamedCommands.registerCommand("CoralStore", new CoordTestingCommand(ScoringPos.CORAL_STORE));
+        NamedCommands.registerCommand("GoToScore", new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
+        NamedCommands.registerCommand("CoralStore", new CoordinationCommand(ScoringPos.CORAL_STORE));
         NamedCommands.registerCommand("Cancel", new InstantCommand(() -> intake.setVoltage(0))
-        .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
+        .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
         ));
-        NamedCommands.registerCommand("HighAlgae", new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        NamedCommands.registerCommand("LowAlgae", new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        NamedCommands.registerCommand("AlgaeProcesser", new CoordTestingCommand(ScoringPos.ALGAE_STORE));
-        NamedCommands.registerCommand("Start", new CoordTestingCommand(ScoringPos.START));
-        NamedCommands.registerCommand("AlignAlgae", new AlignCommand(drivetrain, 12));
+        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("AlgaeProcesser", new CoordinationCommand(ScoringPos.ALGAE_STORE));
+        NamedCommands.registerCommand("Start", new CoordinationCommand(ScoringPos.START));
+        NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, 12));
     }
 
     public Command getAutonomousCommand() {

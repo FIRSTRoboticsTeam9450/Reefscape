@@ -19,7 +19,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class AlignCommand extends Command {
+public class AlgaeAlignCommand extends Command {
     
     //Max Speeds
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
@@ -47,7 +47,7 @@ public class AlignCommand extends Command {
 
     /* ----- Initialization ----- */
 
-    public AlignCommand(CommandSwerveDrivetrain drive, double target) {
+    public AlgaeAlignCommand(CommandSwerveDrivetrain drive, double target) {
         this.target = target;
         this.drive = drive;
         pid.setSetpoint(target);
