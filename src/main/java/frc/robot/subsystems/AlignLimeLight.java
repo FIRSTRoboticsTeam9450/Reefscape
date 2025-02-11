@@ -5,9 +5,17 @@ import edu.wpi.first.math.estimator.SwerveDrivePoseEstimator;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.LimelightHelpers;
 
+/**
+ * Does all the thinky's for where it should go... I hope
+ */
 public class AlignLimeLight extends SubsystemBase{
-    CommandSwerveDrivetrain drive;
-    SwerveDrivePoseEstimator poseEstimator;
+
+    /* ----- Swerve Drive ----- */
+    private CommandSwerveDrivetrain drive;
+    private SwerveDrivePoseEstimator poseEstimator;
+
+    /* ----------- Initialization ----------- */
+
     public AlignLimeLight(CommandSwerveDrivetrain drive) {
         this.drive = drive;
         // Get the pose estimate

@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
 import frc.robot.Constants.ScoringPos;
 
-public class CoordTestingSubsystem extends SubsystemBase{
+public class CoordinationSubsytem extends SubsystemBase{
 
     /* ----- Subsystem Instances ----- */
-    private static CoordTestingSubsystem CT;
+    private static CoordinationSubsytem CT;
     private DiffWristSubsystem DW = DiffWristSubsystem.getInstance();
     private ElevatorSubsystem Elev = ElevatorSubsystem.getInstance();
     private ElbowSubsystem Elbow = ElbowSubsystem.getInstance();
@@ -74,7 +74,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     /**
      * gets the starting angle / position of the encoders
      */
-    public CoordTestingSubsystem() {
+    public CoordinationSubsytem() {
         pos = ScoringPos.START;
 
         pitchEncoder = DW.getPitchAngle();
@@ -592,9 +592,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
         }
     }
 
-    public static CoordTestingSubsystem getInstance() {
+    public static CoordinationSubsytem getInstance() {
         if (CT == null) {
-            CT = new CoordTestingSubsystem();
+            CT = new CoordinationSubsytem();
         }
         return CT;
     }

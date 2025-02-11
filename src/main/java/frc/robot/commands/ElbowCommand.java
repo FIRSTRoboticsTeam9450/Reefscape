@@ -8,20 +8,14 @@ import frc.robot.subsystems.ElbowSubsystem;
  * The Elbow is the Part the connects the elevator and the differential wrist
  */
 public class ElbowCommand extends Command{
-    
-    /* ----- Fields ----- */
 
-    /**
-     * Instance of the elbow subsystem
-     */
+    /* ----- Subsystem Instance ----- */
     private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
 
-    /**
-     * Setpoint to go to
-    */
+    /* ----- Variables ----- */
     private double setpoint;
 
-    /* ----- Initialization ----- */
+    /* ----------- Initialization ----------- */
 
     /**
      * Constructor for the Elbow command
@@ -37,7 +31,7 @@ public class ElbowCommand extends Command{
         elbow.setSetpoint(setpoint);
     }
 
-    /* ----- Finishers ----- */
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {

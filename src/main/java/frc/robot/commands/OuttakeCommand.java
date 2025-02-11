@@ -4,11 +4,18 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
+/**
+ * will slowly outtake depending if holding onto a coral or algae, runs for 1 second
+ */
 public class OuttakeCommand extends Command {
 
-    DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    /* ----- Subsystem Instance ----- */
+    private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
-    Timer timer = new Timer();
+    /* ----- Variables ----- */
+    private Timer timer = new Timer();
+
+    /* ----------- Initialization ----------- */
 
     public OuttakeCommand() {
         addRequirements(intake);
@@ -25,6 +32,8 @@ public class OuttakeCommand extends Command {
 
         timer.reset();
     }
+
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {
