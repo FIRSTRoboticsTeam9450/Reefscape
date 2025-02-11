@@ -13,6 +13,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.IntakeIDS;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -27,7 +28,7 @@ public class AlignCommand extends Command {
     Timer timer = new Timer();
 
     //Limelight
-    LimelightSubsystem limelight = LimelightSubsystem.getInstance();
+    //LimelightSubsystem limelight = LimelightSubsystem.getInstance();
     DualIntakeSubsystem intake = new DualIntakeSubsystem();
 
     //Variables
@@ -58,7 +59,7 @@ public class AlignCommand extends Command {
     public void initialize() {
         timer.restart();
         atTarget = false;
-        limelight.setAlgaeMode(true);
+        LimelightHelpers.setPipelineIndex("limelight", 1);
         SmartDashboard.putBoolean("Align command running?", true);
     }
 
@@ -68,7 +69,7 @@ public class AlignCommand extends Command {
     // yaw -60
     @Override
     public void execute() {
-        double tx = limelight.getTx();
+        double tx = LimelightHelpers.getTX("limelight");
         if (Math.abs(tx - target) < 1) {
             atTarget = true;
         }
@@ -108,7 +109,7 @@ public class AlignCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        limelight.setAlgaeMode(false);
+        LimelightHelpers.setPipelineIndex("limelight", 0);
         SmartDashboard.putBoolean("Align command running?", false);
     }
 

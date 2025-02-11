@@ -26,6 +26,7 @@ import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AlignCommand2;
+import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
@@ -87,6 +88,8 @@ public class RobotContainer {
     private LimelightSubsystem limelight = new LimelightSubsystem();
 
     private ClimbSubsystem climb = new ClimbSubsystem();
+
+    public static double pigeonOffset = 0;
 
     public RobotContainer() {
         configureBindings();
@@ -157,7 +160,7 @@ public class RobotContainer {
             ));
         m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
         m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
-        m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()).andThen(new InstantCommand(() -> pigeonOffset = drivetrain.getPigeon2().getRotation2d().getDegrees())));
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
@@ -259,8 +262,10 @@ public class RobotContainer {
     }
 
     public void registeredCommands() {
-        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+        NamedCommands.registerCommand("IntakeHold", new InstantCommand(() -> intake.setVoltage(2)));
+        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand()));
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        NamedCommands.registerCommand("CoralL3", new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
         NamedCommands.registerCommand("Score", new ScoringCommand());
         NamedCommands.registerCommand("GoToScore", new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));

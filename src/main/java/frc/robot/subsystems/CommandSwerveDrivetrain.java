@@ -8,6 +8,7 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.Utils;
+import com.ctre.phoenix6.hardware.Pigeon2;
 import com.ctre.phoenix6.swerve.SwerveDrivetrainConstants;
 import com.ctre.phoenix6.swerve.SwerveModuleConstants;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -18,6 +19,8 @@ import com.pathplanner.lib.config.RobotConfig;
 import com.pathplanner.lib.controllers.PPHolonomicDriveController;
 
 import edu.wpi.first.math.Matrix;
+import edu.wpi.first.math.VecBuilder;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
@@ -28,7 +31,8 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
-
+import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -253,9 +257,23 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void updateVision() {
-        if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
-            addVisionMeasurement(limelight.getPose(), Utils.getCurrentTimeSeconds());
+        LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        Logger.recordOutput("vision pose", mt2.pose);
+        boolean dontUpdate = false;
+        if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
+            dontUpdate = true;
         }
+        if (mt2.tagCount == 0) {
+            dontUpdate = true;
+        }
+        if (!dontUpdate) {
+            addVisionMeasurement(mt2.pose, Utils.getCurrentTimeSeconds());
+            setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        }
+        // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
+        //     addVisionMeasurement(limelight.getPose(), Utils.getCurrentTimeSeconds());
+        // }
     }
 
     private void startSimThread() {
@@ -278,7 +296,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             var config = RobotConfig.fromGUISettings();
             AutoBuilder.configure(
                 () -> getState().Pose,   // Supplier of current robot pose
-                this::resetPose,         // Consumer for seeding pose against auto
+                this::resetPoseKevin,         // Consumer for seeding pose against auto
                 () -> getState().Speeds, // Supplier of current robot speeds
                 // Consumer of ChassisSpeeds and feedforwards to drive the robot
                 (speeds, feedforwards) -> setControl(
@@ -303,6 +321,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
     public Command getAutoPath(String pathName) {
         return new PathPlannerAuto(pathName);
+    }
+
+    public void resetPoseKevin(Pose2d pose) {
+        RobotContainer.pigeonOffset = getPigeon2().getRotation2d().getDegrees() - pose.getRotation().getDegrees();
+        resetPose(pose);
     }
 
 }

@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ScoringPos;
@@ -31,7 +32,7 @@ public class ScoringCommand extends Command {
             intake.setVoltage(5);
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
-            intake.setVoltage(-.25);
+            intake.setVoltage(2);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-1.25);
         } else {
@@ -48,12 +49,17 @@ public class ScoringCommand extends Command {
     @Override
     public boolean isFinished() {
         // finish after one second
-        return timer.get() > 1;
+        if (DriverStation.isAutonomous()) {
+            return timer.get() > 0.5;
+        } else {
+            return timer.get() > 1;
+        }
     }
     
     @Override
     public void end(boolean interrupted) {
         intake.setVoltage(0);
+        System.out.println("FINISHED SCORING");
         // go to store
         store.schedule();
         

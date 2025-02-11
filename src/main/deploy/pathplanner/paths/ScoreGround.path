@@ -3,24 +3,24 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.2033717105263158,
-        "y": 6.10328947368421
+        "x": 1.5927226027397259,
+        "y": 5.925749143835617
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.1751644736842106,
-        "y": 6.055180921052632
+        "x": 2.5645153658976207,
+        "y": 5.877640591204039
       },
       "isLocked": false,
       "linkedName": "LeftCoral"
     },
     {
       "anchor": {
-        "x": 4.0,
+        "x": 3.98,
         "y": 5.22
       },
       "prevControl": {
-        "x": 3.5521381578947366,
+        "x": 3.5321381578947366,
         "y": 6.108963815789473
       },
       "nextControl": null,
@@ -28,12 +28,7 @@
       "linkedName": "BLL"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.37122128174123326,
-      "rotationDegrees": 78.0
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
@@ -53,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "up",
-      "waypointRelativePos": 0.6671122994652404,
+      "waypointRelativePos": 0.43181818181818094,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -79,7 +74,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 178.7811247648688
+    "rotation": -178.83086067209265
   },
   "useDefaultConstraints": false
 }
