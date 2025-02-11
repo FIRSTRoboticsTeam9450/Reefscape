@@ -9,7 +9,10 @@ import frc.robot.subsystems.CoordinationSubsytem;
  */
 public class RollSideSwitcher extends Command{
     
-    CoordinationSubsytem CT = CoordinationSubsytem.getInstance();
+    /* ----- Subsystem Instance ----- */
+    private CoordinationSubsytem CT = CoordinationSubsytem.getInstance();
+
+    /* ----------- Initialization ----------- */
 
     public RollSideSwitcher() {
 
@@ -21,6 +24,8 @@ public class RollSideSwitcher extends Command{
             CT.rollToOtherSide();
         }
     }
+
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {

@@ -14,24 +14,15 @@ import frc.robot.subsystems.CoordinationSubsytem;
  */
 public class CoordinationCommand extends Command {
 
-    /* ----- Fields ----- */
-
-    /**
-     * Instance of the Coordintation subsystem that is used
-     */
+    /* ----- Subsystem Instance ----- */
     private CoordinationSubsytem CT = CoordinationSubsytem.getInstance();
-    
-    /**
-     * Target Pos
-     */
+
+    /* ----- Variables ----- */
     private ScoringPos targetPos;
-    /**
-     * current state
-     */
     private ScoringPos currentPos;
     private boolean mode;
 
-    /* ----- Initilization ----- */
+    /* ----------- Initilization ----------- */
 
     public CoordinationCommand(ScoringPos pos) {
         this.targetPos = pos;
@@ -71,6 +62,8 @@ public class CoordinationCommand extends Command {
             CT.setPosition(targetPos);
         }
     }
+
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {

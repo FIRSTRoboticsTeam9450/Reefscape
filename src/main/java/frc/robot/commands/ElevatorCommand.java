@@ -7,17 +7,14 @@ import frc.robot.subsystems.ElevatorSubsystem;
  * Command that deals with the elevator subsystem
  */
 public class ElevatorCommand extends Command {
-
-    /* ----- Fields ------ */
     
-    /**
-     * Instance of the elevator subsystem
-     */
+    /* ----- Subsystem Instance ----- */
     private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
 
+    /* ----- Variables ----- */
     private double setpoint;
 
-    /* ----- Initialization ----- */
+    /* ----------- Initialization ----------- */
 
     /**
      * Constructer of the Elevator command
@@ -36,7 +33,7 @@ public class ElevatorCommand extends Command {
         elev.setSetpoint(setpoint);
     }
 
-    /* ----- Finishers ----- */
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {

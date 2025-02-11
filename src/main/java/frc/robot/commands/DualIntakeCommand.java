@@ -6,7 +6,7 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class DualIntakeCommand extends Command{
 
-    /* ----- Instance of the subsystem ----- */
+    /* ----- Subsystem Instance ----- */
     private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
 
     /* ----- Laser Can ----- */
@@ -15,18 +15,19 @@ public class DualIntakeCommand extends Command{
     private double coralTriggerDistance = 15; //unit is mm
     private double algaeTriggerDistance = 25.4; //units is mm
 
+    /* ----- Variables ----- */
     private boolean algae;
-
     private boolean finished;
 
-    Command wristUp = new CoordinationCommand(ScoringPos.GRABBED_ALGAE);
+    /* ----- Command :) ----- */
+    private Command wristUp = new CoordinationCommand(ScoringPos.GRABBED_ALGAE);
 
     public DualIntakeCommand(boolean algae) {
         this.algae = algae;
         addRequirements(DI);
     }
 
-    /* ----- Initialization ----- */
+    /* ----------- Initialization ----------- */
 
     @Override
     public void initialize() {
@@ -38,7 +39,7 @@ public class DualIntakeCommand extends Command{
         }
     }
 
-    /* ----- Updaters ----- */
+    /* ----------- Updaters ----------- */
 
     @Override
     public void execute() {
@@ -57,12 +58,11 @@ public class DualIntakeCommand extends Command{
         
     }
 
-    /* ----- Finishers ----- */
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {
         return finished;
-        // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
     }
 
     @Override

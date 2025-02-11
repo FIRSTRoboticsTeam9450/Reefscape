@@ -13,19 +13,27 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
+/**
+ * Honestly got no clue what this does, but I reckon its something to do with the robot driving field centricly
+ */
 public class FieldCentricCommand extends Command {
 
+    /* ----- Subsystem Instances ----- */
+    private CommandSwerveDrivetrain drive;
+    private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+
+    /* ----- Swerve Drive ----- */
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
             .withDeadband(RobotContainer.MaxSpeed * 0.1).withRotationalDeadband(RobotContainer.MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
-    DoubleSupplier x;
-    DoubleSupplier y;
-    DoubleSupplier rot;
+    /* ----- Variables? (I think) ----- */
+    private DoubleSupplier x;
+    private DoubleSupplier y;
+    private DoubleSupplier rot;
 
-    CommandSwerveDrivetrain drive;
-    DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    /* ----------- Initialization ----------- */
     
     public FieldCentricCommand(CommandSwerveDrivetrain drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
         addRequirements(drive);
@@ -35,10 +43,7 @@ public class FieldCentricCommand extends Command {
         this.rot = rot;
     }
 
-    @Override
-    public void initialize() {
-        
-    }
+    /* ----------- Updaters ----------- */
 
     @Override
     public void execute() {
@@ -48,6 +53,8 @@ public class FieldCentricCommand extends Command {
             .withRotationalRate(-rot.getAsDouble() * RobotContainer.MaxAngularRate) // Drive counterclockwise with negative X (left)
         );
     }
+
+    /* ------------ Finishers ----------- */
 
     @Override
     public boolean isFinished() {

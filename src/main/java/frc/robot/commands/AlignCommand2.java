@@ -16,25 +16,37 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.LimelightSubsystem;
 
+/**
+ * Uses April Tags to understand where it is and to align with primary april tag with certain offsets depending on which reef pole is choosen.
+ */
 public class AlignCommand2 extends Command {
 
+    /* ----- April Tag ID - Positions ----- */
     private HashMap<Integer, double[]> map = new HashMap<>();
 
+    /* ----- PIDs ----- */
     private PIDController pidX = new PIDController(3, 0, 0);
     private PIDController pidY = new PIDController(3, 0, 0);
     private PIDController pidRotate = new PIDController(4, 0, 0);
 
+    /* ----- Subsystem Instances ----- */
     private CommandSwerveDrivetrain drive;
     private LimelightSubsystem limelight = LimelightSubsystem.getInstance();
-    private boolean hasTarget;
-    private AlignPos position;
     private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
 
+    /* ----- Variables ----- */
+    private boolean hasTarget;
+    private AlignPos position;
+
+    /* ----- Swerve Drive ----- */
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
+    /* ----------- Initialzation ----------- */
+
     public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
         this.position = position;
+
         //                X,      Y,      Rotation
         double[] tag18 = {3.6576, 4.0259, Math.PI};
         double[] tag19 = {4.0739, 4.7455, 2 * Math.PI / 3.0};
@@ -46,10 +58,6 @@ public class AlignCommand2 extends Command {
         map.put(21, tag21);
 
         pidRotate.enableContinuousInput(-Math.PI, Math.PI);
-        
-        // pidX.setSetpoint(4);
-        // pidY.setSetpoint(5.2);
-        // pidRotate.setSetpoint(-Math.PI / 3.0);
 
         this.drive = drive;
     }
@@ -68,6 +76,8 @@ public class AlignCommand2 extends Command {
             hasTarget = false;
         }
     }
+
+    /* ----------- Updaters ----------- */
 
     private double[] getAlignPos(double[] targetPos) {
         double tagForwardOffset = 0.48;
@@ -112,16 +122,11 @@ public class AlignCommand2 extends Command {
         }
     }
 
+    /* ----------- Finishers ----------- */
+
     @Override
     public void end(boolean interrupted) {
         SwerveRequest stop = driveRequest.withVelocityX(0).withVelocityY(0).withRotationalRate(0);
         drive.setControl(stop);
     }
-
-    
-
-
-
-
-    
 }
