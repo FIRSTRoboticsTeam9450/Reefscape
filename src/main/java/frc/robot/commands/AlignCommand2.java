@@ -81,7 +81,7 @@ public class AlignCommand2 extends Command {
 
     private double[] getAlignPos(double[] targetPos) {
         double tagForwardOffset = 0.48;
-        double tagLeftOffset = 0.17;
+        double tagLeftOffset = 0.15;
         if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.19;
         } else if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {

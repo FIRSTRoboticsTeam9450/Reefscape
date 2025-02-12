@@ -64,7 +64,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     private double elevAllowedDifference = 1.5;
     private double elbowAllowedDifference = 10;
-    private double pitchAllowedDifference = 10;
+    private double pitchAllowedDifference = 3;
 
     private boolean coralSideLeft;
 
@@ -203,6 +203,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         if (!allAtSetpoints || justChanged) {
             justChanged = false;
             updatePosition();
+            recordSetpoints();
         } else if (allAtSetpoints && justFinished) {
             justFinished = false;
         }
@@ -259,11 +260,15 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void pitchManualMovement(double change) {
+
         double changeTemp = Math.abs(change);
         double setpoint = DW.getPitchSetpoint();
+
+        //DW.setPitchSetpoint(setpoint + change);
+
         if (!(
-            (setpoint + changeTemp  > pitchOriginalSetpoint + pitchAllowedDifference)
-            || (setpoint - changeTemp < pitchOriginalSetpoint - pitchAllowedDifference)
+            (setpoint + change  > pitchOriginalSetpoint + pitchAllowedDifference)
+            || (setpoint + change < pitchOriginalSetpoint - pitchAllowedDifference)
             )) 
         {
             DW.setPitchSetpoint(setpoint + change);
@@ -334,7 +339,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToSourceIntake() {
-        Elev.setSetpoint(6.4);
+        Elev.setSetpoint(7.4);
         DW.setPitchSetpoint(-70);
         Elbow.setSetpoint(33);
         if (elbowEncoder < 60) {

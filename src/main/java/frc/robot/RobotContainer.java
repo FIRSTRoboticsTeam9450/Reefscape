@@ -27,11 +27,11 @@ import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand2;
 import frc.robot.commands.AutoIntakeCommand;
-import frc.robot.commands.CoordTestingCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
+import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
@@ -119,6 +119,8 @@ public class RobotContainer {
             )
         );
 
+        scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
+
         m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
         m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
             point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
@@ -158,8 +160,8 @@ public class RobotContainer {
             .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
             ));
-        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
-        m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
+        m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.ALGAE_STORE));
         m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()).andThen(new InstantCommand(() -> pigeonOffset = drivetrain.getPigeon2().getRotation2d().getDegrees())));
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
@@ -209,9 +211,11 @@ public class RobotContainer {
         m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.CORAL_STORE));
 
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
-        m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
+        // m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
+        m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false)));
         m_driver2.rightStick().onTrue(new AlgaeAlignCommand(drivetrain, 15));
         m_driver2.leftStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
         
@@ -263,7 +267,8 @@ public class RobotContainer {
 
     public void registeredCommands() {
         NamedCommands.registerCommand("IntakeHold", new InstantCommand(() -> intake.setVoltage(2)));
-        NamedCommands.registerCommand("CoralIntake", new CoordTestingCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand()));
+        NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand()));
+        NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand()));
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         NamedCommands.registerCommand("CoralL3", new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));

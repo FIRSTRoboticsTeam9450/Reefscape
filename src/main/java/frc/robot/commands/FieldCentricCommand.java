@@ -6,6 +6,7 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ScoringPos;
@@ -33,6 +34,9 @@ public class FieldCentricCommand extends Command {
     private DoubleSupplier y;
     private DoubleSupplier rot;
 
+    Timer timer = new Timer();
+    boolean scored;
+
     /* ----------- Initialization ----------- */
     
     public FieldCentricCommand(CommandSwerveDrivetrain drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
@@ -41,6 +45,11 @@ public class FieldCentricCommand extends Command {
         this.x = x;
         this.y = y;
         this.rot = rot;
+    }
+
+    @Override
+    public void initialize() {
+        scored = false;
     }
 
     /* ----------- Updaters ----------- */
@@ -52,16 +61,24 @@ public class FieldCentricCommand extends Command {
             .withVelocityY(-x.getAsDouble() * RobotContainer.MaxSpeed) // Drive left with negative X (left)
             .withRotationalRate(-rot.getAsDouble() * RobotContainer.MaxAngularRate) // Drive counterclockwise with negative X (left)
         );
+
+        if (!scored) {
+            if (score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
+                scored = intake.getAlgaeLaserDistance() < 50;
+            } else {
+                scored = intake.getCoralLaserDistance() > 50 && intake.getAlgaeLaserDistance() > 50;
+            }
+            if (scored) {
+                timer.restart();
+            }
+        }
+        
     }
 
     /* ------------ Finishers ----------- */
 
     @Override
     public boolean isFinished() {
-        if (score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-            return intake.getAlgaeLaserDistance() < 50;
-        } else {
-            return intake.getCoralLaserDistance() > 50 && intake.getAlgaeLaserDistance() > 50;
-        }
+        return scored && timer.get() > 1;
     }
 }

@@ -42,7 +42,7 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        DI.setVoltage(2);
+        //DI.setVoltage(2);
     }
     
 }
