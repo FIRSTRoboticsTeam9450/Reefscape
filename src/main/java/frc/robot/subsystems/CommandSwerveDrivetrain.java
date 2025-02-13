@@ -259,6 +259,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private void updateVision() {
         LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+        if (mt2 == null) {
+            return;
+        }
         Logger.recordOutput("vision pose", mt2.pose);
         boolean dontUpdate = false;
         if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
@@ -267,7 +270,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (mt2.tagCount == 0) {
             dontUpdate = true;
         }
-        if (!dontUpdate) {
+        if (!dontUpdate ) {
             addVisionMeasurement(mt2.pose, Utils.getCurrentTimeSeconds());
             setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         }

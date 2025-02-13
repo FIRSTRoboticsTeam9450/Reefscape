@@ -36,6 +36,7 @@ public class FieldCentricCommand extends Command {
 
     Timer timer = new Timer();
     boolean scored;
+    boolean backUp;
 
     /* ----------- Initialization ----------- */
     
@@ -50,6 +51,7 @@ public class FieldCentricCommand extends Command {
     @Override
     public void initialize() {
         scored = false;
+        backUp = intake.getAlgaeLaserDistance() < 50 || intake.getCoralLaserDistance() < 50;
     }
 
     /* ----------- Updaters ----------- */
@@ -71,6 +73,8 @@ public class FieldCentricCommand extends Command {
             if (scored) {
                 timer.restart();
             }
+        } else if (backUp) {
+            drive.setControl(driveRobotCentric.withVelocityX(0).withVelocityY(0.25).withRotationalRate(0));
         }
         
     }
@@ -80,5 +84,10 @@ public class FieldCentricCommand extends Command {
     @Override
     public boolean isFinished() {
         return scored && timer.get() > 1;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        
     }
 }
