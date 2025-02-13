@@ -371,7 +371,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-125);
+        DW.setPitchSetpoint(-127);
         DW.setRollSetpoint(0);
         Elbow.setSetpoint(2);
         Elev.setSetpoint(0);
