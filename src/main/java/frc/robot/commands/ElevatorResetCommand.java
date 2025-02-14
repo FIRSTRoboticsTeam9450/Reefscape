@@ -3,11 +3,15 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.ElevatorSubsystem;
 
+/**
+ * Makes the elevator go down slowly till limit switch triggers, then it resets motor's relative encoders
+ */
 public class ElevatorResetCommand extends Command{
     
+    /* ----- Subystem Instance ----- */
     private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
 
-    public ElevatorResetCommand() {}
+    /* ----------- Initialization ----------- */
 
     @Override
     public void initialize() {
@@ -15,6 +19,8 @@ public class ElevatorResetCommand extends Command{
             elev.setVoltage(-1);
         }
     }
+
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {

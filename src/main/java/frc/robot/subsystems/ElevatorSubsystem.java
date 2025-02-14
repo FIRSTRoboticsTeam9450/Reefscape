@@ -60,15 +60,15 @@ public class ElevatorSubsystem extends SubsystemBase{
         slot0Configs.kS = 0.25; // Add 0.25 V output to overcome static friction
         slot0Configs.kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
         slot0Configs.kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-        slot0Configs.kP = 4.8; // A position error of 2.5 rotations results in 12 V output
+        slot0Configs.kP = 3.8; // A position error of 2.5 rotations results in 12 V output
         slot0Configs.kI = 0; // no output for integrated error
         slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
         
         // set Motion Magic settings
         MotionMagicConfigs motionMagicConfigs = config1.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 50; // Target cruise velocity of 80 rps
-        motionMagicConfigs.MotionMagicAcceleration = 140; // Target acceleration of 160 rps/s (0.5 seconds)
-        motionMagicConfigs.MotionMagicJerk = 600; // Target jerk of 1600 rps/s/s (0.1 seconds)
+        motionMagicConfigs.MotionMagicCruiseVelocity = 75; // Target cruise velocity of 80 rps
+        motionMagicConfigs.MotionMagicAcceleration = 120; // Target acceleration of 160 rps/s (0.5 seconds)
+        motionMagicConfigs.MotionMagicJerk = 1000; // Target jerk of 1600 rps/s/s (0.1 seconds)
 
         temp1.apply(config1);
 

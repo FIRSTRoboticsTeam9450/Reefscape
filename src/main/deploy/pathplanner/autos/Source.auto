@@ -29,50 +29,6 @@
           }
         },
         {
-          "type": "named",
-          "data": {
-            "name": "Score"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Score"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "IntakeLeftGround"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "CoralStore"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ScoreGround"
-          }
-        },
-        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -95,13 +51,19 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "IntakeCenterGround"
+                        "pathName": "BLRSource"
                       }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 1.0
           }
         },
         {
@@ -113,7 +75,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "ScoreCenterGround"
+            "pathName": "SourceScore"
           }
         },
         {
@@ -139,7 +101,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BackUp"
+                        "pathName": "BackUp2"
                       }
                     }
                   ]

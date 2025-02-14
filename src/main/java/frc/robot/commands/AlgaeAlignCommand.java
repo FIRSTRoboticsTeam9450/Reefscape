@@ -13,41 +13,51 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.IntakeIDS;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.LimelightSubsystem;
 
-public class AlignCommand extends Command {
+/**
+ * Will Align to an algae, good for picking them up (algae on ground)
+ */
+public class AlgaeAlignCommand extends Command {
     
-    //Max Speeds
+    /* ----- Max Speeds ----- */
     private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
     private double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
-    Timer timer = new Timer();
+    private Timer timer = new Timer();
 
     //Limelight
-    LimelightSubsystem limelight = LimelightSubsystem.getInstance();
+    //LimelightSubsystem limelight = LimelightSubsystem.getInstance();
     DualIntakeSubsystem intake = new DualIntakeSubsystem();
 
-    //Variables
-    double target;
-    CommandSwerveDrivetrain drive;
-    double power = 0;
-    double rotationPower = 0;
-    PIDController pid = new PIDController(0.01, 0, 0); //0.015, 0, 0.01
-    PIDController pidRotation = new PIDController(0.015, 0, 0); //0.015, 0, 0.005
-    PIDController pidForward = new PIDController(0.01, 0, 0); //0.035, 0, 0.01
+    /* ----- PID's ----- */
+    private PIDController pid = new PIDController(0.01, 0, 0); //0.015, 0, 0.01
+    private PIDController pidRotation = new PIDController(0.015, 0, 0); //0.015, 0, 0.005
+    private PIDController pidForward = new PIDController(0.01, 0, 0); //0.035, 0, 0.01
 
-    boolean atTarget;
+    /* ----- Variables ----- */
+    private double target;
+    private CommandSwerveDrivetrain drive;
+    private double power = 0;
+    private double rotationPower = 0;
+    private boolean atTarget;
 
-    //Swerve Drive stuff
+    /* ----- Swerve Drive ----- */
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    /* ----- Initialization ----- */
+    /* ----------- Initialization ----------- */
 
-    public AlignCommand(CommandSwerveDrivetrain drive, double target) {
+    /**
+     * Constructor
+     * @param drive instance of CommandSwerveDrive
+     * @param target PID target/setpoint
+     */
+    public AlgaeAlignCommand(CommandSwerveDrivetrain drive, double target) {
         this.target = target;
         this.drive = drive;
         pid.setSetpoint(target);
@@ -58,17 +68,18 @@ public class AlignCommand extends Command {
     public void initialize() {
         timer.restart();
         atTarget = false;
-        limelight.setAlgaeMode(true);
+        LimelightHelpers.setPipelineIndex("limelight", 1);
         SmartDashboard.putBoolean("Align command running?", true);
     }
 
-    /* ----- Updaters ----- */
+    /* ----------- Updaters ----------- */
+
     // x = 4
     // y = 5.2
     // yaw -60
     @Override
     public void execute() {
-        double tx = limelight.getTx();
+        double tx = LimelightHelpers.getTX("limelight");
         if (Math.abs(tx - target) < 1) {
             atTarget = true;
         }
@@ -85,30 +96,16 @@ public class AlignCommand extends Command {
 
     }
 
-    /* ----- Finishers ----- */
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {
         return intake.getCoralLaserDistance() < 12 || timer.get() > 4;
-        // if (
-        //     ((limelight.getTx() >= -2 && limelight.getTx() <= 2) && 
-        //     (limelight.getYaw() >= -2 && limelight.getYaw() <= 2) && 
-        //     (limelight.getTa() >= 13)) || 
-        //     (limelight.getTx() == 0.0 && 
-        //     limelight.getYaw() == 0.0 && 
-        //     limelight.getTa() == 0.0)) {
-
-        //         return true;
-
-        // } else {
-        //     return false;
-        // }
-
     }
 
     @Override
     public void end(boolean interrupted) {
-        limelight.setAlgaeMode(false);
+        LimelightHelpers.setPipelineIndex("limelight", 0);
         SmartDashboard.putBoolean("Align command running?", false);
     }
 

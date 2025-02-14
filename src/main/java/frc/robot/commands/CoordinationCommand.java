@@ -6,40 +6,31 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.debugging;
 import frc.robot.Constants.ScoringPos;
-import frc.robot.subsystems.CoordTestingSubsystem;
+import frc.robot.subsystems.CoordinationSubsytem;
 
 /**
  * Uses Logic to see if the state you want to go to is an allowed state to go to.
  * Ex: can't go from coral Intake to Algae intake.
  */
-public class CoordTestingCommand extends Command {
+public class CoordinationCommand extends Command {
 
-    /* ----- Fields ----- */
+    /* ----- Subsystem Instance ----- */
+    private CoordinationSubsytem CT = CoordinationSubsytem.getInstance();
 
-    /**
-     * Instance of the Coordintation subsystem that is used
-     */
-    private CoordTestingSubsystem CT = CoordTestingSubsystem.getInstance();
-    
-    /**
-     * Target Pos
-     */
+    /* ----- Variables ----- */
     private ScoringPos targetPos;
-    /**
-     * current state
-     */
     private ScoringPos currentPos;
     private boolean mode;
 
-    /* ----- Initilization ----- */
+    /* ----------- Initilization ----------- */
 
-    public CoordTestingCommand(ScoringPos pos) {
+    public CoordinationCommand(ScoringPos pos) {
         this.targetPos = pos;
         currentPos = CT.getPos();
         this.mode = false;
     }
 
-    public CoordTestingCommand(ScoringPos pos, boolean mode) {
+    public CoordinationCommand(ScoringPos pos, boolean mode) {
         this.targetPos = pos;
         currentPos = CT.getPos();
         this.mode = mode;
@@ -71,6 +62,8 @@ public class CoordTestingCommand extends Command {
             CT.setPosition(targetPos);
         }
     }
+
+    /* ----------- Finishers ----------- */
 
     @Override
     public boolean isFinished() {

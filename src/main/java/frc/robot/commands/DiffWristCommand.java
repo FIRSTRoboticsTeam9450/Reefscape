@@ -3,15 +3,21 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.DiffWristSubsystem;
 
+/**
+ * Differential Wrist Command that deals with telling it where to go.
+ */
 public class DiffWristCommand extends Command {
 
+    /* ----- Subsystem Instance ----- */
     private DiffWristSubsystem DW = DiffWristSubsystem.getInstance();
 
+    /* ----- Variables ----- */
     private double leftVoltage;
     private double rightVoltage;
     private double setpoint;
     private boolean pitchPID = false;
 
+    /* ----------- Initialization ----------- */
 
     /**
      * Sets the voltage of both motors on the Differental Wrist
@@ -47,6 +53,8 @@ public class DiffWristCommand extends Command {
             DW.setVoltage(leftVoltage, rightVoltage);
         }
     }
+
+    /* ----------- Finishers ----------- */
     
     @Override
     public boolean isFinished() {

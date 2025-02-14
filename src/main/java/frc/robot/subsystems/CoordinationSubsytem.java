@@ -10,10 +10,10 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
 import frc.robot.Constants.ScoringPos;
 
-public class CoordTestingSubsystem extends SubsystemBase{
+public class CoordinationSubsytem extends SubsystemBase{
 
     /* ----- Subsystem Instances ----- */
-    private static CoordTestingSubsystem CT;
+    private static CoordinationSubsytem CT;
     private DiffWristSubsystem DW = DiffWristSubsystem.getInstance();
     private ElevatorSubsystem Elev = ElevatorSubsystem.getInstance();
     private ElbowSubsystem Elbow = ElbowSubsystem.getInstance();
@@ -64,7 +64,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
 
     private double elevAllowedDifference = 1.5;
     private double elbowAllowedDifference = 10;
-    private double pitchAllowedDifference = 10;
+    private double pitchAllowedDifference = 3;
 
     private boolean coralSideLeft;
 
@@ -74,7 +74,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     /**
      * gets the starting angle / position of the encoders
      */
-    public CoordTestingSubsystem() {
+    public CoordinationSubsytem() {
         pos = ScoringPos.START;
 
         pitchEncoder = DW.getPitchAngle();
@@ -203,6 +203,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
         if (!allAtSetpoints || justChanged) {
             justChanged = false;
             updatePosition();
+            recordSetpoints();
         } else if (allAtSetpoints && justFinished) {
             justFinished = false;
         }
@@ -259,11 +260,15 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
 
     public void pitchManualMovement(double change) {
+
         double changeTemp = Math.abs(change);
         double setpoint = DW.getPitchSetpoint();
+
+        //DW.setPitchSetpoint(setpoint + change);
+
         if (!(
-            (setpoint + changeTemp  > pitchOriginalSetpoint + pitchAllowedDifference)
-            || (setpoint - changeTemp < pitchOriginalSetpoint - pitchAllowedDifference)
+            (setpoint + change  > pitchOriginalSetpoint + pitchAllowedDifference)
+            || (setpoint + change < pitchOriginalSetpoint - pitchAllowedDifference)
             )) 
         {
             DW.setPitchSetpoint(setpoint + change);
@@ -334,7 +339,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
 
     public void goToSourceIntake() {
-        Elev.setSetpoint(6.4);
+        Elev.setSetpoint(7.4);
         DW.setPitchSetpoint(-70);
         Elbow.setSetpoint(33);
         if (elbowEncoder < 60) {
@@ -371,7 +376,7 @@ public class CoordTestingSubsystem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-127);
+        DW.setPitchSetpoint(-131);
         DW.setRollSetpoint(0);
         Elbow.setSetpoint(2);
         Elev.setSetpoint(0);
@@ -592,9 +597,9 @@ public class CoordTestingSubsystem extends SubsystemBase{
         }
     }
 
-    public static CoordTestingSubsystem getInstance() {
+    public static CoordinationSubsytem getInstance() {
         if (CT == null) {
-            CT = new CoordTestingSubsystem();
+            CT = new CoordinationSubsytem();
         }
         return CT;
     }
