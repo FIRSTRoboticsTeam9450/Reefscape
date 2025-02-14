@@ -129,7 +129,15 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        // m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
+
+
+
+
+
+
+
+        /* ------------------------- OLD DRIVER KEYBINDS ------------------------- */
+
 
         /* ----- Main Driver Keybinds ----- */
         /* Keybinds:
@@ -143,36 +151,27 @@ public class RobotContainer {
          * D-pad Up = IMU Reset
          */
         
-        m_driver1.rightTrigger().onTrue(new ScoringCommand());
-        m_driver1.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
-        m_driver1.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        m_driver1.x().onTrue(
-            new InstantCommand(() -> intake.setVoltage(0))
-            .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
-            .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
-            ));
-        m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
-        m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
-        m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
+        // m_driver1.rightTrigger().onTrue(new ScoringCommand());
+        // m_driver1.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
+        // m_driver1.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        // m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        // m_driver1.x().onTrue(
+        //     new InstantCommand(() -> intake.setVoltage(0))
+        //     .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
+        //     .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+        //     ));
+        // m_driver1.a().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
+        // m_driver1.b().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
+        // m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
-        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, false));
+        // m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
+        // m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, false));
 
-
-
-        //m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
-
-        //m_driver1.leftTrigger().onTrue(new DualIntakeCommand(false));
-        //m_driver1.rightTrigger().onTrue(new DualIntakeCommand(true));
-
+        // m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
+        // m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
-
-        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
-        m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        
-        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
-        m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
+        // m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
 
 
@@ -192,56 +191,91 @@ public class RobotContainer {
          * Y = L4
          */
 
-        m_driver2.rightTrigger().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
-        m_driver2.leftTrigger().onTrue(new OuttakeCommand());
-        m_driver2.leftBumper().onTrue(new RollSideSwitcher());
-        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        // m_driver2.rightTrigger().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+        // m_driver2.leftTrigger().onTrue(new OuttakeCommand());
+        // m_driver2.leftBumper().onTrue(new RollSideSwitcher());
+        // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
-        m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
+        // m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.CORAL_STORE));
 
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
-        m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
+        // m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
 
 
-        //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
-        
-        //m_driver2.leftTrigger().onTrue(new InstantCommand(() -> intake.setVoltage((-7))).andThen(new CoordTestingCommand(ScoringPos.ALGAEL2)));
-        
-        //m_driver2.leftTrigger().onFalse(new InstantCommand(() -> intake.setVoltage(0))); // USE DIFFERENT BUTTONS
-        
-        /* ----- Main Driver Offical Keybinds ----- */
-        /* Keybinds:
-         * Right Trigger = Score
-         * Left Trigger = (gts?)
-         * Right Bumper = High Algae
-         * Left Bumper = Low Algae
+        /* ------------------------------ NEW DRIVER KEYBINDS ------------------------- */
+
+        /* ----- Driver Controls ----- */
+        /*
+         * Left Joystick = Movement
+         * Right Joystick = Rotation
+         * Left Joystick Click = Left Pole Align
+         * Right Joystick Click = Right Pole ALign
+         * Y = Reset Gyro
          * X = Cancel All
-         * A = Algae Net High
-         * D-pad Up = IMU Reset
+         * D-pad Up = Deploy Climber
+         * D-pad Down = Winch Climber
+         * Right Bumper = Flip
+         * Right Trigger = Go to Score Position
+         * Left Trigger = Score
          */
 
-        /* ----- Operator Driver Offical Keybinds ----- */
-        /* Keybinds:
-         * Right Trigger = Coral Intake
-         * Left Trigger = Outtake
-         * Right Bumper = Roll Intake-System to right side
-         * Left Bumpber = Roll Intake-System to left side
-         * X = L1
-         * A = L2
-         * B = L3
-         * Y = L4
-         */
+        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
+        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, false));
 
+        m_driver1.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
-        // ALGAE GROUND INTAKE - Prob not using :(
-        //m_driver1.x().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE));
+        m_driver1.x().onTrue(
+           new InstantCommand(() -> intake.setVoltage(0))
+           .andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))
+           .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+           ));
 
-        // NEED BUTTON
-        //m_driver1.povRight().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
+        m_driver1.povUp().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordTestingCommand(ScoringPos.START)));
+        m_driver1.povUp().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
+        m_driver1.povDown().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
+        m_driver1.povDown().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+
+        m_driver1.rightBumper().onTrue(new RollSideSwitcher());
+
+        m_driver1.rightTrigger().onTrue(new ScoringCommand());
+
+        m_driver1.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.GO_SCORE_CORAL));
+
+         /* ----- Operator Controls ----- */
+         /*
+          * Y = L4
+          * B = L3
+          * X = L2
+          * A = L1
+          * D-pad Up = Intake High Algae
+          * D-pad Left = Intake Algae Low
+          * D-pad Down = Intake Algae Ground
+          * Right Bumper = Intake Coral Source
+          * Left Bumper = Set Net Score
+          * Right Trigger = Intake Coral Ground
+          * Left Trigger = Set Processor Score
+          */
+
+        m_driver2.y().onTrue( new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        m_driver2.b().onTrue( new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        m_driver2.x().onTrue( new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_driver2.a().onTrue( new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+
+        m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
+        m_driver2.povLeft().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
+        m_driver2.povDown().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
+
+        m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
+        m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+
+        m_driver2.rightTrigger().onTrue(new CoordTestingCommand(ScoringPos.SCORE_PROCESSOR));
+        m_driver2.leftTrigger().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
+
+        
     }
 
     public static void setLiftUp(boolean up) {

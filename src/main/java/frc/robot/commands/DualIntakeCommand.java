@@ -12,7 +12,7 @@ public class DualIntakeCommand extends Command{
     /* ----- Laser Can ----- */
     //The distance for the LaserCan to say it sees something
     //1inch = 25.4mm
-    private double coralTriggerDistance = 15; //unit is mm
+    private double coralTriggerDistance = 60; //unit is mm
     private double algaeTriggerDistance = 25.4; //units is mm
 
     private boolean algae;
@@ -50,7 +50,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             if (DI.getCoralLaserDistance() < coralTriggerDistance) {
-                DI.setVoltage(0);
+                DI.setVoltage(2);
                 finished = true;
             }
         }

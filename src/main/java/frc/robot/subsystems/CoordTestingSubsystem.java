@@ -465,19 +465,19 @@ public class CoordTestingSubsystem extends SubsystemBase{
                 break;
             case 2:
                 coralScorePitch = -90;
-                coralScoreElbow = 78;
+                coralScoreElbow = 88;
                 coralScoreElev = 4;
                 rollToClosestSide();
                 break;
             case 3:
                 coralScorePitch = -90;
-                coralScoreElbow = 78;
+                coralScoreElbow = 88;
                 coralScoreElev = 13.5;
                 rollToClosestSide();
                 break;
             case 4:
                 coralScorePitch = -143.63;
-                coralScoreElbow = 70.14;
+                coralScoreElbow = 80.14;
                 coralScoreElev = 35;
                 rollToClosestSide();
         }
