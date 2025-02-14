@@ -46,6 +46,7 @@ public class AlignCommand2 extends Command {
 
     public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
         this.position = position;
+        // < 2.25, >6
 
         //                X,      Y,      Rotation
         double[] tag18 = {3.6576, 4.0259, Math.PI};
@@ -64,9 +65,14 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
-
+        Pose2d currentPose = drive.getState().Pose;
         int tid = limelight.getTid();
-        if (map.containsKey(tid)) {
+        if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
+            hasTarget = true;
+            pidX.setSetpoint(1.52);
+            pidY.setSetpoint(6.05);
+            pidRotate.setSetpoint(122.0 * Math.PI / 180.0);
+        } else if (map.containsKey(tid)) {
             hasTarget = true;
             double[] pose = getAlignPos(map.get(tid));
             pidX.setSetpoint(pose[0]);
@@ -80,10 +86,10 @@ public class AlignCommand2 extends Command {
     /* ----------- Updaters ----------- */
 
     private double[] getAlignPos(double[] targetPos) {
-        double tagForwardOffset = 0.48;
-        double tagLeftOffset = 0.15;
+        double tagForwardOffset = 0.58;
+        double tagLeftOffset = 0.17;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.19;
+            tagLeftOffset = -0.17;
         } else if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
             tagLeftOffset = 0;
             tagForwardOffset = 0.75;
