@@ -32,7 +32,7 @@ public class DualIntakeCommand extends Command{
     public void initialize() {
         finished = false;
         if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
-            DI.setVoltage(-5);
+            DI.setVoltage(-12);
         } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
             DI.setVoltage(12);
         }
