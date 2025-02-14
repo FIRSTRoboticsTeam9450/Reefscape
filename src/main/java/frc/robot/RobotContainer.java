@@ -54,7 +54,7 @@ public class RobotContainer {
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
     private static double DefaultMaxSpeed = 2.5;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -203,8 +203,8 @@ public class RobotContainer {
         m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
         m_driver2.leftTrigger().onTrue(new OuttakeCommand());
         m_driver2.leftBumper().onTrue(new RollSideSwitcher());
-        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 

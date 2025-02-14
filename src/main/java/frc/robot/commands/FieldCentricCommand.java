@@ -59,13 +59,14 @@ public class FieldCentricCommand extends Command {
 
     @Override
     public void execute() {
-        drive.setControl(
-            driveRobotCentric.withVelocityX(-y.getAsDouble() * RobotContainer.MaxSpeed) // Drive forward with negative Y (forward)
-            .withVelocityY(-x.getAsDouble() * RobotContainer.MaxSpeed) // Drive left with negative X (left)
-            .withRotationalRate(-rot.getAsDouble() * RobotContainer.MaxAngularRate) // Drive counterclockwise with negative X (left)
-        );
+        
 
         if (!scored) {
+            drive.setControl(
+                driveRobotCentric.withVelocityX(-y.getAsDouble() * RobotContainer.MaxSpeed) // Drive forward with negative Y (forward)
+                .withVelocityY(-x.getAsDouble() * RobotContainer.MaxSpeed) // Drive left with negative X (left)
+                .withRotationalRate(-rot.getAsDouble() * RobotContainer.MaxAngularRate) // Drive counterclockwise with negative X (left)
+            );
             if (score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
                 scored = intake.getAlgaeLaserDistance() < 50;
             } else {
@@ -75,7 +76,7 @@ public class FieldCentricCommand extends Command {
                 timer.restart();
             }
         } else if (backUp) {
-            drive.setControl(driveRobotCentric.withVelocityX(0).withVelocityY(0.25).withRotationalRate(0));
+            // drive.setControl(driveRobotCentric.withVelocityX(-0.5).withVelocityY(0).withRotationalRate(0));
         }
         
     }
