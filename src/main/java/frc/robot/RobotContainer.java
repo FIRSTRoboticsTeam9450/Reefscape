@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -92,6 +93,7 @@ public class RobotContainer {
     public static double pigeonOffset = 0;
 
     public RobotContainer() {
+        SmartDashboard.putString("Rio Serial Number", RobotController.getSerialNumber());
         configureBindings();
         registeredCommands();
 

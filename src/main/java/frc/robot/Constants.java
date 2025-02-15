@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 
 /**
@@ -18,6 +19,8 @@ import edu.wpi.first.wpilibj.RobotController;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static RobotConfig robotConfig = new ThingOneConfig();
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
@@ -67,6 +70,7 @@ public final class Constants {
 
   public static final String CTRE_BUS = "Rio";
   public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake; //normally brake, temporarly coast
+  public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
 
   public enum ScoringPos {
     START,
