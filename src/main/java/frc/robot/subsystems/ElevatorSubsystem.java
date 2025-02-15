@@ -86,26 +86,26 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        // position = leftMotor.getPosition().getValueAsDouble(); 
-        // RobotContainer.setLiftUp(position > 22);
-        // atLimit = candi.getS1State().getValue() == S1StateValue.Low;
-        // SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
-        // SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
-        // SmartDashboard.putBoolean("Elevator at limit", atLimit);
-        // SmartDashboard.putBoolean("Reefscape/IDC ATM/ Elevator At setpoint", atSetpoint());
+        position = leftMotor.getPosition().getValueAsDouble(); 
+        RobotContainer.setLiftUp(position > 22);
+        atLimit = candi.getS1State().getValue() == S1StateValue.Low;
+        SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
+        SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
+        SmartDashboard.putBoolean("Elevator at limit", atLimit);
+        SmartDashboard.putBoolean("Reefscape/IDC ATM/ Elevator At setpoint", atSetpoint());
 
-        // if (atLimit) {
-        //     //leftMotor.setPosition(0);
-        // }
+        if (atLimit) {
+            //leftMotor.setPosition(0);
+        }
 
-        // if (resetting && DriverStation.isEnabled()) {
-        //     setSetpoint(getSetpoint() - 0.05);
-        //     if (atLimit) {
-        //         setAtLimit();
-        //         resetting = false;
-        //         setSetpoint(0);
-        //     }
-        // }
+        if (resetting && DriverStation.isEnabled()) {
+            setSetpoint(getSetpoint() - 0.05);
+            if (atLimit) {
+                setAtLimit();
+                resetting = false;
+                setSetpoint(0);
+            }
+        }
     }
 
     /* ----- Getters & Setters ----- */
