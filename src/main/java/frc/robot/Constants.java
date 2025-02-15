@@ -112,7 +112,7 @@ public final class Constants {
     public static final boolean SwerveDebugging = false;
     public static final boolean LimelightDebugging = false;
     public static final boolean CoordAllowedPathsDebugging = false;
-    public static final boolean CoordPositionDebugging = false;
+    public static final boolean CoordPositionDebugging = true;
     public static final boolean CoordAllAtSetpoint = false;
     public static final boolean ClimberPos = true;
   }

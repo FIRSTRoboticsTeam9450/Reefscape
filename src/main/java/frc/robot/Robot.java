@@ -24,6 +24,7 @@ public class Robot extends LoggedRobot {
 
   public Robot() {
     m_robotContainer = new RobotContainer();
+    CanBridge.runTCP();
   }
 
   @Override

@@ -1,14 +1,17 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants;
 import frc.robot.Constants.ScoringPos;
+import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class DualIntakeCommand extends Command{
 
     /* ----- Subsystem Instance ----- */
     private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
+    private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
 
     /* ----- Laser Can ----- */
     //The distance for the LaserCan to say it sees something
@@ -19,9 +22,11 @@ public class DualIntakeCommand extends Command{
     /* ----- Variables ----- */
     private boolean algae;
     private boolean finished;
+    private Timer algaeTimer = new Timer();
 
     /* ----- Command :) ----- */
-    private Command wristUp = new CoordinationCommand(ScoringPos.GRABBED_ALGAE);
+    private Command wristUpReef = new CoordinationCommand(ScoringPos.GRABBED_ALGAE);
+    private Command wristUpGround = new CoordinationCommand(ScoringPos.ALGAE_STORE);
 
     public DualIntakeCommand(boolean algae) {
         this.algae = algae;
@@ -34,7 +39,7 @@ public class DualIntakeCommand extends Command{
     public void initialize() {
         finished = false;
         if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
-            DI.setVoltage(-5);
+            DI.setVoltage(-12);
         } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
             DI.setVoltage(12);
         }
@@ -46,9 +51,14 @@ public class DualIntakeCommand extends Command{
     public void execute() {
         if (algae) {
             if (DI.getAlgaeLaserDistance() < algaeTriggerDistance) {
-                DI.setVoltage(-5);
+                DI.setVoltage(-12);
                 finished = true;
-                wristUp.schedule();
+                if (score.getPos() == ScoringPos.INTAKE_ALGAE) {
+                    wristUpGround.schedule();
+                } else {
+                    wristUpReef.schedule();
+                }
+                algaeTimer.restart();
             }
         } else {
             if (DI.getCoralLaserDistance() < coralTriggerDistance) {
@@ -63,6 +73,9 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public boolean isFinished() {
+        if (algae) {
+            return finished && algaeTimer.get() > 1;
+        }
         return finished;
     }
 

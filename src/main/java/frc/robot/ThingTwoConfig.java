@@ -15,8 +15,8 @@ public class ThingTwoConfig implements RobotConfig {
     Angle backRightOffset = Rotations.of(0.366943359375);
 
     Slot0Configs steerGains = new Slot0Configs()
-        .withKP(125).withKI(0).withKD(2.5)
-        .withKS(0.1).withKV(2.66).withKA(0)
+        .withKP(80).withKI(0).withKD(1)
+        .withKS(0).withKV(1.5).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
 
     Slot0Configs driveGains = new Slot0Configs()
