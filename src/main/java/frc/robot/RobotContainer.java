@@ -217,9 +217,9 @@ public class RobotContainer {
          * X = Cancel All
          * D-pad Up = Deploy Climber
          * D-pad Down = Winch Climber
-         * Right Bumper = Flip
-         * Right Trigger = Go to Score Position
-         * Left Trigger = Score
+         * Right Bumper = Roll Side Switcher
+         * Right Trigger = Score
+         * Left Trigger = Go To Score Position
          */
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
@@ -254,8 +254,8 @@ public class RobotContainer {
           * D-pad Up = Intake High Algae
           * D-pad Left = Intake Algae Low
           * D-pad Down = Intake Algae Ground
-          * Right Bumper = Intake Coral Source
-          * Left Bumper = Set Net Score
+          * Right Bumper = Set Score Net
+          * Left Bumper = Intake Source
           * Right Trigger = Intake Coral Ground
           * Left Trigger = Set Processor Score
           */
@@ -265,9 +265,9 @@ public class RobotContainer {
         m_driver2.x().onTrue( new InstantCommand(() -> scoreSub.setScoringLevel(2)));
         m_driver2.a().onTrue( new InstantCommand(() -> scoreSub.setScoringLevel(1)));
 
-        m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
-        m_driver2.povLeft().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
-        m_driver2.povDown().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)).andThen(new CoordTestingCommand(ScoringPos.ALGAE_STORE)));
+        m_driver2.povUp().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        m_driver2.povLeft().onTrue(new CoordTestingCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        m_driver2.povDown().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
         m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.SCORE_NET));
         m_driver2.leftBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false)).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE)));
