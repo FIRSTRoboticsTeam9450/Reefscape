@@ -24,13 +24,13 @@ public class AlignCommand2 extends Command {
     CommandSwerveDrivetrain drive;
     LimelightSubsystem limelight = LimelightSubsystem.getInstance();
     boolean hasTarget;
-    boolean left;
+    AlignPos position;
 
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    public AlignCommand2(CommandSwerveDrivetrain drive, boolean left) {
-        this.left = left;
+    public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
+        this.position = position;
         //                X,      Y,      Rotation
         double[] tag18 = {3.6576, 4.0259, Math.PI};
         double[] tag19 = {4.0739, 4.7455, 2 * Math.PI / 3.0};
@@ -52,8 +52,14 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
+        Pose2d currentPose = drive.getState().Pose;
         int tid = limelight.getTid();
-        if (map.containsKey(tid)) {
+        if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
+            hasTarget = true;
+            pidX.setSetpoint(1.52);
+            pidY.setSetpoint(6.05);
+            pidRotate.setSetpoint(122.0 * Math.PI / 180.0);
+        } else if (map.containsKey(tid)) {
             hasTarget = true;
             double[] pose = getAlignPos(map.get(tid));
             pidX.setSetpoint(pose[0]);
@@ -67,8 +73,11 @@ public class AlignCommand2 extends Command {
     private double[] getAlignPos(double[] targetPos) {
         double tagForwardOffset = 0.45;
         double tagLeftOffset = 0.17;
-        if (!left) {
+        if (position == Align.RIGHT) {
             tagLeftOffset = -0.19;
+        } else if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
+            tagLeftOffset = 0; // Set left offset for center
+            tagForwardOffset = 0.75; ; // Set forward offset for center
         }
 
         double rotation = targetPos[2] - Math.PI;

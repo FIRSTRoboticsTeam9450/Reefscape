@@ -222,8 +222,8 @@ public class RobotContainer {
          * Left Trigger = Go To Score Position
          */
 
-        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, true));
-        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, false));
+        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX())));
+        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX())));
 
         m_driver1.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()));
 
