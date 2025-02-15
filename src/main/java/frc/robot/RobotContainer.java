@@ -93,7 +93,6 @@ public class RobotContainer {
     public static double pigeonOffset = 0;
 
     public RobotContainer() {
-        SmartDashboard.putString("Rio Serial Number", RobotController.getSerialNumber());
         configureBindings();
         registeredCommands();
 

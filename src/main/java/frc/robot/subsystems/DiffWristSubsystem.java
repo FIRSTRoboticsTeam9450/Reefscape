@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.WristIDs;
+import frc.robot.Constants.debugging;
 
 public class DiffWristSubsystem extends SubsystemBase {
     
@@ -90,10 +91,12 @@ public class DiffWristSubsystem extends SubsystemBase {
         if (runPID) {
             updatePID(pitchPos, rollPos);
         }
-        SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
-        SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
-        SmartDashboard.putNumber("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
-        SmartDashboard.putNumber("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
+        if (debugging.CoordPositionDebugging) {
+            SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
+            SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
+            SmartDashboard.putNumber("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
+            SmartDashboard.putNumber("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
+        }
     }
 
 

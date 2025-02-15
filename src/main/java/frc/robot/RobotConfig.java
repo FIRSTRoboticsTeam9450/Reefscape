@@ -15,6 +15,7 @@ public interface RobotConfig {
     public Slot0Configs getDriveGains();
 
     public double getElbowOffset();
+    public double getElbowRatio();
 
     public double getCoralTriggerDistance();
     public double getAlgaeTriggerDistance();

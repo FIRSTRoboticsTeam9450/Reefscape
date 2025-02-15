@@ -137,6 +137,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
+        setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -162,6 +163,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
+        setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -195,6 +197,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
+        setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -253,7 +256,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         updateVision();
-        Logger.recordOutput("Drive Pose", getState().Pose);
+        //Logger.recordOutput("Drive Pose", getState().Pose);
     }
 
     private void updateVision() {
@@ -262,7 +265,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (mt2 == null) {
             return;
         }
-        Logger.recordOutput("vision pose", mt2.pose);
         boolean dontUpdate = false;
         if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
             dontUpdate = true;
@@ -272,7 +274,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         if (!dontUpdate ) {
             addVisionMeasurement(mt2.pose, Utils.getCurrentTimeSeconds());
-            setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         }
         // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
         //     addVisionMeasurement(limelight.getPose(), Utils.getCurrentTimeSeconds());
