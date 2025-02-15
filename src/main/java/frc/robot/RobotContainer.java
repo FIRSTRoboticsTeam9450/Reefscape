@@ -162,7 +162,7 @@ public class RobotContainer {
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
             ));
         m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
-        m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.ALGAE_STORE));
+        m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()).andThen(new InstantCommand(() -> pigeonOffset = drivetrain.getPigeon2().getRotation2d().getDegrees())));
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
@@ -201,7 +201,7 @@ public class RobotContainer {
          * Y = L4
          */
 
-        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(true)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
         m_driver2.leftTrigger().onTrue(new OuttakeCommand());
         m_driver2.leftBumper().onTrue(new RollSideSwitcher());
         m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));

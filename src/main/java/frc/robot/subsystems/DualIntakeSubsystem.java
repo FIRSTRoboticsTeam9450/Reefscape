@@ -55,8 +55,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
             algaeLaserCan.setRangingMode(LaserCan.RangingMode.LONG);
             coralLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 4, 4));
             algaeLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 4, 4));
-            coralLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-            algaeLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
+            coralLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+            algaeLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
         } catch (ConfigurationFailedException e) {
             System.out.println("Error during Laser Can Configuration: " + e);
         }
@@ -73,7 +73,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         try {
             coralMeasurement = coralLaserCan.getMeasurement();
             algaeMeasurement = algaeLaserCan.getMeasurement();
-            if (coralMeasurement != null) {
+            if (coralMeasurement != null && coralMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
                 coralLaserDistance = coralMedianDistance.calculate(coralMeasurement.distance_mm);
             } else {
                 //coralLaserDistance = 10000;
