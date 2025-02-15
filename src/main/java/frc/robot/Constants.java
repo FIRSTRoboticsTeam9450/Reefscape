@@ -46,6 +46,10 @@ public final class Constants {
     public static final int kCANdiID = 30;
   }
 
+  public static class ClimberIDs {
+    public static final int kMotorID = 27;
+  }
+
   public static class ArmConstraints {
     public static final double kRollHorizontal = 0; // temp
     public static final double kRollVerticalCoralBottom = 0; // temp
@@ -110,6 +114,7 @@ public final class Constants {
     public static final boolean CoordAllowedPathsDebugging = false;
     public static final boolean CoordPositionDebugging = false;
     public static final boolean CoordAllAtSetpoint = false;
+    public static final boolean ClimberPos = true;
   }
 
 }

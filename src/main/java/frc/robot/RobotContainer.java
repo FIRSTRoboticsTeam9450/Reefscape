@@ -28,6 +28,7 @@ import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand2;
 import frc.robot.commands.AutoIntakeCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -87,8 +88,6 @@ public class RobotContainer {
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
-
-    private ClimbSubsystem climb = new ClimbSubsystem();
 
     public static double pigeonOffset = 0;
 
@@ -177,13 +176,19 @@ public class RobotContainer {
 
         
 
-        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordinationCommand(ScoringPos.START)));
-        m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordinationCommand(ScoringPos.START)));
+        // m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
-        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
-        m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
+        // m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
+        m_driver1.povRight().onTrue(new ClimbCommand(-60, 7.5));
 
+        m_driver1.povLeft().onTrue(new ClimbCommand(-350, -12));
+
+        m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
+
+        // m_driver1.povUp().onTrue(new ClimbCommand(-390, -3));
 
         //m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
