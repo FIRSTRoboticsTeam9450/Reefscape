@@ -481,7 +481,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 rollToClosestSide();
                 break;
             case 4:
-                coralScorePitch = -143.63;
+                coralScorePitch = -137.63;
                 coralScoreElbow = 70.14;
                 coralScoreElev = 35;
                 rollToClosestSide();

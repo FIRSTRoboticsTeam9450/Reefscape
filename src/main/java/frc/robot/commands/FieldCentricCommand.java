@@ -55,6 +55,7 @@ public class FieldCentricCommand extends Command {
     }
 
     /* ----------- Updaters ----------- */
+    //1.32 7.05, 122
 
     @Override
     public void execute() {
@@ -84,7 +85,8 @@ public class FieldCentricCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return scored && timer.get() > 1;
+        // return scored && timer.get() > 1;
+        return true;
     }
 
     @Override
