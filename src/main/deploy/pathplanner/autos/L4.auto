@@ -1,0 +1,50 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "StraightToL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeHold"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CLToBLR"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "CoralL1"
+                }
+              },
+              {
+                "type": "named",
+                "data": {
+                  "name": "GoToScore"
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}
