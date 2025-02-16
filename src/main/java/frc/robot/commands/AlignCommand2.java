@@ -93,7 +93,7 @@ public class AlignCommand2 extends Command {
      */
     private double[] getAlignPos(double[] targetPos) {
         double tagForwardOffset = 0.48;
-        double tagLeftOffset = 0.22;
+        double tagLeftOffset = 0.20;
         if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.17;
         }

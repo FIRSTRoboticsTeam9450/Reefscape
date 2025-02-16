@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.5776969178082192,
-        "y": 4.257898116438356
+        "x": 1.6528253424657535,
+        "y": 4.212821061643836
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.0134417808219176,
-        "y": 4.5433861301369864
+        "x": 2.0885702054794524,
+        "y": 4.498309075342466
       },
       "isLocked": false,
       "linkedName": "CenterCoral"
@@ -60,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -148.67130713219586
+    "rotation": -155.37643521383637
   },
   "useDefaultConstraints": false
 }

@@ -83,6 +83,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         elevEncoder = Elev.getPosition();
 
         Start_Set.add(ScoringPos.CORAL_STORE);
+        Start_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL1);
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL2);
@@ -158,6 +159,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Grabbed_Set.add(ScoringPos.SCORE_NET);
 
         Coral_Intake_Vertical_Set.add(ScoringPos.CORAL_STORE);
+        Coral_Intake_Vertical_Set.add(ScoringPos.START);
 
         allowedPaths.put(ScoringPos.START, Start_Set);
 
