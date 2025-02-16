@@ -46,6 +46,7 @@ public class AlignCommand2 extends Command {
 
     public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
         this.position = position;
+        // < 2.25, >6
 
         //                X,      Y,      Rotation
         double[] tag18 = {3.6576, 4.0259, Math.PI};
@@ -64,9 +65,14 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
-
+        Pose2d currentPose = drive.getState().Pose;
         int tid = limelight.getTid();
-        if (map.containsKey(tid)) {
+        if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
+            hasTarget = true;
+            pidX.setSetpoint(1.52);
+            pidY.setSetpoint(6.05);
+            pidRotate.setSetpoint(122.0 * Math.PI / 180.0);
+        } else if (map.containsKey(tid)) {
             hasTarget = true;
             double[] pose = getAlignPos(map.get(tid));
             pidX.setSetpoint(pose[0]);
@@ -86,15 +92,14 @@ public class AlignCommand2 extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos) {
-        // Define default offset values
-        double tagForwardOffset = 0.58;
-        double tagLeftOffset = 0.16;
-
-        // Adjust offsets based on the target position
+        double tagForwardOffset = 0.48;
+        double tagLeftOffset = 0.22;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.17; // Set left offset for right alignment
-        } else if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-            tagLeftOffset = 0; // Set left offset for center
+            tagLeftOffset = -0.17;
+        }
+        System.out.println(score.getPos());
+        if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
+            tagLeftOffset = 0.05; // Set left offset for center
             tagForwardOffset = 0.75; ; // Set forward offset for center
         }
 

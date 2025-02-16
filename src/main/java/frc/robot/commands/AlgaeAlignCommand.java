@@ -88,7 +88,6 @@ public class AlgaeAlignCommand extends Command {
             power = pid.calculate(tx);
             SwerveRequest driveAlign = driveRequest.withVelocityY(-MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withVelocityX(0);
             drive.setControl(driveAlign);
-            SmartDashboard.putNumber("Power", power);
         } else {
             SwerveRequest driveAlign = driveRequest.withVelocityX(0.5).withVelocityY(0);
             drive.setControl(driveAlign);

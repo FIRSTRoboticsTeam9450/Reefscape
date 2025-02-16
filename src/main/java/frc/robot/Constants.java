@@ -7,6 +7,9 @@ package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.RobotController;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -16,6 +19,9 @@ import com.ctre.phoenix6.signals.NeutralModeValue;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("034159F0") ? new ThingOneConfig() : new ThingTwoConfig();
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -38,6 +44,10 @@ public final class Constants {
     public static final int kLeftMotorID = 20;
     public static final int kRightMotorID = 21;
     public static final int kCANdiID = 30;
+  }
+
+  public static class ClimberIDs {
+    public static final int kMotorID = 27;
   }
 
   public static class ArmConstraints {
@@ -64,6 +74,7 @@ public final class Constants {
 
   public static final String CTRE_BUS = "Rio";
   public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake; //normally brake, temporarly coast
+  public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
 
   public enum ScoringPos {
     START,
@@ -101,8 +112,9 @@ public final class Constants {
     public static final boolean SwerveDebugging = false;
     public static final boolean LimelightDebugging = false;
     public static final boolean CoordAllowedPathsDebugging = false;
-    public static final boolean CoordPositionDebugging = false;
-    public static final boolean CoordAllAtSetpoint = true;
+    public static final boolean CoordPositionDebugging = true;
+    public static final boolean CoordAllAtSetpoint = false;
+    public static final boolean ClimberPos = true;
   }
 
 }

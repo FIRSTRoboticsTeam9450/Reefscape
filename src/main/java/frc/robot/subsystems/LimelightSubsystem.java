@@ -45,8 +45,6 @@ public class LimelightSubsystem extends SubsystemBase {
             SmartDashboard.putNumber("limelight ta", ta.getDouble(0));
             SmartDashboard.putNumber("pose ta", poseArray[9]);
         }
-        Logger.recordOutput("Limelight Pose", getPose());
-        poseArray = botPoseFieldBlue.getDoubleArray(new double[10]);
     }
 
     public LimelightSubsystem() {

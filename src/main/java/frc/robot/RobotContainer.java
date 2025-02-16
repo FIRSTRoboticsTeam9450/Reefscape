@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -27,6 +28,7 @@ import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand2;
 import frc.robot.commands.AutoIntakeCommand;
+import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -86,8 +88,6 @@ public class RobotContainer {
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
     private LimelightSubsystem limelight = new LimelightSubsystem();
-
-    private ClimbSubsystem climb = new ClimbSubsystem();
 
     public static double pigeonOffset = 0;
 
@@ -161,7 +161,7 @@ public class RobotContainer {
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
             ));
         m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
-        m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.ALGAE_STORE));
+        m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         m_driver1.povUp().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()).andThen(new InstantCommand(() -> pigeonOffset = drivetrain.getPigeon2().getRotation2d().getDegrees())));
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
@@ -176,13 +176,19 @@ public class RobotContainer {
 
         
 
-        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordinationCommand(ScoringPos.START)));
-        m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordinationCommand(ScoringPos.START)));
+        // m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         
-        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
-        m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
+        // m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
+        m_driver1.povRight().onTrue(new ClimbCommand(-60, 7.5));
 
+        m_driver1.povLeft().onTrue(new ClimbCommand(-350, -12));
+
+        m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
+
+        // m_driver1.povUp().onTrue(new ClimbCommand(-390, -3));
 
         //m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
 
@@ -200,7 +206,7 @@ public class RobotContainer {
          * Y = L4
          */
 
-        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(true)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
         m_driver2.leftTrigger().onTrue(new OuttakeCommand());
         m_driver2.leftBumper().onTrue(new RollSideSwitcher());
         m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));

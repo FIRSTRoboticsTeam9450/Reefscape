@@ -20,7 +20,7 @@ public class RollSideSwitcher extends Command{
 
     @Override
     public void initialize() {
-        if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE) {
+        if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4)) {
             CT.rollToOtherSide();
         }
     }
