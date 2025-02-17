@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 4.056,
-        "y": 5.253499999999999
+        "x": 3.98,
+        "y": 5.22
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.0789999999999997,
-        "y": 5.891499999999999
+        "x": 3.313010204081633,
+        "y": 5.5471938775510194
       },
       "isLocked": false,
       "linkedName": "BLL"
@@ -20,8 +20,8 @@
         "y": 6.962521404109589
       },
       "prevControl": {
-        "x": 2.40825,
-        "y": 6.17
+        "x": 2.4772959183673464,
+        "y": 6.054591836734694
       },
       "nextControl": null,
       "isLocked": false,
@@ -31,19 +31,7 @@
   "rotationTargets": [],
   "constraintZones": [],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "CoralIntake",
-      "waypointRelativePos": 0.3420863309352505,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "IntakeSource"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 6.0,
     "maxAcceleration": 5.0,
