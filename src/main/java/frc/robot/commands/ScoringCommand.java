@@ -30,7 +30,7 @@ public class ScoringCommand extends Command {
         position = scoreSub.getPos();
         timer.restart();
         if (position == ScoringPos.SCORE_NET || position == ScoringPos.ALGAE_STORE) {
-            intake.setVoltage(5);
+            intake.setVoltage(12);
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
             intake.setVoltage(2);

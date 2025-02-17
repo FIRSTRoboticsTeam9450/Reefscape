@@ -92,12 +92,14 @@ public class AlignCommand2 extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos) {
-        double tagForwardOffset = 0.58;
-        double tagLeftOffset = 0.17;
+        double tagForwardOffset = 0.48;
+        double tagLeftOffset = 0.20;
         if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.17;
-        } else if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-            tagLeftOffset = 0; // Set left offset for center
+        }
+        System.out.println(score.getPos());
+        if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
+            tagLeftOffset = 0.05; // Set left offset for center
             tagForwardOffset = 0.75; ; // Set forward offset for center
         }
 
