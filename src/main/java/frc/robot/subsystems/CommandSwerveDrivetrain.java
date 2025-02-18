@@ -256,7 +256,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         updateVision();
-        //Logger.recordOutput("Drive Pose", getState().Pose);
+        Logger.recordOutput("Drive Pose", getState().Pose);
     }
 
     private void updateVision() {

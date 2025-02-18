@@ -206,7 +206,7 @@ public class RobotContainer {
          * Y = L4
          */
 
-        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(true)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
         m_driver2.leftTrigger().onTrue(new OuttakeCommand());
         m_driver2.leftBumper().onTrue(new RollSideSwitcher());
         m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));

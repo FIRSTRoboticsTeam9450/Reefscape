@@ -38,7 +38,7 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        return timer.get() > 2 || DI.getCoralLaserDistance() < Constants.robotConfig.getCoralTriggerDistance();
+        return timer.get() > 2;
         // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
     }
 
