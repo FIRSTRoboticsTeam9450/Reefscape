@@ -480,16 +480,37 @@ public class CoordinationSubsytem extends SubsystemBase{
                 coralScoreElbow = 73.14;
                 coralScoreElev = 35;
                 rollToClosestSide();
+                break;
+            case 5: // Algae Processor
+                coralScorePitch = -129;
+                coralScoreElbow = 2;
+                coralScoreElev = 0;
+                DW.setRollSetpoint(0);
+                break;
+
+            case 6: // Algae Net
+                coralScorePitch = -152;
+                coralScoreElbow = 76;
+                coralScoreElev = 38;
+                break;
         }
 
         // elev 0
         // pitch -71
         // elbow -22
 
-
         Elev.setSetpoint(coralScoreElev);
-        DW.setPitchSetpoint(coralScorePitch);
-        Elbow.setSetpoint(coralScoreElbow);
+        if(level == 6) {
+            if(elevEncoder > 8) {
+                DW.setPitchSetpoint(coralScorePitch);
+                DW.setRollSetpoint(0);
+                Elbow.setSetpoint(coralScoreElbow);
+            }
+        }
+        else {
+            DW.setPitchSetpoint(coralScorePitch);
+            Elbow.setSetpoint(coralScoreElbow);
+        }
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
