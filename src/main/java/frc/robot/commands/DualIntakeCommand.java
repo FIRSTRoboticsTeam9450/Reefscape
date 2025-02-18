@@ -62,7 +62,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             if (DI.getCoralLaserDistance() < coralTriggerDistance) {
-                DI.setVoltage(0.5);
+                DI.setVoltage(12);
                 finished = true;
             }
         }
@@ -73,10 +73,11 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        if (algae) {
-            return finished && algaeTimer.get() > 1;
-        }
-        return finished;
+        return false;
+        // if (algae) {
+        //     return finished && algaeTimer.get() > 1;
+        // }
+        // return finished;
     }
 
     @Override

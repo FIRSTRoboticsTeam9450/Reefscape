@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -17,10 +19,10 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
     /* ----- Instance of Subsystem ----- */
     private static DualIntakeSubsystem DI;
+    int loops = 0;
 
     /* ----- Motors ----- */
     private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
-
     /* ----- Laser Can ----- */
     private LaserCan coralLaserCan;
     private LaserCan algaeLaserCan;
@@ -53,10 +55,10 @@ public class DualIntakeSubsystem extends SubsystemBase{
         try {
             coralLaserCan.setRangingMode(LaserCan.RangingMode.LONG);
             algaeLaserCan.setRangingMode(LaserCan.RangingMode.LONG);
-            coralLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 4, 4));
-            algaeLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 4, 4));
-            coralLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
-            algaeLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_20MS);
+            coralLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 8, 8));
+            algaeLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(0, 0, 8, 8));
+            coralLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_100MS);
+            algaeLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_100MS);
         } catch (ConfigurationFailedException e) {
             System.out.println("Error during Laser Can Configuration: " + e);
         }
@@ -72,18 +74,18 @@ public class DualIntakeSubsystem extends SubsystemBase{
     public void updateLasers() {
         try {
             coralMeasurement = coralLaserCan.getMeasurement();
-            algaeMeasurement = algaeLaserCan.getMeasurement();
+            //algaeMeasurement = algaeLaserCan.getMeasurement();
             if (coralMeasurement != null && coralMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
                 coralLaserDistance = coralMedianDistance.calculate(coralMeasurement.distance_mm);
             } else {
-                //coralLaserDistance = 10000;
+                coralLaserDistance = -50;
             }
-            if (algaeMeasurement != null && algaeMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-                algaeLaserDistance = algaeMedianDistance.calculate(algaeMeasurement.distance_mm);
-            } else {
-                //algaeLaserDistance = 10000;
-                //System.out.println("BAD");
-            }
+            // if (algaeMeasurement != null && algaeMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
+            //     algaeLaserDistance = algaeMedianDistance.calculate(algaeMeasurement.distance_mm);
+            // } else {
+            //     algaeLaserDistance = 10000;
+            // }
+            //Logger.recordOutput("Co", null);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -92,7 +94,9 @@ public class DualIntakeSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         updateLasers();
-        SmartDashboard.putNumber("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
+        loops++;
+        SmartDashboard.putNumber("Reefscape/DualIntake/Loops", loops);
+        Logger.recordOutput("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
         SmartDashboard.putNumber("Reefscape/DualIntake/AlgaeLaserDistance", algaeLaserDistance);
     }
 

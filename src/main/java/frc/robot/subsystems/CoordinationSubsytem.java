@@ -373,9 +373,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-129);
-        DW.setRollSetpoint(0);
-        Elbow.setSetpoint(2);
+        DW.setPitchSetpoint(-123.82); // OLD: -129
+        DW.setRollSetpoint(0); 
+        Elbow.setSetpoint(-3.5); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -476,8 +476,8 @@ public class CoordinationSubsytem extends SubsystemBase{
                 rollToClosestSide();
                 break;
             case 4:
-                coralScorePitch = -137.63;
-                coralScoreElbow = 70.14;
+                coralScorePitch = -143.63;
+                coralScoreElbow = 73.14;
                 coralScoreElev = 35;
                 rollToClosestSide();
         }
