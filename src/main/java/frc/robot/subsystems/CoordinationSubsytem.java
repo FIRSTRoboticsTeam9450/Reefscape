@@ -74,7 +74,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     /**
      * gets the starting angle / position of the encoders
      */
-    public CoordinationSubsytem() {
+    private CoordinationSubsytem() {
         pos = ScoringPos.START;
 
         pitchEncoder = DW.getPitchAngle();

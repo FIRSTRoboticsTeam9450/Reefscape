@@ -47,7 +47,7 @@ public class LimelightSubsystem extends SubsystemBase {
         }
     }
 
-    public LimelightSubsystem() {
+    private LimelightSubsystem() {
 
     }
 

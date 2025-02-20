@@ -77,17 +77,10 @@ public class RobotContainer {
 
     private final SendableChooser<Command> autoChooser;
 
-    private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
-
-    private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
-
-    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
-
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
-    private LimelightSubsystem limelight = new LimelightSubsystem();
 
     public static double pigeonOffset = 0;
 
@@ -234,7 +227,8 @@ public class RobotContainer {
             new InstantCommand(() -> intake.setVoltage(0))
             .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
-            ));        m_driver2.rightStick().onTrue(new AlgaeAlignCommand(drivetrain, 15));
+            ));        
+        m_driver2.rightStick().onTrue(new InstantCommand(() -> drivetrain.runVision = true)).onFalse(new InstantCommand(() -> drivetrain.runVision = false));
         //m_driver2.leftStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
 
 

@@ -42,7 +42,7 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     /* ----- Initialization ----- */
 
-    public DiffWristSubsystem() {
+    private DiffWristSubsystem() {
 
         //Telemetry
         SmartDashboard.putBoolean("Reefscape/DiffWrist/RunPID?", runPID);

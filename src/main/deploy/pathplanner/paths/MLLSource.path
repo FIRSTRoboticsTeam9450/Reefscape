@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.16875,
-        "y": 3.8202499999999993
+        "x": 3.1720170454545458,
+        "y": 4.192708333333333
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.5934999999999997,
-        "y": 5.0097499999999995
+        "x": 2.5967670454545453,
+        "y": 5.382208333333333
       },
       "isLocked": false,
       "linkedName": "MLL"
@@ -60,7 +60,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.9710219310791156
+    "rotation": 0.0
   },
   "useDefaultConstraints": true
 }

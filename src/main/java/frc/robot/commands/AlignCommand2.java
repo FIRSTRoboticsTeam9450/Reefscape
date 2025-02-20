@@ -4,6 +4,8 @@ import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 
 import java.util.HashMap;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -46,8 +48,6 @@ public class AlignCommand2 extends Command {
 
     public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
         this.position = position;
-        // < 2.25, >6
-
         //                X,      Y,      Rotation
         double[] tag17 = {4.0739, 3.3063, 4 * Math.PI / 3.0};
         double[] tag18 = {3.6576, 4.0259, Math.PI};
@@ -96,10 +96,10 @@ public class AlignCommand2 extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos) {
-        double tagForwardOffset = 0.48 - 0.08255;
-        double tagLeftOffset = 0.20;
+        double tagForwardOffset = 0.46;
+        double tagLeftOffset = 0.17145;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.12;
+            tagLeftOffset = -0.17145;
         }
         System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
@@ -123,6 +123,7 @@ public class AlignCommand2 extends Command {
 
         // Create an array with the calculated x, y, and rotation values and return it
         double[] out = {x, y, rotation};
+        double[] out2 = {3, 4.19735, 0};
         return out;
     }
 
@@ -138,10 +139,15 @@ public class AlignCommand2 extends Command {
             // Calculate the power for X direction and clamp it between -1 and 1
             double powerX = pidX.calculate(pose.getX());
             powerX = MathUtil.clamp(powerX, -1, 1);
-
+            powerX += .1*Math.signum(powerX);
             // Calculate the power for Y direction and clamp it between -1 and 1
             double powerY = pidY.calculate(pose.getY());
             powerY = MathUtil.clamp(powerY, -1, 1);
+            powerY += .1*Math.signum(powerY);
+            
+            Logger.recordOutput("Reefscape/Limelight/x error", pidX.getError());
+            Logger.recordOutput("Reefscape/Limelight/y error", pidY.getError());
+
 
             // Calculate the rotational power and clamp it between -2 and 2
             double powerRotate = pidRotate.calculate(pose.getRotation().getRadians());
