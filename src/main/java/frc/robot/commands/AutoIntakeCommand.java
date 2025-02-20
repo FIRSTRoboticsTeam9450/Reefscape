@@ -2,12 +2,15 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
+import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class AutoIntakeCommand extends Command{
 
     /* ----- Instance of the subsystem ----- */
     private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
+    private Command store = new CoordinationCommand(ScoringPos.START);
 
     Timer timer = new Timer();
 
@@ -41,7 +44,8 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        //DI.setVoltage(2);
+        DI.setVoltage(12);
+        store.schedule();
     }
     
 }

@@ -60,6 +60,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private LimelightSubsystem limelight = LimelightSubsystem.getInstance();
 
+    public boolean runVision;
+
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
         new SysIdRoutine.Config(
@@ -256,7 +258,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         updateVision();
-        //Logger.recordOutput("Drive Pose", getState().Pose);
+        Logger.recordOutput("Drive Pose", getState().Pose);
     }
 
     private void updateVision() {
@@ -273,7 +275,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             dontUpdate = true;
         }
         if (!dontUpdate ) {
-            addVisionMeasurement(mt2.pose, Utils.getCurrentTimeSeconds());
+            Logger.recordOutput("Vision Pose", mt2.pose);
+            if (true) {
+                addVisionMeasurement(mt2.pose, Utils.getCurrentTimeSeconds());
+            }
         }
         // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
         //     addVisionMeasurement(limelight.getPose(), Utils.getCurrentTimeSeconds());

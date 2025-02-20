@@ -32,7 +32,7 @@ public class AlgaeAlignCommand extends Command {
 
     //Limelight
     //LimelightSubsystem limelight = LimelightSubsystem.getInstance();
-    DualIntakeSubsystem intake = new DualIntakeSubsystem();
+    DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     /* ----- PID's ----- */
     private PIDController pid = new PIDController(0.01, 0, 0); //0.015, 0, 0.01

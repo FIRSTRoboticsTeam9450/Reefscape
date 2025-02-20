@@ -23,10 +23,10 @@ public class ThingTwoConfig implements RobotConfig {
         .withKP(0.1).withKI(0).withKD(0)
         .withKS(0).withKV(0.124);
     
-    double elbowOffset = -0.090576171875;
+    double elbowOffset = -0.08154296875;
     double elbowRatio = 92.99 / 90.0;
     
-    double coralTriggerDistance = 60;
+    double coralTriggerDistance = 80;
     double algaeTriggerDistance = 24;
 
     @Override

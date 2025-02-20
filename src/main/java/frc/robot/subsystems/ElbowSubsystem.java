@@ -44,7 +44,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
-    public ElbowSubsystem() {
+    private ElbowSubsystem() {
 
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;

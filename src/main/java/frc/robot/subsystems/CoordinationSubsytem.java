@@ -74,7 +74,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     /**
      * gets the starting angle / position of the encoders
      */
-    public CoordinationSubsytem() {
+    private CoordinationSubsytem() {
         pos = ScoringPos.START;
 
         pitchEncoder = DW.getPitchAngle();
@@ -83,6 +83,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         elevEncoder = Elev.getPosition();
 
         Start_Set.add(ScoringPos.CORAL_STORE);
+        Start_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL1);
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL2);
@@ -165,6 +166,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Grabbed_Set.add(ScoringPos.INTAKE_ALGAE);
 
         Coral_Intake_Vertical_Set.add(ScoringPos.CORAL_STORE);
+        Coral_Intake_Vertical_Set.add(ScoringPos.START);
 
         allowedPaths.put(ScoringPos.START, Start_Set);
 
@@ -378,9 +380,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-129);
-        DW.setRollSetpoint(0);
-        Elbow.setSetpoint(2);
+        DW.setPitchSetpoint(-123.82); // OLD: -129
+        DW.setRollSetpoint(0); 
+        Elbow.setSetpoint(-3.5); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -481,20 +483,41 @@ public class CoordinationSubsytem extends SubsystemBase{
                 rollToClosestSide();
                 break;
             case 4:
-                coralScorePitch = -137.63;
-                coralScoreElbow = 70.14;
+                coralScorePitch = -143.63;
+                coralScoreElbow = 73.14;
                 coralScoreElev = 35;
                 rollToClosestSide();
+                break;
+            case 5: // Algae Processor
+                coralScorePitch = -129;
+                coralScoreElbow = 2;
+                coralScoreElev = 0;
+                DW.setRollSetpoint(0);
+                break;
+
+            case 6: // Algae Net
+                coralScorePitch = -152;
+                coralScoreElbow = 76;
+                coralScoreElev = 38;
+                break;
         }
 
         // elev 0
         // pitch -71
         // elbow -22
 
-
         Elev.setSetpoint(coralScoreElev);
-        DW.setPitchSetpoint(coralScorePitch);
-        Elbow.setSetpoint(coralScoreElbow);
+        if(level == 6) {
+            if(elevEncoder > 8) {
+                DW.setPitchSetpoint(coralScorePitch);
+                DW.setRollSetpoint(0);
+                Elbow.setSetpoint(coralScoreElbow);
+            }
+        }
+        else {
+            DW.setPitchSetpoint(coralScorePitch);
+            Elbow.setSetpoint(coralScoreElbow);
+        }
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()

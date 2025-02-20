@@ -45,7 +45,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     /* ----- Initialization ----- */
 
-    public ElevatorSubsystem() {
+    private ElevatorSubsystem() {
 
         TalonFXConfiguration config1 = new TalonFXConfiguration();
         TalonFXConfiguration config2 = new TalonFXConfiguration();

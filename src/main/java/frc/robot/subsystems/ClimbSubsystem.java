@@ -36,7 +36,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /* ----------- Initializaton ----------- */
 
-    public ClimbSubsystem() {
+    private ClimbSubsystem() {
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kCoast);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

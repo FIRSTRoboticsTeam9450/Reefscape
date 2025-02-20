@@ -29,13 +29,15 @@ public class ScoringCommand extends Command {
     public void initialize() {
         position = scoreSub.getPos();
         timer.restart();
-        if (position == ScoringPos.SCORE_NET || position == ScoringPos.ALGAE_STORE) {
+        if (scoreSub.getScoringLevel() == 6 || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(12);
+        } else if(scoreSub.getScoringLevel() == 5) {
+            new DualIntakeCommand(true).schedule();
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
             intake.setVoltage(2);
         } else if (scoreSub.getScoringLevel() == 1) {
-            intake.setVoltage(-0.625);
+            intake.setVoltage(-1);
         } else {
             score.schedule();
             intake.setVoltage(-.25);
