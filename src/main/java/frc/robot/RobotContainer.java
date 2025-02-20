@@ -122,9 +122,9 @@ public class RobotContainer {
         scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
 
         m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
-            point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
-        ));
+        // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
+        //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
+        // ));
 
         // Run SysId routines when holding back/start and X/Y.
         // Note that each routine should be run exactly once in a single log.
