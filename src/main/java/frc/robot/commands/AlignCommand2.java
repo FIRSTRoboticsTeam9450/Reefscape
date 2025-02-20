@@ -49,12 +49,24 @@ public class AlignCommand2 extends Command {
     public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
         this.position = position;
         //                X,      Y,      Rotation
+        double[] tag6 = {13.474446, 3.306318, 5 * Math.PI / 3.0};
+        double[] tag7 = {13.890498, 4.0259, 0};
+        double[] tag8 = {13.474446, 4.745482, Math.PI / 3.0};
+        double[] tag9 = {12.643358, 4.745482, 2 * Math.PI / 3.0};
+        double[] tag10 = {12.227306, 4.0259, Math.PI};
+        double[] tag11 = {12.643358, 3.306318, 4 * Math.PI / 3.0};
         double[] tag17 = {4.0739, 3.3063, 4 * Math.PI / 3.0};
         double[] tag18 = {3.6576, 4.0259, Math.PI};
         double[] tag19 = {4.0739, 4.7455, 2 * Math.PI / 3.0};
         double[] tag20 = {4.9047, 4.7455, Math.PI / 3.0};
         double[] tag21 = {5.3210, 4.0259, 0};
         double[] tag22 = {4.9047, 3.3063, 5 * Math.PI / 3.0};
+        map.put(6, tag6);
+        map.put(7, tag7);
+        map.put(8, tag8);
+        map.put(9, tag9);
+        map.put(10, tag10);
+        map.put(11, tag11);
         map.put(17, tag17);
         map.put(18, tag18);
         map.put(19, tag19);
