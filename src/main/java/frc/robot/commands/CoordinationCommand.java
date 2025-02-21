@@ -7,6 +7,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.debugging;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /**
  * Uses Logic to see if the state you want to go to is an allowed state to go to.
@@ -21,6 +22,8 @@ public class CoordinationCommand extends Command {
     private ScoringPos targetPos;
     private ScoringPos currentPos;
     private boolean mode;
+
+    ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
 
     /* ----------- Initilization ----------- */
 
@@ -38,7 +41,7 @@ public class CoordinationCommand extends Command {
 
     @Override
     public void initialize() {
-
+        elev.setFast();
         currentPos = CT.getPos(); 
         boolean validPath = false;
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);

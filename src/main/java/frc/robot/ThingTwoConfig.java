@@ -26,8 +26,12 @@ public class ThingTwoConfig implements RobotConfig {
     double elbowOffset = -0.08154296875;
     double elbowRatio = 92.99 / 90.0;
     
-    double coralTriggerDistance = 80;
-    double algaeTriggerDistance = 24;
+    double coralTriggerDistance = 60;
+    double algaeTriggerDistance = 30;
+
+    double l4Pitch = -143.63;
+    double l4Elbow = 73.14;
+    double l4Elevator = 35;
 
     @Override
     public Angle getFrontLeftOffset() {
@@ -79,6 +83,19 @@ public class ThingTwoConfig implements RobotConfig {
         return algaeTriggerDistance;
     }
 
+    @Override
+    public double getL4Pitch() {
+        return l4Pitch;
+    }
+    
+    @Override
+    public double getL4Elbow() {
+        return l4Elbow;
+    }
 
+    @Override
+    public double getL4Elevator() {
+        return l4Elevator;
+    }
 
 }

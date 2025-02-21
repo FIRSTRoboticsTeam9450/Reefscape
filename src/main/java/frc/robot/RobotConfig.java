@@ -20,4 +20,8 @@ public interface RobotConfig {
     public double getCoralTriggerDistance();
     public double getAlgaeTriggerDistance();
 
+    public double getL4Pitch();
+    public double getL4Elbow();
+    public double getL4Elevator();
+
 }
