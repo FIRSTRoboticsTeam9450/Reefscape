@@ -22,11 +22,13 @@ public class ScoringCommand extends Command {
     /* ----- Variables ----- */
     private Timer timer = new Timer();
     private ScoringPos position;
+    private boolean algae;
 
     /* ----------- Initialization ----------- */
 
     @Override
     public void initialize() {
+        algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
         timer.restart();
         if (scoreSub.getAlgae() || position == ScoringPos.ALGAE_STORE) {
@@ -51,7 +53,11 @@ public class ScoringCommand extends Command {
         if (DriverStation.isAutonomous()) {
             return timer.get() > 0.5;
         } else {
-            return timer.get() > 0.5;
+            if (algae) {
+                return timer.get() > 0.5;
+            } else {
+                return timer.get() > 1;
+            }
         }
     }
     

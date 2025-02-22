@@ -30,8 +30,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     private PIDController pid = new PIDController(4, 0, 0);
 
     //Motor instances
-    private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, "CantDrive"); //TEMPORARY MOTOR ID
-    private TalonFX rightMotor = new TalonFX(ElevatorIDs.kRightMotorID, "CantDrive"); //TEMPORARY MOTOR ID
+    private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, "CantDrive");
+    private TalonFX rightMotor = new TalonFX(ElevatorIDs.kRightMotorID, "CantDrive");
 
     private double position;
     private double setpoint;
@@ -40,7 +40,7 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     private boolean resetting = true;
 
-    final DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, 75, 120, 1000);
+    final DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, 75, 160, 1000);
 
     private CANdi candi = new CANdi(ElevatorIDs.kCANdiID, "CantDrive");
 
@@ -152,7 +152,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public void setFast() {
-        m_request.Acceleration = 120;
+        m_request.Acceleration = 160;
     }
 
     /**

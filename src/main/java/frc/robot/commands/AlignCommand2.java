@@ -11,6 +11,8 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
@@ -39,6 +41,7 @@ public class AlignCommand2 extends Command {
     /* ----- Variables ----- */
     private boolean hasTarget;
     private AlignPos position;
+    private boolean redAlliance;
 
     /* ----- Swerve Drive ----- */
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
@@ -81,6 +84,7 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
+        redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         Pose2d currentPose = drive.getState().Pose;
         int tid = limelight.getTid();
         if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
@@ -164,6 +168,11 @@ public class AlignCommand2 extends Command {
             // Calculate the rotational power and clamp it between -2 and 2
             double powerRotate = pidRotate.calculate(pose.getRotation().getRadians());
             powerRotate = MathUtil.clamp(powerRotate, -2, 2);
+
+            if (redAlliance) {
+                powerX *= -1;
+                powerY *= -1;
+            }
 
             // Create a new swerve request with the calculated velocities and rotational rate
             SwerveRequest request = driveRequest.withVelocityX(powerX).withVelocityY(powerY).withRotationalRate(powerRotate);

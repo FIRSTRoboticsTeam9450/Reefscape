@@ -35,6 +35,7 @@ import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.OuttakeCommand;
+import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.generated.TunerConstants;
@@ -130,8 +131,6 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
-        // m_driver2.y().onTrue(new AlignCommand(drivetrain, 0));
-
         /* ----- Main Driver Keybinds ----- */
         /* Keybinds:
          * Right Trigger = Go To Scoring Pos
@@ -159,25 +158,10 @@ public class RobotContainer {
             ));
         //m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
         //m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
-        m_driver1.y().onTrue(drivetrain.runOnce(() -> drivetrain.seedFieldCentric()).andThen(new InstantCommand(() -> pigeonOffset = drivetrain.getPigeon2().getRotation2d().getDegrees())));
+        m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
 
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
-
-
-
-        //m_driver1.y().onTrue(new CoordTestingCommand(ScoringPos.ALGAE_STORE));
-
-        //m_driver1.leftTrigger().onTrue(new DualIntakeCommand(false));
-        //m_driver1.rightTrigger().onTrue(new DualIntakeCommand(true));
-
-        
-
-        // m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(6)).andThen(new CoordinationCommand(ScoringPos.START)));
-        // m_driver1.povRight().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        
-        // m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-12)));
-        // m_driver1.povLeft().onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
         m_driver1.povRight().onTrue(new ClimbCommand(-60, 7.5));
 
@@ -186,10 +170,6 @@ public class RobotContainer {
         m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 
         // m_driver1.povUp().onTrue(new ClimbCommand(-390, -3));
-
-        //m_driver1.leftBumper().onTrue(new InstantCommand(() -> elevator.setSetpoint(0)));
-
-        //m_driver1.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE));
 
         /* ----- Operator Driver Keybinds ----- */
         /* Keybinds:

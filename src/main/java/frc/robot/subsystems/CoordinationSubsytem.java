@@ -50,6 +50,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet();
     
     boolean algae;
+    boolean groundAlgae;
 
     private int level = 3;
     private int desiredLevel = 3;
@@ -372,11 +373,15 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToAlgaeStore() {
+        // DW.setPitchSetpoint(-152);
+        // DW.setRollSetpoint(0);
+        // Elbow.setSetpoint(75);
+
         algae = true;
-        DW.setPitchSetpoint(-152);
-        DW.setRollSetpoint(0);
-        Elbow.setSetpoint(75);
-        Elev.setSetpoint(0);
+        DW.setPitchSetpoint(-17);
+        DW.setRollSetpoint(180);
+        Elbow.setSetpoint(56);
+        Elev.setSetpoint(3);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -405,6 +410,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     //elbow 28, pitch -80, roll 180
     public void goToAlgaeIntake() {
         algae = true;
+        groundAlgae = true;
         DW.setPitchSetpoint(-80);
         DW.setRollSetpoint(180);
         Elbow.setSetpoint(28);
@@ -480,17 +486,31 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void goScoreLevel() {
         if (algae) {
+            Elev.setSlow();
             if (algaeNet) { // net
-                coralScorePitch = -152;
-                coralScoreElbow = 76;
-                coralScoreElev = 38;
-                Elev.setSlow();
+                if (groundAlgae) {
+                    coralScorePitch = -17;
+                    coralScoreElbow = 56;
+                    coralScoreElev = 38.3;
+                    DW.setRollSetpoint(180);
+                } else {
+                    coralScorePitch = -152;
+                    coralScoreElbow = 76;
+                    coralScoreElev = 38;
+                    DW.setRollSetpoint(0);
+                }
             } else { // processor
-                coralScorePitch = -129;
-                coralScoreElbow = 12;
-                coralScoreElev = 0;
-                DW.setRollSetpoint(0);
-                Elev.setSlow();
+                if (groundAlgae) {
+                    coralScorePitch = -50;
+                    coralScoreElbow = 48;
+                    coralScoreElev = 0;
+                    DW.setRollSetpoint(180);
+                } else {
+                    coralScorePitch = -129;
+                    coralScoreElbow = 12;
+                    coralScoreElev = 0;
+                    DW.setRollSetpoint(0);
+                }
             }
         } else {
             switch (level) {
@@ -528,7 +548,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         if(algae && algaeNet) {
 
             DW.setPitchSetpoint(coralScorePitch);
-            DW.setRollSetpoint(0);
             Elbow.setSetpoint(coralScoreElbow);
             
             if(DW.atPitchSetpoint()) {
@@ -556,6 +575,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void goL1Algae() {
         algae = true;
+        groundAlgae = false;
         Elev.setSetpoint(11);
         DW.setPitchSetpoint(-141.3);
         Elbow.setSetpoint(37.09);
@@ -572,6 +592,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void goL2Algae() {
         algae = true;
+        groundAlgae = false;
         Elev.setSetpoint(20);
         DW.setPitchSetpoint(-161.3);
         Elbow.setSetpoint(37.09);

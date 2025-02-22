@@ -28,8 +28,8 @@ public class ClimbSubsystem extends SubsystemBase {
     
     /* ----- Motor ----- */
     // private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    private RelativeEncoder encoder = climb.getEncoder();
+    //private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
+    //private RelativeEncoder encoder = climb.getEncoder();
 
     private double maxVolts = 7.5;
     private double minVolts = -3;
@@ -39,7 +39,7 @@ public class ClimbSubsystem extends SubsystemBase {
     private ClimbSubsystem() {
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kCoast);
-        climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /* ----------- Updaters ----------- */
@@ -47,13 +47,13 @@ public class ClimbSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
 
-        double voltage = updatePIDs(encoder.getPosition());
-        setVoltage(voltage);
+        //double voltage = updatePIDs(encoder.getPosition());
+        //setVoltage(voltage);
 
         if (debugging.ClimberPos) {
-            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
-            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
-            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Voltage", voltage);
+            //SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
+            //SmartDashboard.putNumber("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
+            //SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Voltage", voltage);
         }
     }
 
@@ -66,7 +66,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Setters & Getters ----------- */
 
     public void setVoltage(double voltage) {
-        climb.setVoltage(voltage);
+        //climb.setVoltage(voltage);
     }
 
     public void setSetpoint(double setpoint) {
