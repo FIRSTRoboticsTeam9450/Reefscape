@@ -28,7 +28,6 @@ import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand2;
 import frc.robot.commands.AutoIntakeCommand;
-import frc.robot.commands.CancelCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
@@ -39,7 +38,6 @@ import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
-import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -52,7 +50,7 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordinationCommand;;
 
 public class RobotContainer {
-    public static double MaxSpeed = 4; // kSpeedAt12Volts desired top speed 5.41
+    public static double MaxSpeed = 2.5; // kSpeedAt12Volts desired top speed
     public static double MaxAngularRate = RotationsPerSecond.of(.6).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private static double LiftMaxSpeed = 1;
@@ -84,16 +82,14 @@ public class RobotContainer {
 
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
-    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+    private ClimbSubsystem climb = ClimbSubsystem.getInstance();
+
 
     public static double pigeonOffset = 0;
 
     public RobotContainer() {
         configureBindings();
         registeredCommands();
-
-        //int[] validIDs = {6, 7, 8, 9, 10, 11};
-        //LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validIDs);
 
         boolean isCompetition = false;
 
@@ -157,7 +153,11 @@ public class RobotContainer {
         m_driver1.leftBumper().onTrue(new RollSideSwitcher());
         m_driver1.rightBumper().onTrue(new OuttakeCommand());
         //m_driver1.rightBumper().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        m_driver1.x().onTrue(new CancelCommand());
+        m_driver1.x().onTrue(
+            new InstantCommand(() -> intake.setVoltage(0))
+            .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+            .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+            ));
         //m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
         //m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
@@ -165,11 +165,14 @@ public class RobotContainer {
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
 
-        m_driver1.povRight().onTrue(new ClimbCommand(-60, 7.5));
+        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povLeft().onTrue(new ClimbCommand(-350, -12));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.03, 10));
 
-        m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
+        m_driver1.povLeft().onTrue(new ClimbCommand(0.95, -10));
+
+        //m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 
         // m_driver1.povUp().onTrue(new ClimbCommand(-390, -3));
 
@@ -213,7 +216,7 @@ public class RobotContainer {
         //     ));        
         m_driver2.rightStick().onTrue(new InstantCommand(() -> drivetrain.runVision = true)).onFalse(new InstantCommand(() -> drivetrain.runVision = false));
         m_driver2.leftStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
-        m_driver2.start().onTrue(new InstantCommand(() -> elevator.reset()));
+
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS
         
@@ -264,7 +267,6 @@ public class RobotContainer {
     }
 
     public void registeredCommands() {
-        NamedCommands.registerCommand("WaitForCoral", new WaitForLaserCommand());
         NamedCommands.registerCommand("IntakeHold", new InstantCommand(() -> intake.setVoltage(2)));
         NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand()));
         NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand()));
