@@ -32,11 +32,24 @@
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7834224598930488,
+      "minWaypointRelativePos": 0.7678062678062691,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.75,
+        "maxVelocity": 0.6,
         "maxAcceleration": 3.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0,
+      "constraints": {
+        "maxVelocity": 5.0,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -68,7 +81,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -55.22216863363606
+    "rotation": -60.40770364064201
   },
   "reversed": false,
   "folder": "Ground3Coral",

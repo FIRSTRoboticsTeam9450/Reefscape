@@ -61,9 +61,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "WaitForCoral"
           }
         },
         {
@@ -101,7 +101,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": null
+                        "pathName": "BLLToSource"
                       }
                     }
                   ]
@@ -111,9 +111,9 @@
           }
         },
         {
-          "type": "wait",
+          "type": "named",
           "data": {
-            "waitTime": 1.0
+            "name": "WaitForCoral"
           }
         },
         {
@@ -125,7 +125,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SourceToFLR"
+            "pathName": "SourceToDL"
           }
         },
         {
@@ -146,6 +146,12 @@
                       "type": "wait",
                       "data": {
                         "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "BackUp"
                       }
                     }
                   ]

@@ -103,6 +103,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         updateLasers();
         Logger.recordOutput("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
         Logger.recordOutput("Reefscape/DualIntake/AlgaeLaserDistance", algaeLaserDistance);
+        Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
     }
 
     /* ----- Getters & Setters ----- */

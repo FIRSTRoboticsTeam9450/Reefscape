@@ -22,6 +22,7 @@ public class CoordinationCommand extends Command {
     private ScoringPos targetPos;
     private ScoringPos currentPos;
     private boolean mode;
+    public static boolean justCancelled;
 
     ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
 
@@ -46,7 +47,12 @@ public class CoordinationCommand extends Command {
         boolean validPath = false;
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);
         if(mode == false) {
-            if (connectedPathsSet.contains(targetPos)) {
+            if (justCancelled) {
+                if (CT.getAllAtSetpoints()) {
+                    justCancelled = false;
+                }
+            }
+            if (connectedPathsSet.contains(targetPos) && !justCancelled) {
                 CT.setPosition(targetPos);
                 validPath = true;
             } else if (debugging.CoordAllowedPathsDebugging) {
