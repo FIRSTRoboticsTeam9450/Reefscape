@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.revrobotics.RelativeEncoder;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
@@ -24,36 +25,37 @@ public class ClimbSubsystem extends SubsystemBase {
     private static ClimbSubsystem CS;
 
     /* ----- PID Controller ----- */
-    private PIDController pid = new PIDController(0.5, 0, 0);
+    private PIDController pid = new PIDController(60, 0, 0);
     
     /* ----- Motor ----- */
     // private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    //private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    //private RelativeEncoder encoder = climb.getEncoder();
+    private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
+    private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
 
-    private double maxVolts = 7.5;
-    private double minVolts = -3;
+    private double maxVolts = 10;
+    private double minVolts = -10;
 
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
+        pid.setSetpoint(0.8);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kCoast);
-        //climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /* ----------- Updaters ----------- */
-
+    // .03 .8
     @Override
     public void periodic() {
 
-        //double voltage = updatePIDs(encoder.getPosition());
-        //setVoltage(voltage);
+        double voltage = updatePIDs(encoder.getPosition());
+        setVoltage(-voltage);
 
         if (debugging.ClimberPos) {
-            //SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
-            //SmartDashboard.putNumber("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
-            //SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Voltage", voltage);
+            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
+            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
+            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Voltage", voltage);
         }
     }
 
@@ -66,7 +68,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Setters & Getters ----------- */
 
     public void setVoltage(double voltage) {
-        //climb.setVoltage(voltage);
+        climb.setVoltage(voltage);
     }
 
     public void setSetpoint(double setpoint) {

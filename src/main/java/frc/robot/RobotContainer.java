@@ -82,6 +82,8 @@ public class RobotContainer {
 
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
+    private ClimbSubsystem climb = ClimbSubsystem.getInstance();
+
 
     public static double pigeonOffset = 0;
 
@@ -163,11 +165,14 @@ public class RobotContainer {
         m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
 
-        m_driver1.povRight().onTrue(new ClimbCommand(-60, 7.5));
+        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povLeft().onTrue(new ClimbCommand(-350, -12));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.03, 10));
 
-        m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
+        m_driver1.povLeft().onTrue(new ClimbCommand(0.95, -10));
+
+        //m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 
         // m_driver1.povUp().onTrue(new ClimbCommand(-390, -3));
 
