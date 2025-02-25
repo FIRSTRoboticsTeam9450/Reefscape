@@ -168,9 +168,11 @@ public class RobotContainer {
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povUp().onTrue(new ClimbCommand(0.06, 12));
+        m_driver1.povUp().onTrue(new ClimbCommand(0.075, 12));
 
-        m_driver1.povDown().onTrue(new ClimbCommand(0.8, -10));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.649, 10));
+
+        m_driver1.povRight().onTrue(new ClimbCommand(0.9, 3));
 
         //m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 

@@ -18,6 +18,15 @@ import frc.robot.Constants.debugging;
 
 /**
  * Climbers, they go up and down... is fun :)
+ * <p>
+ *  Grabbing Cage: 0.075
+ * </p>
+ * <p>
+ *  Climbing: 0.649
+ * </p>
+ * <p>
+ *  Store: 0.888
+ * </p>
  */
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -33,19 +42,27 @@ public class ClimbSubsystem extends SubsystemBase {
     private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
 
     private double maxVolts = 12;
-    private double minVolts = -12;
 
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
-        pid.setSetpoint(0.58);
+        pid.setSetpoint(0.888);
         SparkFlexConfig config = new SparkFlexConfig();
-        config.idleMode(IdleMode.kCoast);
+        config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /* ----------- Updaters ----------- */
-    // .95store .05deploy.465climb
+
+    /*
+     * POSITIONS
+     * 
+     * Grabbing: 0.075
+     * Climbing: 0.649
+     * Store: 0.888
+     * 
+     */
+
     @Override
     public void periodic() {
         double voltage = updatePIDs(encoder.getPosition());
@@ -59,7 +76,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public double updatePIDs(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(maxVolts, minVolts, voltage);
+        voltage = MathUtil.clamp(voltage, -maxVolts, maxVolts);
         return voltage;
     }
 
@@ -74,11 +91,7 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void setMaxVolts(double maxVolts) {
-        if (maxVolts > 0) {
-            this.maxVolts = maxVolts;
-        } else if (maxVolts < 0) {
-            minVolts = maxVolts;
-        }
+        this.maxVolts = Math.abs(maxVolts);
     }
 
     public static ClimbSubsystem getInstance() {
