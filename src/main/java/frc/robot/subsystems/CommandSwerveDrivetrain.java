@@ -262,12 +262,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void updateVision() {
-        if (!DriverStation.isEnabled()) {
-            LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
-            LimelightHelpers.SetIMUMode("limelight", 1);
-        } else {
-            LimelightHelpers.SetIMUMode("limelight", 2);
-        }
+        LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
         if (mt2 == null) {
             return;

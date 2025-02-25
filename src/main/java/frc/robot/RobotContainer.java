@@ -88,7 +88,7 @@ public class RobotContainer {
     public static double pigeonOffset = 0;
 
     public RobotContainer() {
-        LimelightHelpers.SetIMUMode("limelight", 2);
+        LimelightHelpers.SetIMUMode("limelight", 1);
 
         configureBindings();
         registeredCommands();
