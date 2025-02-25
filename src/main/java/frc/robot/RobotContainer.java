@@ -168,9 +168,9 @@ public class RobotContainer {
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povRight().onTrue(new ClimbCommand(0.03, 10));
+        m_driver1.povUp().onTrue(new ClimbCommand(0.06, 12));
 
-        m_driver1.povLeft().onTrue(new ClimbCommand(0.95, -10));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.8, -10));
 
         //m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 
@@ -214,8 +214,8 @@ public class RobotContainer {
         //     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         //     .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
         //     ));        
-        m_driver2.rightStick().onTrue(new InstantCommand(() -> drivetrain.runVision = true)).onFalse(new InstantCommand(() -> drivetrain.runVision = false));
-        m_driver2.leftStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        //m_driver2.rightStick().onTrue(new InstantCommand(() -> drivetrain.runVision = true)).onFalse(new InstantCommand(() -> drivetrain.runVision = false));
+        //m_driver2.leftStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
 
 
         //m_driver2.leftBumper().onFalse(new InstantCommand(() -> intake.setVoltage(-7))); // USE DIFFERENT BUTTONS

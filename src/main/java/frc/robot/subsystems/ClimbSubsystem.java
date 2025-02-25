@@ -32,26 +32,24 @@ public class ClimbSubsystem extends SubsystemBase {
     private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
     private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
 
-    private double maxVolts = 10;
-    private double minVolts = -10;
+    private double maxVolts = 12;
+    private double minVolts = -12;
 
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
-        pid.setSetpoint(0.8);
+        pid.setSetpoint(0.58);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kCoast);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /* ----------- Updaters ----------- */
-    // .03 .8
+    // .95store .05deploy.465climb
     @Override
     public void periodic() {
-
         double voltage = updatePIDs(encoder.getPosition());
         setVoltage(-voltage);
-
         if (debugging.ClimberPos) {
             SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
             SmartDashboard.putNumber("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
