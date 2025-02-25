@@ -1,9 +1,13 @@
 package frc.robot.subsystems;
 
+import static edu.wpi.first.units.Units.Amps;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.TorqueCurrentFOC;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -36,6 +40,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     //MedianFilter coralMedianDistance = new MedianFilter(3);
     double coralLaserDistance;
     double algaeLaserDistance;
+
+    VoltageOut request = new VoltageOut(0).withEnableFOC(true);
     /* ----- Initialization ----- */
 
     /**
@@ -97,6 +103,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         updateLasers();
         Logger.recordOutput("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
         Logger.recordOutput("Reefscape/DualIntake/AlgaeLaserDistance", algaeLaserDistance);
+        Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
     }
 
     /* ----- Getters & Setters ----- */
@@ -119,7 +126,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * @param voltage range of -12V to 12V
      */
     public void setVoltage(double voltage) {
-        motor.setVoltage(voltage);
+        motor.setControl(request.withOutput(voltage));
     }
 
     public void setMode(boolean coast) {

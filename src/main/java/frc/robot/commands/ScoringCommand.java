@@ -22,17 +22,17 @@ public class ScoringCommand extends Command {
     /* ----- Variables ----- */
     private Timer timer = new Timer();
     private ScoringPos position;
+    private boolean algae;
 
     /* ----------- Initialization ----------- */
 
     @Override
     public void initialize() {
+        algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
         timer.restart();
-        if (scoreSub.getScoringLevel() == 6 || position == ScoringPos.ALGAE_STORE) {
+        if (scoreSub.getAlgae() || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(12);
-        } else if(scoreSub.getScoringLevel() == 5) {
-            new DualIntakeCommand(true).schedule();
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
             intake.setVoltage(2);
@@ -53,7 +53,11 @@ public class ScoringCommand extends Command {
         if (DriverStation.isAutonomous()) {
             return timer.get() > 0.5;
         } else {
-            return timer.get() > 1;
+            if (algae) {
+                return timer.get() > 0.5;
+            } else {
+                return timer.get() > 1;
+            }
         }
     }
     

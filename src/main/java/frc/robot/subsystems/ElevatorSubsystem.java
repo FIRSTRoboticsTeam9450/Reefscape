@@ -4,6 +4,7 @@ import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANdi;
@@ -29,8 +30,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     private PIDController pid = new PIDController(4, 0, 0);
 
     //Motor instances
-    private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
-    private TalonFX rightMotor = new TalonFX(ElevatorIDs.kRightMotorID, Constants.CTRE_BUS); //TEMPORARY MOTOR ID
+    private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, "CantDrive");
+    private TalonFX rightMotor = new TalonFX(ElevatorIDs.kRightMotorID, "CantDrive");
 
     private double position;
     private double setpoint;
@@ -39,9 +40,9 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     private boolean resetting = true;
 
-    final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
+    final DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, 75, 160, 1000);
 
-    private CANdi candi = new CANdi(ElevatorIDs.kCANdiID);
+    private CANdi candi = new CANdi(ElevatorIDs.kCANdiID, "CantDrive");
 
     /* ----- Initialization ----- */
 
@@ -63,12 +64,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         slot0Configs.kP = 3.8; // A position error of 2.5 rotations results in 12 V output
         slot0Configs.kI = 0; // no output for integrated error
         slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
-        
-        // set Motion Magic settings
-        MotionMagicConfigs motionMagicConfigs = config1.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = 75; // Target cruise velocity of 80 rps
-        motionMagicConfigs.MotionMagicAcceleration = 120; // Target acceleration of 160 rps/s (0.5 seconds)
-        motionMagicConfigs.MotionMagicJerk = 1000; // Target jerk of 1600 rps/s/s (0.1 seconds)
+    
 
         temp1.apply(config1);
 
@@ -149,6 +145,14 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void reset() {
         resetting = true;
+    }
+
+    public void setSlow() {
+        m_request.Acceleration = 50;
+    }
+
+    public void setFast() {
+        m_request.Acceleration = 160;
     }
 
     /**

@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.014285714285714,
-        "y": 5.218877551020407
+        "x": 3.1767418032786883,
+        "y": 4.1748463114754095
       },
       "prevControl": null,
       "nextControl": {
-        "x": 5.454802759740258,
-        "y": 5.7917695964749525
+        "x": 3.6172588487332322,
+        "y": 4.747738356929955
       },
       "isLocked": false,
       "linkedName": "FLR"
@@ -48,7 +48,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -121.13897243697872
+    "rotation": 0.20834737080621638
   },
   "useDefaultConstraints": false
 }

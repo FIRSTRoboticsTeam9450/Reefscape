@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.1,
-        "y": 5.9
+        "x": 3.1407786885245907,
+        "y": 3.8631659836065575
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.1,
-        "y": 5.9
+        "x": 1.793912250168426,
+        "y": 3.961115469907926
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DR"
     },
     {
       "anchor": {
-        "x": 1.9147203947368419,
-        "y": 5.7953947368421055
+        "x": 1.397388698630137,
+        "y": 5.459952910958905
       },
       "prevControl": {
-        "x": 2.914720394736841,
-        "y": 5.7953947368421055
+        "x": 1.7279537671232876,
+        "y": 4.949079623287671
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,18 +30,18 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6735187424425643,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.7314629258517036,
+      "rotationDegrees": 116.39220456519134
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6965240641711233,
+      "minWaypointRelativePos": 0.868471035137702,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 5.0,
+        "maxVelocity": 0.75,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -52,33 +52,20 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "up",
-      "waypointRelativePos": 0.15,
+      "name": "CoralIntake",
+      "waypointRelativePos": 0.36428571428571427,
       "endWaypointRelativePos": null,
       "command": {
-        "type": "sequential",
+        "type": "named",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "CoralL1"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "GoToScore"
-              }
-            }
-          ]
+          "name": "CoralIntake"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 2.0,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -86,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 115.46334506187162
   },
   "reversed": false,
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

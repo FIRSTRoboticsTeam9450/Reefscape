@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.921703767123288,
-        "y": 5.249593321917807
+        "x": 3.6802254098360656,
+        "y": 5.085911885245901
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.627789293439077,
-        "y": 5.792932137707287
+        "x": 3.3863109361518546,
+        "y": 5.629250701035381
       },
       "isLocked": false,
       "linkedName": "BLR"
     },
     {
       "anchor": {
-        "x": 1.6528253424657535,
-        "y": 5.850620719178083
+        "x": 1.714,
+        "y": 5.787
       },
       "prevControl": {
-        "x": 3.6942096250901226,
-        "y": 5.88357178262437
+        "x": 3.7553842826243686,
+        "y": 5.819951063446287
       },
       "nextControl": null,
       "isLocked": false,
@@ -50,8 +50,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.7,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 3.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -62,10 +62,10 @@
     "rotation": -178.56790381583548
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Ground3Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -55.22216863363606
+    "rotation": -60.40770364064201
   },
   "useDefaultConstraints": false
 }

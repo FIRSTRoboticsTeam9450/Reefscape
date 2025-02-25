@@ -25,7 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToReef"
+            "pathName": "StartToDR"
           }
         },
         {
@@ -33,9 +33,16 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Score"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Score"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -43,39 +50,21 @@
                 "data": {
                   "commands": [
                     {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
                       "type": "path",
                       "data": {
-                        "pathName": "BLRSource"
+                        "pathName": "DRToLeftGround"
                       }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WaitForCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralStore"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceScore"
+            "pathName": "LeftGroundToDL"
           }
         },
         {
@@ -97,67 +86,17 @@
                       "data": {
                         "waitTime": 0.5
                       }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "BLLToSource"
-                      }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WaitForCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralStore"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceToDL"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Score"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "BackUp"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
+            "pathName": "BackUp"
           }
         }
       ]
