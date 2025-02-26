@@ -15,6 +15,8 @@ import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 
+import edu.wpi.first.cameraserver.CameraServer;
+
 import au.grapplerobotics.CanBridge;
 
 public class Robot extends LoggedRobot {
@@ -25,6 +27,7 @@ public class Robot extends LoggedRobot {
   public Robot() {
     m_robotContainer = new RobotContainer();
     CanBridge.runTCP();
+    CameraServer.startAutomaticCapture();
   }
 
   @Override

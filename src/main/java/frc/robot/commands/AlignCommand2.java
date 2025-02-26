@@ -119,7 +119,7 @@ public class AlignCommand2 extends Command {
         }
         System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-            tagLeftOffset = 0.05; // Set left offset for center
+            tagLeftOffset = 0; // Set left offset for center
             tagForwardOffset = 0.75; ; // Set forward offset for center
         }
 
