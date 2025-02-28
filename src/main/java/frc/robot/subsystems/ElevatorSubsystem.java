@@ -94,14 +94,14 @@ public class ElevatorSubsystem extends SubsystemBase{
             //leftMotor.setPosition(0);
         }
 
-        if (resetting && DriverStation.isEnabled()) {
-            setSetpoint(getSetpoint() - 0.05);
-            if (atLimit) {
-                setAtLimit();
-                resetting = false;
-                setSetpoint(0);
-            }
-        }
+        // if (resetting && DriverStation.isEnabled()) {
+        //     setSetpoint(getSetpoint() - 0.05);
+        //     if (atLimit) {
+        //         setAtLimit();
+        //         resetting = false;
+        //         setSetpoint(0);
+        //     }
+        // }
     }
 
     /* ----- Getters & Setters ----- */

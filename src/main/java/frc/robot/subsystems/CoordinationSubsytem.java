@@ -570,7 +570,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goScoreL4() {
-        Elev.setSetpoint(21.37);
+        Elev.setSetpoint(29);
     }
 
     public void goL1Algae() {

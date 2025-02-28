@@ -4,8 +4,10 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Tracer;
+import edu.wpi.first.wpilibj.PowerDistribution.ModuleType;
 import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -24,7 +26,12 @@ public class Robot extends LoggedRobot {
 
   private final RobotContainer m_robotContainer;
 
+  public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
+
   public Robot() {
+    Logger.addDataReceiver(new NT4Publisher());
+    Logger.start();
+
     m_robotContainer = new RobotContainer();
     CanBridge.runTCP();
     CameraServer.startAutomaticCapture();
@@ -32,12 +39,11 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void robotPeriodic() {
-    CommandScheduler.getInstance().run(); 
+    CommandScheduler.getInstance().run();
   }
   @Override
   public void robotInit() {
-      Logger.addDataReceiver(new NT4Publisher());
-      Logger.start();
+      
   }
 
   @Override

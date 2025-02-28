@@ -25,7 +25,7 @@ import frc.robot.Constants.debugging;
  *  Climbing: 0.649
  * </p>
  * <p>
- *  Store: 0.888
+ *  Store: 0.928
  * </p>
  */
 public class ClimbSubsystem extends SubsystemBase {
@@ -34,7 +34,7 @@ public class ClimbSubsystem extends SubsystemBase {
     private static ClimbSubsystem CS;
 
     /* ----- PID Controller ----- */
-    private PIDController pid = new PIDController(60, 0, 0);
+    private PIDController pid = new PIDController(55, 0, 0.5);
     
     /* ----- Motor ----- */
     // private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
@@ -46,7 +46,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
-        pid.setSetpoint(0.888);
+        pid.setSetpoint(0.928);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

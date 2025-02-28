@@ -113,9 +113,9 @@ public class AlignCommand2 extends Command {
      */
     private double[] getAlignPos(double[] targetPos) {
         double tagForwardOffset = 0.46;
-        double tagLeftOffset = 0.14605;
+        double tagLeftOffset = 0.14605 - 0.05;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.14605;
+            tagLeftOffset = -0.14605 - 0.05;
         }
         System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {

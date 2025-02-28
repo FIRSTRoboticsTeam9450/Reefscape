@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
+import frc.robot.Robot;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
 /**
@@ -139,7 +140,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, modules);
-        setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        //setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -165,7 +166,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, modules);
-        setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        //setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -199,7 +200,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         SwerveModuleConstants<?, ?, ?>... modules
     ) {
         super(drivetrainConstants, odometryUpdateFrequency, odometryStandardDeviation, visionStandardDeviation, modules);
-        setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        //setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         if (Utils.isSimulation()) {
             startSimThread();
         }
@@ -258,26 +259,34 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         updateVision();
+        Logger.recordOutput("Reefscape/PDH", Robot.pdh.getAllCurrents());
         Logger.recordOutput("Drive Pose", getState().Pose);
     }
 
     private void updateVision() {
         LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
-        LimelightHelpers.PoseEstimate mt2 = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-        if (mt2 == null) {
+        LimelightHelpers.PoseEstimate visionPose = null;
+        if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        } else {
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+            setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7, .9));
+        }
+        if (visionPose == null) {
             return;
         }
         boolean dontUpdate = false;
         if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
             dontUpdate = true;
         }
-        if (mt2.tagCount == 0) {
+        if (visionPose.tagCount == 0) {
             dontUpdate = true;
         }
         if (!dontUpdate ) {
-            Logger.recordOutput("Vision Pose", mt2.pose);
+            Logger.recordOutput("Vision Pose", visionPose.pose);
             if (true) {
-                addVisionMeasurement(mt2.pose, Utils.getCurrentTimeSeconds());
+                addVisionMeasurement(visionPose.pose, Utils.getCurrentTimeSeconds());
             }
         }
         // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
