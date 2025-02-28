@@ -63,7 +63,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             if (DI.getCoralLaserDistance() < coralTriggerDistance) {
-                DI.setVoltage(1);
+                DI.setVoltage(5);
                 finished = true;
             }
         }
@@ -86,6 +86,8 @@ public class DualIntakeCommand extends Command{
             if (score.getPos() == ScoringPos.INTAKE_ALGAE) {
                 wristUpGround.schedule();
             }
+        } else {
+            DI.setVoltage(5);
         }
     }
     

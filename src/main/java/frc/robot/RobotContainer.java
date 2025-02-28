@@ -49,19 +49,19 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordinationCommand;;
 
 public class RobotContainer {
-    public static double MaxSpeed = 4; // kSpeedAt12Volts desired top speed
-    public static double MaxAngularRate = RotationsPerSecond.of(1.2).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
+    public static double MaxSpeed = 2.2; // kSpeedAt12Volts desired top speed
+    public static double MaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private static double LiftMaxSpeed = 1;
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
-    private static double DefaultMaxSpeed = 4;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.2).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxSpeed = 2.2;
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
-            .withDeadband(MaxSpeed * 0.01).withRotationalDeadband(MaxAngularRate * 0.01) // Add a 10% deadband
+            .withDeadband(MaxSpeed * 0.1).withRotationalDeadband(MaxAngularRate * 0.1) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
 
     private final SwerveRequest.SwerveDriveBrake brake = new SwerveRequest.SwerveDriveBrake();
@@ -110,9 +110,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(Math.pow(-m_driver1.getLeftY(), 2) * Math.signum(-m_driver1.getLeftY()) * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(Math.pow(-m_driver1.getLeftX(), 2) * Math.signum(-m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(Math.pow(-m_driver1.getRightX(), 2) * Math.signum(-m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-m_driver1.getLeftY()  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-m_driver1.getLeftX() * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-m_driver1.getRightX() * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
@@ -169,7 +169,7 @@ public class RobotContainer {
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povUp().onTrue(new ClimbCommand(0.075, 12));
+        m_driver1.povUp().onTrue(new ClimbCommand(0.11, 12));
 
         m_driver1.povDown().onTrue(new ClimbCommand(0.72, 10).andThen(new CoordinationCommand(ScoringPos.START)));
 

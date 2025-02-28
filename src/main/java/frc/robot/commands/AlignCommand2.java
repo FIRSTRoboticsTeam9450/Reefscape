@@ -151,6 +151,9 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
+            if (pidX.getError() < 0.02 && pidY.getError() < 0.02 && pidRotate.getError() < 0.2) {
+                
+            }
             // Get the current pose of the drive system
             Pose2d pose = drive.getState().Pose;
 

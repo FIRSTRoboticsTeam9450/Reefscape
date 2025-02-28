@@ -31,7 +31,7 @@ public class Robot extends LoggedRobot {
 
   public Robot() {
     Logger.addDataReceiver(new NT4Publisher());
-    Logger.addDataReceiver(new WPILOGWriter());
+    Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
     Logger.start();
 
     m_robotContainer = new RobotContainer();

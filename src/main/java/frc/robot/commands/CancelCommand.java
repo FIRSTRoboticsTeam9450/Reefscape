@@ -21,7 +21,7 @@ public class CancelCommand extends Command {
     public void initialize() {
         CoordinationCommand.justCancelled = true;
         if (score.getPos() == ScoringPos.INTAKE_CORAL) {
-            intake.setVoltage(2);
+            intake.setVoltage(5);
         } else {
             intake.setVoltage(0);
         }
