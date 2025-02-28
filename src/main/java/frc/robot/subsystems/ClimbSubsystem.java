@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.spark.SparkAbsoluteEncoder;
 import com.revrobotics.spark.SparkFlex;
@@ -46,6 +48,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
+        // 0.928
         pid.setSetpoint(0.928);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
@@ -68,9 +71,9 @@ public class ClimbSubsystem extends SubsystemBase {
         double voltage = updatePIDs(encoder.getPosition());
         setVoltage(-voltage);
         if (debugging.ClimberPos) {
-            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
-            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
-            SmartDashboard.putNumber("Reefscape/Debugging/Climbers/Voltage", voltage);
+            Logger.recordOutput("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
+            Logger.recordOutput("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
+            Logger.recordOutput("Reefscape/Debugging/Climbers/Voltage", voltage);
         }
     }
 

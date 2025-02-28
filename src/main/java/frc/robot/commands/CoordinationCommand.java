@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import java.util.Set;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.debugging;
@@ -60,11 +62,11 @@ public class CoordinationCommand extends Command {
                 System.out.println("Invalid Path");
             }
             if (debugging.CoordAllowedPathsDebugging) {
-                SmartDashboard.putBoolean("Reefscape/Debugging/Coordination/Valid Path?", validPath);
+                Logger.recordOutput("Reefscape/Debugging/Coordination/Valid Path?", validPath);
             }
             if (debugging.CoordAllowedPathsDebugging) {
-                SmartDashboard.putString("Reefscape/Debugging/Paths", currentPos + "");
-                SmartDashboard.putString("Reefscape/Debugging/Paths", connectedPathsSet.toString());
+                Logger.recordOutput("Reefscape/Debugging/Paths", currentPos + "");
+                Logger.recordOutput("Reefscape/Debugging/Paths", connectedPathsSet.toString());
             }
         } 
         else {

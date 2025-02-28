@@ -6,6 +6,8 @@ import static edu.wpi.first.units.Units.MetersPerSecond;
 import static edu.wpi.first.units.Units.RadiansPerSecond;
 import static edu.wpi.first.units.Units.RotationsPerSecond;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
@@ -18,7 +20,6 @@ import frc.robot.Constants.IntakeIDS;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.DualIntakeSubsystem;
-import frc.robot.subsystems.LimelightSubsystem;
 
 /**
  * Will Align to an algae, good for picking them up (algae on ground)
@@ -69,7 +70,6 @@ public class AlgaeAlignCommand extends Command {
         timer.restart();
         atTarget = false;
         LimelightHelpers.setPipelineIndex("limelight", 1);
-        SmartDashboard.putBoolean("Align command running?", true);
     }
 
     /* ----------- Updaters ----------- */
@@ -105,7 +105,6 @@ public class AlgaeAlignCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         LimelightHelpers.setPipelineIndex("limelight", 0);
-        SmartDashboard.putBoolean("Align command running?", false);
     }
 
 }

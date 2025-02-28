@@ -59,8 +59,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveSteerGains m_steerCharacterization = new SwerveRequest.SysIdSwerveSteerGains();
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
-    private LimelightSubsystem limelight = LimelightSubsystem.getInstance();
-
     public boolean runVision;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
@@ -271,7 +269,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         } else {
             visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-            setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7, .9));
+            setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         }
         if (visionPose == null) {
             return;

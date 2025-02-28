@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
@@ -84,6 +86,8 @@ public class ElbowSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         angle = motor.getPosition().getValueAsDouble();
+        Logger.recordOutput("Reefscape/Debugging/Setpoints/Elbow Setpoint", getSetpoint());
+        Logger.recordOutput("Reefscape/Debugging/Positions/Elbow Angle", getAngle());
         //SmartDashboard.putNumber("Elbow/encoder pos", getAngle());
     }
 

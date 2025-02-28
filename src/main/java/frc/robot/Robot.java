@@ -16,6 +16,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
+import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
 import edu.wpi.first.cameraserver.CameraServer;
 
@@ -30,6 +31,7 @@ public class Robot extends LoggedRobot {
 
   public Robot() {
     Logger.addDataReceiver(new NT4Publisher());
+    Logger.addDataReceiver(new WPILOGWriter());
     Logger.start();
 
     m_robotContainer = new RobotContainer();

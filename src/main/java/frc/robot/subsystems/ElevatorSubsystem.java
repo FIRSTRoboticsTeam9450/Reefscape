@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -85,10 +87,9 @@ public class ElevatorSubsystem extends SubsystemBase{
         position = leftMotor.getPosition().getValueAsDouble(); 
         RobotContainer.setLiftUp(position > 22);
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;
-        SmartDashboard.putNumber("Reefscape/Elevator/Setpoint", pid.getSetpoint());
-        SmartDashboard.putNumber("Reefscape/Elevator/pos", position);
-        SmartDashboard.putBoolean("Elevator at limit", atLimit);
-        SmartDashboard.putBoolean("Reefscape/IDC ATM/ Elevator At setpoint", atSetpoint());
+        Logger.recordOutput("Reefscape/Elevator/Setpoint", pid.getSetpoint());
+        Logger.recordOutput("Reefscape/Elevator/pos", position);
+        Logger.recordOutput("Elevator at limit", atLimit);
 
         if (atLimit) {
             //leftMotor.setPosition(0);

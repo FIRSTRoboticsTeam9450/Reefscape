@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.pathplanner.lib.config.RobotConfig;
 
 import java.util.HashMap;
 
@@ -14,15 +15,16 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
+import frc.robot.RobotContainer;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
-import frc.robot.subsystems.LimelightSubsystem;
-
 /**
  * Uses April Tags to understand where it is and to align with primary april tag with certain offsets depending on which reef pole is choosen.
  */
+import frc.robot.subsystems.ElevatorSubsystem;
 public class AlignCommand2 extends Command {
 
     /* ----- April Tag ID - Positions ----- */
@@ -35,8 +37,8 @@ public class AlignCommand2 extends Command {
 
     /* ----- Subsystem Instances ----- */
     private CommandSwerveDrivetrain drive;
-    private LimelightSubsystem limelight = LimelightSubsystem.getInstance();
     private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
     /* ----- Variables ----- */
     private boolean hasTarget;
@@ -86,7 +88,7 @@ public class AlignCommand2 extends Command {
     public void initialize() {
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         Pose2d currentPose = drive.getState().Pose;
-        int tid = limelight.getTid();
+        int tid = (int)LimelightHelpers.getFiducialID("limelight");
         if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
             hasTarget = true;
             pidX.setSetpoint(1.52);
@@ -113,9 +115,9 @@ public class AlignCommand2 extends Command {
      */
     private double[] getAlignPos(double[] targetPos) {
         double tagForwardOffset = 0.46;
-        double tagLeftOffset = 0.14605 - 0.05;
+        double tagLeftOffset = 0.14605;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.14605 - 0.05;
+            tagLeftOffset = -0.14605;
         }
         System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
@@ -154,12 +156,18 @@ public class AlignCommand2 extends Command {
 
             // Calculate the power for X direction and clamp it between -1 and 1
             double powerX = pidX.calculate(pose.getX());
-            powerX = MathUtil.clamp(powerX, -1, 1);
-            powerX += .1*Math.signum(powerX);
-            // Calculate the power for Y direction and clamp it between -1 and 1
             double powerY = pidY.calculate(pose.getY());
-            powerY = MathUtil.clamp(powerY, -1, 1);
-            powerY += .1*Math.signum(powerY);
+
+            if (score.getScoringLevel() == 4) {
+                powerX = MathUtil.clamp(powerX, -1, 1);
+                powerY = MathUtil.clamp(powerY, -1, 1);
+            } else {
+                powerX = MathUtil.clamp(powerX, -2, 2);
+                powerY = MathUtil.clamp(powerY, -2, 2);
+            }
+
+            powerX += .05*Math.signum(powerX);
+            powerY += .05*Math.signum(powerY);
             
             Logger.recordOutput("Reefscape/Limelight/x error", pidX.getError());
             Logger.recordOutput("Reefscape/Limelight/y error", pidY.getError());
@@ -167,7 +175,7 @@ public class AlignCommand2 extends Command {
 
             // Calculate the rotational power and clamp it between -2 and 2
             double powerRotate = pidRotate.calculate(pose.getRotation().getRadians());
-            powerRotate = MathUtil.clamp(powerRotate, -2, 2);
+            powerRotate = MathUtil.clamp(powerRotate, -4, 4);
 
             if (redAlliance) {
                 powerX *= -1;

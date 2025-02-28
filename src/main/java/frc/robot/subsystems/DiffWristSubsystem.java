@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -92,10 +94,10 @@ public class DiffWristSubsystem extends SubsystemBase {
             updatePID(pitchPos, rollPos);
         }
         if (debugging.CoordPositionDebugging) {
-            SmartDashboard.putNumber("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
-            SmartDashboard.putNumber("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
-            SmartDashboard.putNumber("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
-            SmartDashboard.putNumber("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
+            Logger.recordOutput("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
+            Logger.recordOutput("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
+            Logger.recordOutput("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
+            Logger.recordOutput("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
         }
     }
 

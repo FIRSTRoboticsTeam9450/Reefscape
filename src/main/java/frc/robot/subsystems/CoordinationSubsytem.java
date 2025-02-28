@@ -5,6 +5,8 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
@@ -704,27 +706,13 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void debugger() {
 
         if (debugging.CoordPositionDebugging) {
-            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elbow Angle", elbowEncoder);
-            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Pitch Angle", pitchEncoder);
-            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Roll Angle", rollEncoder);
-            SmartDashboard.putNumber("Reefscape/Debugging/Positions/Elevator Revolutions", elevEncoder);
-
-            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elbow Setpoint", Elbow.getSetpoint());
-            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Pitch Setpoint", DW.getPitchSetpoint());
-            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Roll Setpoint", DW.getRollSetpoint());
-            SmartDashboard.putNumber("Reefscape/Debugging/Setpoints/Elevator Setpoint", Elev.getSetpoint());
-
-            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elbow atSetpoint?", Elbow.atSetpoint());
-            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Pitch atSetpoint?", DW.atPitchSetpoint());
-            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Roll atSetpoint?", DW.atRollSetpoint());
-            SmartDashboard.putBoolean("Reefscape/Debugging/AtSetpoint?/Elevator atSetpoint?", Elev.atSetpoint());
-
-            SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Start Paths", allowedPaths.get(ScoringPos.START).toString());
-            SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Store Paths", allowedPaths.get(ScoringPos.CORAL_STORE).toString());
-            SmartDashboard.putString("Reefscape/Debugging/Forced Paths/Coral Intake Paths", allowedPaths.get(ScoringPos.INTAKE_CORAL).toString());
+            Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Elbow atSetpoint?", Elbow.atSetpoint());
+            Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Pitch atSetpoint?", DW.atPitchSetpoint());
+            Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Roll atSetpoint?", DW.atRollSetpoint());
+            Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Elevator atSetpoint?", Elev.atSetpoint());
         }
         if (debugging.CoordAllAtSetpoint) {
-            SmartDashboard.putBoolean("Reefscape/Debugging/All At Setpoints", allAtSetpoints);
+            Logger.recordOutput("Reefscape/Debugging/All At Setpoints", allAtSetpoints);
         }
 
     }
