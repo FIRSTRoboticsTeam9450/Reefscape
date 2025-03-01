@@ -173,7 +173,7 @@ public class RobotContainer {
 
         m_driver1.povDown().onTrue(new ClimbCommand(0.72, 10).andThen(new CoordinationCommand(ScoringPos.START)));
 
-        m_driver1.povRight().onTrue(new ClimbCommand(0.928, 3));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.92, 3));
 
         //m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 
@@ -290,6 +290,10 @@ public class RobotContainer {
         NamedCommands.registerCommand("AlgaeProcesser", new CoordinationCommand(ScoringPos.ALGAE_STORE));
         NamedCommands.registerCommand("Start", new CoordinationCommand(ScoringPos.START));
         NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, 12));
+
+        NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = true));
+        NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = false));
+
     }
 
     public Command getAutonomousCommand() {

@@ -117,9 +117,9 @@ public class AlignCommand2 extends Command {
         double tagForwardOffset = 0.46;
         double tagLeftOffset = 0.14605;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.14605;
+            tagLeftOffset = -0.14605 - 0.05;
         }
-        System.out.println(score.getPos());
+        //System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
             tagLeftOffset = 0; // Set left offset for center
             tagForwardOffset = 0.75; ; // Set forward offset for center
@@ -151,7 +151,7 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
-            if (pidX.getError() < 0.02 && pidY.getError() < 0.02 && pidRotate.getError() < 0.2) {
+            if (pidX.getError() < 0.02 && pidY.getError() < 0.02 && pidRotate.getError() < 0.1) {
                 
             }
             // Get the current pose of the drive system

@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 1.714,
-        "y": 5.787
+        "y": 5.807
       },
       "prevControl": {
         "x": 3.7553842826243686,
-        "y": 5.819951063446287
+        "y": 5.8399510634462874
       },
       "nextControl": null,
       "isLocked": false,
@@ -42,9 +42,22 @@
       "waypointRelativePos": 0.6000000000000004,
       "endWaypointRelativePos": null,
       "command": {
-        "type": "named",
+        "type": "parallel",
         "data": {
-          "name": "CoralIntake"
+          "commands": [
+            {
+              "type": "named",
+              "data": {
+                "name": "CoralIntake"
+              }
+            },
+            {
+              "type": "named",
+              "data": {
+                "name": "StopVision"
+              }
+            }
+          ]
         }
       }
     }

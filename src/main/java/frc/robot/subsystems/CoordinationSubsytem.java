@@ -531,7 +531,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 case 3:
                     coralScorePitch = -90;
                     coralScoreElbow = 78;
-                    coralScoreElev = 14;
+                    coralScoreElev = 12.75;
                     rollToClosestSide();
                     break;
                 case 4:
@@ -572,7 +572,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goScoreL4() {
-        Elev.setSetpoint(29);
+        Elev.setSetpoint(22);
     }
 
     public void goL1Algae() {

@@ -60,6 +60,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     public boolean runVision;
+    public static boolean visionOverride;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -283,7 +284,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         if (!dontUpdate ) {
             Logger.recordOutput("Vision Pose", visionPose.pose);
-            if (true) {
+            if (!visionOverride) {
                 addVisionMeasurement(visionPose.pose, Utils.getCurrentTimeSeconds());
             }
         }

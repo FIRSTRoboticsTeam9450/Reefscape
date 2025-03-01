@@ -162,10 +162,10 @@ public class ElevatorSubsystem extends SubsystemBase{
      */
     public boolean getAtSetpoint() {
         if ((position > setpoint - 1) && (position < setpoint + 1)) {
-            System.out.println("Elevator At Setpoint: Got to True");
+            //System.out.println("Elevator At Setpoint: Got to True");
             return true;
         }
-        System.out.println("Elevator At Setpoint: Got To False");
+        //System.out.println("Elevator At Setpoint: Got To False");
         return false;
     }
 

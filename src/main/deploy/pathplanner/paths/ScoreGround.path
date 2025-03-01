@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.714,
-        "y": 5.797
+        "y": 5.807
       },
       "prevControl": null,
       "nextControl": {
         "x": 2.6857927631578944,
-        "y": 5.748891447368422
+        "y": 5.7588914473684225
       },
       "isLocked": false,
       "linkedName": "LeftCoral"
@@ -46,6 +46,17 @@
   ],
   "pointTowardsZones": [],
   "eventMarkers": [
+    {
+      "name": "StartVision",
+      "waypointRelativePos": 0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "StartVision"
+        }
+      }
+    },
     {
       "name": "up",
       "waypointRelativePos": 0.43181818181818094,

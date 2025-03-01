@@ -22,7 +22,7 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public void initialize() {
-        System.out.println("INTAKING");
+        //System.out.println("INTAKING");
         timer.restart();
         DI.setVoltage(12);
     }
