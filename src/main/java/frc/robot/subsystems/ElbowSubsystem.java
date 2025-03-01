@@ -86,8 +86,8 @@ public class ElbowSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         angle = motor.getPosition().getValueAsDouble();
-        Logger.recordOutput("Reefscape/Debugging/Setpoints/Elbow Setpoint", getSetpoint());
-        Logger.recordOutput("Reefscape/Debugging/Positions/Elbow Angle", getAngle());
+        Logger.recordOutput("Reefscape/Elbow/Elbow Setpoint", getSetpoint());
+        Logger.recordOutput("Reefscape/Elbow/Elbow Angle", getAngle());
         //SmartDashboard.putNumber("Elbow/encoder pos", getAngle());
     }
 

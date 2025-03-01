@@ -96,8 +96,8 @@ public class DiffWristSubsystem extends SubsystemBase {
         if (debugging.CoordPositionDebugging) {
             Logger.recordOutput("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
             Logger.recordOutput("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
-            Logger.recordOutput("Reefscape/DiffWrist/pitchPID Setpoint", pitchPID.getSetpoint());
-            Logger.recordOutput("Reefscape/DiffWrist/rollPID Setpoint", rollPID.getSetpoint());
+            Logger.recordOutput("Reefscape/DiffWrist/pitchPID Setpoint", getPitchSetpoint());
+            Logger.recordOutput("Reefscape/DiffWrist/rollPID Setpoint", getRollSetpoint());
         }
     }
 

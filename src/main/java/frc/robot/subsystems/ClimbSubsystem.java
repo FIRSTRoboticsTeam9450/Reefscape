@@ -71,9 +71,9 @@ public class ClimbSubsystem extends SubsystemBase {
         double voltage = updatePIDs(encoder.getPosition());
         setVoltage(-voltage);
         if (debugging.ClimberPos) {
-            Logger.recordOutput("Reefscape/Debugging/Climbers/Motor Revolutions", encoder.getPosition());
-            Logger.recordOutput("Reefscape/Debugging/Climbers/PID Setpoint", pid.getSetpoint());
-            Logger.recordOutput("Reefscape/Debugging/Climbers/Voltage", voltage);
+            Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
+            Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
+            Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
         }
     }
 
