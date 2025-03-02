@@ -1,0 +1,31 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "GoToScore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Practice"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": null,
+  "choreoAuto": false
+}

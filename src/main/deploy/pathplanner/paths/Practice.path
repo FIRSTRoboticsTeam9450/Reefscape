@@ -3,45 +3,40 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.125,
-        "y": 4.14
+        "x": 2.901024590163934,
+        "y": 6.272694672131147
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9434160958904108,
-        "y": 4.1477953767123275
+        "x": 3.2007172131147534,
+        "y": 5.805174180327868
       },
       "isLocked": false,
-      "linkedName": "DL"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 1.690266393442623,
-        "y": 2.3647028688524587
+        "x": 3.92,
+        "y": 5.265
       },
       "prevControl": {
-        "x": 2.456576324949471,
-        "y": 3.1760898551538292
+        "x": 3.7042213114754095,
+        "y": 5.648606557377049
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "RightCoral"
+      "linkedName": "BLL"
     }
   ],
-  "rotationTargets": [
-    {
-      "waypointRelativePos": 0.929859719438878,
-      "rotationDegrees": -139.56779897143292
-    }
-  ],
+  "rotationTargets": [],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.9404761904761904,
+      "minWaypointRelativePos": 0.6131198347107447,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 5.0,
-        "maxAcceleration": 5.0,
+        "maxVelocity": 0.5,
+        "maxAcceleration": 4.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -50,19 +45,7 @@
     }
   ],
   "pointTowardsZones": [],
-  "eventMarkers": [
-    {
-      "name": "CoralIntake",
-      "waypointRelativePos": 0.36428571428571427,
-      "endWaypointRelativePos": null,
-      "command": {
-        "type": "named",
-        "data": {
-          "name": "CoralIntake"
-        }
-      }
-    }
-  ],
+  "eventMarkers": [],
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 4.0,
@@ -73,13 +56,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -145.78429786756254
+    "rotation": -59.99999999999999
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Ground3Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": -61.557071375636646
   },
   "useDefaultConstraints": true
 }

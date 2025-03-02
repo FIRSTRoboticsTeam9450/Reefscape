@@ -171,7 +171,7 @@ public class RobotContainer {
 
         m_driver1.povUp().onTrue(new ClimbCommand(0.11, 12));
 
-        m_driver1.povDown().onTrue(new ClimbCommand(0.72, 10).andThen(new CoordinationCommand(ScoringPos.START)));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.6, 10).andThen(new CoordinationCommand(ScoringPos.START)));
 
         m_driver1.povRight().onTrue(new ClimbCommand(0.92, 3));
 
