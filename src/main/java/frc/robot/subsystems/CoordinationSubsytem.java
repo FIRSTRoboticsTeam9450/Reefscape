@@ -157,6 +157,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_L1_Set.add(ScoringPos.CORAL_STORE);
         Algae_L1_Set.add(ScoringPos.INTAKE_ALGAE);
         Algae_L1_Set.add(ScoringPos.ALGAEL2);
+        Algae_L1_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Algae_L2_Set.add(ScoringPos.ALGAE_STORE);
         Algae_L2_Set.add(ScoringPos.SCORE_PROCESSOR);
@@ -164,6 +165,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_L2_Set.add(ScoringPos.CORAL_STORE);
         Algae_L2_Set.add(ScoringPos.INTAKE_ALGAE);
         Algae_L2_Set.add(ScoringPos.ALGAEL1);
+        Algae_L2_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Coral_Score_Go_Set.add(ScoringPos.CORAL_STORE);
         Coral_Score_Go_Set.add(ScoringPos.SCORE_CORAL);
@@ -525,13 +527,13 @@ public class CoordinationSubsytem extends SubsystemBase{
                 case 2:
                     coralScorePitch = -90;
                     coralScoreElbow = 78;
-                    coralScoreElev = 4.5;
+                    coralScoreElev = 4.75;
                     rollToClosestSide();
                     break;
                 case 3:
                     coralScorePitch = -90;
                     coralScoreElbow = 78;
-                    coralScoreElev = 12.75;
+                    coralScoreElev = 13;
                     rollToClosestSide();
                     break;
                 case 4:
