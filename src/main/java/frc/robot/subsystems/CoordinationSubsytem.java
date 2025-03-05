@@ -169,6 +169,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         Coral_Score_Go_Set.add(ScoringPos.CORAL_STORE);
         Coral_Score_Go_Set.add(ScoringPos.SCORE_CORAL);
+        Coral_Score_Go_Set.add(ScoringPos.GO_SCORE_CORAL);
         Coral_Score_Go_Set.add(ScoringPos.ScoreL4);
 
 

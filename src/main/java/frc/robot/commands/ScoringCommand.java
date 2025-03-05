@@ -1,8 +1,10 @@
 package frc.robot.commands;
 
+import edu.wpi.first.math.geometry.CoordinateAxis;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.Constants;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -14,6 +16,7 @@ public class ScoringCommand extends Command {
 
     /* ----- Subsystem Instances ----- */
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    private CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
     private CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
     private CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
     private CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
@@ -23,6 +26,7 @@ public class ScoringCommand extends Command {
     private Timer timer = new Timer();
     private ScoringPos position;
     private boolean algae;
+    private double coralTriggerDistance = Constants.robotConfig.getCoralTriggerDistance();
 
     /* ----------- Initialization ----------- */
 
@@ -71,9 +75,12 @@ public class ScoringCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         intake.setVoltage(0);
-        //System.out.println("FINISHED SCORING");
-        // go to store
-        store.schedule();
+        if (intake.getCoralLaserDistance() < coralTriggerDistance) {
+            retry.schedule();
+        } else {
+            // go to store
+            store.schedule();
+        }
         
     }
 }
