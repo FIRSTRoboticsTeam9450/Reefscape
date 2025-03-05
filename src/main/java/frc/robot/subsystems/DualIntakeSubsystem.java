@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
+import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -30,10 +31,9 @@ public class DualIntakeSubsystem extends SubsystemBase{
     /* ----- Motors ----- */
     private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
     /* ----- Laser Can ----- */
-    private LaserCan coralLaserCan;
-    private LaserCan algaeLaserCan;
+    CANrange coralRange = new CANrange(IntakeIDS.kDualIntakeCoralLaserID);
+    CANrange algaeRange = new CANrange(IntakeIDS.kDualIntakeAlgaeLaserID);
     //private LaserCan.Measurement coralMeasurement;
-    private LaserCan.Measurement algaeMeasurement;
     // LaserCANs are configured with a medianfilter, which means the last 3 reults are averaged together
     // this smooths out the output nicely
     //MedianFilter algaeMedianDistance = new MedianFilter(3);
@@ -57,20 +57,6 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.CurrentLimits.StatorCurrentLimit = 80;
         configurator.apply(config);
 
-        //LaserCan settings
-        coralLaserCan = new LaserCan(IntakeIDS.kDualIntakeCoralLaserID);
-        algaeLaserCan = new LaserCan(IntakeIDS.kDualIntakeAlgaeLaserID);
-        try {
-            coralLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
-            algaeLaserCan.setRangingMode(LaserCan.RangingMode.SHORT);
-            coralLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 4, 4));
-            algaeLaserCan.setRegionOfInterest(new LaserCan.RegionOfInterest(8, 8, 16, 16));
-            coralLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-            algaeLaserCan.setTimingBudget(LaserCan.TimingBudget.TIMING_BUDGET_33MS);
-        } catch (ConfigurationFailedException e) {
-            System.out.println("Error during Laser Can Configuration: " + e);
-        }
-
         //coralMeasurement = coralLaserCan.getMeasurement();
     }
 
@@ -81,18 +67,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
      */
     public void updateLasers() {
         try {
-            LaserCan.Measurement coralMeasurement = coralLaserCan.getMeasurement();
-            LaserCan.Measurement algaeMeasurement = algaeLaserCan.getMeasurement();
-            if (coralMeasurement != null && coralMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-                coralLaserDistance = coralMeasurement.distance_mm;
-            } else {
-                coralLaserDistance = 10000;
-            }
-            if (algaeMeasurement != null && algaeMeasurement.status == LaserCan.LASERCAN_STATUS_VALID_MEASUREMENT) {
-                algaeLaserDistance = algaeMeasurement.distance_mm;
-            } else {
-                algaeLaserDistance = 10000;
-            }
+            coralLaserDistance = coralRange.getDistance().getValueAsDouble();
+            algaeLaserDistance = algaeRange.getDistance().getValueAsDouble();
         } catch (Exception e) {
             e.printStackTrace();
         }

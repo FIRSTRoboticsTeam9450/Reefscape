@@ -276,6 +276,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (visionPose == null) {
             return;
         }
+        Logger.recordOutput("Reefscape/Vision Timestamp", visionPose.latency);
+        Logger.recordOutput("Reefscape/Rio Timestamp", Utils.getCurrentTimeSeconds());
+
         boolean dontUpdate = false;
         if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
             dontUpdate = true;
@@ -286,7 +289,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         if (!dontUpdate ) {
             Logger.recordOutput("Vision Pose", visionPose.pose);
             if (!visionOverride) {
-                addVisionMeasurement(visionPose.pose, Utils.getCurrentTimeSeconds());
+                addVisionMeasurement(visionPose.pose, Utils.getCurrentTimeSeconds() - (visionPose.latency / 1000));
             }
         }
         // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {
