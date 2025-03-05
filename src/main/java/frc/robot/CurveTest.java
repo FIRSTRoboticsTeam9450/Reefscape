@@ -4,8 +4,13 @@ public class CurveTest {
     public static void main(String[] args) {
         double[] curve = generateCurve();
         for (int i = 0; i < curve.length; i++) {
-            //System.out.println(i + ", " + curve[i]);
+            System.out.println(curve[i]);
         }
+        System.out.println(getOutput(curve, 0.5));
+    }
+
+    public static double getOutput(double[] curve, double x) {
+        return curve[(int) Math.round(x * 127)];
     }
 
     public static double getPoint(double[][] curve, double x) {
@@ -29,10 +34,10 @@ public class CurveTest {
     }
 
     public static double[] generateCurve() {
-        double x1 = 0.415;
-        double y1 = 0.738;
-        double x2 = 0.734;
-        double y2 = 0.298;
+        double x1 = 26.3;
+        double y1 = 0.7;
+        double x2 = 73.4;
+        double y2 = 0.87;
 
         int steps = 1024;
         double[][] curve = new double[2][steps + 1];
@@ -40,7 +45,7 @@ public class CurveTest {
             double t = (double)i / steps;
             curve[0][i] = x1 * 3 * Math.pow(1 - t, 2) * t + x2 * 3 * (1 - t) * Math.pow(t, 2) + 127 * Math.pow(t, 3);
             curve[1][i] = y1 * 3 * Math.pow(1 - t, 2) * t + y2 * 3 * (1 - t) * Math.pow(t, 2) + Math.pow(t, 3);
-            System.out.println(curve[0][i] + "," + curve[1][i]);
+            //System.out.println(curve[0][i] + "," + curve[1][i]);
         }
 
         double[] out = new double[128];
