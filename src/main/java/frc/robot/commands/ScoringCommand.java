@@ -1,6 +1,5 @@
 package frc.robot.commands;
 
-import edu.wpi.first.math.geometry.CoordinateAxis;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -44,7 +43,7 @@ public class ScoringCommand extends Command {
             intake.setVoltage(-1);
         } else {
             score.schedule();
-            intake.setVoltage(-.25);
+            // intake.setVoltage(-.25);
         }
         
     }
@@ -74,11 +73,11 @@ public class ScoringCommand extends Command {
     
     @Override
     public void end(boolean interrupted) {
-        intake.setVoltage(0);
-        if (intake.getCoralLaserDistance() < coralTriggerDistance) {
+        if (intake.getCoralLaserDistance() < coralTriggerDistance && !DriverStation.isAutonomous()) {
             retry.schedule();
         } else {
             // go to store
+            intake.setVoltage(0);
             store.schedule();
         }
         

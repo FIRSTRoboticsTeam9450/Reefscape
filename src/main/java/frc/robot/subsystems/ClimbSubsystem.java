@@ -21,13 +21,13 @@ import frc.robot.Constants.debugging;
 /**
  * Climbers, they go up and down... is fun :)
  * <p>
- *  Grabbing Cage: 0.075
+ *  Grabbing Cage: 0.11
  * </p>
  * <p>
- *  Climbing: 0.649
+ *  Climbing: 0.6
  * </p>
  * <p>
- *  Store: 0.928
+ *  Store: 0.9
  * </p>
  */
 public class ClimbSubsystem extends SubsystemBase {
@@ -49,7 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private ClimbSubsystem() {
         // 0.928
-        pid.setSetpoint(0.92);
+        pid.setSetpoint(0.91);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

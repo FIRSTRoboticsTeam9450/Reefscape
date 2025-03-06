@@ -144,12 +144,14 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_ScoreL4_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Coral_Score_Set.add(ScoringPos.CORAL_STORE);
+        Coral_Score_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Algae_Net_Score_Set.add(ScoringPos.CORAL_STORE);
 
         Algae_Processor_Score_Set.add(ScoringPos.CORAL_STORE);
 
         Score_L4_Set.add(ScoringPos.CORAL_STORE);
+        Score_L4_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Algae_L1_Set.add(ScoringPos.ALGAE_STORE);
         Algae_L1_Set.add(ScoringPos.SCORE_PROCESSOR);
@@ -233,7 +235,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             justFinished = false;
         }
 
-        if (debugging.CoordPositionDebugging) {
+        if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint || debugging.currentPos) {
             debugger();
         }
     }
@@ -526,13 +528,13 @@ public class CoordinationSubsytem extends SubsystemBase{
                     DW.setRollSetpoint(0);
                     break;
                 case 2:
-                    coralScorePitch = -90;
+                    coralScorePitch = -70;
                     coralScoreElbow = 78;
-                    coralScoreElev = 4.75;
+                    coralScoreElev = 3.75;
                     rollToClosestSide();
                     break;
                 case 3:
-                    coralScorePitch = -90;
+                    coralScorePitch = -70;
                     coralScoreElbow = 78;
                     coralScoreElev = 13;
                     rollToClosestSide();
@@ -642,6 +644,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void setPosition(ScoringPos pos) {
         this.pos = pos;
+        justHitScore = true;
         justChanged = true;
         allAtSetpoints = false;
     }
@@ -716,6 +719,10 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
         if (debugging.CoordAllAtSetpoint) {
             Logger.recordOutput("Reefscape/Debugging/All At Setpoints", allAtSetpoints);
+        }
+
+        if (debugging.currentPos) {
+            Logger.recordOutput("Reefscape/Debugging/Current Position", getPos());
         }
 
     }

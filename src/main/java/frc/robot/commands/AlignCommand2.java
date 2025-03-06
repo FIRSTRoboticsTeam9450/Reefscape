@@ -44,6 +44,7 @@ public class AlignCommand2 extends Command {
     private boolean hasTarget;
     private AlignPos position;
     private boolean redAlliance;
+    private int tid;
 
     /* ----- Swerve Drive ----- */
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
@@ -89,6 +90,7 @@ public class AlignCommand2 extends Command {
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         Pose2d currentPose = drive.getState().Pose;
         int tid = (int)LimelightHelpers.getFiducialID("limelight");
+        this.tid = tid;
         if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
             hasTarget = true;
             pidX.setSetpoint(1.52);
@@ -96,7 +98,7 @@ public class AlignCommand2 extends Command {
             pidRotate.setSetpoint(122.0 * Math.PI / 180.0);
         } else if (map.containsKey(tid)) {
             hasTarget = true;
-            double[] pose = getAlignPos(map.get(tid));
+            double[] pose = getAlignPos(map.get(tid), 0.5);
             pidX.setSetpoint(pose[0]);
             pidY.setSetpoint(pose[1]);
             pidRotate.setSetpoint(pose[2]);
@@ -104,6 +106,8 @@ public class AlignCommand2 extends Command {
             hasTarget = false;
         }
     }
+
+    // black red yellow green right -> left
 
     /* ----------- Updaters ----------- */
 
@@ -113,12 +117,8 @@ public class AlignCommand2 extends Command {
      * @param targetPos An array containing the target position with [x, y, rotation].
      * @return An array containing the aligned position with [x, y, rotation].
      */
-    private double[] getAlignPos(double[] targetPos) {
-        double tagForwardOffset = 0.46;
-        if (score.getScoringLevel() == 4) {
-            tagForwardOffset = 0.5;
-        }
-        double tagLeftOffset = 0.13 - 0.03;
+    private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
+        double tagLeftOffset = 0.124;
         if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.13 - 0.08;
         }
@@ -126,6 +126,11 @@ public class AlignCommand2 extends Command {
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
             tagLeftOffset = 0; // Set left offset for center
             tagForwardOffset = 0.75; ; // Set forward offset for center
+        }
+
+        if(score.getPos() == ScoringPos.GRABBED_ALGAE) {
+            tagLeftOffset = 0;
+            tagForwardOffset = 0.9;
         }
 
         // Calculate rotation relative to the target position
@@ -144,7 +149,6 @@ public class AlignCommand2 extends Command {
 
         // Create an array with the calculated x, y, and rotation values and return it
         double[] out = {x, y, rotation};
-        double[] out2 = {3, 4.19735, 0};
         return out;
     }
 
@@ -155,7 +159,10 @@ public class AlignCommand2 extends Command {
     public void execute() {
         if (hasTarget) {
             if (pidX.getError() < 0.02 && pidY.getError() < 0.02 && pidRotate.getError() < 0.1) {
-                
+                double[] pose = getAlignPos(map.get(tid), 0.42);
+                pidX.setSetpoint(pose[0]);
+                pidY.setSetpoint(pose[1]);
+                pidRotate.setSetpoint(pose[2]);
             }
             // Get the current pose of the drive system
             Pose2d pose = drive.getState().Pose;

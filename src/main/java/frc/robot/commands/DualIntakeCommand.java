@@ -53,7 +53,7 @@ public class DualIntakeCommand extends Command{
             return;
         }
         if (algae) {
-            if (DI.getAlgaeLaserDistance() < algaeTriggerDistance) {
+            if (DI.getAlgaeLaserDistance() < algaeTriggerDistance && DI.getAlgaeLaserDistance() != 100) {
                 DI.setVoltage(-12);
                 finished = true;
                 if (score.getPos() != ScoringPos.INTAKE_ALGAE) {

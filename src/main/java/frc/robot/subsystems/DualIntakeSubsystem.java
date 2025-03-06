@@ -2,8 +2,11 @@ package frc.robot.subsystems;
 
 import static edu.wpi.first.units.Units.Amps;
 
+import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
+
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.TorqueCurrentFOC;
@@ -49,6 +52,13 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * Configs LaserCans
      */
     private DualIntakeSubsystem() {
+        CANrangeConfiguration rangeConfig = new CANrangeConfiguration();
+        rangeConfig.FovParams.FOVRangeX = 6.75;
+        rangeConfig.FovParams.FOVRangeY = 6.75;
+
+        coralRange.getConfigurator().apply(rangeConfig);
+        algaeRange.getConfigurator().apply(rangeConfig);
+
         TalonFXConfigurator configurator = motor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
@@ -68,7 +78,13 @@ public class DualIntakeSubsystem extends SubsystemBase{
     public void updateLasers() {
         try {
             coralLaserDistance = coralRange.getDistance().getValueAsDouble();
-            algaeLaserDistance = algaeRange.getDistance().getValueAsDouble();
+            algaeLaserDistance = algaeRange.getDistance().getValueAsDouble() * 1000;
+            if (coralRange.getSignalStrength().getValueAsDouble() < 2000) {
+                coralLaserDistance = 100;
+            }
+            if (algaeRange.getSignalStrength().getValueAsDouble() < 2000) {
+                algaeLaserDistance = 100;
+            }
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -78,6 +94,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     public void periodic() {
         updateLasers();
         Logger.recordOutput("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
+        Logger.recordOutput("Reefscape/DualIntake/CoralLaserStrength", coralRange.getSignalStrength().getValueAsDouble());
+
         Logger.recordOutput("Reefscape/DualIntake/AlgaeLaserDistance", algaeLaserDistance);
         Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
     }
