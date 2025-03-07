@@ -118,19 +118,19 @@ public class AlignCommand2 extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
-        double tagLeftOffset = 0.124;
+        double tagLeftOffset = 0.173;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.13 - 0.08;
+            tagLeftOffset = -0.173;
         }
         //System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
             tagLeftOffset = 0; // Set left offset for center
-            tagForwardOffset = 0.75; ; // Set forward offset for center
+            tagForwardOffset = 0.65; ; // Set forward offset for center
         }
 
         if(score.getPos() == ScoringPos.GRABBED_ALGAE) {
             tagLeftOffset = 0;
-            tagForwardOffset = 0.9;
+            tagForwardOffset = 1.2;
         }
 
         // Calculate rotation relative to the target position

@@ -24,9 +24,9 @@ public class OuttakeCommand extends Command {
     @Override
     public void initialize() {
         timer.restart();
-        if (intake.getAlgaeLaserDistance() < 25) {
+        if (intake.hasAlgae()) {
             intake.setVoltage(5);
-        } else if (intake.getCoralLaserDistance() < 25) {
+        } else if (intake.hasCoral()) {
             intake.setVoltage(-5);
         }
 

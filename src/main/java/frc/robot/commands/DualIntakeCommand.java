@@ -38,9 +38,9 @@ public class DualIntakeCommand extends Command{
     @Override
     public void initialize() {
         finished = false;
-        if (algae && DI.getAlgaeLaserDistance() > algaeTriggerDistance) {
+        if (algae) {
             DI.setVoltage(-12);
-        } else if (!algae && DI.getCoralLaserDistance() > coralTriggerDistance) {
+        } else {
             DI.setVoltage(12);
         }
     }
@@ -53,7 +53,7 @@ public class DualIntakeCommand extends Command{
             return;
         }
         if (algae) {
-            if (DI.getAlgaeLaserDistance() < algaeTriggerDistance && DI.getAlgaeLaserDistance() != 100) {
+            if (DI.hasAlgae()) {
                 DI.setVoltage(-12);
                 finished = true;
                 if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
@@ -62,7 +62,7 @@ public class DualIntakeCommand extends Command{
                 algaeTimer.restart();
             }
         } else {
-            if (DI.getCoralLaserDistance() < coralTriggerDistance) {
+            if (DI.hasCoral()) {
                 DI.setVoltage(5);
                 finished = true;
             }

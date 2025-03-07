@@ -49,7 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private ClimbSubsystem() {
         // 0.928
-        pid.setSetpoint(0.91);
+        pid.setSetpoint(0.84);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -86,7 +86,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Setters & Getters ----------- */
 
     public void setVoltage(double voltage) {
-        climb.setVoltage(voltage);
+        // climb.setVoltage(voltage);
     }
 
     public void setSetpoint(double setpoint) {

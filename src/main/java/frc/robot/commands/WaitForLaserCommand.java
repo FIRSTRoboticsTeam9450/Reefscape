@@ -15,7 +15,7 @@ public class WaitForLaserCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getCoralLaserDistance() < Constants.robotConfig.getCoralTriggerDistance();
+        return intake.hasCoral();
     }
 
 }

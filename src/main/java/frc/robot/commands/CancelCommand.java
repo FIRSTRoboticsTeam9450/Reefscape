@@ -28,4 +28,9 @@ public class CancelCommand extends Command {
         stop.schedule();
     }
 
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
+
 }

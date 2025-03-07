@@ -44,6 +44,9 @@ public class DualIntakeSubsystem extends SubsystemBase{
     double coralLaserDistance;
     double algaeLaserDistance;
 
+    boolean hasCoral;
+    boolean hasAlgae;
+
     VoltageOut request = new VoltageOut(0).withEnableFOC(true);
     /* ----- Initialization ----- */
 
@@ -77,25 +80,29 @@ public class DualIntakeSubsystem extends SubsystemBase{
      */
     public void updateLasers() {
         try {
-            coralLaserDistance = coralRange.getDistance().getValueAsDouble();
+            coralLaserDistance = coralRange.getDistance().getValueAsDouble() * 1000;
             algaeLaserDistance = algaeRange.getDistance().getValueAsDouble() * 1000;
-            if (coralRange.getSignalStrength().getValueAsDouble() < 2000) {
-                coralLaserDistance = 100;
+            if (coralRange.getSignalStrength().getValueAsDouble() < 2500) {
+                coralLaserDistance = 1000;
             }
-            if (algaeRange.getSignalStrength().getValueAsDouble() < 2000) {
-                algaeLaserDistance = 100;
+            if (algaeRange.getSignalStrength().getValueAsDouble() < 2500) {
+                algaeLaserDistance = 1000;
             }
         } catch (Exception e) {
             e.printStackTrace();
         }
+        hasCoral = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
+        hasAlgae = algaeLaserDistance < Constants.robotConfig.getAlgaeTriggerDistance();
     }
 
     @Override
     public void periodic() {
         updateLasers();
+        Logger.recordOutput("Reefscape/DualIntake/HasCoral", hasCoral);
         Logger.recordOutput("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
         Logger.recordOutput("Reefscape/DualIntake/CoralLaserStrength", coralRange.getSignalStrength().getValueAsDouble());
 
+        Logger.recordOutput("Reefscape/DualIntake/HasAlgae", hasAlgae);
         Logger.recordOutput("Reefscape/DualIntake/AlgaeLaserDistance", algaeLaserDistance);
         Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
     }
@@ -106,12 +113,12 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * returns the distance of the laser from the laser can
      * @return distance of laser
      */
-    public double getCoralLaserDistance() {
-        return coralLaserDistance;
+    public boolean hasCoral() {
+        return hasCoral;
     }
 
-    public double getAlgaeLaserDistance() {
-        return algaeLaserDistance;
+    public boolean hasAlgae() {
+        return hasAlgae;
     }
 
 

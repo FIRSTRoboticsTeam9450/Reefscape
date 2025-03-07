@@ -1,19 +1,23 @@
 package frc.robot;
 
+import edu.wpi.first.math.MathUtil;
+
 public class CurveTest {
-    public static void main(String[] args) {
-        double[] curve = generateCurve();
-        for (int i = 0; i < curve.length; i++) {
-            System.out.println(curve[i]);
-        }
-        System.out.println(getOutput(curve, 0.5));
+
+    static double[] bezier;
+
+    double x1;
+    double y1;
+    double x2;
+    double y2;
+
+    public static double getOutput(double x) {
+        x = MathUtil.clamp(x, -1, 1);
+        double sign = Math.signum(x);
+        return bezier[(int) Math.round(Math.abs(x) * 127)] * sign;
     }
 
-    public static double getOutput(double[] curve, double x) {
-        return curve[(int) Math.round(x * 127)];
-    }
-
-    public static double getPoint(double[][] curve, double x) {
+    private static double getPoint(double[][] curve, double x) {
         double sign = Math.signum(x);
         x = Math.abs(x);
 
@@ -33,12 +37,7 @@ public class CurveTest {
         return 0;
     }
 
-    public static double[] generateCurve() {
-        double x1 = 26.3;
-        double y1 = 0.7;
-        double x2 = 73.4;
-        double y2 = 0.87;
-
+    public static void generateCurve(double x1, double y1, double x2, double y2) {
         int steps = 1024;
         double[][] curve = new double[2][steps + 1];
         for (int i = 0; i <= steps; i++) {
@@ -53,6 +52,6 @@ public class CurveTest {
             out[i] = getPoint(curve, i);
         }
 
-        return out;
+        bezier = out;
     }
 }

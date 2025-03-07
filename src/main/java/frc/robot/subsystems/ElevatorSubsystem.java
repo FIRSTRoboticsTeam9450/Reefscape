@@ -38,6 +38,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     private double position;
     private double setpoint;
 
+    private double offset;
+
     private boolean atLimit;
 
     private boolean resetting = true;
@@ -84,25 +86,25 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        position = leftMotor.getPosition().getValueAsDouble(); 
+        position = leftMotor.getPosition().getValueAsDouble() - offset; 
         RobotContainer.setLiftUp(position > 22);
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         Logger.recordOutput("Reefscape/Elevator/Setpoint", pid.getSetpoint());
         Logger.recordOutput("Reefscape/Elevator/pos", position);
         Logger.recordOutput("Elevator at limit", atLimit);
+        Logger.recordOutput("Reefscape/Elevator/Offset", offset);
 
-        if (atLimit) {
-            //leftMotor.setPosition(0);
+        if (resetting && DriverStation.isEnabled()) {
+            setSetpoint(getSetpoint() - 0.05);
+            if (atLimit) {
+                setAtLimit();
+                resetting = false;
+                offset = getPosition();
+            }
         }
-
-        // if (resetting && DriverStation.isEnabled()) {
-        //     setSetpoint(getSetpoint() - 0.05);
-        //     if (atLimit) {
-        //         setAtLimit();
-        //         resetting = false;
-        //         setSetpoint(0);
-        //     }
-        // }
+        if (!resetting && atLimit) {
+            offset = getPosition();
+        }
     }
 
     /* ----- Getters & Setters ----- */

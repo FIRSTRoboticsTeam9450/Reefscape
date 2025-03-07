@@ -73,7 +73,7 @@ public class ScoringCommand extends Command {
     
     @Override
     public void end(boolean interrupted) {
-        if (intake.getCoralLaserDistance() < coralTriggerDistance && !DriverStation.isAutonomous()) {
+        if (intake.hasCoral() && !DriverStation.isAutonomous()) {
             retry.schedule();
         } else {
             // go to store

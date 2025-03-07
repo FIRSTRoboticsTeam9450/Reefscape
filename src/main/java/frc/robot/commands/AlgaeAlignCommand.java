@@ -99,7 +99,7 @@ public class AlgaeAlignCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.getCoralLaserDistance() < 12 || timer.get() > 4;
+        return intake.hasCoral() || timer.get() > 4;
     }
 
     @Override

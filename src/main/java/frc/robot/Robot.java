@@ -29,6 +29,11 @@ public class Robot extends LoggedRobot {
 
   public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
 
+  double x1;
+  double y1;
+  double x2;
+  double y2;
+
   public Robot() {
     Logger.addDataReceiver(new NT4Publisher());
     Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
@@ -45,14 +50,24 @@ public class Robot extends LoggedRobot {
   }
   @Override
   public void robotInit() {
-      
+    SmartDashboard.putNumber("Reefscape/DriveCurve/x1", 92.7);
+    SmartDashboard.putNumber("Reefscape/DriveCurve/x2", 90);
+    SmartDashboard.putNumber("Reefscape/DriveCurve/y1", 0.085);
+    SmartDashboard.putNumber("Reefscape/DriveCurve/y2", 0.905);
   }
 
   @Override
-  public void disabledInit() {}
+  public void disabledInit() {
+
+  }
 
   @Override
-  public void disabledPeriodic() {}
+  public void disabledPeriodic() {
+    x1 = SmartDashboard.getNumber("Reefscape/DriveCurve/x1", 0);
+    x2 = SmartDashboard.getNumber("Reefscape/DriveCurve/x2", 0);
+    y1 = SmartDashboard.getNumber("Reefscape/DriveCurve/y1", 0);
+    y2 = SmartDashboard.getNumber("Reefscape/DriveCurve/y2", 0);
+  }
 
   @Override
   public void disabledExit() {}
@@ -76,6 +91,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
+    CurveTest.generateCurve(x1, y1, x2, y2);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

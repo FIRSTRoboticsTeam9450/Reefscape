@@ -51,7 +51,7 @@ public class FieldCentricCommand extends Command {
     @Override
     public void initialize() {
         scored = false;
-        backUp = intake.getAlgaeLaserDistance() < 50 || intake.getCoralLaserDistance() < 50;
+        backUp = intake.hasAlgae() || intake.hasCoral();
     }
 
     /* ----------- Updaters ----------- */
@@ -68,9 +68,9 @@ public class FieldCentricCommand extends Command {
                 .withRotationalRate(-rot.getAsDouble() * RobotContainer.MaxAngularRate) // Drive counterclockwise with negative X (left)
             );
             if (score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-                scored = intake.getAlgaeLaserDistance() < 50;
+                scored = intake.hasAlgae();
             } else {
-                scored = intake.getCoralLaserDistance() > 50 && intake.getAlgaeLaserDistance() > 50;
+                scored = !intake.hasCoral() && !intake.hasAlgae();
             }
             if (scored) {
                 timer.restart();
