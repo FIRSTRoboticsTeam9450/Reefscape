@@ -478,7 +478,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToIntakeVertical() {
         DW.setPitchSetpoint(-71);
         rollToClosestSide();
-        Elbow.setSetpoint(-22);
+        Elbow.setSetpoint(-16);
         Elev.setSetpoint(0);
         
         if (DW.atRollSetpoint()

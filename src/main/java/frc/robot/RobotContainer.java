@@ -209,8 +209,9 @@ public class RobotContainer {
         //m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.CORAL_STORE));
         m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
-        m_driver2.rightStick().onTrue(new ClimbCommand(0.075, 12));
-        
+        //m_driver2.rightStick().onTrue(new ClimbCommand(0.075, 12));
+        m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+        m_driver2.leftStick().whileTrue(new AlgaeAlignCommand(drivetrain, -12));
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
         // m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
         //m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false)));

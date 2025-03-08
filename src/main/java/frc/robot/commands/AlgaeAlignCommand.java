@@ -42,6 +42,7 @@ public class AlgaeAlignCommand extends Command {
 
     /* ----- Variables ----- */
     private double target;
+    private double taTarget = 16;
     private CommandSwerveDrivetrain drive;
     private double power = 0;
     private double rotationPower = 0;
@@ -59,9 +60,10 @@ public class AlgaeAlignCommand extends Command {
      * @param target PID target/setpoint
      */
     public AlgaeAlignCommand(CommandSwerveDrivetrain drive, double target) {
-        this.target = target;
+        this.target = -18;
         this.drive = drive;
         pid.setSetpoint(target);
+        pidForward.setSetpoint(taTarget);
         addRequirements(drive);
     }
 
@@ -69,7 +71,6 @@ public class AlgaeAlignCommand extends Command {
     public void initialize() {
         timer.restart();
         atTarget = false;
-        LimelightHelpers.setPipelineIndex("limelight", 1);
     }
 
     /* ----------- Updaters ----------- */
@@ -79,19 +80,17 @@ public class AlgaeAlignCommand extends Command {
     // yaw -60
     @Override
     public void execute() {
-        double tx = LimelightHelpers.getTX("limelight");
+        double tx = LimelightHelpers.getTX("limelight-neural");
+        double ta = LimelightHelpers.getTA("limelight-neural");
         if (Math.abs(tx - target) < 1) {
             atTarget = true;
         }
+        //pid.setSetpoint(-0.75 * ta - 11);
 
-        if (!atTarget) {
-            power = pid.calculate(tx);
-            SwerveRequest driveAlign = driveRequest.withVelocityY(-MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withVelocityX(0);
-            drive.setControl(driveAlign);
-        } else {
-            SwerveRequest driveAlign = driveRequest.withVelocityX(0.5).withVelocityY(0);
-            drive.setControl(driveAlign);
-        }
+        power = pid.calculate(tx);
+        double powerForward = pidForward.calculate(ta);
+        SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withVelocityX(MathUtil.clamp(powerForward, -0.15, 0.15) * MaxSpeed);
+        drive.setControl(driveAlign);
 
     }
 
@@ -104,7 +103,6 @@ public class AlgaeAlignCommand extends Command {
 
     @Override
     public void end(boolean interrupted) {
-        LimelightHelpers.setPipelineIndex("limelight", 0);
     }
 
 }

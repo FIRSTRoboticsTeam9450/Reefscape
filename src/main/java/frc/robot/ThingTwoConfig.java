@@ -9,9 +9,9 @@ import edu.wpi.first.units.measure.Angle;
 
 public class ThingTwoConfig implements RobotConfig {
     
-    Angle frontLeftOffset = Rotations.of(-0.4580078125);
-    Angle frontRightOffset = Rotations.of(-0.34423828125);
-    Angle backLeftOffset = Rotations.of(0.149169921875);
+    Angle frontLeftOffset = Rotations.of(-0.46044921875);
+    Angle frontRightOffset = Rotations.of(-0.343994140625);
+    Angle backLeftOffset = Rotations.of(0.14404296875);
     Angle backRightOffset = Rotations.of(0.366943359375);
 
     Slot0Configs steerGains = new Slot0Configs()
@@ -26,7 +26,7 @@ public class ThingTwoConfig implements RobotConfig {
     double elbowOffset = -0.08154296875;
     double elbowRatio = 92.99 / 90.0;
     
-    double coralTriggerDistance = 115;
+    double coralTriggerDistance = 97;
     double algaeTriggerDistance = 55;
 
     double l4Pitch = -143.63;

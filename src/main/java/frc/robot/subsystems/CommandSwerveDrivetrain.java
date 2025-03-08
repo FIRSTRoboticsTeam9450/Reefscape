@@ -264,13 +264,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void updateVision() {
-        LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight-neural", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
         if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-neural");
             setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         } else {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-neural");
             setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         }
         if (visionPose == null) {
@@ -287,6 +287,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             dontUpdate = true;
         }
         if (!dontUpdate ) {
+            Pose2d fakePose = new Pose2d(visionPose.pose.getX(), visionPose.pose.getY() - 0.15, visionPose.pose.getRotation());
             Logger.recordOutput("Vision Pose", visionPose.pose);
             if (!visionOverride) {
                 addVisionMeasurement(visionPose.pose, Utils.getCurrentTimeSeconds() - (visionPose.latency / 1000));
