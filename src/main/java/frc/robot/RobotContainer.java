@@ -290,7 +290,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
         NamedCommands.registerCommand("AlgaeProcesser", new CoordinationCommand(ScoringPos.ALGAE_STORE));
         NamedCommands.registerCommand("Start", new CoordinationCommand(ScoringPos.START));
-        NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, 12));
+        NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, -18));
 
         NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = true));
         NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = false));

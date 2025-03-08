@@ -264,13 +264,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void updateVision() {
-        LimelightHelpers.SetRobotOrientation("limelight-neural", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
         if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-neural");
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
             setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
         } else {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-neural");
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
             setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         }
         if (visionPose == null) {

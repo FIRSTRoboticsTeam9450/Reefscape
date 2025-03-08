@@ -38,7 +38,7 @@ public class ScoringCommand extends Command {
             intake.setVoltage(12);
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
-            intake.setVoltage(1);
+            intake.setVoltage(-1);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-1);
         } else {

@@ -36,13 +36,13 @@ public class AlgaeAlignCommand extends Command {
     DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     /* ----- PID's ----- */
-    private PIDController pid = new PIDController(0.01, 0, 0); //0.015, 0, 0.01
+    private PIDController pid = new PIDController(0.05, 0, 0); //0.015, 0, 0.01
     private PIDController pidRotation = new PIDController(0.015, 0, 0); //0.015, 0, 0.005
-    private PIDController pidForward = new PIDController(0.01, 0, 0); //0.035, 0, 0.01
+    private PIDController pidForward = new PIDController(0.05, 0, 0); //0.035, 0, 0.01
 
     /* ----- Variables ----- */
     private double target;
-    private double taTarget = 16;
+    private double taTarget = 10.3;
     private CommandSwerveDrivetrain drive;
     private double power = 0;
     private double rotationPower = 0;
@@ -62,7 +62,7 @@ public class AlgaeAlignCommand extends Command {
     public AlgaeAlignCommand(CommandSwerveDrivetrain drive, double target) {
         this.target = -18;
         this.drive = drive;
-        pid.setSetpoint(target);
+        pid.setSetpoint(-18);
         pidForward.setSetpoint(taTarget);
         addRequirements(drive);
     }
@@ -80,8 +80,8 @@ public class AlgaeAlignCommand extends Command {
     // yaw -60
     @Override
     public void execute() {
-        double tx = LimelightHelpers.getTX("limelight-neural");
-        double ta = LimelightHelpers.getTA("limelight-neural");
+        double tx = LimelightHelpers.getTX("limelight");
+        double ta = LimelightHelpers.getTA("limelight");
         if (Math.abs(tx - target) < 1) {
             atTarget = true;
         }
