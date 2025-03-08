@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.67827868852459,
-        "y": 5.745235655737704
+        "x": 2.241700819672131,
+        "y": 5.7212602459016395
       },
       "prevControl": {
-        "x": 3.719662971148958,
-        "y": 5.778186719183991
+        "x": 4.2830851022965,
+        "y": 5.754211309347927
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftCoral"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
@@ -64,18 +64,18 @@
   ],
   "globalConstraints": {
     "maxVelocity": 5.0,
-    "maxAcceleration": 3.0,
+    "maxAcceleration": 1.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
-    "velocity": 0,
+    "velocity": 1.6,
     "rotation": -178.56790381583548
   },
   "reversed": false,
-  "folder": "Ground3Coral",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
     "rotation": -60.40770364064201

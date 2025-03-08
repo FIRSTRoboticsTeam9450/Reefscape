@@ -261,18 +261,22 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         Logger.recordOutput("Reefscape/PDH/Channel Currents", Robot.pdh.getAllCurrents());
         Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
         Logger.recordOutput("Drive Pose", getState().Pose);
+        Logger.recordOutput("Reefscape/Limelight/ta", LimelightHelpers.getTA("limelight"));
+        Logger.recordOutput("Reefscape/Limelight/tx", LimelightHelpers.getTX("limelight"));
     }
 
     private void updateVision() {
-        LimelightHelpers.SetRobotOrientation("limelight", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight-old", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
-        if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight");
-            setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        } else {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight");
-            setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
-        }
+        // if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
+        //     visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-old");
+        //     setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
+        // } else {
+        //     visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-old");
+        //     setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
+        // }
+        visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-old");
+        setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         if (visionPose == null) {
             return;
         }
@@ -342,7 +346,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
     }
     public Command getAutoPath(String pathName) {
-        return new PathPlannerAuto(pathName);
+        return new PathPlannerAuto(pathName, true);
     }
 
     public void resetPoseKevin(Pose2d pose) {

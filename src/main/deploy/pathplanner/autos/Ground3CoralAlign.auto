@@ -29,6 +29,50 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Score"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "IntakeLeftGroundAlign"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "AlignAlgae"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "ScoreGround"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
@@ -51,7 +95,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BLRSource"
+                        "pathName": "IntakeCenterGround"
                       }
                     }
                   ]
@@ -63,69 +107,13 @@
         {
           "type": "named",
           "data": {
-            "name": "WaitForCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "CoralStore"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "SourceScore"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Score"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.5
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": null
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "WaitForCoral"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralStore"
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "SourceToDL"
+            "pathName": "ScoreCenterGround"
           }
         },
         {

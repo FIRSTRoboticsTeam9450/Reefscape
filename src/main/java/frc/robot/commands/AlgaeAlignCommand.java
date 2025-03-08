@@ -36,7 +36,7 @@ public class AlgaeAlignCommand extends Command {
     DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     /* ----- PID's ----- */
-    private PIDController pid = new PIDController(0.05, 0, 0); //0.015, 0, 0.01
+    private PIDController pid = new PIDController(0.03, 0, 0); //0.015, 0, 0.01
     private PIDController pidRotation = new PIDController(0.015, 0, 0); //0.015, 0, 0.005
     private PIDController pidForward = new PIDController(0.05, 0, 0); //0.035, 0, 0.01
 
@@ -80,17 +80,26 @@ public class AlgaeAlignCommand extends Command {
     // yaw -60
     @Override
     public void execute() {
-        double tx = LimelightHelpers.getTX("limelight");
-        double ta = LimelightHelpers.getTA("limelight");
-        if (Math.abs(tx - target) < 1) {
+        double tx = LimelightHelpers.getTX("limelight-coral");
+        double ta = LimelightHelpers.getTA("limelight-coral");
+        
+        pid.setSetpoint(-Math.sqrt(25 * ta) - 1);
+        
+        if (Math.abs(pid.getError()) < 1 && Math.abs(pidForward.getError()) < 2) {
             atTarget = true;
         }
         //pid.setSetpoint(-0.75 * ta - 11);
 
         power = pid.calculate(tx);
         double powerForward = pidForward.calculate(ta);
-        SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.15, 0.15) * MaxSpeed).withVelocityX(MathUtil.clamp(powerForward, -0.15, 0.15) * MaxSpeed);
-        drive.setControl(driveAlign);
+        if (atTarget) {
+            SwerveRequest driveForward = driveRequest.withVelocityY(0).withVelocityX(0.35 * MaxSpeed);
+            drive.setControl(driveForward);
+        } else {
+            SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.35, 0.35) * MaxSpeed).withVelocityX(MathUtil.clamp(powerForward, -0.25, 0.25) * MaxSpeed);
+            drive.setControl(driveAlign);
+        }
+        
 
     }
 
@@ -98,11 +107,12 @@ public class AlgaeAlignCommand extends Command {
 
     @Override
     public boolean isFinished() {
-        return intake.hasCoral() || timer.get() > 4;
+        return intake.hasCoral() || timer.get() > 2;
     }
 
     @Override
     public void end(boolean interrupted) {
+        drive.setControl(driveRequest.withVelocityX(0).withVelocityY(0));
     }
 
 }

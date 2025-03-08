@@ -3,8 +3,9 @@
   "robotLength": 0.9,
   "holonomicMode": true,
   "pathFolders": [
+    "2 coral",
     "Ground3Coral",
-    "2 coral"
+    "Ground3CoralRight"
   ],
   "autoFolders": [],
   "defaultMaxVel": 5.0,

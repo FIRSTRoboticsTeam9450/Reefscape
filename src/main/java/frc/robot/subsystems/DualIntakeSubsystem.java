@@ -29,7 +29,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
     /* ----- Instance of Subsystem ----- */
     private static DualIntakeSubsystem DI;
 
-    int count;
+    int coralValidCount = 0;
 
     /* ----- Motors ----- */
     private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
@@ -46,6 +46,9 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
     boolean hasCoral;
     boolean hasAlgae;
+
+    boolean lastHadCoral;
+    boolean hasCoralNow;
 
     VoltageOut request = new VoltageOut(0).withEnableFOC(true);
     /* ----- Initialization ----- */
@@ -91,8 +94,20 @@ public class DualIntakeSubsystem extends SubsystemBase{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        hasCoral = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
+        hasCoralNow = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
         hasAlgae = algaeLaserDistance < Constants.robotConfig.getAlgaeTriggerDistance();
+        
+        if (hasCoralNow == lastHadCoral) {
+            coralValidCount++;
+            if (coralValidCount >= 2) {
+                hasCoral = hasCoralNow;
+            }
+        } else {
+            coralValidCount = 0;
+        }
+
+        lastHadCoral = hasCoralNow;
+    
     }
 
     @Override

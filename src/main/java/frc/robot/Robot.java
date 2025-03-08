@@ -54,6 +54,8 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber("Reefscape/DriveCurve/x2", 90);
     SmartDashboard.putNumber("Reefscape/DriveCurve/y1", 0.085);
     SmartDashboard.putNumber("Reefscape/DriveCurve/y2", 0.905);
+
+    LimelightHelpers.setPipelineIndex("limelight-coral", 2);
   }
 
   @Override
@@ -75,7 +77,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     int[] validTags = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
-    LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validTags);
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-old", validTags);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {

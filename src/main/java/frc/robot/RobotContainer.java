@@ -211,7 +211,7 @@ public class RobotContainer {
 
         //m_driver2.rightStick().onTrue(new ClimbCommand(0.075, 12));
         m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
-        m_driver2.leftStick().whileTrue(new AlgaeAlignCommand(drivetrain, -12));
+        m_driver2.leftStick().onTrue(new AlgaeAlignCommand(drivetrain, -12));
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
         // m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
         //m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false)));
@@ -298,6 +298,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-       return autoChooser.getSelected();
+       return drivetrain.getAutoPath("Ground3Coral");
     }
 }
