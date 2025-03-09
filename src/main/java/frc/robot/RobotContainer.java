@@ -94,12 +94,9 @@ public class RobotContainer {
 
         boolean isCompetition = false;
 
-        //if isComp... is true, it will only use auto's that name starts with "comp"
-        autoChooser = AutoBuilder.buildAutoChooserWithOptionsModifier(
-            (stream) -> isCompetition
-            ? stream.filter(auto -> auto.getName().startsWith("comp"))
-            : stream
-        );
+        autoChooser = new SendableChooser<>();
+        autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
+        autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
@@ -169,11 +166,11 @@ public class RobotContainer {
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
-        m_driver1.povUp().onTrue(new ClimbCommand(0.11, 12));
-
-        m_driver1.povDown().onTrue(new ClimbCommand(0.6, 10).andThen(new CoordinationCommand(ScoringPos.START)));
-
-        m_driver1.povRight().onTrue(new ClimbCommand(0.91, 3));
+        //THINGS
+        m_driver1.povUp().onTrue(new ClimbCommand(0.91, 12));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.35, 10).andThen(new CoordinationCommand(ScoringPos.START)));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.1, 3));
+        //END
 
         //m_driver1.povDown().onTrue(new ClimbCommand(0, -3));
 
@@ -298,6 +295,6 @@ public class RobotContainer {
     }
 
     public Command getAutonomousCommand() {
-       return drivetrain.getAutoPath("Ground3Coral");
+       return autoChooser.getSelected();
     }
 }

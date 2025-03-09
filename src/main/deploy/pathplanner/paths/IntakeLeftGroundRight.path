@@ -16,16 +16,16 @@
     },
     {
       "anchor": {
-        "x": 1.714,
-        "y": 5.84
+        "x": 1.690266393442623,
+        "y": 5.841137295081967
       },
       "prevControl": {
-        "x": 3.7553842826243677,
-        "y": 5.872951063446287
+        "x": 3.731650676066991,
+        "y": 5.874088358528254
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "LeftCoral"
+      "linkedName": "LeftCoralRight"
     }
   ],
   "rotationTargets": [
@@ -75,7 +75,7 @@
     "rotation": -178.56790381583548
   },
   "reversed": false,
-  "folder": "Ground3Coral",
+  "folder": "Ground3CoralRight",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -60.40770364064201

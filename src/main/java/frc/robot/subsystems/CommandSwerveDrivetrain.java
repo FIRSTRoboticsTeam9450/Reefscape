@@ -266,7 +266,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     }
 
     private void updateVision() {
-        LimelightHelpers.SetRobotOrientation("limelight-old", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
+        LimelightHelpers.SetRobotOrientation("limelight-coral", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
         // if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
         //     visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-old");
@@ -275,7 +275,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //     visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-old");
         //     setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         // }
-        visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-old");
+        visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
         setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         if (visionPose == null) {
             return;
@@ -345,8 +345,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             DriverStation.reportError("Failed to load PathPlanner config and configure AutoBuilder", ex.getStackTrace());
         }
     }
-    public Command getAutoPath(String pathName) {
-        return new PathPlannerAuto(pathName, true);
+    public Command getAutoPath(String pathName, boolean mirror) {
+        return new PathPlannerAuto(pathName, mirror);
     }
 
     public void resetPoseKevin(Pose2d pose) {

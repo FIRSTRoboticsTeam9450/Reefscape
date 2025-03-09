@@ -89,7 +89,7 @@ public class AlignCommand2 extends Command {
     public void initialize() {
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         Pose2d currentPose = drive.getState().Pose;
-        int tid = (int)LimelightHelpers.getFiducialID("limelight-old");
+        int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
         this.tid = tid;
         if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
             hasTarget = true;

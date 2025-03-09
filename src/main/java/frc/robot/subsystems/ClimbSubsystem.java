@@ -48,8 +48,8 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
-        // 0.928
-        pid.setSetpoint(0.87);
+        // 0.1
+        pid.setSetpoint(0.5);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);

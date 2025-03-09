@@ -38,7 +38,7 @@ public class ScoringCommand extends Command {
             intake.setVoltage(12);
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
-            intake.setVoltage(-1);
+            intake.setVoltage(0);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-1);
         } else {
@@ -50,9 +50,9 @@ public class ScoringCommand extends Command {
 
     @Override
     public void execute() {
-        // if (scoreSub.getScoringLevel() == 4 && timer.get() > 0.3) {
-        //     intake.setVoltage(-2);
-        // }
+        if (scoreSub.getScoringLevel() == 4 && timer.get() > 0.3) {
+            intake.setVoltage(-2);
+        }
     }
 
     /* ----------- Finishers ----------- */

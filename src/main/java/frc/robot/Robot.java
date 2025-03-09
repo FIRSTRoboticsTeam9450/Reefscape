@@ -55,7 +55,7 @@ public class Robot extends LoggedRobot {
     SmartDashboard.putNumber("Reefscape/DriveCurve/y1", 0.085);
     SmartDashboard.putNumber("Reefscape/DriveCurve/y2", 0.905);
 
-    LimelightHelpers.setPipelineIndex("limelight-coral", 2);
+    LimelightHelpers.setPipelineIndex("limelight-coral", 0);
   }
 
   @Override
