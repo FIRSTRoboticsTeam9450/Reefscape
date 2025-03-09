@@ -7,6 +7,7 @@ import frc.robot.Constants;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 /*
  * Score a game piece - automatic for coral and algae
@@ -26,6 +27,7 @@ public class ScoringCommand extends Command {
     private ScoringPos position;
     private boolean algae;
     private double coralTriggerDistance = Constants.robotConfig.getCoralTriggerDistance();
+    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
     /* ----------- Initialization ----------- */
 
@@ -50,7 +52,7 @@ public class ScoringCommand extends Command {
 
     @Override
     public void execute() {
-        if (scoreSub.getScoringLevel() == 4 && timer.get() > 0.3) {
+        if (scoreSub.getScoringLevel() == 4 && elevator.atSetpoint()) {
             intake.setVoltage(-2);
         }
     }
