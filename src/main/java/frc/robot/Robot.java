@@ -50,10 +50,10 @@ public class Robot extends LoggedRobot {
   }
   @Override
   public void robotInit() {
-    SmartDashboard.putNumber("Reefscape/DriveCurve/x1", 92.7);
-    SmartDashboard.putNumber("Reefscape/DriveCurve/x2", 90);
-    SmartDashboard.putNumber("Reefscape/DriveCurve/y1", 0.085);
-    SmartDashboard.putNumber("Reefscape/DriveCurve/y2", 0.905);
+    SmartDashboard.putNumber("Reefscape/DriveCurve/x1", 126.2); // 92.7 63.7
+    SmartDashboard.putNumber("Reefscape/DriveCurve/x2", 83); // 90 89.3
+    SmartDashboard.putNumber("Reefscape/DriveCurve/y1", 0.125); // 0.085 .095
+    SmartDashboard.putNumber("Reefscape/DriveCurve/y2", .96);// .905 1.016
 
     LimelightHelpers.setPipelineIndex("limelight-coral", 0);
   }

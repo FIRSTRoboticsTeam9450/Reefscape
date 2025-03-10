@@ -70,7 +70,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 80;
+        config.CurrentLimits.StatorCurrentLimit = 50;
         configurator.apply(config);
 
         //coralMeasurement = coralLaserCan.getMeasurement();

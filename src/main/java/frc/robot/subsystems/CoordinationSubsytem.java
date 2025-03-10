@@ -528,15 +528,15 @@ public class CoordinationSubsytem extends SubsystemBase{
                     DW.setRollSetpoint(0);
                     break;
                 case 2:
-                    coralScorePitch = -70;
+                    coralScorePitch = -90;
                     coralScoreElbow = 78;
-                    coralScoreElev = 3.75;
+                    coralScoreElev = 4.5; //Comp: 3.75
                     rollToClosestSide();
                     break;
                 case 3:
-                    coralScorePitch = -70;
+                    coralScorePitch = -90;
                     coralScoreElbow = 78;
-                    coralScoreElev = 13;
+                    coralScoreElev = 13.5;
                     rollToClosestSide();
                     break;
                 case 4:
@@ -615,12 +615,15 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToScoreCoral() {
-
         DW.setPitchSetpoint(-83.19);
         Elbow.setSetpoint(32.91);
+        if (level == 3 && Elbow.atSetpoint()) {
+            Elev.setSetpoint(12.5);
+        }
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
+            && Elev.atSetpoint()
             )
         {
             allAtSetpoints = true;

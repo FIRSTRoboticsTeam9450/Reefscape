@@ -43,7 +43,9 @@ public class ScoringCommand extends Command {
             intake.setVoltage(-1);
         } else {
             score.schedule();
-            // intake.setVoltage(-.25);
+            if (scoreSub.getScoringLevel() == 2) {
+                intake.setVoltage(-.25);
+            }
         }
         
     }
@@ -51,7 +53,7 @@ public class ScoringCommand extends Command {
     @Override
     public void execute() {
         if (scoreSub.getScoringLevel() == 4 && timer.get() > 0.3) {
-            intake.setVoltage(-2);
+            // intake.setVoltage(-2);
         }
     }
 
