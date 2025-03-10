@@ -49,13 +49,13 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordinationCommand;;
 
 public class RobotContainer {
-    public static double MaxSpeed = 5.14; // kSpeedAt12Volts desired top speed
+    public static double MaxSpeed = 4.369; // kSpeedAt12Volts desired top speed
     public static double MaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // 3/4 of a rotation per second max angular velocity
 
     private static double LiftMaxSpeed = 1;
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
-    private static double DefaultMaxSpeed = 5.14;
+    private static double DefaultMaxSpeed = 4.369;
     private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     

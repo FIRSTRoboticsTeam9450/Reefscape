@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.RobotController;
  */
 public final class Constants {
 
-  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("034159F0") ? new ThingOneConfig() : new ThingTwoConfig();
+  public static RobotConfig robotConfig = new ThingTwoConfig();
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
