@@ -577,7 +577,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goScoreL4() {
-        Elev.setSetpoint(31);
+        Elev.setSetpoint(21);
     }
 
     public void goL1Algae() {
@@ -657,7 +657,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             DW.setRollSetpoint(-90);
             coralSideLeft = false;
         } else if (rollEncoder > 0) {
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(97);
             coralSideLeft = true;
         }
     }
@@ -667,7 +667,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             DW.setRollSetpoint(-90);
             coralSideLeft = false;
         } else if (!coralSideLeft) {
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(97);
             coralSideLeft = true;
         }
     }

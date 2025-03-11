@@ -46,7 +46,7 @@ public class ScoringCommand extends Command {
         } else {
             score.schedule();
             if (scoreSub.getScoringLevel() == 2) {
-                intake.setVoltage(-.25);
+                intake.setVoltage(0);
             }
         }
         
@@ -77,13 +77,16 @@ public class ScoringCommand extends Command {
     
     @Override
     public void end(boolean interrupted) {
-        if (intake.hasCoral() && !DriverStation.isAutonomous()) {
-            retry.schedule();
-        } else {
-            // go to store
-            intake.setVoltage(0);
-            store.schedule();
-        }
+        // if (intake.hasCoral() && !DriverStation.isAutonomous()) {
+        //     retry.schedule();
+        // } else {
+        //     // go to store
+        //     intake.setVoltage(0);
+        //     store.schedule();
+        // }
+
+        intake.setVoltage(0);
+        store.schedule();
         
     }
 }

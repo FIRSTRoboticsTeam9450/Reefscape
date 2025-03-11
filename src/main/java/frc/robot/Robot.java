@@ -27,12 +27,7 @@ public class Robot extends LoggedRobot {
 
   private final RobotContainer m_robotContainer;
 
-  public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
-
-  double x1;
-  double y1;
-  double x2;
-  double y2;
+  //public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
 
   public Robot() {
     Logger.addDataReceiver(new NT4Publisher());
@@ -40,7 +35,6 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     m_robotContainer = new RobotContainer();
-    CanBridge.runTCP();
     CameraServer.startAutomaticCapture();
   }
 
@@ -50,12 +44,8 @@ public class Robot extends LoggedRobot {
   }
   @Override
   public void robotInit() {
-    SmartDashboard.putNumber("Reefscape/DriveCurve/x1", 126.2); // 92.7 63.7
-    SmartDashboard.putNumber("Reefscape/DriveCurve/x2", 83); // 90 89.3
-    SmartDashboard.putNumber("Reefscape/DriveCurve/y1", 0.125); // 0.085 .095
-    SmartDashboard.putNumber("Reefscape/DriveCurve/y2", .96);// .905 1.016
-
-    LimelightHelpers.setPipelineIndex("limelight-coral", 0);
+    m_robotContainer.driveBezier.dashboardInitialSettings();
+    m_robotContainer.rotateBezier.dashboardInitialSettings();
   }
 
   @Override
@@ -65,10 +55,8 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledPeriodic() {
-    x1 = SmartDashboard.getNumber("Reefscape/DriveCurve/x1", 0);
-    x2 = SmartDashboard.getNumber("Reefscape/DriveCurve/x2", 0);
-    y1 = SmartDashboard.getNumber("Reefscape/DriveCurve/y1", 0);
-    y2 = SmartDashboard.getNumber("Reefscape/DriveCurve/y2", 0);
+    m_robotContainer.driveBezier.checkAndupdateCurve();
+    m_robotContainer.rotateBezier.checkAndupdateCurve();
   }
 
   @Override
@@ -77,7 +65,7 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     int[] validTags = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
-    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-old", validTags);
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validTags);
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {
@@ -93,7 +81,6 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void teleopInit() {
-    CurveTest.generateCurve(x1, y1, x2, y2);
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }

@@ -50,6 +50,9 @@ public class DualIntakeSubsystem extends SubsystemBase{
     boolean lastHadCoral;
     boolean hasCoralNow;
 
+    double voltage;
+    boolean atSpeed;
+
     VoltageOut request = new VoltageOut(0).withEnableFOC(true);
     /* ----- Initialization ----- */
 
@@ -94,20 +97,36 @@ public class DualIntakeSubsystem extends SubsystemBase{
         } catch (Exception e) {
             e.printStackTrace();
         }
-        hasCoralNow = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
+        //hasCoralNow = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
         hasAlgae = algaeLaserDistance < Constants.robotConfig.getAlgaeTriggerDistance();
         
-        if (hasCoralNow == lastHadCoral) {
-            coralValidCount++;
-            if (coralValidCount >= 2) {
-                hasCoral = hasCoralNow;
+        // if (hasCoralNow == lastHadCoral) {
+        //     coralValidCount++;
+        //     if (coralValidCount >= 2) {
+        //         hasCoral = hasCoralNow;
+        //     }
+        // } else {
+        //     coralValidCount = 0;
+        // }
+
+        //lastHadCoral = hasCoralNow;
+
+        if (voltage > 1) {
+            if (motor.getVelocity().getValueAsDouble() > 1) {
+                atSpeed = true;
             }
-        } else {
-            coralValidCount = 0;
+            if (atSpeed) {
+                if (motor.getVelocity().getValueAsDouble() < 0.5) {
+                    hasCoral = true;
+                    atSpeed = false;
+                }
+            }
         }
 
-        lastHadCoral = hasCoralNow;
-    
+        if (voltage <= 0) {
+            hasCoral = false;
+            atSpeed = false;
+        }
     }
 
     @Override
@@ -142,6 +161,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * @param voltage range of -12V to 12V
      */
     public void setVoltage(double voltage) {
+        this.voltage = voltage;
         motor.setControl(request.withOutput(voltage));
     }
 

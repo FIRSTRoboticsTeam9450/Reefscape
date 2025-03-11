@@ -63,7 +63,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             if (DI.hasCoral()) {
-                DI.setVoltage(5);
+                DI.setVoltage(12);
                 finished = true;
             }
         }
@@ -87,7 +87,7 @@ public class DualIntakeCommand extends Command{
                 wristUpGround.schedule();
             }
         } else {
-            DI.setVoltage(5);
+            DI.setVoltage(12);
         }
     }
     

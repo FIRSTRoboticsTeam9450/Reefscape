@@ -1,23 +1,72 @@
 package frc.robot;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 public class CurveTest {
 
-    static double[] bezier;
+    private double[] bezier;
 
-    double x1;
-    double y1;
-    double x2;
-    double y2;
+    private double x1;
+    private double y1;
+    private double x2;
+    private double y2;
+    private double deadband = 0.05; // joystick deadband
+    private double minOutput = .1;
+    private String identifier;
+    private double joystick = -1;
 
-    public static double getOutput(double x) {
-        x = MathUtil.clamp(x, -1, 1);
-        double sign = Math.signum(x);
-        return bezier[(int) Math.round(Math.abs(x) * 127)] * sign;
+    private String string_x1;
+    private String string_y1;
+    private String string_x2;
+    private String string_y2;
+    private String string_deadband;
+    private String string_minOutput;
+    private String string_waveformX;   
+    private String string_waveformY;
+
+    private String base = "Reefscape/DriveCurve/";
+
+    public CurveTest(String identifier, double x1, double y1, double x2, double y2, double deadband, double minOutput){
+        this.identifier = identifier;
+        this.x1 = x1;
+        this.y1 = y1;
+        this.x2 = x2;
+        this.y2 = y2;
+        this.deadband = deadband;
+        this.minOutput = minOutput;
+
+        string_x1 = base+identifier+"_x1";
+        string_y1 = base+identifier+"_y1";
+        string_x2 = base+identifier+"_x2";
+        string_y2 = base+identifier+"_y2";
+        string_deadband = base+identifier+"_deadband";
+        string_minOutput = base+identifier+"_minOutput";
+        string_waveformX = base+identifier+"_waveform_X";
+        string_waveformY = base+identifier+"_waveform_Y";
+
+        generateCurve(x1, y1, x2, y2, minOutput, deadband);
     }
 
-    private static double getPoint(double[][] curve, double x) {
+    public double getOutput(double x) {
+        x = MathUtil.clamp(x, -1, 1);
+        double sign = Math.signum(x);
+        x=Math.abs(x);
+        if (x < deadband){
+            return 0;
+        }
+        x = x-deadband;
+        x /= (1 - deadband);
+
+        x = x+minOutput;
+        x /= (1 +minOutput);
+
+        return bezier[(int) Math.round(x * 127)] * sign;
+    }
+
+    private double getPoint(double[][] curve, double x) {
         double sign = Math.signum(x);
         x = Math.abs(x);
 
@@ -37,7 +86,14 @@ public class CurveTest {
         return 0;
     }
 
-    public static void generateCurve(double x1, double y1, double x2, double y2) {
+    public void generateCurve(double px1, double py1, double px2, double py2, double pminOutput, double pdeadband) {
+        x1 = px1;
+        y1 = py1;
+        x2 = px2;
+        y2 = py2;
+        minOutput = pminOutput;
+        deadband = pdeadband;
+
         int steps = 1024;
         double[][] curve = new double[2][steps + 1];
         for (int i = 0; i <= steps; i++) {
@@ -53,5 +109,69 @@ public class CurveTest {
         }
 
         bezier = out;
+    }
+    
+    private void logCurve() {
+        // Logger.recordOutput(string_waveformX, joystick);
+        // Logger.recordOutput(string_waveformY, getOutput(joystick));
+        SmartDashboard.putNumber(string_waveformY, getOutput(joystick));
+        joystick += .01;
+        if (joystick > 1) {
+            joystick = -1;
+        }
+    }
+
+    public void dashboardInitialSettings(){
+        double testValue = SmartDashboard.getNumber(string_x1, -100.0);
+
+        SmartDashboard.putBoolean(base + identifier + "_update", false);
+
+        if (testValue == -100.0) {
+            SmartDashboard.putNumber(string_x1, x1);
+            SmartDashboard.putNumber(string_y1, y1);
+            SmartDashboard.putNumber(string_x2, x2);
+            SmartDashboard.putNumber(string_y2, y2);
+            SmartDashboard.putNumber(string_deadband, deadband);
+            SmartDashboard.putNumber(string_minOutput, minOutput);
+        }
+        else{
+            x1 = SmartDashboard.getNumber(string_x1, 0);
+            y1 = SmartDashboard.getNumber(string_y1, 0);
+            x2 = SmartDashboard.getNumber(string_x2, 0);
+            y2 = SmartDashboard.getNumber(string_y2, 0);
+            deadband = SmartDashboard.getNumber(string_deadband, 0);
+            minOutput = SmartDashboard.getNumber(string_minOutput, 0);
+        }
+    }
+
+    public void checkAndupdateCurve(){
+        if (SmartDashboard.getBoolean(base+identifier+"_update", false)) {
+
+            SmartDashboard.putBoolean(base+identifier+"_update", false);
+
+            double tmpx1 = SmartDashboard.getNumber(string_x1, 0);
+            double tmpy1 = SmartDashboard.getNumber(string_y1, 0);
+            double tmpx2 = SmartDashboard.getNumber(string_x2, 0);
+            double tmpy2 = SmartDashboard.getNumber(string_y2, 0);
+            double tmpdeadband = SmartDashboard.getNumber(string_deadband, 0);
+            double tmpminOutput = SmartDashboard.getNumber(string_minOutput, 0);
+
+            
+            System.out.printf("x1: %f \ntmpx1: %f\n", x1, tmpx1);
+            
+            //tmpx1 != x1 || tmpx2 != x2 || tmpy1 != y1 || tmpy2 != y2 || tmpdeadband != deadband || tmpminOutput != minOutput
+            System.out.println("checkAndUpdateCurve");
+            x1 = tmpx1;
+            x2 = tmpx2;
+            y1 = tmpy1;
+            y2 = tmpy2;
+            deadband = tmpdeadband;
+            minOutput = tmpminOutput;
+
+            generateCurve(x1, y1, x2, y2, deadband, minOutput);
+            System.out.println("Hello there!");
+
+        }
+        logCurve();
     }
 }

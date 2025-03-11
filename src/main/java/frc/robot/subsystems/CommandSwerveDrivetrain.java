@@ -258,8 +258,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
 
         updateVision();
-        Logger.recordOutput("Reefscape/PDH/Channel Currents", Robot.pdh.getAllCurrents());
-        Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
+        //Logger.recordOutput("Reefscape/PDH/Channel Currents", Robot.pdh.getAllCurrents());
+        //Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
         Logger.recordOutput("Drive Pose", getState().Pose);
         Logger.recordOutput("Reefscape/Limelight/ta", LimelightHelpers.getTA("limelight"));
         Logger.recordOutput("Reefscape/Limelight/tx", LimelightHelpers.getTX("limelight"));
