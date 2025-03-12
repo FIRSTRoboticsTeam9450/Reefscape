@@ -663,7 +663,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             DW.setRollSetpoint(-90);
             coralSideLeft = false;
         } else if (rollEncoder > 0) {
-            DW.setRollSetpoint(97);
+            DW.setRollSetpoint(95);
             coralSideLeft = true;
         }
     }
@@ -673,7 +673,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             DW.setRollSetpoint(-90);
             coralSideLeft = false;
         } else if (!coralSideLeft) {
-            DW.setRollSetpoint(97);
+            DW.setRollSetpoint(95);
             coralSideLeft = true;
         }
     }
