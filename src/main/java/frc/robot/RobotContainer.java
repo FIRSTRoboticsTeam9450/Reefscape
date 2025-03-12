@@ -33,12 +33,10 @@ import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
-import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
-import frc.robot.commands.SaveCommand;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -60,8 +58,8 @@ public class RobotContainer {
     private static double DefaultMaxSpeed = 4.369;
     private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
-    public CurveTest driveBezier = new CurveTest("drive", 126.2, 0.125, 83, 0.96, 0.05, 0.1);
-    public CurveTest rotateBezier = new CurveTest("rotate", 126.2, 0.125, 83, 0.96, 0.05, 0.1);
+    public CurveTest driveBezier = new CurveTest("drive", 126.2, 0.125, 83, 0.96, 0.07, 0);
+    public CurveTest rotateBezier = new CurveTest("rotate", 126.2, 0.125, 83, 0.96, 0.07, 0);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -118,8 +116,7 @@ public class RobotContainer {
         );
 
         scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
-        intake.setDefaultCommand(new ManualElevatorCommand(() -> -m_driver2.getRightY()));
-        m_driver2.povLeft().onTrue(new SaveCommand());
+        
         m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))

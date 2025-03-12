@@ -2,6 +2,8 @@ package frc.robot;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.Utils;
+
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
@@ -27,7 +29,9 @@ public class CurveTest {
     private String string_waveformX;   
     private String string_waveformY;
 
+    private String string_update;
     private String base = "Reefscape/DriveCurve/";
+    private String update = "_update";
 
     public CurveTest(String identifier, double x1, double y1, double x2, double y2, double deadband, double minOutput){
         this.identifier = identifier;
@@ -46,6 +50,7 @@ public class CurveTest {
         string_minOutput = base+identifier+"_minOutput";
         string_waveformX = base+identifier+"_waveform_X";
         string_waveformY = base+identifier+"_waveform_Y";
+        string_update = base+identifier+"_update";
 
         generateCurve(x1, y1, x2, y2, minOutput, deadband);
     }
@@ -53,15 +58,15 @@ public class CurveTest {
     public double getOutput(double x) {
         x = MathUtil.clamp(x, -1, 1);
         double sign = Math.signum(x);
-        x=Math.abs(x);
-        if (x < deadband){
-            return 0;
-        }
-        x = x-deadband;
-        x /= (1 - deadband);
+        x = Math.abs(x);
+        // if (x < deadband){
+        //     return 0;
+        // }
+        // x = x-deadband;
+        // x /= (1 - deadband);
 
-        x = x+minOutput;
-        x /= (1 +minOutput);
+        // x = x+minOutput;
+        // x /= (1 +minOutput);
 
         return bezier[(int) Math.round(x * 127)] * sign;
     }
@@ -69,6 +74,13 @@ public class CurveTest {
     private double getPoint(double[][] curve, double x) {
         double sign = Math.signum(x);
         x = Math.abs(x);
+
+        if (x / 127.0 < deadband){
+            x = 0;
+        } else {
+            x = 127 * (x / 127 - deadband);
+            x /= (1.0 - deadband);
+        }
 
         for (int i = 0; i < curve[0].length; i++) {
             if (x <= curve[0][i]) {
@@ -79,7 +91,11 @@ public class CurveTest {
                 double y1 = curve[1][i-1];
                 double x2 = curve[0][i];
                 double y2 = curve[1][i];
-                return sign * (y1 + ((x - x1) * (y2 - y1)) / (x2 - x1));
+                double out = (y1 + ((x - x1) * (y2 - y1)) / (x2 - x1));
+
+                out = out + minOutput;
+                out /= (1.0 + minOutput);
+                return out * sign;
             }
         }
         
@@ -124,7 +140,7 @@ public class CurveTest {
     public void dashboardInitialSettings(){
         double testValue = SmartDashboard.getNumber(string_x1, -100.0);
 
-        SmartDashboard.putBoolean(base + identifier + "_update", false);
+        SmartDashboard.putBoolean(base+identifier+update, false);
 
         if (testValue == -100.0) {
             SmartDashboard.putNumber(string_x1, x1);
@@ -144,33 +160,38 @@ public class CurveTest {
         }
     }
 
+    int count=0;
     public void checkAndupdateCurve(){
-        if (SmartDashboard.getBoolean(base+identifier+"_update", false)) {
-
-            SmartDashboard.putBoolean(base+identifier+"_update", false);
-
-            double tmpx1 = SmartDashboard.getNumber(string_x1, 0);
-            double tmpy1 = SmartDashboard.getNumber(string_y1, 0);
-            double tmpx2 = SmartDashboard.getNumber(string_x2, 0);
-            double tmpy2 = SmartDashboard.getNumber(string_y2, 0);
-            double tmpdeadband = SmartDashboard.getNumber(string_deadband, 0);
-            double tmpminOutput = SmartDashboard.getNumber(string_minOutput, 0);
-
+        if(((count++) % 25) == 0){
             
-            System.out.printf("x1: %f \ntmpx1: %f\n", x1, tmpx1);
-            
-            //tmpx1 != x1 || tmpx2 != x2 || tmpy1 != y1 || tmpy2 != y2 || tmpdeadband != deadband || tmpminOutput != minOutput
-            System.out.println("checkAndUpdateCurve");
-            x1 = tmpx1;
-            x2 = tmpx2;
-            y1 = tmpy1;
-            y2 = tmpy2;
-            deadband = tmpdeadband;
-            minOutput = tmpminOutput;
+            boolean bUpdate = SmartDashboard.getBoolean(string_update,false);
+            if (bUpdate) {
 
-            generateCurve(x1, y1, x2, y2, deadband, minOutput);
-            System.out.println("Hello there!");
+                SmartDashboard.putBoolean(string_update, false);
 
+                double tmpx1 = SmartDashboard.getNumber(string_x1, 0);
+                double tmpy1 = SmartDashboard.getNumber(string_y1, 0);
+                double tmpx2 = SmartDashboard.getNumber(string_x2, 0);
+                double tmpy2 = SmartDashboard.getNumber(string_y2, 0);
+                double tmpdeadband = SmartDashboard.getNumber(string_deadband, 0);
+                double tmpminOutput = SmartDashboard.getNumber(string_minOutput, 0);
+
+                
+                //System.out.printf("x1: %f \ntmpx1: %f\n", x1, tmpx1);
+                System.out.println("Updated " + identifier + " at " + Utils.getCurrentTimeSeconds());
+
+                //tmpx1 != x1 || tmpx2 != x2 || tmpy1 != y1 || tmpy2 != y2 || tmpdeadband != deadband || tmpminOutput != minOutput
+                //System.out.println("checkAndUpdateCurve");
+                x1 = tmpx1;
+                x2 = tmpx2;
+                y1 = tmpy1;
+                y2 = tmpy2;
+                deadband = tmpdeadband;
+                minOutput = tmpminOutput;
+
+                generateCurve(x1, y1, x2, y2, minOutput, deadband);
+                //System.out.println("Hello there!");
+            }
         }
         logCurve();
     }

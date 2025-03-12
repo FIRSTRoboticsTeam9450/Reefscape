@@ -349,8 +349,11 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralStore() {
         algae = false;
         rollToClosestSide();
-        DW.setPitchSetpoint(-130);
-        Elbow.setSetpoint(70);
+
+        if (DW.getRollAngle() < 120) {
+            Elbow.setSetpoint(70);
+            DW.setPitchSetpoint(-130);
+        }
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -419,9 +422,12 @@ public class CoordinationSubsytem extends SubsystemBase{
         algae = true;
         groundAlgae = true;
         DW.setPitchSetpoint(-80);
-        DW.setRollSetpoint(180);
         Elbow.setSetpoint(28);
         Elev.setSetpoint(0);
+
+        if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
+            DW.setRollSetpoint(180);
+        }
 
 
         // DW.setPitchSetpoint(-129);
