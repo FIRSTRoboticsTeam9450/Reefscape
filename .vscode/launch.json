@@ -6,6 +6,13 @@
   "configurations": [
     {
       "type": "java",
+      "name": "AlignHelper",
+      "request": "launch",
+      "mainClass": "frc.robot.AlignHelper",
+      "projectName": "Reefscape"
+    },
+    {
+      "type": "java",
       "name": "CurveTest",
       "request": "launch",
       "mainClass": "frc.robot.CurveTest",

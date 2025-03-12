@@ -1,3 +1,4 @@
+package frc.robot;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -69,10 +70,10 @@ public class AlignHelper {
 	public static double[] getAlignPos(double[] targetPos, AlignPos position) {
         //double tagForwardOffset = 0.46;
         //double tagLeftOffset = 0.13;
-		double tagForwardOffset = 0.5051995621714053;
-		double tagLeftOffset = 0.11396869035757484;
+		double tagForwardOffset = 0.42;
+		double tagLeftOffset = 0.173;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.13 - 0.05;
+            tagLeftOffset = -0.173;
         }
         //System.out.println(score.getPos());
         if (position == AlignPos.CENTER) {

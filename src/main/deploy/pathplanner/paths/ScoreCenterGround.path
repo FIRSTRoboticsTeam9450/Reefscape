@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.6303278688524592,
-        "y": 4.342674180327869
+        "x": 1.5584016393442621,
+        "y": 4.510502049180328
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.066072731866157,
-        "y": 4.628162194026499
+        "x": 1.99414650235796,
+        "y": 4.795990062878959
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CenterCoralLeft"
     },
     {
       "anchor": {
@@ -74,7 +74,7 @@
   "folder": "Ground3Coral",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -144.66459070099998
+    "rotation": -142.3343788014167
   },
   "useDefaultConstraints": true
 }
