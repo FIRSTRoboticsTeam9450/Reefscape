@@ -126,7 +126,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
                 }
             }
         }
-        Logger.recordOutput("Reefscape/DualIntake/Velocity", motor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Reefscape/DualIntake/Velocity", motorVelocity);
         if (Math.abs(motorVelocity) > 5) {
             coralValidCount++;
             if (coralValidCount > 2) {

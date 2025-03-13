@@ -7,7 +7,7 @@ import com.ctre.phoenix6.Utils;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-public class CurveTest {
+public class BezierCurve {
 
     private double[] bezier;
 
@@ -33,7 +33,7 @@ public class CurveTest {
     private String base = "Reefscape/DriveCurve/";
     private String update = "_update";
 
-    public CurveTest(String identifier, double x1, double y1, double x2, double y2, double deadband, double minOutput){
+    public BezierCurve(String identifier, double x1, double y1, double x2, double y2, double deadband, double minOutput){
         this.identifier = identifier;
         this.x1 = x1;
         this.y1 = y1;

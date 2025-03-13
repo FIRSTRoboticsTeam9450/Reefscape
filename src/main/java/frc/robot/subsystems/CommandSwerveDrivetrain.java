@@ -283,8 +283,6 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 return;
             }
         }
-        Logger.recordOutput("Reefscape/Vision Timestamp", visionPose.latency);
-        Logger.recordOutput("Reefscape/Rio Timestamp", Utils.getCurrentTimeSeconds());
 
         boolean dontUpdate = false;
         if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
