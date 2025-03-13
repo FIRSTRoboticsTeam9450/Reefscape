@@ -624,7 +624,10 @@ public class CoordinationSubsytem extends SubsystemBase{
         DW.setPitchSetpoint(-83.19);
         Elbow.setSetpoint(32.91);
         if (level == 3 && Elbow.atSetpoint()) {
-            Elev.setSetpoint(12.5);
+            Elev.setSetpoint(11.5);
+        }
+        if (level == 2 && Elbow.atSetpoint()) {
+
         }
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()

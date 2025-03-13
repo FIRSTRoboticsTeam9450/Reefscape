@@ -13,6 +13,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.trajectory.constraint.CentripetalAccelerationConstraint;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -58,6 +59,8 @@ public class RobotContainer {
     private static double DefaultMaxSpeed = 4.369;
     private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
+    private static boolean driveEnabled = true;
+
     public CurveTest driveBezier = new CurveTest("drive", 126.2, 0.125, 83, 0.96, 0.07, 0);
     public CurveTest rotateBezier = new CurveTest("rotate", 126.2, 0.125, 83, 0.96, 0.07, 0);
     
@@ -104,6 +107,8 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+
+    
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -161,10 +166,10 @@ public class RobotContainer {
         //m_driver1.a().onTrue(new CoordinationCommand(ScoringPos.SCORE_NET));
         //m_driver1.b().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
-
-        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
-        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
-
+        if (!DriverStation.isTest()) {
+            m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
+            m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
+        }
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
         //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
 
@@ -210,7 +215,9 @@ public class RobotContainer {
 
         m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
         // m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
-        m_driver2.leftStick().onTrue(new AlgaeAlignCommand(drivetrain, -12));
+        if (!DriverStation.isTest()) {
+            m_driver2.leftStick().onTrue(new AlgaeAlignCommand(drivetrain, -12));
+        }
         //m_driver2.rightBumper().onTrue(new CoordTestingCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordTestingCommand(ScoringPos.CORAL_STORE))));
         // m_driver2.rightBumper().onTrue(new InstantCommand(() -> elevator.reset()));
         //m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false)));
@@ -262,12 +269,27 @@ public class RobotContainer {
     }
 
     public static void setLiftUp(boolean up) {
+        if (!driveEnabled) {
+            return;
+        }
         if (up) {
             MaxSpeed = LiftMaxSpeed;
             MaxAngularRate = LiftMaxAngularRate;
         } else {
             MaxSpeed = DefaultMaxSpeed;
             MaxAngularRate = DefaultMaxAngularRate;
+        }
+    }
+
+    public static void toggleDrive(boolean enabled) {
+        if (enabled) {
+            driveEnabled = true;
+            MaxSpeed = DefaultMaxSpeed;
+            MaxAngularRate = DefaultMaxAngularRate;
+        } else {
+            driveEnabled = false;
+            MaxSpeed = 0;
+            MaxAngularRate = 0;
         }
     }
 

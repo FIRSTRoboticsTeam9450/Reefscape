@@ -125,12 +125,12 @@ public class AlignCommand2 extends Command {
         //System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
             tagLeftOffset = 0; // Set left offset for center
-            tagForwardOffset = 0.65; ; // Set forward offset for center
+            tagForwardOffset = 0.6; ; // Set forward offset for center
         }
 
         if(score.getPos() == ScoringPos.GRABBED_ALGAE) {
             tagLeftOffset = 0;
-            tagForwardOffset = 1.2;
+            tagForwardOffset = 1.4;
         }
 
         // Calculate rotation relative to the target position
@@ -182,8 +182,8 @@ public class AlignCommand2 extends Command {
             powerX += .05*Math.signum(powerX);
             powerY += .05*Math.signum(powerY);
             
-            Logger.recordOutput("Reefscape/Limelight/x error", pidX.getError());
-            Logger.recordOutput("Reefscape/Limelight/y error", pidY.getError());
+            //Logger.recordOutput("Reefscape/Limelight/x error", pidX.getError());
+            //Logger.recordOutput("Reefscape/Limelight/y error", pidY.getError());
 
 
             // Calculate the rotational power and clamp it between -2 and 2

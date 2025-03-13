@@ -4,6 +4,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Tracer;
@@ -50,7 +51,7 @@ public class Robot extends LoggedRobot {
 
   @Override
   public void disabledInit() {
-
+    RobotContainer.toggleDrive(true);
   }
 
   @Override
@@ -95,10 +96,13 @@ public class Robot extends LoggedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
+    RobotContainer.toggleDrive(false);
   }
 
   @Override
-  public void testPeriodic() {}
+  public void testPeriodic() {
+    SmartDashboard.putBoolean("Reefscape/DriverStation/ Test mode", DriverStation.isTest());
+  }
 
   @Override
   public void testExit() {}

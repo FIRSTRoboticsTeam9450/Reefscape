@@ -70,7 +70,7 @@ public class AlignHelper {
 	public static double[] getAlignPos(double[] targetPos, AlignPos position) {
         //double tagForwardOffset = 0.46;
         //double tagLeftOffset = 0.13;
-		double tagForwardOffset = 0.42;
+		double tagForwardOffset = 0.47;
 		double tagLeftOffset = 0.173;
         if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.173;

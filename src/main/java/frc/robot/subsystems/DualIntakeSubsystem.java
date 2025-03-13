@@ -19,6 +19,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
 import edu.wpi.first.math.filter.MedianFilter;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.IntakeIDS;
@@ -111,21 +112,28 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
         //lastHadCoral = hasCoralNow;
 
+        double motorVelocity = motor.getVelocity().getValueAsDouble();
+
         if (voltage > 1) {
-            if (motor.getVelocity().getValueAsDouble() > 1) {
+            if (motorVelocity > 1) {
                 atSpeed = true;
             }
             if (atSpeed) {
-                if (motor.getVelocity().getValueAsDouble() < 0.5) {
+                if (motorVelocity < 0.5) {
                     hasCoral = true;
                     atSpeed = false;
+                    coralValidCount = 0;
                 }
             }
         }
-
-        if (voltage <= 0) {
-            hasCoral = false;
-            atSpeed = false;
+        Logger.recordOutput("Reefscape/DualIntake/Velocity", motor.getVelocity().getValueAsDouble());
+        if (Math.abs(motorVelocity) > 5) {
+            coralValidCount++;
+            if (coralValidCount > 2) {
+                hasCoral = false;
+            }
+        } else {
+            coralValidCount = 0;
         }
     }
 
@@ -163,6 +171,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
     public void setVoltage(double voltage) {
         this.voltage = voltage;
         motor.setControl(request.withOutput(voltage));
+        atSpeed = false;
     }
 
     public void setMode(boolean coast) {

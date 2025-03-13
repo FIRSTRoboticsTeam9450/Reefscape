@@ -277,8 +277,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         // }
         visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
         setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
-        if (visionPose == null) {
-            return;
+        if (visionPose == null || visionPose.tagCount == 0) {
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-old");
+            if (visionPose == null) {
+                return;
+            }
         }
         Logger.recordOutput("Reefscape/Vision Timestamp", visionPose.latency);
         Logger.recordOutput("Reefscape/Rio Timestamp", Utils.getCurrentTimeSeconds());
@@ -291,10 +294,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             dontUpdate = true;
         }
         if (!dontUpdate ) {
-            Pose2d fakePose = new Pose2d(visionPose.pose.getX(), visionPose.pose.getY() - 0.15, visionPose.pose.getRotation());
             Logger.recordOutput("Vision Pose", visionPose.pose);
             if (!visionOverride) {
-                addVisionMeasurement(visionPose.pose, Utils.getCurrentTimeSeconds() - (visionPose.latency / 1000));
+                addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
             }
         }
         // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {

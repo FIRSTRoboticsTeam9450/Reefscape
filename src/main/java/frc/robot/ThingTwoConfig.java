@@ -27,7 +27,7 @@ public class ThingTwoConfig implements RobotConfig {
     double elbowRatio = 92.99 / 90.0;
     
     double coralTriggerDistance = 115;
-    double algaeTriggerDistance = 55;
+    double algaeTriggerDistance = 70;
 
     double l4Pitch = -146.63;
     double l4Elbow = 82.14;
