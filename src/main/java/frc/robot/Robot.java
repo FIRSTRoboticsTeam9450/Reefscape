@@ -66,7 +66,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void autonomousInit() {
     int[] validTags = {6, 7, 8, 9, 10, 11, 17, 18, 19, 20, 21, 22};
-    LimelightHelpers.SetFiducialIDFiltersOverride("limelight", validTags);
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-coral", validTags);
+    LimelightHelpers.SetFiducialIDFiltersOverride("limelight-old", validTags);
+
     m_autonomousCommand = m_robotContainer.getAutonomousCommand();
 
     if (m_autonomousCommand != null) {

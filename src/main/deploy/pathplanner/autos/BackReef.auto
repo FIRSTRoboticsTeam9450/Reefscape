@@ -29,20 +29,19 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
           "type": "parallel",
           "data": {
             "commands": [
               {
-                "type": "sequential",
+                "type": "named",
                 "data": {
-                  "commands": [
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "Score"
-                      }
-                    }
-                  ]
+                  "name": "Score"
                 }
               },
               {
@@ -53,6 +52,12 @@
                       "type": "path",
                       "data": {
                         "pathName": "DRToCenterGround"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CoralStore"
                       }
                     }
                   ]
@@ -100,9 +105,21 @@
           }
         },
         {
+          "type": "named",
+          "data": {
+            "name": "CoralL3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "LeftGrounToBLR"
+            "pathName": "LeftGroundToDL"
           }
         },
         {
@@ -128,7 +145,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BackUpAgain"
+                        "pathName": "BackUp"
                       }
                     }
                   ]
@@ -141,6 +158,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Unfinished",
+  "folder": null,
   "choreoAuto": false
 }

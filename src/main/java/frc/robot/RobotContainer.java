@@ -89,6 +89,7 @@ public class RobotContainer {
         autoChooser = new SendableChooser<>();
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
+        autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }

@@ -53,7 +53,7 @@ public class TunerConstants {
     private static final TalonFXConfiguration driveInitialConfigs = new TalonFXConfiguration()
         .withCurrentLimits(
             new CurrentLimitsConfigs()
-                .withStatorCurrentLimit(Amps.of(60))
+                .withStatorCurrentLimit(Amps.of(120))
                 .withStatorCurrentLimitEnable(true)
         );
     private static final TalonFXConfiguration steerInitialConfigs = new TalonFXConfiguration()
@@ -82,7 +82,7 @@ public class TunerConstants {
 
     private static final double kDriveGearRatio = 6.75;   //L2+: 5.902777777777778, curently using L2: 6.75
     private static final double kSteerGearRatio = 21.428571428571427;
-    private static final Distance kWheelRadius = Inches.of(1.876);
+    private static final Distance kWheelRadius = Inches.of(1.949);
 
     private static final boolean kInvertLeftSide = false;
     private static final boolean kInvertRightSide = true;
