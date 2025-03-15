@@ -49,7 +49,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private ClimbSubsystem() {
         // 0.1
-        pid.setSetpoint(0.098);
+        pid.setSetpoint(0.076);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -60,16 +60,16 @@ public class ClimbSubsystem extends SubsystemBase {
     /*
      * POSITIONS
      * 
-     * Grabbing: 0.075
+     * Grabbing: 0.98
      * Climbing: 0.649
-     * Store: 0.888
+     * Store: 0.211
      * 
      */
 
     @Override
     public void periodic() {
         double voltage = updatePIDs(encoder.getPosition());
-        //setVoltage(-voltage);
+        setVoltage(-voltage);
         if (debugging.ClimberPos) {
             Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
             Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());

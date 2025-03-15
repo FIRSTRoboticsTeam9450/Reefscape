@@ -42,6 +42,8 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     private boolean atLimit;
 
+    private boolean highUp;
+
     private boolean resetting = true;
 
     final DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, 75, 160, 1000);
@@ -87,7 +89,10 @@ public class ElevatorSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         position = leftMotor.getPosition().getValueAsDouble() - offset; 
-        RobotContainer.setLiftUp(position > 22);
+        RobotContainer.setLiftUp(position > 22 || highUp);
+        if (highUp && setpoint < 15 && position < 3) {
+            highUp = false;
+        }
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         Logger.recordOutput("Reefscape/Elevator/Setpoint", pid.getSetpoint());
         Logger.recordOutput("Reefscape/Elevator/pos", position);
@@ -121,6 +126,9 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public void setSetpoint(double setpoint) {
+        if (setpoint > 15) {
+            highUp = true;
+        }
         pid.setSetpoint(setpoint);
         this.setpoint = setpoint;
         leftMotor.setControl(m_request.withPosition(setpoint));

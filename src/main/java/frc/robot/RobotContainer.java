@@ -154,9 +154,9 @@ public class RobotContainer {
             m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         }
         
-        m_driver1.povUp().onTrue(new ClimbCommand(0.91, 12));
-        m_driver1.povDown().onTrue(new ClimbCommand(0.35, 10).andThen(new CoordinationCommand(ScoringPos.START)));
-        m_driver1.povRight().onTrue(new ClimbCommand(0.1, 3));
+        m_driver1.povUp().onTrue(new ClimbCommand(0.92, 12));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.344, 10).andThen(new CoordinationCommand(ScoringPos.START)));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.076, 3));
 
         /* ----- Operator Driver Keybinds ----- */
         /* Keybinds:
@@ -182,9 +182,9 @@ public class RobotContainer {
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         
-        //m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        //m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        //m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         
         m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
 
@@ -197,8 +197,8 @@ public class RobotContainer {
         // m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
-        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
     }
 
     public static void setLiftUp(boolean up) {
