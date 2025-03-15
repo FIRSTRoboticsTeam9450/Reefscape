@@ -4,24 +4,24 @@
     {
       "anchor": {
         "x": 3.689,
-        "y": 5.066
+        "y": 5.086
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.395085526315789,
-        "y": 5.60933881578948
+        "y": 5.62933881578948
       },
       "isLocked": false,
       "linkedName": "BLR"
     },
     {
       "anchor": {
-        "x": 1.8,
-        "y": 6.093
+        "x": 1.750204918032787,
+        "y": 5.853125
       },
       "prevControl": {
-        "x": 3.841384282624368,
-        "y": 6.125951063446287
+        "x": 3.791589200657155,
+        "y": 5.886076063446287
       },
       "nextControl": null,
       "isLocked": false,
@@ -46,9 +46,22 @@
         "data": {
           "commands": [
             {
-              "type": "named",
+              "type": "sequential",
               "data": {
-                "name": "CoralIntake"
+                "commands": [
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "CoralIntake"
+                    }
+                  },
+                  {
+                    "type": "named",
+                    "data": {
+                      "name": "CoralStore"
+                    }
+                  }
+                ]
               }
             },
             {

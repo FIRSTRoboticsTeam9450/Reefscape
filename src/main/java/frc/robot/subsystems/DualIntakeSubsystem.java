@@ -159,6 +159,10 @@ public class DualIntakeSubsystem extends SubsystemBase{
         return hasCoral;
     }
 
+    public void setHasCoral(boolean hasCoral) {
+        this.hasCoral = hasCoral;
+    }
+
     public boolean hasAlgae() {
         return hasAlgae;
     }

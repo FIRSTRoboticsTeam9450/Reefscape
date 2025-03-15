@@ -118,6 +118,7 @@ public class AlignCommand2 extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
+        // 0.187 left, 0.448 back
         double tagLeftOffset = 0.173;
         if (position == AlignPos.RIGHT) {
             tagLeftOffset = -0.173;
@@ -158,7 +159,7 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
-            if (pidX.getError() < 0.02 && pidY.getError() < 0.02 && pidRotate.getError() < 0.1) {
+            if (pidX.getError() < 0.03 && pidY.getError() < 0.03 && pidRotate.getError() < 0.2) {
                 double[] pose = getAlignPos(map.get(tid), 0.42);
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);

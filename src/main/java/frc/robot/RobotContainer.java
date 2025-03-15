@@ -53,8 +53,8 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 126.2, 0.125, 83, 0.96, 0.07, 0);
-    public BezierCurve rotateBezier = new BezierCurve("rotate", 126.2, 0.125, 83, 0.96, 0.07, 0);
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.05, 0.03);
+    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.05, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -142,7 +142,7 @@ public class RobotContainer {
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
         m_driver1.leftTrigger().onTrue(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
         m_driver1.leftBumper().onTrue(new RollSideSwitcher());
-        m_driver1.rightBumper().onTrue(new OuttakeCommand());
+        //m_driver1.rightBumper().onTrue(new OuttakeCommand());
         m_driver1.x().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))
             .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
@@ -182,10 +182,12 @@ public class RobotContainer {
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         
-        m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        //m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        //m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        //m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         
+        m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
+
         /* ----- Commands not currently in use ----- */
         
         // SOURCE INTAKE
@@ -195,8 +197,8 @@ public class RobotContainer {
         // m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
-        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
     }
 
     public static void setLiftUp(boolean up) {
@@ -231,7 +233,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         NamedCommands.registerCommand("CoralL3", new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        NamedCommands.registerCommand("Score", new ScoringCommand());
+        NamedCommands.registerCommand("Score", new ScoringCommand().andThen(new InstantCommand(() -> intake.setHasCoral(false))));
         NamedCommands.registerCommand("GoToScore", new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
         NamedCommands.registerCommand("CoralStore", new CoordinationCommand(ScoringPos.CORAL_STORE));
         NamedCommands.registerCommand("Cancel", new InstantCommand(() -> intake.setVoltage(0))
@@ -246,7 +248,6 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = true));
         NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = false));
-
     }
 
     public Command getAutonomousCommand() {

@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 3.689,
-        "y": 5.066
+        "y": 5.086
       },
       "prevControl": null,
       "nextControl": {
         "x": 3.505010273972603,
-        "y": 5.430927226027397
+        "y": 5.450927226027398
       },
       "isLocked": false,
       "linkedName": "BLR"
