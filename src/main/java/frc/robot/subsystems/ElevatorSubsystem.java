@@ -135,7 +135,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public boolean atSetpoint() {
-        return false;
+        return Math.abs(getPosition() - getSetpoint()) < 1;
     }
 
     public void setVoltage(double voltage) {

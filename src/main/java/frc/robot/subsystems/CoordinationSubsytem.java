@@ -548,7 +548,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 case 4:
                     coralScorePitch = Constants.robotConfig.getL4Pitch();
                     coralScoreElbow = Constants.robotConfig.getL4Elbow();
-                    coralScoreElev = Constants.robotConfig.getL4Elevator();;
+                    coralScoreElev = Constants.robotConfig.getL4Elevator();
                     rollToClosestSide();
                     break;
             }
@@ -566,8 +566,14 @@ public class CoordinationSubsytem extends SubsystemBase{
             if(DW.atPitchSetpoint()) {
                 Elev.setSetpoint(coralScoreElev);
             }
-        }
-        else {
+        } else if (level == 1) {
+            DW.setPitchSetpoint(coralScorePitch);
+            Elbow.setSetpoint(coralScoreElbow);
+
+            if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
+                Elev.setSetpoint(coralScoreElev);
+            }
+        } else {
             DW.setPitchSetpoint(coralScorePitch);
             Elbow.setSetpoint(coralScoreElbow);
             Elev.setSetpoint(coralScoreElev);

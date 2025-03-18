@@ -22,7 +22,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     
     // PID
     private PIDController pitchPID = new PIDController(5, 0, 0);
-    private PIDController rollPID = new PIDController(30, 0, 0);
+    private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
     // private SparkFlex leftMotor = new SparkFlex(WristIDs.kDiffWristLeftMotorID, MotorType.kBrushless);
@@ -150,7 +150,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public boolean atPitchSetpoint() {
         double pitchAngle = getPitchAngle();
         double pitchSetpoint = getPitchSetpoint();
-        if ((pitchAngle > pitchSetpoint - 15) && (pitchAngle < pitchSetpoint + 15)) {
+        if ((pitchAngle > pitchSetpoint - 18) && (pitchAngle < pitchSetpoint + 18)) {
             return true;
         }
         return false;
