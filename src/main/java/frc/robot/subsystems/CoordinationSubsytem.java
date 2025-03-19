@@ -411,7 +411,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-120.82); // OLD: -129
+        DW.setPitchSetpoint(-130.15); // OLD: -129
         DW.setRollSetpoint(0); 
         Elbow.setSetpoint(-5); // Old: 2
         Elev.setSetpoint(0);
