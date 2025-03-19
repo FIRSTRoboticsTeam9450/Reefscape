@@ -34,16 +34,6 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
     /* ----- Motors ----- */
     private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
-    /* ----- Laser Can ----- */
-    CANrange coralRange = new CANrange(IntakeIDS.kDualIntakeCoralLaserID);
-    CANrange algaeRange = new CANrange(IntakeIDS.kDualIntakeAlgaeLaserID);
-    //private LaserCan.Measurement coralMeasurement;
-    // LaserCANs are configured with a medianfilter, which means the last 3 reults are averaged together
-    // this smooths out the output nicely
-    //MedianFilter algaeMedianDistance = new MedianFilter(3);
-    //MedianFilter coralMedianDistance = new MedianFilter(3);
-    double coralLaserDistance;
-    double algaeLaserDistance;
 
     boolean hasCoral;
     boolean hasAlgae;
@@ -55,6 +45,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     boolean atSpeed;
 
     VoltageOut request = new VoltageOut(0).withEnableFOC(true);
+
+    CoordinationSubsytem score = CoordinationSubsytem.getInstance();
     /* ----- Initialization ----- */
 
     /**
@@ -62,17 +54,10 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * Configs LaserCans
      */
     private DualIntakeSubsystem() {
-        CANrangeConfiguration rangeConfig = new CANrangeConfiguration();
-        rangeConfig.FovParams.FOVRangeX = 6.75;
-        rangeConfig.FovParams.FOVRangeY = 6.75;
-
-        coralRange.getConfigurator().apply(rangeConfig);
-        algaeRange.getConfigurator().apply(rangeConfig);
-
         TalonFXConfigurator configurator = motor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 50;
         configurator.apply(config);
@@ -86,20 +71,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * Updates the median distance of the laser can for the past 3 checks
      */
     public void updateLasers() {
-        try {
-            coralLaserDistance = coralRange.getDistance().getValueAsDouble() * 1000;
-            algaeLaserDistance = algaeRange.getDistance().getValueAsDouble() * 1000;
-            if (coralRange.getSignalStrength().getValueAsDouble() < 2500) {
-                coralLaserDistance = 1000;
-            }
-            if (algaeRange.getSignalStrength().getValueAsDouble() < 2500) {
-                algaeLaserDistance = 1000;
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         //hasCoralNow = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
-        hasAlgae = algaeLaserDistance < Constants.robotConfig.getAlgaeTriggerDistance();
+        hasAlgae = score.getAlgae() && hasCoral;
         
         // if (hasCoralNow == lastHadCoral) {
         //     coralValidCount++;
@@ -115,19 +88,20 @@ public class DualIntakeSubsystem extends SubsystemBase{
         double motorVelocity = motor.getVelocity().getValueAsDouble();
 
         if (voltage > 1) {
-            if (motorVelocity > 1) {
+            if (motorVelocity > 85) {
                 atSpeed = true;
             }
             if (atSpeed) {
-                if (motorVelocity < 0.5) {
+                if (motorVelocity < 70) {
                     hasCoral = true;
                     atSpeed = false;
                     coralValidCount = 0;
                 }
             }
         }
+        
         Logger.recordOutput("Reefscape/DualIntake/Velocity", motorVelocity);
-        if (Math.abs(motorVelocity) > 5) {
+        if (Math.abs(motorVelocity) > 75) {
             coralValidCount++;
             if (coralValidCount > 2) {
                 hasCoral = false;
@@ -141,11 +115,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     public void periodic() {
         updateLasers();
         Logger.recordOutput("Reefscape/DualIntake/HasCoral", hasCoral);
-        Logger.recordOutput("Reefscape/DualIntake/CoralLaserDistance", coralLaserDistance);
-        Logger.recordOutput("Reefscape/DualIntake/CoralLaserStrength", coralRange.getSignalStrength().getValueAsDouble());
 
         Logger.recordOutput("Reefscape/DualIntake/HasAlgae", hasAlgae);
-        Logger.recordOutput("Reefscape/DualIntake/AlgaeLaserDistance", algaeLaserDistance);
         Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
     }
 

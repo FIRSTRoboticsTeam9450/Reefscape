@@ -171,7 +171,7 @@ public class ElevatorSubsystem extends SubsystemBase{
      * @return 
      */
     public boolean getAtSetpoint() {
-        if ((position > setpoint - 1) && (position < setpoint + 1)) {
+        if ((getPosition() > getSetpoint() - 2) && (getPosition() < getSetpoint() + 2)) {
             //System.out.println("Elevator At Setpoint: Got to True");
             return true;
         }

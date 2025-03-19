@@ -13,12 +13,6 @@ public class DualIntakeCommand extends Command{
     private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
     private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
 
-    /* ----- Laser Can ----- */
-    //The distance for the LaserCan to say it sees something
-    //1inch = 25.4mm
-    private double coralTriggerDistance = Constants.robotConfig.getCoralTriggerDistance(); //unit is mm
-    private double algaeTriggerDistance = Constants.robotConfig.getAlgaeTriggerDistance(); //units is mm
-
     /* ----- Variables ----- */
     private boolean algae;
     private boolean finished;
@@ -39,7 +33,7 @@ public class DualIntakeCommand extends Command{
     public void initialize() {
         finished = false;
         if (algae) {
-            DI.setVoltage(-12);
+            DI.setVoltage(12);
         } else {
             DI.setVoltage(12);
         }
@@ -54,7 +48,7 @@ public class DualIntakeCommand extends Command{
         }
         if (algae) {
             if (DI.hasAlgae()) {
-                DI.setVoltage(-12);
+                DI.setVoltage(12);
                 finished = true;
                 if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
                     wristUpReef.schedule();
@@ -63,7 +57,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             if (DI.hasCoral()) {
-                DI.setVoltage(12);
+                DI.setVoltage(0);
                 finished = true;
             }
         }
@@ -74,9 +68,9 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        if (algae) {
-            return finished && algaeTimer.get() > 0.5;
-        }
+        // if (algae) {
+        //     return finished && algaeTimer.get() > 0.5;
+        // }
         return finished;
     }
 
@@ -87,7 +81,7 @@ public class DualIntakeCommand extends Command{
                 wristUpGround.schedule();
             }
         } else {
-            DI.setVoltage(12);
+            DI.setVoltage(0);
         }
     }
     

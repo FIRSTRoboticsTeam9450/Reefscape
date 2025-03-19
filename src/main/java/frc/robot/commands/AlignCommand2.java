@@ -172,7 +172,7 @@ public class AlignCommand2 extends Command {
             double powerX = pidX.calculate(pose.getX());
             double powerY = pidY.calculate(pose.getY());
 
-            if (score.getScoringLevel() == 4) {
+            if (score.getScoringLevel() == 4 && false) {
                 powerX = MathUtil.clamp(powerX, -1, 1);
                 powerY = MathUtil.clamp(powerY, -1, 1);
             } else {
