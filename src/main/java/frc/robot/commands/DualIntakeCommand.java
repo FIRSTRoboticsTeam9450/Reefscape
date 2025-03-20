@@ -61,6 +61,10 @@ public class DualIntakeCommand extends Command{
                 finished = true;
             }
         }
+
+        if (finished) {
+            algaeTimer.restart();
+        }
         
     }
 
@@ -71,7 +75,7 @@ public class DualIntakeCommand extends Command{
         // if (algae) {
         //     return finished && algaeTimer.get() > 0.5;
         // }
-        return finished;
+        return finished && algaeTimer.get() > 0.1;
     }
 
     @Override

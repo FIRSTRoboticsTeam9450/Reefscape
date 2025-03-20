@@ -351,14 +351,15 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) {
             DW.setRollSetpoint(0);
-            DW.setPitchSetpoint(-78);
-            Elev.setSetpoint(13.5);
-            Elbow.setSetpoint(85);
+            DW.setPitchSetpoint(-50);
+            Elev.setSetpoint(4.5);
+            Elbow.setSetpoint(67);
         } else {
             rollToClosestSide();
+            //DW.setRollSetpoint(0);
             if (DW.getRollAngle() < 120) {
-                Elbow.setSetpoint(85);
-                DW.setPitchSetpoint(-110);
+                Elbow.setSetpoint(90);
+                DW.setPitchSetpoint(-130);
             }
             Elev.setSetpoint(0);
         }
@@ -375,12 +376,10 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToSourceIntake() {
-        Elev.setSetpoint(7.4);
-        DW.setPitchSetpoint(-70);
-        Elbow.setSetpoint(33);
-        if (elbowEncoder < 60) {
-            DW.setRollSetpoint(0);
-        }
+        Elev.setSetpoint(5.4);
+        DW.setPitchSetpoint(-135);
+        Elbow.setSetpoint(100);
+        DW.setRollSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -411,7 +410,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-130.15); // OLD: -129
+        DW.setPitchSetpoint(-135.15); // OLD: -129
         DW.setRollSetpoint(0); 
         Elbow.setSetpoint(-5); // Old: 2
         Elev.setSetpoint(0);
@@ -520,20 +519,20 @@ public class CoordinationSubsytem extends SubsystemBase{
                 case 1:
                     coralScorePitch = -118;
                     coralScoreElbow = 65;
-                    coralScoreElev = 2;
+                    coralScoreElev = 1;
                     DW.setRollSetpoint(0);
                     break;
                 case 2:
                     coralScorePitch = -90;
                     coralScoreElbow = 78;
                     coralScoreElev = 4.5; //Comp: 3.75
-                    rollToClosestSide();
+                    //rollToClosestSide();
                     break;
                 case 3:
                     coralScorePitch = -90;
                     coralScoreElbow = 78;
                     coralScoreElev = 13.5;
-                    rollToClosestSide();
+                    //rollToClosestSide();
                     break;
                 case 4:
                     coralScorePitch = Constants.robotConfig.getL4Pitch();
@@ -566,6 +565,13 @@ public class CoordinationSubsytem extends SubsystemBase{
             Elev.setSetpoint(coralScoreElev);
             if (Elev.atSetpoint()) {
                 DW.setPitchSetpoint(coralScorePitch);
+                rollToClosestSide();
+            }
+        } else if (level == 3 || level == 2) {
+            DW.setPitchSetpoint(coralScorePitch);
+            Elbow.setSetpoint(coralScoreElbow);
+            Elev.setSetpoint(coralScoreElev);
+            if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
                 rollToClosestSide();
             }
         } else {

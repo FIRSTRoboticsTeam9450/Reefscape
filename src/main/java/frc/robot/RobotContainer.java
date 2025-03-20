@@ -53,8 +53,8 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.05, 0.03);
-    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.05, 0.03);
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
+    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -88,7 +88,7 @@ public class RobotContainer {
 
         autoChooser = new SendableChooser<>();
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
-        autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
+        autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", false));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
 
         SmartDashboard.putData("Auto Chooser", autoChooser);

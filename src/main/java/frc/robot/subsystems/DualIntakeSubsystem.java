@@ -32,6 +32,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
     int coralValidCount = 0;
 
+    CANrange laser = new CANrange(Constants.IntakeIDS.kDualIntakeCoralLaserID);
+
     /* ----- Motors ----- */
     private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
 
@@ -54,6 +56,14 @@ public class DualIntakeSubsystem extends SubsystemBase{
      * Configs LaserCans
      */
     private DualIntakeSubsystem() {
+        CANrangeConfiguration laserConfig = new CANrangeConfiguration();
+        laserConfig.FovParams.FOVRangeX = 6.75;
+        laserConfig.FovParams.FOVCenterY = 6.75;
+        laserConfig.ProximityParams.MinSignalStrengthForValidMeasurement = 10000;
+        laserConfig.ProximityParams.ProximityThreshold = 0.09;
+        
+        laser.getConfigurator().apply(laserConfig);
+
         TalonFXConfigurator configurator = motor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
@@ -72,7 +82,13 @@ public class DualIntakeSubsystem extends SubsystemBase{
      */
     public void updateLasers() {
         //hasCoralNow = coralLaserDistance < Constants.robotConfig.getCoralTriggerDistance();
+        hasCoral = laser.getIsDetected().getValue();
         hasAlgae = score.getAlgae() && hasCoral;
+
+        Logger.recordOutput("Reefscape/DualIntake/distance", laser.getDistance().getValueAsDouble());
+        Logger.recordOutput("Reefscape/DualIntake/signal strength", laser.getSignalStrength().getValueAsDouble());
+        Logger.recordOutput("Reefscape/DualIntake/detected", laser.getIsDetected().getValue());
+
         
         // if (hasCoralNow == lastHadCoral) {
         //     coralValidCount++;
@@ -85,30 +101,30 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
         //lastHadCoral = hasCoralNow;
 
-        double motorVelocity = motor.getVelocity().getValueAsDouble();
+        //double motorVelocity = motor.getVelocity().getValueAsDouble();
 
-        if (voltage > 1) {
-            if (motorVelocity > 85) {
-                atSpeed = true;
-            }
-            if (atSpeed) {
-                if (motorVelocity < 70) {
-                    hasCoral = true;
-                    atSpeed = false;
-                    coralValidCount = 0;
-                }
-            }
-        }
+        // if (voltage > 1) {
+        //     if (motorVelocity > 85) {
+        //         atSpeed = true;
+        //     }
+        //     if (atSpeed) {
+        //         if (motorVelocity < 70) {
+        //             hasCoral = true;
+        //             atSpeed = false;
+        //             coralValidCount = 0;
+        //         }
+        //     }
+        // }
         
-        Logger.recordOutput("Reefscape/DualIntake/Velocity", motorVelocity);
-        if (Math.abs(motorVelocity) > 75) {
-            coralValidCount++;
-            if (coralValidCount > 2) {
-                hasCoral = false;
-            }
-        } else {
-            coralValidCount = 0;
-        }
+        // Logger.recordOutput("Reefscape/DualIntake/Velocity", motorVelocity);
+        // if (Math.abs(motorVelocity) > 75) {
+        //     coralValidCount++;
+        //     if (coralValidCount > 2) {
+        //         hasCoral = false;
+        //     }
+        // } else {
+        //     coralValidCount = 0;
+        // }
     }
 
     @Override
