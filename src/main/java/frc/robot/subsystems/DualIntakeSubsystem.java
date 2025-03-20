@@ -15,6 +15,7 @@ import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import au.grapplerobotics.ConfigurationFailedException;
 import au.grapplerobotics.LaserCan;
@@ -66,7 +67,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
         TalonFXConfigurator configurator = motor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 50;

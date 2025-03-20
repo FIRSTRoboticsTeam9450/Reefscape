@@ -29,8 +29,8 @@ public class ThingTwoConfig implements RobotConfig {
     double coralTriggerDistance = 115;
     double algaeTriggerDistance = 70;
 
-    double l4Pitch = -150.63;
-    double l4Elbow = 82.14;
+    double l4Pitch = -143.63;
+    double l4Elbow = 67;
     double l4Elevator = 35;
 
     @Override

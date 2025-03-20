@@ -44,7 +44,7 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        DI.setVoltage(12);
+        DI.setVoltage(0);
         //store.schedule();
     }
     

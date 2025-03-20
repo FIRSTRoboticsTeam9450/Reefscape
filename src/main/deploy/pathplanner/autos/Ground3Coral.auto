@@ -7,12 +7,6 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeHold"
-          }
-        },
-        {
-          "type": "named",
-          "data": {
             "name": "CoralStore"
           }
         },

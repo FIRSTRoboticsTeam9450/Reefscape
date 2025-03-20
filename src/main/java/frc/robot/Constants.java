@@ -75,7 +75,7 @@ public final class Constants {
   public static final String CTRE_BUS = "Rio";
   public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake; //normally brake, temporarly coast
   public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
-
+// 0.05
   public enum ScoringPos {
     START,
     INTAKE_CORAL,

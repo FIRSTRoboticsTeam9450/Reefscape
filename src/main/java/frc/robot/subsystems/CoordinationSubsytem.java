@@ -563,7 +563,8 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
         } else if (level == 4) {
             Elev.setSetpoint(coralScoreElev);
-            if (Elev.atSetpoint()) {
+            Elbow.setSetpoint(coralScoreElbow);
+            if (elevEncoder > 25) {
                 DW.setPitchSetpoint(coralScorePitch);
                 rollToClosestSide();
             }
