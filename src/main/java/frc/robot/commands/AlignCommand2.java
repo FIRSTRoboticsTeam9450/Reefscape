@@ -14,7 +14,9 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AlignPos;
@@ -45,6 +47,8 @@ public class AlignCommand2 extends Command {
     private AlignPos position;
     private boolean redAlliance;
     private int tid;
+    
+    CommandXboxController controller;
 
     /* ----- Swerve Drive ----- */
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
@@ -52,8 +56,9 @@ public class AlignCommand2 extends Command {
 
     /* ----------- Initialzation ----------- */
 
-    public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position) {
+    public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position, CommandXboxController controller) {
         this.position = position;
+        this.controller = controller;
         //                X,      Y,      Rotation
         double[] tag6 = {13.474446, 3.306318, 5 * Math.PI / 3.0};
         double[] tag7 = {13.890498, 4.0259, 0};
@@ -159,11 +164,17 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
-            if (pidX.getError() < 0.03 && pidY.getError() < 0.03 && pidRotate.getError() < 0.2) {
-                double[] pose = getAlignPos(map.get(tid), 0.42);
+            if (atSetpoint(0.05, 0.3)) {
+                double[] pose = getAlignPos(map.get(tid), 0.44);
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
+            }
+
+            if (atSetpoint()) {
+                controller.setRumble(RumbleType.kBothRumble, 0.5);
+            } else {
+                controller.setRumble(RumbleType.kBothRumble, 0);
             }
             // Get the current pose of the drive system
             Pose2d pose = drive.getState().Pose;
@@ -204,6 +215,14 @@ public class AlignCommand2 extends Command {
         }
     }
 
+    public boolean atSetpoint() {
+        return atSetpoint(0.03, 0.2);
+    }
+
+    public boolean atSetpoint(double translationTolerance, double rotationTolerance) {
+        return Math.abs(pidX.getError()) < translationTolerance && Math.abs(pidY.getError()) < translationTolerance && Math.abs(pidRotate.getError()) < rotationTolerance;
+    }
+
     /* ----------- Finishers ----------- */
 
     /**
@@ -218,5 +237,6 @@ public class AlignCommand2 extends Command {
 
         // Set the drive control with the stop request to halt all movement
         drive.setControl(stop);
+        controller.setRumble(RumbleType.kBothRumble, 0);
     }
 }

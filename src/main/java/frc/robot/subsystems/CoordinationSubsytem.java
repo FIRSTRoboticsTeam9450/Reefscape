@@ -80,6 +80,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double coralScoreElbow = 0;
     private double coralScoreElev = 0;
     private double coralScorePitch = 0;
+
+    ScoringPos lastPos = ScoringPos.START;
     /**
      * gets the starting angle / position of the encoders
      */
@@ -355,12 +357,16 @@ public class CoordinationSubsytem extends SubsystemBase{
             Elev.setSetpoint(4.5);
             Elbow.setSetpoint(67);
         } else {
-            rollToClosestSide();
-            //DW.setRollSetpoint(0);
-            if (DW.getRollAngle() < 120) {
-                Elbow.setSetpoint(90);
-                DW.setPitchSetpoint(-130);
+            if (lastPos == ScoringPos.INTAKE_CORAL) {
+                if (elbowEncoder > 15) {
+                    rollToClosestSide();
+                }
+            } else {
+                rollToClosestSide();
             }
+            //DW.setRollSetpoint(0);
+            Elbow.setSetpoint(90);
+            DW.setPitchSetpoint(-130);
             Elev.setSetpoint(0);
         }
 
@@ -410,9 +416,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-135.15); // OLD: -129
+        DW.setPitchSetpoint(-122); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(-5); // Old: 2
+        Elbow.setSetpoint(-15); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -468,7 +474,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToScoreProcessor() {
-        DW.setPitchSetpoint(-90.5);
+        DW.setPitchSetpoint(-105.5);
         DW.setRollSetpoint(0);
         Elbow.setSetpoint(-17);
         if (DW.atPitchSetpoint() && DW.atRollSetpoint() && Elbow.atSetpoint()) {
@@ -546,7 +552,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         // pitch -71
         // elbow -22
 
-        if(algae && algaeNet) {
+        if(algae) {
 
             DW.setPitchSetpoint(coralScorePitch);
             Elbow.setSetpoint(coralScoreElbow);
@@ -662,6 +668,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     /* ----- Setters and Getters ----- */
 
     public void setPosition(ScoringPos pos) {
+        lastPos = this.pos;
         this.pos = pos;
         justHitScore = true;
         justChanged = true;
