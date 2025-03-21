@@ -3,16 +3,16 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.726229508196721,
-        "y": 4.227846746575342
+        "x": 1.7861680327868852,
+        "y": 4.09093237704918
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.4021079328542556,
-        "y": 4.447565068493151
+        "x": 2.46204645744442,
+        "y": 4.310650698966987
       },
       "isLocked": false,
-      "linkedName": "CenterCoral"
+      "linkedName": null
     },
     {
       "anchor": {

@@ -44,7 +44,7 @@ public class RollSideSwitcher extends Command{
                     CT.rollToOtherSide();
                 finished = true;
             } else if (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() != 1) {
-                wrist.setPitchSetpoint(-120);
+                wrist.setPitchSetpoint(-130);
                 if (wrist.atPitchSetpoint() && !finished) {
                     CT.rollToOtherSide();
                     finished = true;
