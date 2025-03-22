@@ -351,7 +351,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralStore() {
         algae = false;
 
-        if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) {
+        if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE) {
             DW.setRollSetpoint(0);
             DW.setPitchSetpoint(-70);
             Elev.setSetpoint(4.5);
@@ -383,7 +383,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void goToSourceIntake() {
         Elev.setSetpoint(5.4);
-        DW.setPitchSetpoint(-155);
+        DW.setPitchSetpoint(-135);
         Elbow.setSetpoint(100);
         DW.setRollSetpoint(0);
         if (DW.atRollSetpoint()
@@ -569,10 +569,10 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
         } else if (level == 4) {
             Elev.setSetpoint(coralScoreElev);
-            Elbow.setSetpoint(coralScoreElbow);
             if (elevEncoder > 25) {
                 DW.setPitchSetpoint(coralScorePitch);
                 rollToClosestSide();
+                Elbow.setSetpoint(coralScoreElbow);
             }
         } else if (level == 3 || level == 2) {
             DW.setPitchSetpoint(coralScorePitch);

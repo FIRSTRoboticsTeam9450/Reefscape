@@ -138,10 +138,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         return Math.abs(getPosition() - getSetpoint()) < 1;
     }
 
-    public void setVoltage(double voltage) {
-        leftMotor.setVoltage(voltage);
-    }
-
     public double getSetpoint() {
         return pid.getSetpoint();
     }
