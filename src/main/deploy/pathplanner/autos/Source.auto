@@ -63,6 +63,12 @@
         {
           "type": "named",
           "data": {
+            "name": "IntakeSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "WaitForCoral"
           }
         },
@@ -101,13 +107,19 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": null
+                        "pathName": "BLLtoSource"
                       }
                     }
                   ]
                 }
               }
             ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeSource"
           }
         },
         {
@@ -164,6 +176,6 @@
     }
   },
   "resetOdom": true,
-  "folder": "Unfinished",
+  "folder": null,
   "choreoAuto": false
 }

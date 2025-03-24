@@ -7,6 +7,7 @@ import java.util.Set;
 
 import org.littletonrobotics.junction.Logger;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
@@ -351,7 +352,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralStore() {
         algae = false;
 
-        if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE) {
+        if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous()) {
             DW.setRollSetpoint(0);
             DW.setPitchSetpoint(-70);
             Elev.setSetpoint(4.5);
@@ -366,7 +367,13 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
             //DW.setRollSetpoint(0);
             Elbow.setSetpoint(90);
-            DW.setPitchSetpoint(-150);
+            if (lastPos == ScoringPos.INTAKE_VERTICAL_CORAL) {
+                if (elbowEncoder > 30)
+                DW.setPitchSetpoint(-150);
+
+            } else {
+                DW.setPitchSetpoint(-150);
+            }
             Elev.setSetpoint(0);
         }
 
@@ -491,9 +498,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToIntakeVertical() {
-        DW.setPitchSetpoint(-91);
+        DW.setPitchSetpoint(-65);
         rollToClosestSide();
-        Elbow.setSetpoint(-16);
+        Elbow.setSetpoint(-28);
         Elev.setSetpoint(0);
         
         if (DW.atRollSetpoint()

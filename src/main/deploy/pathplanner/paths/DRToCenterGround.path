@@ -16,12 +16,12 @@
     },
     {
       "anchor": {
-        "x": 1.7861680327868852,
-        "y": 4.019006147540983
+        "x": 1.786,
+        "y": 3.98
       },
       "prevControl": {
-        "x": 2.099326296878509,
-        "y": 4.0564882523018175
+        "x": 2.0991582640916238,
+        "y": 4.017482104760834
       },
       "nextControl": null,
       "isLocked": false,
@@ -53,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "CoralIntake",
-      "waypointRelativePos": 0.3452380952380952,
+      "waypointRelativePos": 0.15852649006622752,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

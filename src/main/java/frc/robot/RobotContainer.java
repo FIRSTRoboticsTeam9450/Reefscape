@@ -31,6 +31,7 @@ import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
+import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
@@ -90,7 +91,7 @@ public class RobotContainer {
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", false));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
-
+        autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -186,15 +187,15 @@ public class RobotContainer {
         m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
         m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         
-        m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
+        //m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
 
         /* ----- Commands not currently in use ----- */
         
         // SOURCE INTAKE
         m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
-
+    
         // VERTICAL CORAL
-        // m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+        m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
@@ -228,8 +229,8 @@ public class RobotContainer {
 
     public void registeredCommands() {
         NamedCommands.registerCommand("IntakeHold", new InstantCommand(() -> intake.setVoltage(2)));
-        NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand()));
-        NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand()));
+        NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand(false)));
+        NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand(true)));
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         NamedCommands.registerCommand("CoralL3", new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
@@ -248,6 +249,7 @@ public class RobotContainer {
 
         NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = true));
         NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = false));
+        NamedCommands.registerCommand("WaitForCoral", new WaitForLaserCommand());
     }
 
     public Command getAutonomousCommand() {

@@ -13,8 +13,12 @@ public class AutoIntakeCommand extends Command{
     private Command store = new CoordinationCommand(ScoringPos.START);
 
     Timer timer = new Timer();
+    Timer grabbedTimer = new Timer();
 
-    public AutoIntakeCommand() {
+    boolean grabbed = false;
+    boolean source;
+
+    public AutoIntakeCommand(boolean source) {
         addRequirements(DI);
     }
 
@@ -25,12 +29,17 @@ public class AutoIntakeCommand extends Command{
         //System.out.println("INTAKING");
         timer.restart();
         DI.setVoltage(12);
+        grabbed = false;
     }
 
     /* ----- Updaters ----- */
 
     @Override
     public void execute() {
+        if (DI.hasCoral() && !grabbed) {
+            grabbedTimer.restart();
+            grabbed = true;
+        }
         
     }
 
@@ -38,13 +47,17 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public boolean isFinished() {
-        return timer.get() > 2 || DI.hasCoral();
+        if (source) {
+            return DI.hasCoral() || timer.get() > 3;
+        }
+        return timer.get() > 5 || (DI.hasCoral() && grabbedTimer.get() > 0.3);
         // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
     }
 
     @Override
     public void end(boolean interrupted) {
-        DI.setVoltage(2);
+        DI.setVoltage(4);
+        System.out.println("SLOW INTAKE SAD NO WHY ACTUALLY SOBBING :'(");
         //store.schedule();
     }
     
