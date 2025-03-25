@@ -90,7 +90,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     public void periodic() {
         position = leftMotor.getPosition().getValueAsDouble() - offset; 
         RobotContainer.setLiftUp(position > 22 || highUp);
-        if (highUp && setpoint < 15 && position < 3) {
+        if (highUp && setpoint < 15 && position < 8) {
             highUp = false;
         }
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;

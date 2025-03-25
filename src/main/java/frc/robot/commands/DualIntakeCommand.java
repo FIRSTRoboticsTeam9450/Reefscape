@@ -51,7 +51,7 @@ public class DualIntakeCommand extends Command{
                 DI.setVoltage(12);
                 finished = true;
                 if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
-                    wristUpReef.schedule();
+                    //wristUpReef.schedule();
                 } 
                 algaeTimer.restart();
             }
@@ -81,7 +81,8 @@ public class DualIntakeCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         if (algae) {
-            if (score.getPos() == ScoringPos.INTAKE_ALGAE) {
+            wristUpGround.schedule();
+            if (score.getPos() == ScoringPos.INTAKE_ALGAE || true) {
                 wristUpGround.schedule();
             }
         } else {

@@ -26,6 +26,7 @@ import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.FieldCentricCommand;
+import frc.robot.commands.GoToScorePosCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ResetIMUCommand;
@@ -141,7 +142,7 @@ public class RobotContainer {
          */
         
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
-        m_driver1.leftTrigger().onTrue(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
+        m_driver1.leftTrigger().onTrue(new GoToScorePosCommand());
         m_driver1.leftBumper().onTrue(new RollSideSwitcher());
         //m_driver1.rightBumper().onTrue(new OuttakeCommand());
         m_driver1.x().onTrue(

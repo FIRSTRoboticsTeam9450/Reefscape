@@ -22,6 +22,8 @@ public final class Constants {
 
   public static RobotConfig robotConfig = new ThingTwoConfig();
 
+  public static boolean l4mode = false;
+
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
@@ -95,7 +97,8 @@ public final class Constants {
     ALGAEL2,
     GRABBED_ALGAE,
     GO_SCORE_CORAL,
-    INTAKE_VERTICAL_CORAL
+    INTAKE_VERTICAL_CORAL,
+    PRE_L4
   }
 
   public enum AlignPos {

@@ -51,7 +51,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Algae_L2_Set = new HashSet<>();
     private Set<ScoringPos> Algae_Grabbed_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Score_Go_Set = new HashSet<>();
-    private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet();
+    private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet<>();
+    private Set<ScoringPos> Pre_L4_Set = new HashSet<>();
     
     boolean algae;
 
@@ -101,6 +102,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL2);
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL3);
         Coral_Store_Set.add(ScoringPos.CORAL_SCOREL4);
+        Coral_Store_Set.add(ScoringPos.PRE_L4);
 
         Coral_Store_Set.add(ScoringPos.START);
         Coral_Store_Set.add(ScoringPos.INTAKE_CORAL);
@@ -111,6 +113,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Store_Set.add(ScoringPos.ALGAEL1);
         Coral_Store_Set.add(ScoringPos.ALGAEL2);
         Coral_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
+
+        Coral_Store_Set.add(ScoringPos.CORAL_STORE);
 
         Coral_Intake_Set.add(ScoringPos.CORAL_STORE);
         Coral_Intake_Set.add(ScoringPos.INTAKE_SOURCE);
@@ -129,6 +133,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Store_Set.add(ScoringPos.CORAL_STORE); //temp
         Algae_Store_Set.add(ScoringPos.ALGAEL1);
         Algae_Store_Set.add(ScoringPos.ALGAEL2);
+        Algae_Store_Set.add(ScoringPos.GRABBED_ALGAE);
         Algae_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
         
         Coral_ScoreL1_Set.add(ScoringPos.CORAL_STORE);
@@ -189,6 +194,9 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Intake_Vertical_Set.add(ScoringPos.CORAL_STORE);
         Coral_Intake_Vertical_Set.add(ScoringPos.START);
 
+        Pre_L4_Set.add(ScoringPos.CORAL_STORE);
+        Pre_L4_Set.add(ScoringPos.GO_SCORE_CORAL);
+
         allowedPaths.put(ScoringPos.START, Start_Set);
 
         allowedPaths.put(ScoringPos.CORAL_STORE, Coral_Store_Set);
@@ -220,7 +228,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         allowedPaths.put(ScoringPos.GO_SCORE_CORAL, Coral_Score_Go_Set);
 
         allowedPaths.put(ScoringPos.INTAKE_VERTICAL_CORAL, Coral_Intake_Vertical_Set);
-
+        allowedPaths.put(ScoringPos.PRE_L4, Pre_L4_Set);
     }
 
     @Override
@@ -286,6 +294,8 @@ public class CoordinationSubsytem extends SubsystemBase{
             goToGrabed();
         } else if (pos == ScoringPos.INTAKE_VERTICAL_CORAL) {
             goToIntakeVertical();
+        } else if (pos == ScoringPos.PRE_L4) {
+            goToPreL4();
         }
 
     }
@@ -349,14 +359,27 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
+    public void goToPreL4() {
+        DW.setRollSetpoint(0);
+        DW.setPitchSetpoint(-70);
+        Elev.setSetpoint(4.5);
+        Elbow.setSetpoint(67);
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
     public void goToCoralStore() {
         algae = false;
 
-        if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous()) {
-            DW.setRollSetpoint(0);
-            DW.setPitchSetpoint(-70);
-            Elev.setSetpoint(4.5);
-            Elbow.setSetpoint(67);
+        if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous())) {
+            goToPreL4();
         } else {
             if (lastPos == ScoringPos.INTAKE_CORAL) {
                 if (elbowEncoder > 15) {
@@ -425,7 +448,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralIntake() {
         DW.setPitchSetpoint(-148); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(-8); // Old: 2
+        Elbow.setSetpoint(-6); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -721,8 +744,15 @@ public class CoordinationSubsytem extends SubsystemBase{
         return level;
     }
 
+    public int getDesiredLevel() {
+        return desiredLevel;
+    }
+
     public void setScoringLevel(int level) {
         desiredLevel = level;
+        if (pos == ScoringPos.CORAL_STORE) {
+            justChanged = true;
+        }
     }
 
     public void setAlgaeNet(boolean net) {

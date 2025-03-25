@@ -47,6 +47,8 @@ public class AlignCommand2 extends Command {
     private AlignPos position;
     private boolean redAlliance;
     private int tid;
+    private boolean up = false;
+    private Pose2d currentPose;
     
     CommandXboxController controller;
 
@@ -93,15 +95,10 @@ public class AlignCommand2 extends Command {
     @Override
     public void initialize() {
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
-        Pose2d currentPose = drive.getState().Pose;
+        currentPose = drive.getState().Pose;
         int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
         this.tid = tid;
-        if (currentPose.getX() < 2.25 && currentPose.getY() > 6) {
-            hasTarget = true;
-            pidX.setSetpoint(1.52);
-            pidY.setSetpoint(6.05);
-            pidRotate.setSetpoint(122.0 * Math.PI / 180.0);
-        } else if (map.containsKey(tid)) {
+        if (map.containsKey(tid)) {
             hasTarget = true;
             double[] pose = getAlignPos(map.get(tid), 0.5);
             pidX.setSetpoint(pose[0]);
@@ -110,6 +107,7 @@ public class AlignCommand2 extends Command {
         } else {
             hasTarget = false;
         }
+        up = false;
     }
 
     // black red yellow green right -> left
@@ -164,11 +162,18 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
-            if (atSetpoint(0.05, 0.3)) {
+            if (atSetpoint(0.05, 0.3) && !score.getAlgae()) {
                 double[] pose = getAlignPos(map.get(tid), 0.44);
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
+            }
+
+            if (atSetpoint(0.04, 0.3)) {
+                if (score.getDesiredLevel() == 4 && !up && !score.getAlgae()) {
+                    up = true;
+                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                }
             }
 
             if (atSetpoint()) {
@@ -177,13 +182,13 @@ public class AlignCommand2 extends Command {
                 controller.setRumble(RumbleType.kBothRumble, 0);
             }
             // Get the current pose of the drive system
-            Pose2d pose = drive.getState().Pose;
+            currentPose = drive.getState().Pose;
 
             // Calculate the power for X direction and clamp it between -1 and 1
-            double powerX = pidX.calculate(pose.getX());
-            double powerY = pidY.calculate(pose.getY());
+            double powerX = pidX.calculate(currentPose.getX());
+            double powerY = pidY.calculate(currentPose.getY());
 
-            if (score.getScoringLevel() == 4 && false) {
+            if (score.getScoringLevel() == 4 && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
                 powerX = MathUtil.clamp(powerX, -1, 1);
                 powerY = MathUtil.clamp(powerY, -1, 1);
             } else {
@@ -199,7 +204,7 @@ public class AlignCommand2 extends Command {
 
 
             // Calculate the rotational power and clamp it between -2 and 2
-            double powerRotate = pidRotate.calculate(pose.getRotation().getRadians());
+            double powerRotate = pidRotate.calculate(currentPose.getRotation().getRadians());
             powerRotate = MathUtil.clamp(powerRotate, -4, 4);
 
             if (redAlliance) {
@@ -220,7 +225,7 @@ public class AlignCommand2 extends Command {
     }
 
     public boolean atSetpoint(double translationTolerance, double rotationTolerance) {
-        return Math.abs(pidX.getError()) < translationTolerance && Math.abs(pidY.getError()) < translationTolerance && Math.abs(pidRotate.getError()) < rotationTolerance;
+        return Math.abs(pidX.getSetpoint() - currentPose.getX()) < translationTolerance && Math.abs(pidY.getSetpoint() - currentPose.getY()) < translationTolerance && Math.abs(pidRotate.getSetpoint() - currentPose.getRotation().getRadians()) < rotationTolerance;
     }
 
     /* ----------- Finishers ----------- */

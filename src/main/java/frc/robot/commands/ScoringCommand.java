@@ -28,6 +28,7 @@ public class ScoringCommand extends Command {
     private boolean algae;
     private double coralTriggerDistance = Constants.robotConfig.getCoralTriggerDistance();
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+    private boolean running;
 
     /* ----------- Initialization ----------- */
 
@@ -35,25 +36,36 @@ public class ScoringCommand extends Command {
     public void initialize() {
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
-        timer.restart();
+        if (scoreSub.getPos() != ScoringPos.GO_SCORE_CORAL) {
+            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            running = true;
+        } else {
+            score();
+        }
+        
+        
+    }
+
+    public void score() {
         if (scoreSub.getAlgae() || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(-12);
         } else if(scoreSub.getScoringLevel() == 4) {
-            //elev.schedule();
-            intake.setVoltage(-2);
+            elev.schedule();
+            intake.setVoltage(0);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-2);
         } else {
             score.schedule();
             intake.setVoltage(0);
         }
-        
+        timer.restart();
     }
 
     @Override
     public void execute() {
-        if (scoreSub.getScoringLevel() == 4 && elevator.getPosition() < 31) {
-            // intake.setVoltage(-2);
+        if (running && scoreSub.getAllAtSetpoints()) {
+            score();
+            running = false;
         }
     }
 
@@ -62,6 +74,9 @@ public class ScoringCommand extends Command {
     @Override
     public boolean isFinished() {
         // finish after one second
+        if (running) {
+            return false;
+        }
         if (DriverStation.isAutonomous()) {
             return timer.get() > 0.5;
         } else {
