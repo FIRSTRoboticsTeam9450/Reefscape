@@ -169,7 +169,7 @@ public class AlignCommand2 extends Command {
                 pidRotate.setSetpoint(pose[2]);
             }
 
-            if (atSetpoint(0.04, 0.3)) {
+            if (atSetpoint(0.05, 0.3)) {
                 if (score.getDesiredLevel() == 4 && !up && !score.getAlgae()) {
                     up = true;
                     new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();

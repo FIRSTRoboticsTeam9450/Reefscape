@@ -34,8 +34,8 @@ public class ThingTwoConfig implements RobotConfig {
     // double l4Elbow = 82;
     // double l4Elevator = 35;
 
-    double l4Pitch = -170.63;
-    double l4Elbow = 75;
+    double l4Pitch = -165.63;
+    double l4Elbow = 72;
     double l4Elevator = 35;
 
     @Override
