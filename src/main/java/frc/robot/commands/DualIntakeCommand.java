@@ -75,6 +75,9 @@ public class DualIntakeCommand extends Command{
         // if (algae) {
         //     return finished && algaeTimer.get() > 0.5;
         // }
+        if (algae) {
+            return finished && algaeTimer.get() > 1;
+        }
         return finished && algaeTimer.get() > 0.1;
     }
 
@@ -83,7 +86,7 @@ public class DualIntakeCommand extends Command{
         if (algae) {
             wristUpGround.schedule();
             if (score.getPos() == ScoringPos.INTAKE_ALGAE || true) {
-                wristUpGround.schedule();
+                //wristUpGround.schedule();
             }
         } else {
             DI.setVoltage(0);

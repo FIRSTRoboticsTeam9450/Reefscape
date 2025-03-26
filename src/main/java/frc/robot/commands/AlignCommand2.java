@@ -49,6 +49,8 @@ public class AlignCommand2 extends Command {
     private int tid;
     private boolean up = false;
     private Pose2d currentPose;
+    private boolean algae;
+    int stuckCounter = 0;
     
     CommandXboxController controller;
 
@@ -128,8 +130,9 @@ public class AlignCommand2 extends Command {
         }
         //System.out.println(score.getPos());
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
+            algae = true;
             tagLeftOffset = 0; // Set left offset for center
-            tagForwardOffset = 0.6; ; // Set forward offset for center
+            tagForwardOffset = 0.65; ; // Set forward offset for center
         }
 
         if(score.getPos() == ScoringPos.GRABBED_ALGAE) {
@@ -162,6 +165,13 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
+            if (algae && atSetpoint(0.08, 0.3)) {
+                double[] pose = getAlignPos(map.get(tid), 0.9);
+                pidX.setSetpoint(pose[0]);
+                pidY.setSetpoint(pose[1]);
+                pidRotate.setSetpoint(pose[2]);
+            }
+
             if (atSetpoint(0.05, 0.3) && !score.getAlgae()) {
                 double[] pose = getAlignPos(map.get(tid), 0.44);
                 pidX.setSetpoint(pose[0]);
@@ -212,8 +222,30 @@ public class AlignCommand2 extends Command {
                 powerY *= -1;
             }
 
+            double xVel = drive.getState().Speeds.vxMetersPerSecond;
+            double yVel = drive.getState().Speeds.vyMetersPerSecond;
+            double powMag = powerX * powerX + powerY * powerY;
+            double velMag = xVel * xVel + yVel * yVel;
+            Logger.recordOutput("Reefscape/Align/VelMag", velMag);
+            Logger.recordOutput("Reefscape/Align/PowerMag", powMag);
+
+            //System.out.println("Pow " + powMag + ", Vel " + velMag);
             // Create a new swerve request with the calculated velocities and rotational rate
+            if (powMag > 0.04 && velMag < 0.001) {
+                stuckCounter++;
+            } else {
+                stuckCounter = 0;
+            }
+
+            if (stuckCounter > 5 && !up) {
+                up = true;
+                score.setCoralInFront(true);
+                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            }
+
+            //Logger.recordOutput("Reefscape/Align/Stuck", stuck);
             SwerveRequest request = driveRequest.withVelocityX(powerX).withVelocityY(powerY).withRotationalRate(powerRotate);
+            
 
             // Set the drive control with the created request
             drive.setControl(request);

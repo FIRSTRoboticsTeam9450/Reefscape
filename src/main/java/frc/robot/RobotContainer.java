@@ -159,6 +159,7 @@ public class RobotContainer {
         m_driver1.povUp().onTrue(new ClimbCommand(0.92, 12));
         m_driver1.povDown().onTrue(new ClimbCommand(0.344, 10).andThen(new CoordinationCommand(ScoringPos.START)));
         m_driver1.povRight().onTrue(new ClimbCommand(0.076, 3));
+        m_driver1.start().onTrue(new InstantCommand(() -> scoreSub.toggleCoralInFront()));
 
         /* ----- Operator Driver Keybinds ----- */
         /* Keybinds:

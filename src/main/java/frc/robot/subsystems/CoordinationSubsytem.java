@@ -78,6 +78,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double pitchAllowedDifference = 3;
 
     private boolean coralSideLeft;
+    private boolean l4Extend;
 
     private double coralScoreElbow = 0;
     private double coralScoreElev = 0;
@@ -377,7 +378,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void goToCoralStore() {
         algae = false;
-
+        l4Extend = false;
         if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous())) {
             goToPreL4();
         } else {
@@ -448,7 +449,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralIntake() {
         DW.setPitchSetpoint(-148); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(-6); // Old: 2
+        Elbow.setSetpoint(-10); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -561,19 +562,33 @@ public class CoordinationSubsytem extends SubsystemBase{
                 case 2:
                     coralScorePitch = -112;
                     coralScoreElbow = 78;
-                    coralScoreElev = 4; //Comp: 3.75
+                    if (l4Extend) {
+                        coralScoreElev = 5.5;
+                    } else {
+                        coralScoreElev = 4; //Comp: 3.75
+                    }
                     //rollToClosestSide();
                     break;
                 case 3:
                     coralScorePitch = -112;
                     coralScoreElbow = 78;
-                    coralScoreElev = 13;
+                    if (l4Extend) {
+                        coralScoreElev = 14.5;
+                    } else {
+                        coralScoreElev = 13;
+                    }
                     //rollToClosestSide();
                     break;
                 case 4:
-                    coralScorePitch = Constants.robotConfig.getL4Pitch();
-                    coralScoreElbow = Constants.robotConfig.getL4Elbow();
-                    coralScoreElev = Constants.robotConfig.getL4Elevator();
+                    if (l4Extend) {
+                        coralScorePitch = -132;
+                        coralScoreElbow = 37;
+                        coralScoreElev = 36;
+                    } else {
+                        coralScorePitch = Constants.robotConfig.getL4Pitch();
+                        coralScoreElbow = Constants.robotConfig.getL4Elbow();
+                        coralScoreElev = Constants.robotConfig.getL4Elevator();
+                    }
                     break;
             }
         }
@@ -626,6 +641,18 @@ public class CoordinationSubsytem extends SubsystemBase{
             justFinished = true;
         }
     }
+
+    public void setCoralInFront(boolean coral) {
+        l4Extend = coral;
+        if (pos == ScoringPos.GO_SCORE_CORAL) {
+            justChanged = true;
+        }
+    }
+
+    public void toggleCoralInFront() {
+        setCoralInFront(!l4Extend);
+    }
+
 
     public void goScoreL4() {
         Elev.setSetpoint(21);
