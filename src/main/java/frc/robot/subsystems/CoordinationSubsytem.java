@@ -413,7 +413,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToSourceIntake() {
-        Elev.setSetpoint(5.4);
+        Elev.setSetpoint(5.9);
         DW.setPitchSetpoint(-135);
         Elbow.setSetpoint(100);
         DW.setRollSetpoint(0);

@@ -58,7 +58,7 @@ public class AutoIntakeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        DI.setVoltage(4);
+        DI.setVoltage(0);
         System.out.println("SLOW INTAKE SAD NO WHY ACTUALLY SOBBING :'(");
         //store.schedule();
     }
