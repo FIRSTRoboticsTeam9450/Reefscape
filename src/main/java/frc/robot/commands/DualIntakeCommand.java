@@ -2,6 +2,8 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
@@ -76,7 +78,7 @@ public class DualIntakeCommand extends Command{
         //     return finished && algaeTimer.get() > 0.5;
         // }
         if (algae) {
-            return finished && algaeTimer.get() > 1;
+            return finished && algaeTimer.get() > 0.25;
         }
         return finished && algaeTimer.get() > 0.1;
     }
@@ -89,7 +91,8 @@ public class DualIntakeCommand extends Command{
                 //wristUpGround.schedule();
             }
         } else {
-            DI.setVoltage(0);
+            DI.setVoltage(6);
+            new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0))).schedule();;
         }
     }
     

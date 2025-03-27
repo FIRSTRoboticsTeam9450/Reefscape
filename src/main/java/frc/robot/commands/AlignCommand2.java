@@ -96,13 +96,14 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
+        stuckCounter = 0;
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         currentPose = drive.getState().Pose;
         int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
         this.tid = tid;
         if (map.containsKey(tid)) {
             hasTarget = true;
-            double[] pose = getAlignPos(map.get(tid), 0.5);
+            double[] pose = getAlignPos(map.get(tid), 0.6);
             pidX.setSetpoint(pose[0]);
             pidY.setSetpoint(pose[1]);
             pidRotate.setSetpoint(pose[2]);
@@ -165,11 +166,16 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
         if (hasTarget) {
-            if (algae && atSetpoint(0.08, 0.3)) {
-                double[] pose = getAlignPos(map.get(tid), 0.9);
-                pidX.setSetpoint(pose[0]);
-                pidY.setSetpoint(pose[1]);
-                pidRotate.setSetpoint(pose[2]);
+            // if (algae && atSetpoint(0.08, 0.3)) {
+            //     double[] pose = getAlignPos(map.get(tid), 0.9);
+            //     pidX.setSetpoint(pose[0]);
+            //     pidY.setSetpoint(pose[1]);
+            //     pidRotate.setSetpoint(pose[2]);
+            // }
+
+            if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up) {
+                up = true;
+                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
             }
 
             if (atSetpoint(0.05, 0.3) && !score.getAlgae()) {
@@ -237,10 +243,12 @@ public class AlignCommand2 extends Command {
                 stuckCounter = 0;
             }
 
-            if (stuckCounter > 5 && !up) {
-                up = true;
+            if (stuckCounter > 5) {
                 score.setCoralInFront(true);
-                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                if (!up) {
+                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                    up = true;
+                }
             }
 
             //Logger.recordOutput("Reefscape/Align/Stuck", stuck);

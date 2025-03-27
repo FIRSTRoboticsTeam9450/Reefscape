@@ -292,7 +292,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         } else if (pos == ScoringPos.START) {
             goToStart();
         } else if (pos == ScoringPos.GRABBED_ALGAE) {
-            goToGrabed();
+            goToGrabbed();
         } else if (pos == ScoringPos.INTAKE_VERTICAL_CORAL) {
             goToIntakeVertical();
         } else if (pos == ScoringPos.PRE_L4) {
@@ -710,8 +710,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
-    public void goToGrabed() {
-        DW.setPitchSetpoint(-90);
+    public void goToGrabbed() {
+        Elev.setSetpoint(elbowOriginalSetpoint);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()

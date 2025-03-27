@@ -7,6 +7,12 @@
         {
           "type": "named",
           "data": {
+            "name": "IntakeHold"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CoralStore"
           }
         },
@@ -19,51 +25,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "StartToReef"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "Score"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.2
-                      }
-                    },
-                    {
-                      "type": "path",
-                      "data": {
-                        "pathName": "IntakeLeftGround"
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "CoralStore"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "ScoreGround"
+            "pathName": "StartToFLL"
           }
         },
         {
@@ -89,7 +51,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "IntakeCenterGround"
+                        "pathName": "FLLSource"
                       }
                     }
                   ]
@@ -101,13 +63,25 @@
         {
           "type": "named",
           "data": {
+            "name": "IntakeSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "CoralStore"
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "ScoreCenterGround"
+            "pathName": "SourceScore"
           }
         },
         {
@@ -133,7 +107,63 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BackUp"
+                        "pathName": "BLLtoSource"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeSource"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "WaitForCoral"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SourceToBLR"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "named",
+                "data": {
+                  "name": "Score"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.5
+                      }
+                    },
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "BLRSource"
                       }
                     }
                   ]

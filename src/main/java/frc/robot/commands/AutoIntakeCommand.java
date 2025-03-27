@@ -19,6 +19,7 @@ public class AutoIntakeCommand extends Command{
     boolean source;
 
     public AutoIntakeCommand(boolean source) {
+        this.source = source;
         addRequirements(DI);
     }
 
@@ -51,6 +52,7 @@ public class AutoIntakeCommand extends Command{
             return DI.hasCoral() || timer.get() > 3;
         }
         return timer.get() > 5 || (DI.hasCoral() && grabbedTimer.get() > 0.3);
+
         // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
     }
 

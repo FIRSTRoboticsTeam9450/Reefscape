@@ -36,7 +36,7 @@ public class ScoringCommand extends Command {
     public void initialize() {
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
-        if (scoreSub.getPos() != ScoringPos.GO_SCORE_CORAL) {
+        if (scoreSub.getPos() != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
             running = true;
         } else {
