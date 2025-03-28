@@ -9,10 +9,10 @@ import edu.wpi.first.units.measure.Angle;
 
 public class ThingOneConfig implements RobotConfig {
     
-    Angle frontLeftOffset = Rotations.of(-0.133056640625);
-    Angle frontRightOffset = Rotations.of(-0.0478515625);
-    Angle backLeftOffset = Rotations.of(0.092041015625);
-    Angle backRightOffset = Rotations.of(0.4794921875);
+    Angle frontLeftOffset = Rotations.of(-0.131103515625);
+    Angle frontRightOffset = Rotations.of(-0.0537109375);
+    Angle backLeftOffset = Rotations.of(0.273681640625);
+    Angle backRightOffset = Rotations.of(0.47265625);
 
     Slot0Configs steerGains = new Slot0Configs()
         .withKP(80).withKI(0).withKD(1)

@@ -74,8 +74,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double rollOriginalSetpoint;
 
     private double elevAllowedDifference = 1.5;
-    private double elbowAllowedDifference = 10;
-    private double pitchAllowedDifference = 3;
+    private double elbowAllowedDifference = 15;
+    private double pitchAllowedDifference = 6;
 
     private boolean coralSideLeft;
     private boolean l4Extend;
@@ -449,7 +449,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralIntake() {
         DW.setPitchSetpoint(-148); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(-10); // Old: 2
+        Elbow.setSetpoint(-6); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
