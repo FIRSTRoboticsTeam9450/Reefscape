@@ -40,8 +40,8 @@ public class ClimbSubsystem extends SubsystemBase {
     
     /* ----- Motor ----- */
     // private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
+    //private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
+    // private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
 
     private double maxVolts = 12;
 
@@ -52,7 +52,7 @@ public class ClimbSubsystem extends SubsystemBase {
         pid.setSetpoint(0.076);
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
-        climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+        //climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
     /* ----------- Updaters ----------- */
@@ -68,12 +68,12 @@ public class ClimbSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double voltage = updatePIDs(encoder.getPosition());
-        setVoltage(-voltage);
+        //double voltage = updatePIDs(encoder.getPosition());
+        //setVoltage(-voltage);
         if (debugging.ClimberPos) {
-            Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
+            //Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
             Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
-            Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+            //Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
         }
     }
 
@@ -86,7 +86,7 @@ public class ClimbSubsystem extends SubsystemBase {
     /* ----------- Setters & Getters ----------- */
 
     public void setVoltage(double voltage) {
-        climb.setVoltage(voltage);
+        //climb.setVoltage(voltage);
     }
 
     public void setSetpoint(double setpoint) {
