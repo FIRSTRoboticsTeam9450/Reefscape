@@ -18,18 +18,24 @@ public class ThingOneConfig implements RobotConfig {
         .withKP(80).withKI(0).withKD(1)
         .withKS(0).withKV(1.5).withKA(0)
         .withStaticFeedforwardSign(StaticFeedforwardSignValue.UseClosedLoopSign);
+
     Slot0Configs driveGains = new Slot0Configs()
         .withKP(0.1).withKI(0).withKD(0)
         .withKS(0).withKV(0.124);
     
-    double elbowOffset = 0.127685546875;
-    double elbowRatio = 82.09 / 90.0;
+    double elbowOffset = -0.171875;
+    double elbowRatio = 92.99 / 90.0;
     
-    double coralTriggerDistance = 60;
-    double algaeTriggerDistance = 24;
+    double coralTriggerDistance = 115;
+    double algaeTriggerDistance = 70;
 
-    double l4Pitch = -143.63;
-    double l4Elbow = 73.14;
+    // Practice field totes
+    // double l4Pitch = -175.63;
+    // double l4Elbow = 82;
+    // double l4Elevator = 35;
+
+    double l4Pitch = -165.63;
+    double l4Elbow = 72;
     double l4Elevator = 35;
 
     @Override

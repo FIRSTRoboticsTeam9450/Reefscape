@@ -20,7 +20,7 @@ import edu.wpi.first.wpilibj.RobotController;
  */
 public final class Constants {
 
-  public static RobotConfig robotConfig = new ThingTwoConfig();
+  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("0329F2BF") ? new ThingOneConfig() : new ThingTwoConfig();
 
   public static boolean l4mode = false;
 
