@@ -92,7 +92,7 @@ public class DualIntakeCommand extends Command{
             }
         } else {
             DI.setVoltage(6);
-            new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0))).schedule();;
+            new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0.5))).schedule();;
         }
     }
     

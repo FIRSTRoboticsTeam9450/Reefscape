@@ -108,7 +108,7 @@ public class ElevatorSubsystem extends SubsystemBase{
             }
         }
         if (!resetting && atLimit) {
-            offset = getPosition();
+            offset = leftMotor.getPosition().getValueAsDouble();
         }
     }
 
@@ -131,7 +131,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
         pid.setSetpoint(setpoint);
         this.setpoint = setpoint;
-        leftMotor.setControl(m_request.withPosition(setpoint));
+        leftMotor.setControl(m_request.withPosition(setpoint + offset));
     }
 
     public boolean atSetpoint() {

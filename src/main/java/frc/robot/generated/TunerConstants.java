@@ -169,7 +169,6 @@ public class TunerConstants {
     private static final Distance kBackRightXPos = Inches.of(-11.875);
     private static final Distance kBackRightYPos = Inches.of(-11.875);
 
-
     public static final SwerveModuleConstants<TalonFXConfiguration, TalonFXConfiguration, CANcoderConfiguration> FrontLeft =
         ConstantCreator.createModuleConstants(
             kFrontLeftSteerMotorId, kFrontLeftDriveMotorId, kFrontLeftEncoderId, kFrontLeftEncoderOffset,
