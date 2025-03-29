@@ -38,7 +38,8 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
-import frc.robot.commands.CoordinationCommand;;
+import frc.robot.commands.CoordinationCommand;
+import frc.robot.commands.DriverIntakeCommand;;
 
 public class RobotContainer {
     // Top speed when lift is up
@@ -47,7 +48,7 @@ public class RobotContainer {
 
     // Normal top speed
     private static double DefaultMaxSpeed = 4.369;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.7).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.25).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -144,8 +145,8 @@ public class RobotContainer {
         
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
         m_driver1.leftTrigger().onTrue(new GoToScorePosCommand());
-        m_driver1.leftBumper().onTrue(new RollSideSwitcher());
-        //m_driver1.rightBumper().onTrue(new OuttakeCommand());
+        m_driver1.leftBumper().onTrue(new RollSideSwitcher(true));
+        m_driver1.rightBumper().onTrue(new RollSideSwitcher(false));
         m_driver1.x().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))
             .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
@@ -190,7 +191,7 @@ public class RobotContainer {
         m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
         m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         
-        //m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
+        m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
 
         /* ----- Commands not currently in use ----- */
         
@@ -198,7 +199,7 @@ public class RobotContainer {
         m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
     
         // VERTICAL CORAL
-        m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+        //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
         //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));

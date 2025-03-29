@@ -23,10 +23,12 @@ public class RollSideSwitcher extends Command{
     int count = 0;
     private boolean hasAlgae;
 
+    private boolean left;
+
     /* ----------- Initialization ----------- */
 
-    public RollSideSwitcher() {
-
+    public RollSideSwitcher(boolean left) {
+        this.left = left;
     }
 
     @Override
@@ -39,7 +41,9 @@ public class RollSideSwitcher extends Command{
     @Override
     public void execute() {
         if (!hasAlgae) {
-            if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4)) {
+            if (CT.getPos() == ScoringPos.CORAL_STORE && CT.getDesiredLevel() == 4) {
+                CT.setL4RollSide(left);
+            } else if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4)) {
                 if (!finished)
                     CT.rollToOtherSide();
                 finished = true;

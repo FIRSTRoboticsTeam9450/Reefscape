@@ -39,9 +39,8 @@ public class ClimbSubsystem extends SubsystemBase {
     private PIDController pid = new PIDController(55, 0, 0.5);
     
     /* ----- Motor ----- */
-    // private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
     //private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    // private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
+    //private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
 
     private double maxVolts = 12;
 

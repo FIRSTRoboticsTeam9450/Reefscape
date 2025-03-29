@@ -165,6 +165,12 @@ public class AlignCommand2 extends Command {
      */
     @Override
     public void execute() {
+
+        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up) {
+            up = true;
+            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+        }
+        
         if (hasTarget) {
             // if (algae && atSetpoint(0.08, 0.3)) {
             //     double[] pose = getAlignPos(map.get(tid), 0.9);
@@ -172,11 +178,6 @@ public class AlignCommand2 extends Command {
             //     pidY.setSetpoint(pose[1]);
             //     pidRotate.setSetpoint(pose[2]);
             // }
-
-            if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up) {
-                up = true;
-                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
-            }
 
             if (atSetpoint(0.05, 0.3) && !score.getAlgae()) {
                 double[] pose = getAlignPos(map.get(tid), 0.44);
@@ -215,9 +216,9 @@ public class AlignCommand2 extends Command {
             powerX += .05*Math.signum(powerX);
             powerY += .05*Math.signum(powerY);
             
-            //Logger.recordOutput("Reefscape/Limelight/x error", pidX.getError());
-            //Logger.recordOutput("Reefscape/Limelight/y error", pidY.getError());
-
+            Logger.recordOutput("Reefscape/Align/x error", Math.abs(pidX.getSetpoint() - currentPose.getX()));
+            Logger.recordOutput("Reefscape/Align/y error", Math.abs(pidY.getSetpoint() - currentPose.getY()));
+            Logger.recordOutput("Reefscape/Align/rot error", pidRotate.getError());
 
             // Calculate the rotational power and clamp it between -2 and 2
             double powerRotate = pidRotate.calculate(currentPose.getRotation().getRadians());
@@ -265,7 +266,7 @@ public class AlignCommand2 extends Command {
     }
 
     public boolean atSetpoint(double translationTolerance, double rotationTolerance) {
-        return Math.abs(pidX.getSetpoint() - currentPose.getX()) < translationTolerance && Math.abs(pidY.getSetpoint() - currentPose.getY()) < translationTolerance && Math.abs(pidRotate.getSetpoint() - currentPose.getRotation().getRadians()) < rotationTolerance;
+        return Math.abs(pidX.getSetpoint() - currentPose.getX()) < translationTolerance && Math.abs(pidY.getSetpoint() - currentPose.getY()) < translationTolerance && pidRotate.getError() < rotationTolerance;
     }
 
     /* ----------- Finishers ----------- */

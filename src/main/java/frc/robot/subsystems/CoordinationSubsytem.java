@@ -543,7 +543,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             if (algaeNet) { // net
                 coralScorePitch = -110;
                 coralScoreElbow = 76;
-                coralScoreElev = 38;
+                coralScoreElev = 35;
                 DW.setRollSetpoint(0);
             } else { // processor
                 coralScorePitch = -90;
@@ -730,6 +730,22 @@ public class CoordinationSubsytem extends SubsystemBase{
         justHitScore = true;
         justChanged = true;
         allAtSetpoints = false;
+    }
+
+    private void rollToL4() {
+        if (l4RollLeft) {
+            DW.setRollSetpoint(95);
+            coralSideLeft = true;
+        } else {
+            DW.setRollSetpoint(-90);
+            coralSideLeft = false;
+        }
+    }
+
+    boolean l4RollLeft;
+
+    public void setL4RollSide(boolean left) {
+        l4RollLeft = left;
     }
 
     public void rollToClosestSide() {

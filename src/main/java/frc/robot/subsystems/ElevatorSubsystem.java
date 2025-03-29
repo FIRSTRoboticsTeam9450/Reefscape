@@ -131,7 +131,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
         pid.setSetpoint(setpoint);
         this.setpoint = setpoint;
-        leftMotor.setControl(m_request.withPosition(setpoint + offset));
+        leftMotor.setControl(m_request.withPosition(setpoint));
     }
 
     public boolean atSetpoint() {

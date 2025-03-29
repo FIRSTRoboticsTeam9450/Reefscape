@@ -37,7 +37,7 @@ public class ThingTwoConfig implements RobotConfig {
 
     double l4Pitch = -165.63;
     double l4Elbow = 72;
-    double l4Elevator = 35;
+    double l4Elevator = 36;
 
     @Override
     public Angle getFrontLeftOffset() {
