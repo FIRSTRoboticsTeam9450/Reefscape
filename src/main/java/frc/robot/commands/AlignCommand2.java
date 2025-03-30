@@ -33,9 +33,9 @@ public class AlignCommand2 extends Command {
     private HashMap<Integer, double[]> map = new HashMap<>();
 
     /* ----- PIDs ----- */
-    private PIDController pidX = new PIDController(3, 0, 0);
-    private PIDController pidY = new PIDController(3, 0, 0);
-    private PIDController pidRotate = new PIDController(4, 0, 0);
+    private PIDController pidX = new PIDController(6, 0, 0);
+    private PIDController pidY = new PIDController(6, 0, 0);
+    private PIDController pidRotate = new PIDController(8, 0, 0);
 
     /* ----- Subsystem Instances ----- */
     private CommandSwerveDrivetrain drive;
@@ -166,11 +166,17 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
 
+        if (position == AlignPos.RIGHT && LimelightHelpers.getFiducialID("limelight-coral") != tid) {
+            drive.runVision = false;
+        } else {
+            drive.runVision = true;
+        }
+
         if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up) {
             up = true;
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
-        
+
         if (hasTarget) {
             // if (algae && atSetpoint(0.08, 0.3)) {
             //     double[] pose = getAlignPos(map.get(tid), 0.9);
@@ -179,14 +185,14 @@ public class AlignCommand2 extends Command {
             //     pidRotate.setSetpoint(pose[2]);
             // }
 
-            if (atSetpoint(0.05, 0.3) && !score.getAlgae()) {
+            if (atSetpoint(0.06, 0.3) && !score.getAlgae()) {
                 double[] pose = getAlignPos(map.get(tid), 0.44);
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
             }
 
-            if (atSetpoint(0.05, 0.3)) {
+            if (atSetpoint(0.3, 0.6)) {
                 if (score.getDesiredLevel() == 4 && !up && !score.getAlgae()) {
                     up = true;
                     new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
@@ -216,8 +222,12 @@ public class AlignCommand2 extends Command {
             powerX += .05*Math.signum(powerX);
             powerY += .05*Math.signum(powerY);
             
+            double xError = Math.abs(pidX.getSetpoint() - currentPose.getX());
+            double yError = Math.abs(pidY.getSetpoint() - currentPose.getY());
             Logger.recordOutput("Reefscape/Align/x error", Math.abs(pidX.getSetpoint() - currentPose.getX()));
             Logger.recordOutput("Reefscape/Align/y error", Math.abs(pidY.getSetpoint() - currentPose.getY()));
+            Logger.recordOutput("Reefscape/Align/ErrorMag", xError * xError + yError * yError);
+            
             Logger.recordOutput("Reefscape/Align/rot error", pidRotate.getError());
 
             // Calculate the rotational power and clamp it between -2 and 2
@@ -238,19 +248,21 @@ public class AlignCommand2 extends Command {
 
             //System.out.println("Pow " + powMag + ", Vel " + velMag);
             // Create a new swerve request with the calculated velocities and rotational rate
+            // 0.04, 0.001
             if (powMag > 0.04 && velMag < 0.001) {
                 stuckCounter++;
             } else {
                 stuckCounter = 0;
             }
 
-            if (stuckCounter > 5) {
-                score.setCoralInFront(true);
-                if (!up) {
-                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
-                    up = true;
-                }
-            }
+            // I KILLED IT YIPPEEE
+            // if (stuckCounter > 5) {
+            //     score.setCoralInFront(true);
+            //     if (!up) {
+            //         new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            //         up = true;
+            //     }
+            // }
 
             //Logger.recordOutput("Reefscape/Align/Stuck", stuck);
             SwerveRequest request = driveRequest.withVelocityX(powerX).withVelocityY(powerY).withRotationalRate(powerRotate);

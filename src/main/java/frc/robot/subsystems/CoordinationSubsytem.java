@@ -447,7 +447,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(-148); // OLD: -129
+        DW.setPitchSetpoint(Constants.robotConfig.getPitchGroundPos()); // OLD: -129
         DW.setRollSetpoint(0); 
         Elbow.setSetpoint(Constants.robotConfig.getElbowGroundPos()); // Old: 2
         Elev.setSetpoint(0);
@@ -543,7 +543,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             if (algaeNet) { // net
                 coralScorePitch = -140; //-145
                 coralScoreElbow = 76;
-                coralScoreElev = 38;
+                coralScoreElev = Constants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
             } else { // processor
                 coralScorePitch = -90;
@@ -598,12 +598,20 @@ public class CoordinationSubsytem extends SubsystemBase{
         // elbow -22
 
         if(algae) {
-
-            DW.setPitchSetpoint(coralScorePitch);
-            Elbow.setSetpoint(coralScoreElbow);
-            
-            if(DW.atPitchSetpoint()) {
+            if (algaeNet) {
+                Elbow.setSetpoint(coralScoreElbow);
                 Elev.setSetpoint(coralScoreElev);
+                DW.setPitchSetpoint(-110); //old pitch pos used while going up
+                if (Elev.getPosition() > 35) {
+                    DW.setPitchSetpoint(coralScorePitch); //pitch pos wanted when scoring
+                }
+            } else {
+                DW.setPitchSetpoint(coralScorePitch);
+                Elbow.setSetpoint(coralScoreElbow);
+                
+                if(DW.atPitchSetpoint()) {
+                    Elev.setSetpoint(coralScoreElev);
+                }
             }
         } else if (level == 1) {
             DW.setPitchSetpoint(coralScorePitch);

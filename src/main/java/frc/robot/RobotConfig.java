@@ -16,7 +16,11 @@ public interface RobotConfig {
 
     public double getElbowOffset();
     public double getElbowRatio();
+    
     public double getElbowGroundPos();
+    public double getPitchGroundPos();
+
+    public double getElevatorNetPos();
 
     public double getCoralTriggerDistance();
     public double getAlgaeTriggerDistance();

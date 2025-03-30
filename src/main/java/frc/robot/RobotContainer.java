@@ -48,7 +48,7 @@ public class RobotContainer {
 
     // Normal top speed
     private static double DefaultMaxSpeed = 4.369;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.25).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -158,7 +158,7 @@ public class RobotContainer {
             m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT, m_driver1)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         }
         m_driver1.povUp().onTrue(new ClimbCommand(0.955, 12));
-        m_driver1.povDown().onTrue(new ClimbCommand(0.360, 10).andThen(new CoordinationCommand(ScoringPos.START)));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.320, 10).andThen(new CoordinationCommand(ScoringPos.START)));
         m_driver1.povRight().onTrue(new ClimbCommand(0.121, 3));
         m_driver1.start().onTrue(new InstantCommand(() -> scoreSub.toggleCoralInFront()));
 

@@ -25,8 +25,12 @@ public class ThingTwoConfig implements RobotConfig {
     
     double elbowOffset = 0.322265625;
     double elbowRatio = 92.99 / 90.0;
-    double elbowGroundSetpoint = -8;
     
+    double elbowGroundSetpoint = -8;
+    double pitchGroundSetpoint = -152;
+
+    double elevatorNetPos = 38;
+
     double coralTriggerDistance = 115;
     double algaeTriggerDistance = 70;
 
@@ -82,6 +86,16 @@ public class ThingTwoConfig implements RobotConfig {
     @Override
     public double getElbowGroundPos() {
         return elbowGroundSetpoint;
+    }
+
+    @Override
+    public double getPitchGroundPos() {
+        return pitchGroundSetpoint;
+    }
+
+    @Override
+    public double getElevatorNetPos() {
+        return elevatorNetPos;
     }
 
     @Override

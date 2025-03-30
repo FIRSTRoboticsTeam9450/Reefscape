@@ -16,6 +16,7 @@ import com.ctre.phoenix6.signals.S1StateValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -131,7 +132,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
         pid.setSetpoint(setpoint);
         this.setpoint = setpoint;
-        leftMotor.setControl(m_request.withPosition(setpoint));
+        leftMotor.setControl(m_request.withPosition(setpoint + offset - 0.25));
     }
 
     public boolean atSetpoint() {

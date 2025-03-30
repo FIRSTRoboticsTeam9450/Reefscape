@@ -25,10 +25,14 @@ public class ThingOneConfig implements RobotConfig {
     
     double elbowOffset = -0.171875;
     double elbowRatio = 92.99 / 90.0;
-    double elbowGroundSetpoint = -8;
+    
+    double elbowGroundSetpoint = -12;
+    double pitchGroundSetpoint = -140;
     
     double coralTriggerDistance = 115;
     double algaeTriggerDistance = 70;
+
+    double elevatorNetPos = 39;
 
     // Practice field totes
     // double l4Pitch = -175.63;
@@ -82,6 +86,16 @@ public class ThingOneConfig implements RobotConfig {
     @Override
     public double getElbowGroundPos() {
         return elbowGroundSetpoint;
+    }
+
+    @Override
+    public double getPitchGroundPos() {
+        return pitchGroundSetpoint;
+    }
+
+    @Override
+    public double getElevatorNetPos() {
+        return elevatorNetPos;
     }
 
     @Override
