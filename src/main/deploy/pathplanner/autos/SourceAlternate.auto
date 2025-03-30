@@ -81,7 +81,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SourceScore"
+            "pathName": "SourceToBLR"
           }
         },
         {
@@ -107,7 +107,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BLLToSource"
+                        "pathName": "BLRSource"
                       }
                     }
                   ]
@@ -137,7 +137,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "SourceToBLR"
+            "pathName": "SourceScore"
           }
         },
         {
@@ -163,7 +163,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BLRSource"
+                        "pathName": "BLLToSource"
                       }
                     }
                   ]

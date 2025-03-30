@@ -541,9 +541,9 @@ public class CoordinationSubsytem extends SubsystemBase{
         if (algae) {
             //Elev.setSlow();
             if (algaeNet) { // net
-                coralScorePitch = -110;
+                coralScorePitch = -140; //-145
                 coralScoreElbow = 76;
-                coralScoreElev = 35;
+                coralScoreElev = 38;
                 DW.setRollSetpoint(0);
             } else { // processor
                 coralScorePitch = -90;

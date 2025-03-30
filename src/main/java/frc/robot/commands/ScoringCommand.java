@@ -48,7 +48,11 @@ public class ScoringCommand extends Command {
 
     public void score() {
         if (scoreSub.getAlgae() || position == ScoringPos.ALGAE_STORE) {
-            intake.setVoltage(-9);
+            if (position == ScoringPos.SCORE_NET) {
+                intake.setVoltage(-3);
+            } else {
+                intake.setVoltage(-10.5);
+            }
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
             intake.setVoltage(0);
