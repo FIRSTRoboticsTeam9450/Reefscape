@@ -25,4 +25,6 @@ public interface RobotConfig {
     public double getL4Elbow();
     public double getL4Elevator();
 
+    public boolean getRunClimber();
+
 }
