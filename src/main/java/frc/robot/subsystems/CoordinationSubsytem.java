@@ -377,6 +377,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToCoralStore() {
+        setL4RollSide(false);
         algae = false;
         l4Extend = false;
         if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral() || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous())) {
@@ -541,7 +542,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         if (algae) {
             //Elev.setSlow();
             if (algaeNet) { // net
-                coralScorePitch = -140; //-145
+                coralScorePitch = -130; //-145
                 coralScoreElbow = 76;
                 coralScoreElev = Constants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
@@ -565,7 +566,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 5.5;
                     } else {
-                        coralScoreElev = 4; //Comp: 3.75
+                        coralScoreElev = 4.5; //Comp: 3.75
                     }
                     //rollToClosestSide();
                     break;
@@ -573,9 +574,9 @@ public class CoordinationSubsytem extends SubsystemBase{
                     coralScorePitch = -112;
                     coralScoreElbow = 78;
                     if (l4Extend) {
-                        coralScoreElev = 14.5;
+                        coralScoreElev = 14.25;
                     } else {
-                        coralScoreElev = 13;
+                        coralScoreElev = 13.25;
                     }
                     //rollToClosestSide();
                     break;
@@ -624,7 +625,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             Elev.setSetpoint(coralScoreElev);
             if (elevEncoder > 25) {
                 DW.setPitchSetpoint(coralScorePitch);
-                rollToClosestSide();
+                rollToL4();
                 Elbow.setSetpoint(coralScoreElbow);
             }
         } else if (level == 3 || level == 2) {

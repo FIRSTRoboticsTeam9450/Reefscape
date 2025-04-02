@@ -43,5 +43,15 @@ public class DriverIntakeCommand extends Command {
         //     new GoToScorePosCommand().schedule();
         // }
     }
+
+    @Override
+    public boolean isFinished() {
+        return driveController.getLeftTriggerAxis() < 0.02;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        forward.cancel();
+    }
     
 }

@@ -24,11 +24,7 @@ public class OuttakeCommand extends Command {
     @Override
     public void initialize() {
         timer.restart();
-        if (intake.hasAlgae()) {
-            intake.setVoltage(5);
-        } else if (intake.hasCoral()) {
-            intake.setVoltage(-5);
-        }
+        intake.setVoltage(-2);
 
         timer.reset();
     }

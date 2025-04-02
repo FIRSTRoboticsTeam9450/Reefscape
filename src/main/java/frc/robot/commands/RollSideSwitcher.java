@@ -35,7 +35,7 @@ public class RollSideSwitcher extends Command{
     public void initialize() {
         finished = false;
         count = 0;
-        hasAlgae = Intake.hasAlgae();
+        hasAlgae = CT.getAlgae();
     }
 
     @Override
@@ -43,6 +43,7 @@ public class RollSideSwitcher extends Command{
         if (!hasAlgae) {
             if (CT.getPos() == ScoringPos.CORAL_STORE && CT.getDesiredLevel() == 4) {
                 CT.setL4RollSide(left);
+                finished = true;
             } else if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4)) {
                 if (!finished)
                     CT.rollToOtherSide();

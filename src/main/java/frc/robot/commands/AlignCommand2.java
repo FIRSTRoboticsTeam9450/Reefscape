@@ -136,11 +136,6 @@ public class AlignCommand2 extends Command {
             tagForwardOffset = 0.65; ; // Set forward offset for center
         }
 
-        if(score.getPos() == ScoringPos.GRABBED_ALGAE) {
-            tagLeftOffset = 0;
-            tagForwardOffset = 1.4;
-        }
-
         // Calculate rotation relative to the target position
         double rotation = targetPos[2] - Math.PI;
 
@@ -249,20 +244,23 @@ public class AlignCommand2 extends Command {
             //System.out.println("Pow " + powMag + ", Vel " + velMag);
             // Create a new swerve request with the calculated velocities and rotational rate
             // 0.04, 0.001
-            if (powMag > 0.04 && velMag < 0.001) {
+            if (powMag > 0.3 && velMag < 0.02) {
                 stuckCounter++;
             } else {
                 stuckCounter = 0;
             }
 
             // I KILLED IT YIPPEEE
-            // if (stuckCounter > 5) {
-            //     score.setCoralInFront(true);
-            //     if (!up) {
-            //         new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
-            //         up = true;
-            //     }
-            // }
+            // --- Comment this to disable coral detection ---
+            if (stuckCounter > 5) {
+                score.setCoralInFront(true);
+                if (!up) {
+                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                    up = true;
+                }
+            }
+
+            // ------------------------------------------------
 
             //Logger.recordOutput("Reefscape/Align/Stuck", stuck);
             SwerveRequest request = driveRequest.withVelocityX(powerX).withVelocityY(powerY).withRotationalRate(powerRotate);
@@ -292,7 +290,7 @@ public class AlignCommand2 extends Command {
     public void end(boolean interrupted) {
         // Create a swerve request to stop all motion by setting velocities and rotational rate to 0
         SwerveRequest stop = driveRequest.withVelocityX(0).withVelocityY(0).withRotationalRate(0);
-
+        drive.runVision = true;
         // Set the drive control with the stop request to halt all movement
         drive.setControl(stop);
         controller.setRumble(RumbleType.kBothRumble, 0);

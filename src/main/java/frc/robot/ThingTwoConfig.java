@@ -23,11 +23,11 @@ public class ThingTwoConfig implements RobotConfig {
         .withKP(0.1).withKI(0).withKD(0)
         .withKS(0).withKV(0.124);
     
-    double elbowOffset = 0.322265625;
+    double elbowOffset = -0.171875;
     double elbowRatio = 92.99 / 90.0;
     
-    double elbowGroundSetpoint = -8;
-    double pitchGroundSetpoint = -152;
+    double elbowGroundSetpoint = -5;
+    double pitchGroundSetpoint = -148;
 
     double elevatorNetPos = 38;
 
