@@ -15,6 +15,7 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ClimberIDs;
 import frc.robot.Constants.debugging;
 
@@ -44,6 +45,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private double maxVolts = 12;
 
+    private boolean runClimber = Constants.robotConfig.getRunClimber();
+
     /* ----------- Initializaton ----------- */
 
     private ClimbSubsystem() {
@@ -67,12 +70,14 @@ public class ClimbSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        double voltage = updatePIDs(encoder.getPosition());
-        setVoltage(-voltage);
-        if (debugging.ClimberPos) {
-            Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
-            Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
-            Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+        if (runClimber) {
+            double voltage = updatePIDs(encoder.getPosition());
+            setVoltage(-voltage);
+            if (debugging.ClimberPos) {
+                Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
+                Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
+                Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+            }
         }
     }
 

@@ -43,6 +43,8 @@ public class ThingTwoConfig implements RobotConfig {
     double l4Elbow = 72;
     double l4Elevator = 36;
 
+    boolean runClimber = true;
+
     @Override
     public Angle getFrontLeftOffset() {
         return frontLeftOffset;
@@ -121,6 +123,10 @@ public class ThingTwoConfig implements RobotConfig {
     @Override
     public double getL4Elevator() {
         return l4Elevator;
+    }
+
+    public boolean getRunClimber() {
+        return runClimber;
     }
 
 }

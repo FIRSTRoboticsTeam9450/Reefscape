@@ -39,7 +39,6 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordinationCommand;
-import frc.robot.commands.DriverIntakeCommand;;
 
 public class RobotContainer {
     // Top speed when lift is up
