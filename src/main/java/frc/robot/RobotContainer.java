@@ -39,6 +39,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.commands.CoordinationCommand;
+import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
     // Top speed when lift is up
@@ -92,8 +93,8 @@ public class RobotContainer {
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", false));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
-        autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
-        autoChooser.addOption("Left Source 2", drivetrain.getAutoPath("SourceAlternate", false));
+        //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
+        autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -157,7 +158,7 @@ public class RobotContainer {
             m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT, m_driver1)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
         }
         m_driver1.povUp().onTrue(new ClimbCommand(0.9, 12));
-        m_driver1.povDown().onTrue(new ClimbCommand(0.320, 10).andThen(new CoordinationCommand(ScoringPos.START)));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.320, 9).andThen(new CoordinationCommand(ScoringPos.START)));
         m_driver1.povRight().onTrue(new ClimbCommand(0.109, 3));
         m_driver1.start().onTrue(new InstantCommand(() -> scoreSub.toggleCoralInFront()));
 

@@ -10,6 +10,7 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -38,6 +39,12 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     private double pitchPos;
     private double rollPos;
+
+    private double lastPitchPos;
+    private double lastRollPos;
+
+    private int pitchDeadCounter;
+    private int rollDeadCounter;
 
     // Variables
     private boolean runPID = true;
@@ -82,7 +89,31 @@ public class DiffWristSubsystem extends SubsystemBase {
         double rVolts = pitchVoltage + rollVoltage;
         lVolts = MathUtil.clamp(lVolts, -8, 8);
         rVolts = MathUtil.clamp(rVolts, -8, 8);
+
+        if ((lVolts > 0.1 || rVolts > 0.1) && DriverStation.isEnabled()) {
+            if (pitchPos == lastPitchPos) {
+                pitchDeadCounter++;
+            } else {
+                pitchDeadCounter = 0;
+            }
+            if (rollPos == lastRollPos) {
+                rollDeadCounter++;
+            } else {
+                rollDeadCounter = 0;
+            }
+        }
+        
+        // if (rollDeadCounter > 4 || pitchDeadCounter > 4) {
+        //     setVoltage(0, 0);
+        //     System.out.println("THE DIFFY ENCODERS ARE ANGRY!! STOPPING DIFFY");
+        // } else {
+        //     setVoltage(lVolts, rVolts);
+        // }
+
         setVoltage(lVolts, rVolts);
+
+        lastPitchPos = pitchPos;
+        lastRollPos = rollPos;
     }
 
     @Override
@@ -99,6 +130,7 @@ public class DiffWristSubsystem extends SubsystemBase {
             Logger.recordOutput("Reefscape/DiffWrist/pitchPID Setpoint", getPitchSetpoint());
             Logger.recordOutput("Reefscape/DiffWrist/rollPID Setpoint", getRollSetpoint());
         }
+
     }
 
 
