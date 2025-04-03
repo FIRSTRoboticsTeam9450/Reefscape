@@ -743,10 +743,10 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     private void rollToL4() {
         if (l4RollLeft) {
-            DW.setRollSetpoint(95);
+            DW.setRollSetpoint(90);
             coralSideLeft = true;
         } else {
-            DW.setRollSetpoint(-90);
+            DW.setRollSetpoint(-94);
             coralSideLeft = false;
         }
     }
@@ -759,23 +759,23 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void rollToClosestSide() {
         if (rollEncoder <= -5) {
-            DW.setRollSetpoint(-90);
+            DW.setRollSetpoint(-94);
             coralSideLeft = false;
         } else if (rollEncoder > 5) {
-            DW.setRollSetpoint(95);
+            DW.setRollSetpoint(90);
             coralSideLeft = true;
         } else {
-            DW.setRollSetpoint(-90);
+            DW.setRollSetpoint(-94);
             coralSideLeft = false;
         }
     }
 
     public void rollToOtherSide() {
         if (coralSideLeft) {
-            DW.setRollSetpoint(-90);
+            DW.setRollSetpoint(-94);
             coralSideLeft = false;
         } else if (!coralSideLeft) {
-            DW.setRollSetpoint(95);
+            DW.setRollSetpoint(90);
             coralSideLeft = true;
         }
     }

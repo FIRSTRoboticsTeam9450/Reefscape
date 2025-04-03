@@ -91,7 +91,7 @@ public class RobotContainer {
 
         autoChooser = new SendableChooser<>();
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
-        autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", false));
+        autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
         //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
         autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
@@ -153,10 +153,8 @@ public class RobotContainer {
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
             ));
         m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
-        if (!DriverStation.isTest()) {
-            m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT, m_driver1)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
-            m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT, m_driver1)).onFalse(new FieldCentricCommand(drivetrain, () -> m_driver1.getLeftX(), () -> m_driver1.getLeftY(), () -> m_driver1.getRightX()));
-        }
+        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT, m_driver1));
+        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT, m_driver1));
         m_driver1.povUp().onTrue(new ClimbCommand(0.9, 12));
         m_driver1.povDown().onTrue(new ClimbCommand(0.320, 9).andThen(new CoordinationCommand(ScoringPos.START)));
         m_driver1.povRight().onTrue(new ClimbCommand(0.109, 3));

@@ -96,6 +96,7 @@ public class AlignCommand2 extends Command {
 
     @Override
     public void initialize() {
+        drive.runVision = true;
         stuckCounter = 0;
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         currentPose = drive.getState().Pose;
