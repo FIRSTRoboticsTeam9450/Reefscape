@@ -55,7 +55,7 @@ public class ScoringCommand extends Command {
             }
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
-            intake.setVoltage(0);
+            intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-2);
         } else {

@@ -54,6 +54,10 @@ public class RobotContainer {
     public static double MaxSpeed = DefaultMaxSpeed;
     public static double MaxAngularRate = DefaultMaxAngularRate;
 
+    public static double SprintSpeed = 5.14;
+
+    public static boolean sprint = false;
+
     private static boolean driveEnabled = true;
 
     public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
@@ -146,7 +150,7 @@ public class RobotContainer {
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
         m_driver1.leftTrigger().onTrue(new DriverIntakeCommand(m_driver1, drivetrain));
         m_driver1.leftBumper().onTrue(new RollSideSwitcher(true));
-        m_driver1.rightBumper().onTrue(new RollSideSwitcher(false));
+        m_driver1.rightBumper().onTrue(new InstantCommand(() -> sprint = true)).onFalse(new InstantCommand(() -> sprint = false));
         m_driver1.x().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))
             .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
@@ -212,7 +216,11 @@ public class RobotContainer {
             MaxSpeed = LiftMaxSpeed;
             MaxAngularRate = LiftMaxAngularRate;
         } else {
-            MaxSpeed = DefaultMaxSpeed;
+            if (sprint) {
+                MaxSpeed = SprintSpeed;
+            } else {
+                MaxSpeed = DefaultMaxSpeed;
+            }
             MaxAngularRate = DefaultMaxAngularRate;
         }
     }
