@@ -39,8 +39,8 @@ public class ThingTwoConfig implements RobotConfig {
     // double l4Elbow = 82;
     // double l4Elevator = 35;
 
-    double l4Pitch = -168.63;
-    double l4Elbow = 75;
+    double l4Pitch = -172.63;
+    double l4Elbow = 82;
     double l4Elevator = 36;
 
     boolean runClimber = true;
