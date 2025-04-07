@@ -3,6 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
@@ -99,7 +100,16 @@ public class ScoringCommand extends Command {
         } else {
             // go to store
             intake.setVoltage(0);
-            store.schedule();
+            if (!algae) {
+                new CoordinationCommand(ScoringPos.CORAL_STORE)
+                .andThen(new WaitCommand(1))
+                .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                .andThen(new DualIntakeCommand(false))
+                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
+                .schedule();
+            } else {
+                store.schedule();
+            }
         }
 
         

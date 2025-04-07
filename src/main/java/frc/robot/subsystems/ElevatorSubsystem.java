@@ -20,6 +20,7 @@ import edu.wpi.first.units.measure.Velocity;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ElevatorIDs;
@@ -28,6 +29,8 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     //Instance of Elevator Subsystem
     private static ElevatorSubsystem elev;
+
+    CommandXboxController controller;
 
     //PID instance
     private PIDController pid = new PIDController(4, 0, 0);
@@ -92,7 +95,12 @@ public class ElevatorSubsystem extends SubsystemBase{
         position = leftMotor.getPosition().getValueAsDouble() - offset; 
         RobotContainer.setLiftUp(position > 22 || highUp);
         if (highUp && setpoint < 15 && position < 8) {
-            highUp = false;
+            if (controller == null) {
+                highUp = false;
+            } else if (Math.abs(controller.getLeftX()) < 0.1 && Math.abs(controller.getLeftY()) < 0.1 && Math.abs(controller.getRightX()) < 0.1) {
+                System.out.println("hi");
+                highUp = false;
+            }
         }
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         Logger.recordOutput("Reefscape/Elevator/Setpoint", pid.getSetpoint());
@@ -161,6 +169,10 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public void setFast() {
         m_request.Acceleration = 160;
+    }
+
+    public void setController(CommandXboxController controller) {
+        this.controller = controller;
     }
 
     /**

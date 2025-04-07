@@ -98,7 +98,8 @@ public final class Constants {
     GRABBED_ALGAE,
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,
-    PRE_L4
+    PRE_L4,
+    L1_STORE
   }
 
   public enum AlignPos {

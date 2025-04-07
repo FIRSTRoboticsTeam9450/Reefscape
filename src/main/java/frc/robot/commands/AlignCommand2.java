@@ -181,7 +181,7 @@ public class AlignCommand2 extends Command {
             //     pidRotate.setSetpoint(pose[2]);
             // }
 
-            if (atSetpoint(0.06, 0.3) && !score.getAlgae()) {
+            if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
                 double[] pose = getAlignPos(map.get(tid), 0.44);
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);

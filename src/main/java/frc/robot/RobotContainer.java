@@ -38,6 +38,7 @@ import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
+import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.commands.CoordinationCommand;
 import frc.robot.commands.DriverIntakeCommand;
 
@@ -85,6 +86,8 @@ public class RobotContainer {
 
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
+    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+
     private ClimbSubsystem climb = ClimbSubsystem.getInstance();
 
     public static double pigeonOffset = 0;
@@ -103,6 +106,7 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
+        elevator.setController(m_driver1);
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
