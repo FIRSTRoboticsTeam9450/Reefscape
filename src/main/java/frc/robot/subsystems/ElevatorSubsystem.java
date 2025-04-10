@@ -93,15 +93,15 @@ public class ElevatorSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         position = leftMotor.getPosition().getValueAsDouble() - offset; 
-        RobotContainer.setLiftUp(position > 22 || highUp);
-        if (highUp && setpoint < 15 && position < 8) {
-            if (controller == null) {
-                highUp = false;
-            } else if (Math.abs(controller.getLeftX()) < 0.1 && Math.abs(controller.getLeftY()) < 0.1 && Math.abs(controller.getRightX()) < 0.1) {
-                System.out.println("hi");
-                highUp = false;
-            }
+        if (highUp && setpoint < 24 && position < 24) {
+            highUp = false;
+            // if (controller == null) {
+            //     highUp = false;
+            // } else if (Math.abs(controller.getLeftX()) < 0.1 && Math.abs(controller.getLeftY()) < 0.1 && Math.abs(controller.getRightX()) < 0.1) {
+            //     highUp = false;
+            // }
         }
+        RobotContainer.setLiftUp(position > 24 || highUp); 
         atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         Logger.recordOutput("Reefscape/Elevator/Setpoint", pid.getSetpoint());
         Logger.recordOutput("Reefscape/Elevator/pos", position);

@@ -16,6 +16,8 @@ import frc.robot.Constants;
 
 public class CoordinationSubsytem extends SubsystemBase{
 
+    public static boolean autoGround = false;
+
     /* ----- Subsystem Instances ----- */
     private static CoordinationSubsytem CT;
     private DiffWristSubsystem DW = DiffWristSubsystem.getInstance();
@@ -122,6 +124,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Intake_Set.add(ScoringPos.INTAKE_SOURCE);
         Coral_Intake_Set.add(ScoringPos.ALGAEL1);
         Coral_Intake_Set.add(ScoringPos.ALGAEL2);
+        Coral_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
 
         Source_Intake_Set.add(ScoringPos.CORAL_STORE);
         Source_Intake_Set.add(ScoringPos.INTAKE_CORAL);

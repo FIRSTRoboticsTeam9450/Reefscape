@@ -23,6 +23,7 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 
 /**
  * Will Align to an algae, good for picking them up (algae on ground)
+ * UNUSED
  */
 public class AlgaeAlignCommand extends Command {
     

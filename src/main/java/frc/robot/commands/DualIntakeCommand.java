@@ -85,6 +85,10 @@ public class DualIntakeCommand extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        if (interrupted) {
+            DI.setVoltage(0);
+            return;
+        }
         if (algae) {
             wristUpGround.schedule();
             if (score.getPos() == ScoringPos.INTAKE_ALGAE || true) {

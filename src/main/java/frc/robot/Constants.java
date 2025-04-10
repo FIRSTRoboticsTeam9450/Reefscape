@@ -28,18 +28,18 @@ public final class Constants {
     public static final int kDriverControllerPort = 0;
   }
   public static class IntakeIDS {
-    public static final int kDualIntakeMotorID = 25; //temp
+    public static final int kDualIntakeMotorID = 25;
     public static final int kDualIntakeCoralLaserID = 34;
     public static final int kDualIntakeAlgaeLaserID = 35;
   }
 
   public static class WristIDs {
-    public static final int kDiffWristLeftMotorID = 23; //temp
-    public static final int kDiffWristRightMotorID = 24; //temp
-    public static final int kDiffWristPitchCANCoderID = 32; //temp
-    public static final int kDiffWristRollCANCoderID = 33; //temp
-    public static final int KElbowWristMotorID = 22; //temp
-    public static final int KElbowWristEncoderID = 31; //temp
+    public static final int kDiffWristLeftMotorID = 23;
+    public static final int kDiffWristRightMotorID = 24;
+    public static final int kDiffWristPitchCANCoderID = 32;
+    public static final int kDiffWristRollCANCoderID = 33;
+    public static final int KElbowWristMotorID = 22;
+    public static final int KElbowWristEncoderID = 31;
   }
 
   public static class ElevatorIDs {
@@ -72,6 +72,15 @@ public final class Constants {
     public static final double kGroundIntakeAlgaeElbow = 0; // temp
     public static final double kGroundIntakeAlgaePitch = 0; // temp
     public static final double kGroundIntakeAlgaeElevator = 0; // temp
+  }
+
+  public static class AlignOffsets {
+    public static final double leftReef = 0.173;
+    public static final double rightReef = -0.173;
+    public static final double firstCoralBack = 0.6;
+    public static final double scoreCoralBack = 0.44;
+    public static final double algaeBack = 0.65;
+    public static final double algaeLeft = 0;
   }
 
   public static final String CTRE_BUS = "Rio";

@@ -34,10 +34,6 @@ public class FieldCentricCommand extends Command {
     private DoubleSupplier y;
     private DoubleSupplier rot;
 
-    Timer timer = new Timer();
-    boolean scored;
-    boolean backUp;
-
     /* ----------- Initialization ----------- */
     
     public FieldCentricCommand(CommandSwerveDrivetrain drive, DoubleSupplier x, DoubleSupplier y, DoubleSupplier rot) {
@@ -50,8 +46,6 @@ public class FieldCentricCommand extends Command {
 
     @Override
     public void initialize() {
-        scored = false;
-        backUp = intake.hasAlgae() || intake.hasCoral();
     }
 
     /* ----------- Updaters ----------- */
@@ -59,26 +53,11 @@ public class FieldCentricCommand extends Command {
 
     @Override
     public void execute() {
-        
-
-        if (!scored) {
-            drive.setControl(
+        drive.setControl(
                 driveRobotCentric.withVelocityX(-y.getAsDouble() * RobotContainer.MaxSpeed) // Drive forward with negative Y (forward)
                 .withVelocityY(-x.getAsDouble() * RobotContainer.MaxSpeed) // Drive left with negative X (left)
                 .withRotationalRate(-rot.getAsDouble() * RobotContainer.MaxAngularRate) // Drive counterclockwise with negative X (left)
             );
-            if (score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-                scored = intake.hasAlgae();
-            } else {
-                scored = !intake.hasCoral() && !intake.hasAlgae();
-            }
-            if (scored) {
-                timer.restart();
-            }
-        } else if (backUp) {
-            // drive.setControl(driveRobotCentric.withVelocityX(-0.5).withVelocityY(0).withRotationalRate(0));
-        }
-        
     }
 
     /* ------------ Finishers ----------- */
@@ -86,7 +65,7 @@ public class FieldCentricCommand extends Command {
     @Override
     public boolean isFinished() {
         // return scored && timer.get() > 1;
-        return true;
+        return false;
     }
 
     @Override

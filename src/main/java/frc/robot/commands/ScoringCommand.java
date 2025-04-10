@@ -58,7 +58,7 @@ public class ScoringCommand extends Command {
             elev.schedule();
             intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
-            intake.setVoltage(-2);
+            intake.setVoltage(-4);
         } else {
             score.schedule();
             intake.setVoltage(0);
@@ -100,7 +100,7 @@ public class ScoringCommand extends Command {
         } else {
             // go to store
             intake.setVoltage(0);
-            if (!algae) {
+            if (!algae && CoordinationSubsytem.autoGround) {
                 new CoordinationCommand(ScoringPos.CORAL_STORE)
                 .andThen(new WaitCommand(1))
                 .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)

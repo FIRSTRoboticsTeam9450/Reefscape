@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.AlignPos;
@@ -27,7 +28,7 @@ import frc.robot.subsystems.CoordinationSubsytem;
  * Uses April Tags to understand where it is and to align with primary april tag with certain offsets depending on which reef pole is choosen.
  */
 import frc.robot.subsystems.ElevatorSubsystem;
-public class AlignCommand2 extends Command {
+public class AlignCommand extends Command {
 
     /* ----- April Tag ID - Positions ----- */
     private HashMap<Integer, double[]> map = new HashMap<>();
@@ -52,6 +53,7 @@ public class AlignCommand2 extends Command {
     private boolean algae;
     int stuckCounter = 0;
     
+    // Controller rumbles when at setpoint
     CommandXboxController controller;
 
     /* ----- Swerve Drive ----- */
@@ -60,22 +62,24 @@ public class AlignCommand2 extends Command {
 
     /* ----------- Initialzation ----------- */
 
-    public AlignCommand2(CommandSwerveDrivetrain drive, AlignPos position, CommandXboxController controller) {
+    public AlignCommand(CommandSwerveDrivetrain drive, AlignPos position, CommandXboxController controller) {
         this.position = position;
         this.controller = controller;
-        //                X,      Y,      Rotation
-        double[] tag6 = {13.474446, 3.306318, 5 * Math.PI / 3.0};
-        double[] tag7 = {13.890498, 4.0259, 0};
-        double[] tag8 = {13.474446, 4.745482, Math.PI / 3.0};
-        double[] tag9 = {12.643358, 4.745482, 2 * Math.PI / 3.0};
-        double[] tag10 = {12.227306, 4.0259, Math.PI};
+
+        /* --------------- AprilTag location map --------------- */
+        //                X,         Y,        Rotation
+        double[] tag6 =  {13.474446, 3.306318, 5 * Math.PI / 3.0};
+        double[] tag7 =  {13.890498, 4.0259,   0};
+        double[] tag8 =  {13.474446, 4.745482, Math.PI / 3.0};
+        double[] tag9 =  {12.643358, 4.745482, 2 * Math.PI / 3.0};
+        double[] tag10 = {12.227306, 4.0259,   Math.PI};
         double[] tag11 = {12.643358, 3.306318, 4 * Math.PI / 3.0};
-        double[] tag17 = {4.0739, 3.3063, 4 * Math.PI / 3.0};
-        double[] tag18 = {3.6576, 4.0259, Math.PI};
-        double[] tag19 = {4.0739, 4.7455, 2 * Math.PI / 3.0};
-        double[] tag20 = {4.9047, 4.7455, Math.PI / 3.0};
-        double[] tag21 = {5.3210, 4.0259, 0};
-        double[] tag22 = {4.9047, 3.3063, 5 * Math.PI / 3.0};
+        double[] tag17 = {4.0739,    3.3063,   4 * Math.PI / 3.0};
+        double[] tag18 = {3.6576,    4.0259,   Math.PI};
+        double[] tag19 = {4.0739,    4.7455,   2 * Math.PI / 3.0};
+        double[] tag20 = {4.9047,    4.7455,   Math.PI / 3.0};
+        double[] tag21 = {5.3210,    4.0259,   0};
+        double[] tag22 = {4.9047,    3.3063,   5 * Math.PI / 3.0};
         map.put(6, tag6);
         map.put(7, tag7);
         map.put(8, tag8);
@@ -88,6 +92,7 @@ public class AlignCommand2 extends Command {
         map.put(20, tag20);
         map.put(21, tag21);
         map.put(22, tag22);
+        /* ----------------------------------------------------- */
 
         pidRotate.enableContinuousInput(-Math.PI, Math.PI);
 
@@ -100,11 +105,16 @@ public class AlignCommand2 extends Command {
         stuckCounter = 0;
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         currentPose = drive.getState().Pose;
+
+        // grab target tag from limelight to align to
         int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
         this.tid = tid;
+
+        // if tag not a reef tag ignore it
         if (map.containsKey(tid)) {
             hasTarget = true;
-            double[] pose = getAlignPos(map.get(tid), 0.6);
+            // Initial position is back ~1 coral width
+            double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.firstCoralBack);
             pidX.setSetpoint(pose[0]);
             pidY.setSetpoint(pose[1]);
             pidRotate.setSetpoint(pose[2]);
@@ -113,8 +123,6 @@ public class AlignCommand2 extends Command {
         }
         up = false;
     }
-
-    // black red yellow green right -> left
 
     /* ----------- Updaters ----------- */
 
@@ -125,16 +133,16 @@ public class AlignCommand2 extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
-        // 0.187 left, 0.448 back
-        double tagLeftOffset = 0.173;
+        double tagLeftOffset = Constants.AlignOffsets.leftReef;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.173;
+            tagLeftOffset = Constants.AlignOffsets.rightReef;
         }
-        //System.out.println(score.getPos());
+
+        // Algae
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
             algae = true;
-            tagLeftOffset = 0; // Set left offset for center
-            tagForwardOffset = 0.65; ; // Set forward offset for center
+            tagLeftOffset = Constants.AlignOffsets.algaeLeft; // Set left offset for center
+            tagForwardOffset = Constants.AlignOffsets.algaeBack; ; // Set forward offset for center
         }
 
         // Calculate rotation relative to the target position
@@ -162,32 +170,30 @@ public class AlignCommand2 extends Command {
     @Override
     public void execute() {
 
+        // Stop checking limelight pose once we lose target tag if aligning to the right
+        // this is important because the limelight cannot see the april tag the whole way on that side
         if (position == AlignPos.RIGHT && LimelightHelpers.getFiducialID("limelight-coral") != tid) {
             drive.runVision = false;
         } else {
             drive.runVision = true;
         }
 
+        // Raise elevator right away for L1-3
         if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up) {
             up = true;
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
 
         if (hasTarget) {
-            // if (algae && atSetpoint(0.08, 0.3)) {
-            //     double[] pose = getAlignPos(map.get(tid), 0.9);
-            //     pidX.setSetpoint(pose[0]);
-            //     pidY.setSetpoint(pose[1]);
-            //     pidRotate.setSetpoint(pose[2]);
-            // }
-
+            // Scoot forward to scoring position once initial target is reached
             if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
-                double[] pose = getAlignPos(map.get(tid), 0.44);
+                double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.scoreCoralBack);
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
             }
 
+            // Send elevator up if within tolerance at L4
             if (atSetpoint(0.3, 0.6)) {
                 if (score.getDesiredLevel() == 4 && !up && !score.getAlgae()) {
                     up = true;
@@ -195,6 +201,7 @@ public class AlignCommand2 extends Command {
                 }
             }
 
+            // Rumble controller to let driver know robot is ready to score
             if (atSetpoint()) {
                 controller.setRumble(RumbleType.kBothRumble, 0.5);
             } else {
@@ -203,10 +210,11 @@ public class AlignCommand2 extends Command {
             // Get the current pose of the drive system
             currentPose = drive.getState().Pose;
 
-            // Calculate the power for X direction and clamp it between -1 and 1
+            // Calculate drive power
             double powerX = pidX.calculate(currentPose.getX());
             double powerY = pidY.calculate(currentPose.getY());
 
+            // Slow down at L4
             if (score.getScoringLevel() == 4 && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
                 powerX = MathUtil.clamp(powerX, -1, 1);
                 powerY = MathUtil.clamp(powerY, -1, 1);
@@ -235,6 +243,7 @@ public class AlignCommand2 extends Command {
                 powerY *= -1;
             }
 
+            // Calculate magnitude of velocity and power
             double xVel = drive.getState().Speeds.vxMetersPerSecond;
             double yVel = drive.getState().Speeds.vyMetersPerSecond;
             double powMag = powerX * powerX + powerY * powerY;
@@ -242,9 +251,7 @@ public class AlignCommand2 extends Command {
             Logger.recordOutput("Reefscape/Align/VelMag", velMag);
             Logger.recordOutput("Reefscape/Align/PowerMag", powMag);
 
-            //System.out.println("Pow " + powMag + ", Vel " + velMag);
-            // Create a new swerve request with the calculated velocities and rotational rate
-            // 0.04, 0.001
+            // If power is above a certain threshold and velocity is near zero, must be stuck on a coral
             if (powMag > 0.3 && velMag < 0.02) {
                 stuckCounter++;
             } else {
@@ -253,6 +260,7 @@ public class AlignCommand2 extends Command {
 
             // I KILLED IT YIPPEEE
             // --- Comment this to disable coral detection ---
+            // Change arm position to account for coral
             if (stuckCounter > 5) {
                 score.setCoralInFront(true);
                 if (!up) {

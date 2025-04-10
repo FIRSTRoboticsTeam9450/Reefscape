@@ -21,7 +21,7 @@ import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
-import frc.robot.commands.AlignCommand2;
+import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
@@ -154,18 +154,20 @@ public class RobotContainer {
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
         m_driver1.leftTrigger().onTrue(new DriverIntakeCommand(m_driver1, drivetrain));
         m_driver1.leftBumper().onTrue(new RollSideSwitcher(true));
-        m_driver1.rightBumper().onTrue(new InstantCommand(() -> sprint = true)).onFalse(new InstantCommand(() -> sprint = false));
+        m_driver1.rightBumper().onTrue(new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround));
         m_driver1.x().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))
             .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
             .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
             ));
         m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
-        m_driver1.leftStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.LEFT, m_driver1));
-        m_driver1.rightStick().whileTrue(new AlignCommand2(drivetrain, AlignPos.RIGHT, m_driver1));
+        m_driver1.leftStick().whileTrue(new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1));
+        m_driver1.rightStick().whileTrue(new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1));
         m_driver1.povUp().onTrue(new ClimbCommand(0.9, 12));
-        m_driver1.povDown().onTrue(new ClimbCommand(0.300, 9).andThen(new CoordinationCommand(ScoringPos.START)));
-        m_driver1.povRight().onTrue(new ClimbCommand(0.1, 3));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.300, 12).andThen(new CoordinationCommand(ScoringPos.INTAKE_ALGAE)));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.15, 3));
+        m_driver1.povLeft().onTrue(new FieldCentricCommand(drivetrain, () -> -m_driver1.getLeftX(), () -> -m_driver1.getLeftY(), () -> 
+        m_driver1.getRightX()));
         m_driver1.start().onTrue(new InstantCommand(() -> scoreSub.toggleCoralInFront()));
 
         /* ----- Operator Driver Keybinds ----- */
@@ -208,8 +210,8 @@ public class RobotContainer {
         //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
-        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
     }
 
     public static void setLiftUp(boolean up) {

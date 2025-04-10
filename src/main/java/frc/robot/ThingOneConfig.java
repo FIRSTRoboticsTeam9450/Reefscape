@@ -23,10 +23,10 @@ public class ThingOneConfig implements RobotConfig {
         .withKP(0.1).withKI(0).withKD(0)
         .withKS(0).withKV(0.124);
     
-    double elbowOffset = -0.171875;
+    double elbowOffset = 0.32666015625;
     double elbowRatio = 92.99 / 90.0;
     
-    double elbowGroundSetpoint = -12;
+    double elbowGroundSetpoint = -6;
     double pitchGroundSetpoint = -140;
     
     double coralTriggerDistance = 115;
@@ -43,7 +43,7 @@ public class ThingOneConfig implements RobotConfig {
     double l4Elbow = 72;
     double l4Elevator = 35;
 
-    boolean runClimber = false;
+    boolean runClimber = true;
 
     @Override
     public Angle getFrontLeftOffset() {
