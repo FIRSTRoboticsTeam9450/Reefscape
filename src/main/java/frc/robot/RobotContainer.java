@@ -164,8 +164,8 @@ public class RobotContainer {
         m_driver1.leftStick().whileTrue(new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1));
         m_driver1.rightStick().whileTrue(new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1));
         m_driver1.povUp().onTrue(new ClimbCommand(0.9, 12));
-        m_driver1.povDown().onTrue(new ClimbCommand(0.300, 12).andThen(new CoordinationCommand(ScoringPos.INTAKE_ALGAE)));
-        m_driver1.povRight().onTrue(new ClimbCommand(0.15, 3));
+        m_driver1.povDown().onTrue(new ClimbCommand(0.300, 9).andThen(new CoordinationCommand(ScoringPos.START)));
+        m_driver1.povRight().onTrue(new ClimbCommand(0.1, 3));
         
         m_driver1.povLeft().toggleOnTrue(new FieldCentricCommand(drivetrain, () -> -driveBezier.getOutput(m_driver1.getLeftX()), 
             () -> -driveBezier.getOutput(m_driver1.getLeftY()), 
