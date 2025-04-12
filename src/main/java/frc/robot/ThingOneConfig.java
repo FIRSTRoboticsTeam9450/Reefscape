@@ -27,7 +27,7 @@ public class ThingOneConfig implements RobotConfig {
     double elbowRatio = 92.99 / 90.0;
     
     double elbowGroundSetpoint = -6;
-    double pitchGroundSetpoint = -140;
+    double pitchGroundSetpoint = -155;
     
     double coralTriggerDistance = 115;
     double algaeTriggerDistance = 70;
@@ -39,8 +39,8 @@ public class ThingOneConfig implements RobotConfig {
     // double l4Elbow = 82;
     // double l4Elevator = 35;
 
-    double l4Pitch = -165.63;
-    double l4Elbow = 72;
+    double l4Pitch = -182.63;
+    double l4Elbow = 87;
     double l4Elevator = 35;
 
     boolean runClimber = true;

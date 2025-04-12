@@ -138,6 +138,10 @@ public class ElevatorSubsystem extends SubsystemBase{
         if (setpoint > 15) {
             highUp = true;
         }
+        // if (setpoint > 16) {
+        //     System.out.println("Electrical gods are angry! Skip one L4/Net");
+        //     return;
+        // }
         pid.setSetpoint(setpoint);
         this.setpoint = setpoint;
         leftMotor.setControl(m_request.withPosition(setpoint + offset - 0.25));

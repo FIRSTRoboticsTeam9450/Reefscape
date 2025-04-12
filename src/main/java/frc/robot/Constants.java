@@ -108,7 +108,8 @@ public final class Constants {
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,
     PRE_L4,
-    L1_STORE
+    L1_STORE,
+    LOLIPOP_INTAKE_ALGAE
   }
 
   public enum AlignPos {

@@ -49,10 +49,10 @@ public class ScoringCommand extends Command {
 
     public void score() {
         if (scoreSub.getAlgae() || position == ScoringPos.ALGAE_STORE) {
-            if (position == ScoringPos.SCORE_NET) {
-                intake.setVoltage(-3);
-            } else {
+            if (scoreSub.getAlgaeNet()) {
                 intake.setVoltage(-10.5);
+            } else {
+                intake.setVoltage(-3);
             }
         } else if(scoreSub.getScoringLevel() == 4) {
             elev.schedule();
@@ -102,7 +102,7 @@ public class ScoringCommand extends Command {
             intake.setVoltage(0);
             if (!algae && CoordinationSubsytem.autoGround) {
                 new CoordinationCommand(ScoringPos.CORAL_STORE)
-                .andThen(new WaitCommand(1))
+                .andThen(new WaitCommand(0.65))
                 .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
                 .andThen(new DualIntakeCommand(false))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))

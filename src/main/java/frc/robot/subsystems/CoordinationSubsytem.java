@@ -56,6 +56,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet<>();
     private Set<ScoringPos> Pre_L4_Set = new HashSet<>();
     private Set<ScoringPos> L1_Store_Set = new HashSet<>();
+    private Set<ScoringPos> Lolipop_Intake_Set = new HashSet<>();
     
     boolean algae;
 
@@ -113,6 +114,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Store_Set.add(ScoringPos.INTAKE_ALGAE);
         Coral_Store_Set.add(ScoringPos.INTAKE_SOURCE);
         Coral_Store_Set.add(ScoringPos.INTAKE_VERTICAL_CORAL);
+        Coral_Store_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
         Coral_Store_Set.add(ScoringPos.ALGAEL1);
         Coral_Store_Set.add(ScoringPos.ALGAEL2);
@@ -125,6 +127,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Intake_Set.add(ScoringPos.ALGAEL1);
         Coral_Intake_Set.add(ScoringPos.ALGAEL2);
         Coral_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
+        Coral_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+
 
         Source_Intake_Set.add(ScoringPos.CORAL_STORE);
         Source_Intake_Set.add(ScoringPos.INTAKE_CORAL);
@@ -134,6 +138,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Intake_Set.add(ScoringPos.ALGAEL1);
         Algae_Intake_Set.add(ScoringPos.ALGAEL2);
         Algae_Intake_Set.add(ScoringPos.INTAKE_CORAL);
+        Algae_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
         Algae_Store_Set.add(ScoringPos.SCORE_NET);
         Algae_Store_Set.add(ScoringPos.SCORE_PROCESSOR);
@@ -143,6 +148,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Store_Set.add(ScoringPos.ALGAEL2);
         Algae_Store_Set.add(ScoringPos.GRABBED_ALGAE);
         Algae_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Algae_Store_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
         
         Coral_ScoreL1_Set.add(ScoringPos.CORAL_STORE);
         Coral_ScoreL2_Set.add(ScoringPos.CORAL_STORE);
@@ -179,6 +185,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_L1_Set.add(ScoringPos.ALGAEL2);
         Algae_L1_Set.add(ScoringPos.GO_SCORE_CORAL);
         Algae_L1_Set.add(ScoringPos.INTAKE_CORAL);
+        Algae_L1_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
         Algae_L2_Set.add(ScoringPos.ALGAE_STORE);
         Algae_L2_Set.add(ScoringPos.SCORE_PROCESSOR);
@@ -188,12 +195,12 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_L2_Set.add(ScoringPos.ALGAEL1);
         Algae_L2_Set.add(ScoringPos.GO_SCORE_CORAL);
         Algae_L2_Set.add(ScoringPos.INTAKE_CORAL);
+        Algae_L2_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
         Coral_Score_Go_Set.add(ScoringPos.CORAL_STORE);
         Coral_Score_Go_Set.add(ScoringPos.SCORE_CORAL);
         Coral_Score_Go_Set.add(ScoringPos.GO_SCORE_CORAL);
         Coral_Score_Go_Set.add(ScoringPos.ScoreL4);
-
 
         Algae_Grabbed_Set.add(ScoringPos.ALGAE_STORE);
         Algae_Grabbed_Set.add(ScoringPos.CORAL_STORE);
@@ -202,6 +209,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Grabbed_Set.add(ScoringPos.ALGAEL2);
         Algae_Grabbed_Set.add(ScoringPos.INTAKE_ALGAE);
         Algae_Grabbed_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Algae_Grabbed_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
         Coral_Intake_Vertical_Set.add(ScoringPos.CORAL_STORE);
         Coral_Intake_Vertical_Set.add(ScoringPos.START);
@@ -214,6 +222,13 @@ public class CoordinationSubsytem extends SubsystemBase{
         L1_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
         L1_Store_Set.add(ScoringPos.INTAKE_CORAL);
 
+        Lolipop_Intake_Set.add(ScoringPos.CORAL_STORE);
+        Lolipop_Intake_Set.add(ScoringPos.INTAKE_CORAL);
+        Lolipop_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
+        Lolipop_Intake_Set.add(ScoringPos.ALGAEL1);
+        Lolipop_Intake_Set.add(ScoringPos.ALGAEL2);
+        Lolipop_Intake_Set.add(ScoringPos.ALGAE_STORE);
+
         allowedPaths.put(ScoringPos.START, Start_Set);
 
         allowedPaths.put(ScoringPos.CORAL_STORE, Coral_Store_Set);
@@ -223,6 +238,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         allowedPaths.put(ScoringPos.INTAKE_SOURCE, Source_Intake_Set);
 
         allowedPaths.put(ScoringPos.INTAKE_ALGAE, Algae_Intake_Set);
+        allowedPaths.put(ScoringPos.LOLIPOP_INTAKE_ALGAE, Lolipop_Intake_Set);
 
         allowedPaths.put(ScoringPos.ALGAE_STORE, Algae_Store_Set);
 
@@ -268,6 +284,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint || debugging.currentPos) {
             debugger();
         }
+        Logger.recordOutput("Reefscape/Scoring/AutoIntakeMode", autoGround);
     }
 
 
@@ -315,6 +332,8 @@ public class CoordinationSubsytem extends SubsystemBase{
             goToIntakeVertical();
         } else if (pos == ScoringPos.PRE_L4) {
             goToPreL4();
+        } else if (pos == ScoringPos.LOLIPOP_INTAKE_ALGAE) {
+            goToLolipopAlgae();
         }
 
     }
@@ -503,6 +522,28 @@ public class CoordinationSubsytem extends SubsystemBase{
         algae = true;
         DW.setPitchSetpoint(-100);
         Elbow.setSetpoint(-5);
+        Elev.setSetpoint(0);
+        DW.setRollSetpoint(0);
+
+
+        // DW.setPitchSetpoint(-129);
+        // DW.setRollSetpoint(0);
+        // Elbow.setSetpoint(0);
+        // Elev.setSetpoint(0);
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    public void goToLolipopAlgae() {
+        algae = true;
+        DW.setPitchSetpoint(-100);
+        Elbow.setSetpoint(20);
         Elev.setSetpoint(0);
         DW.setRollSetpoint(0);
 
