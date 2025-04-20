@@ -73,15 +73,15 @@ public class AlignHelper {
 
 		// Forward offset: 0.45561842367428596
 		// Left offset: 0.15651825866830574
-		double tagForwardOffset = 0.44;
-		double tagLeftOffset = 0.173;
+		double tagForwardOffset = Constants.AlignOffsets.scoreCoralBack;
+        double tagLeftOffset = Constants.AlignOffsets.leftReef;
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = -0.173;
+            tagLeftOffset = Constants.AlignOffsets.rightReef;
         }
         //System.out.println(score.getPos());
         if (position == AlignPos.CENTER) {
-            tagLeftOffset = 0; // Set left offset for center
-            tagForwardOffset = 0.75; ; // Set forward offset for center
+            tagLeftOffset = Constants.AlignOffsets.algaeLeft; // Set left offset for center
+            tagForwardOffset = Constants.AlignOffsets.algaeBack; ; // Set forward offset for center
         }
 
         // Calculate rotation relative to the target position

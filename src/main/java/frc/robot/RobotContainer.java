@@ -48,7 +48,7 @@ public class RobotContainer {
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
     // Normal top speed
-    private static double DefaultMaxSpeed = 4.369;
+    private static double DefaultMaxSpeed = 5.14;
     private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
