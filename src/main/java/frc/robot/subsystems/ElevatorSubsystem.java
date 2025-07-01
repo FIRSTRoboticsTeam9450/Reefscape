@@ -8,6 +8,7 @@ import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.Follower;
+import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
 import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -47,11 +48,12 @@ public class ElevatorSubsystem extends SubsystemBase{
     private boolean resetDone;
     private boolean inMove;
 
-    double velocity = 75;
-    double acceleration = 160;
+    double velocity = 40; //75
+    double acceleration = 40; // 160
     double jerk = 1000;
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
-
+    MotionMagicVelocityVoltage v_request = new MotionMagicVelocityVoltage(velocity);
+            
     double currentLimit = 80;
     double kS = 0.25; // Add 0.25 V output to overcome static friction
     double kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
@@ -82,7 +84,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config2.CurrentLimits.StatorCurrentLimitEnable = true;
         config2.CurrentLimits.StatorCurrentLimit = 80;
-        temp2.apply(config2);
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }
@@ -103,6 +104,10 @@ public class ElevatorSubsystem extends SubsystemBase{
         slot0Configs.kI = kI; // no output for integrated error
         slot0Configs.kD = kD; // A velocity error of 1 rps results in 0.1 V output
         slot0Configs.kG = kG; // for gravity
+
+        var motionMagicConfigs = config1.MotionMagic;
+        motionMagicConfigs.MotionMagicAcceleration = 40;
+        motionMagicConfigs.MotionMagicJerk = 0;
 
         temp1.apply(config1);
 
@@ -135,26 +140,31 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     final int STATESIZE = RESETDONE+1;
     boolean[] state = new boolean[STATESIZE];
+    boolean flag = true;
 
 
     @Override
     public void periodic() {
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
-
+        
         boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         if (!resetDone && atLimit){
             offset =  rawPosition;
             resetDone = true;
         }
-       
-        if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
-            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
-            System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
+
+        // if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
+        //     //m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
+        //     v_request = new MotionMagicVelocityVoltage(velocity);
+        //     System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
+        // }
+
+        //leftMotor.setControl(m_request.withPosition(setpoint + offset));
+        if(flag) {
+            leftMotor.setControl(v_request.withVelocity(40));
+            flag = false;
         }
-
-        leftMotor.setControl(m_request.withPosition(setpoint + offset));
-
         atSetpoint = Math.abs(position - setpoint) < .3;
         double currTime = Timer.getFPGATimestamp();
         if (!atSetpoint){
@@ -215,6 +225,21 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     public double getSetpoint() {
         return setpoint;
+    }
+
+    public void updateMotionMagic(double multiplier) {
+        if(multiplier < 0) {
+            velocity = -20;
+        }
+        else if(multiplier == 0) {
+            velocity = 0;
+        }
+        else{
+            velocity = 20;
+        }
+        //velocity = 40 * multiplier;
+        System.out.println();
+        //acceleration = 125 * multiplier;
     }
 
     private double dynamicUpdate(String desc, double current){

@@ -28,6 +28,7 @@ import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.GoToScorePosCommand;
+import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.OuttakeCommand;
 import frc.robot.commands.ResetIMUCommand;
@@ -119,7 +120,8 @@ public class RobotContainer {
         );
 
         scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
-        
+        elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
+
         m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
