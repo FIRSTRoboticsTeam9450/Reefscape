@@ -203,10 +203,10 @@ public class RobotContainer {
         // m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         // m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
-        m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
-        m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
-        m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
-        m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
+        // m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
+        // m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
+        // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
+        // m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
         
         m_driver2.y().onTrue(new ElevatorCommand(38));
         m_driver2.x().onTrue(new ElevatorCommand(26));
