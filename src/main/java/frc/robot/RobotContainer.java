@@ -25,6 +25,8 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
+import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorCommandRelative;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.GoToScorePosCommand;
 import frc.robot.commands.ManualPitchCommand;
@@ -106,7 +108,6 @@ public class RobotContainer {
     }
 
     private void configureBindings() {
-        elevator.setController(m_driver1);
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
         drivetrain.setDefaultCommand(
@@ -188,27 +189,37 @@ public class RobotContainer {
          * D-pad Down = Intake Algae Ground
          */
 
-        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
-        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
-        m_driver2.leftBumper().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
+        // m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        // m_driver2.leftTrigger().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
+        // m_driver2.leftBumper().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
         //m_driver2.rightBumper().onTrue(new RollSideSwitcher());
-        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         
-        m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
-        m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        // m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        // m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        // m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        // m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
-        m_driver2.rightStick().onTrue(new ClimbCommand(0.91, 12));
-        m_driver2.leftStick().onTrue(new OuttakeCommand());
+        m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
+        m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
+        m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
+        m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
+        
+        m_driver2.y().onTrue(new ElevatorCommand(38));
+        m_driver2.x().onTrue(new ElevatorCommand(26));
+        m_driver2.b().onTrue(new ElevatorCommand(13));
+        m_driver2.a().onTrue(new ElevatorCommand(0));
+
+        // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
+        // m_driver2.leftStick().onTrue(new OuttakeCommand());
 
         /* ----- Commands not currently in use ----- */
         
         // SOURCE INTAKE
-        m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
+        // m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
     
         // VERTICAL CORAL
         //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));

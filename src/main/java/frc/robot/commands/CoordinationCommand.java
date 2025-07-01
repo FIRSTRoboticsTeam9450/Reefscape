@@ -44,7 +44,6 @@ public class CoordinationCommand extends Command {
 
     @Override
     public void initialize() {
-        elev.setFast();
         currentPos = CT.getPos(); 
         boolean validPath = false;
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);

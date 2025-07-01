@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj.livewindow.LiveWindow;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.robot.subsystems.ElevatorSubsystem;
 
 import org.littletonrobotics.junction.LoggedRobot;
 import org.littletonrobotics.junction.Logger;
@@ -27,6 +28,7 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
+  private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
 
   //public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
 
@@ -47,6 +49,8 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     m_robotContainer.driveBezier.dashboardInitialSettings();
     m_robotContainer.rotateBezier.dashboardInitialSettings();
+    elev.putParams();
+
   }
 
   @Override
@@ -87,6 +91,9 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    elev.updateParams();
+
+
   }
 
   @Override
