@@ -48,20 +48,26 @@ public class ElevatorSubsystem extends SubsystemBase{
     private boolean resetDone;
     private boolean inMove;
 
-    double velocity = 40; //75
-    double acceleration = 40; // 160
+    double velocity = 75; //75
+    double acceleration = 350; // 160
     double jerk = 1000;
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
-    MotionMagicVelocityVoltage v_request = new MotionMagicVelocityVoltage(velocity);
             
     double currentLimit = 80;
-    double kS = 0.25; // Add 0.25 V output to overcome static friction
-    double kV = 0.12; // A velocity target of 1 rps results in 0.12 V output
-    double kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output
-    double kP = 3.8; // A position error of 2.5 rotations results in 12 V output
-    double kI = 0; // no output for integrated error
-    double kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
-    double kG = .001; // was originally left to default. this was added so it could be updated
+    double kS = 0.6; // Add 0.25 V output to overcome static friction .25
+    double kV = 0.1; // A velocity target of 1 rps results in 0.12 V output .12
+    double kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output .01
+    double kP = 2; // A position error of 2.5 rotations results in 12 V output 3.8
+    double kI = 0; // no output for integrated error 0
+    double kD = 0.0; // A velocity error of 1 rps results in 0.1 V output 0.1
+    double kG = 0.45; // was originally left to default. this was added so it could be updated 0.55
+
+    // kg is always applied, it counters gravity. 
+    //     start low and increase until the elevator slowly creeps up, then backoff
+    // ks is applied when starting to move (static resistance) both up and down
+    //     when starting to move this will enable it get going then it is removed
+    // kv is multiplied by desired velocity
+    // ka is multi
     private CANdi candi = new CANdi(ElevatorIDs.kCANdiID, "CantDrive");
 
     public static ElevatorSubsystem getInstance() {
@@ -141,7 +147,7 @@ public class ElevatorSubsystem extends SubsystemBase{
     final int STATESIZE = RESETDONE+1;
     boolean[] state = new boolean[STATESIZE];
     boolean flag = true;
-
+    boolean flag2 = true;
 
     @Override
     public void periodic() {
@@ -154,17 +160,13 @@ public class ElevatorSubsystem extends SubsystemBase{
             resetDone = true;
         }
 
-        // if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
-        //     //m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
-        //     v_request = new MotionMagicVelocityVoltage(velocity);
-        //     System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
-        // }
-
-        //leftMotor.setControl(m_request.withPosition(setpoint + offset));
-        if(flag) {
-            leftMotor.setControl(v_request.withVelocity(40));
-            flag = false;
+        if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
+            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
+            System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
+
+        leftMotor.setControl(m_request.withPosition(setpoint + offset));
+        
         atSetpoint = Math.abs(position - setpoint) < .3;
         double currTime = Timer.getFPGATimestamp();
         if (!atSetpoint){
@@ -228,15 +230,15 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public void updateMotionMagic(double multiplier) {
-        if(multiplier < 0) {
-            velocity = -20;
-        }
-        else if(multiplier == 0) {
-            velocity = 0;
-        }
-        else{
-            velocity = 20;
-        }
+        // if(multiplier < 0) {
+        //     velocity = -20;
+        // }
+        // else if(multiplier == 0) {
+        //     velocity = 0;
+        // }
+        // else{
+        //     velocity = 20;
+        // }
         //velocity = 40 * multiplier;
         System.out.println();
         //acceleration = 125 * multiplier;
