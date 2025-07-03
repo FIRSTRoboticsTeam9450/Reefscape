@@ -48,18 +48,19 @@ public class ElevatorSubsystem extends SubsystemBase{
     private boolean resetDone;
     private boolean inMove;
 
-    double velocity = 75; //75
-    double acceleration = 250; // 160
-    double jerk = 1000;
-    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true);
-    double currentLimit = 120;
-    double kS = 0.6; // Add 0.25 V output to overcome static friction .25
-    double kV = 0.1875; // A velocity target of 1 rps results in 0.12 V output .12
-    double kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output .01
-    double kP = 2; // A position error of 2.5 rotations results in 12 V output 3.8
+    // 0.82 is the record going up and down
+    double velocity = 90; //77 is closest to max velocity time: 0.82
+    double acceleration = 270; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
+    double jerk = 1000; // Make sure it's not 0 because the arm hit something
+    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); FOC slowed us down from 0.82 to 0.84
+    double currentLimit = 110; // 100 is the max stator current pull
+    double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
+    double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
+    double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
+    double kP = 3; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
     double kI = 0; // no output for integrated error 0
-    double kD = 0.0; // A velocity error of 1 rps results in 0.1 V output 0.1
-    double kG = 0.45; // was originally left to default. this was added so it could be updated 0.55
+    double kD = 0.12; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
+    double kG = 0.45; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
 
     // kg is always applied, it counters gravity. 
     //     start low and increase until the elevator slowly creeps up, then backoff
@@ -88,7 +89,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         config2.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config2.CurrentLimits.StatorCurrentLimitEnable = true;
-        config2.CurrentLimits.StatorCurrentLimit = 80;
+        config2.CurrentLimits.StatorCurrentLimit = currentLimit;
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }
@@ -137,6 +138,10 @@ public class ElevatorSubsystem extends SubsystemBase{
     int motionIndexBig = HISTORY; // start at 2 so prevIndex = motionIndex-2 is not a problem
     
     double[][] motion = new double[HISTORY][MOTIONSIZE];
+    double[] motionAdj = new double[MOTIONSIZE];
+
+    int adjustSize = 9;
+    int[] indices = new int[adjustSize];
 
     final int ATLIMIT = 0;
     final int HIGHUP = 1;
@@ -160,7 +165,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
 
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
-            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true);
+            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); FOC slowed us down from 0.82 to 0.84
             System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
 
@@ -201,8 +206,34 @@ public class ElevatorSubsystem extends SubsystemBase{
             motion[motionIndex][MOVETIME]  = moveTime;
 
             // motion[motionIndex][OFFSET] = (motion[motionIndex][ACCEL]+motion[prevIndex][ACCEL])/2.0;
+
+            if (motionIndexBig>adjustSize){
+                for (int i=0; i<adjustSize; i++){
+                    indices[i] = (motionIndexBig-i) % HISTORY;
+                }
+                int middleIndex = indices[(adjustSize+1)/2];
+
+                for (int j=0; j<MOTIONSIZE; j++){
+                    motionAdj[j] = motion[middleIndex][j];
+                }
+                
+                motionAdj[SPEED] = 0;
+                motionAdj[ACCEL] = 0;
+                motionAdj[JERK] = 0;
+
+                for (int j=0; j<adjustSize; j++){
+                    motionAdj[SPEED] += motion[indices[j]][SPEED];
+                    motionAdj[ACCEL] += motion[indices[j]][ACCEL];
+                    motionAdj[JERK] += motion[indices[j]][JERK];
+                }
+                motionAdj[SPEED] /= adjustSize;
+                motionAdj[ACCEL] /= adjustSize;
+                motionAdj[JERK] /= adjustSize;
+                Logger.recordOutput("elev/motionAdj", motionAdj);
+                
+            }
             Logger.recordOutput("elev/motion", motion[motionIndex]);
-            Logger.recordOutput("elev/Amp", leftMotor.getStatorCurrent().getValueAsDouble());
+            Logger.recordOutput("elev/Stator", leftMotor.getStatorCurrent().getValueAsDouble());
             Logger.recordOutput("elev/Supply", leftMotor.getSupplyCurrent().getValueAsDouble());
             state[ATLIMIT] = atLimit;
             state[ATSETPOINT] = atSetpoint;

@@ -25,6 +25,7 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
+import frc.robot.commands.ElbowCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.GoToScorePosCommand;
@@ -150,7 +151,7 @@ public class RobotContainer {
          * Right Stick = Rotate/Align Right
          * D-pad Up = Deploy Climber
          * D-pad Down = Climb
-         * D-pad Right = Store Climber
+         * D-pad Right = Store Climber 
          */
         
         m_driver1.rightTrigger().onTrue(new ScoringCommand());
@@ -209,10 +210,15 @@ public class RobotContainer {
         // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
         // m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
         
-        m_driver2.y().onTrue(new ElevatorCommand(38));
-        m_driver2.x().onTrue(new ElevatorCommand(26));
-        m_driver2.b().onTrue(new ElevatorCommand(13));
-        m_driver2.a().onTrue(new ElevatorCommand(0));
+        m_driver2.y().onTrue(new ElbowCommand(8.78));
+        m_driver2.x().onTrue(new ElbowCommand(26));
+        m_driver2.b().onTrue(new ElbowCommand(50));
+        m_driver2.a().onTrue(new ElbowCommand(100.81));
+
+        // m_driver2.y().onTrue(new ElevatorCommand(38));
+        // m_driver2.x().onTrue(new ElevatorCommand(26));
+        // m_driver2.b().onTrue(new ElevatorCommand(13));
+        // m_driver2.a().onTrue(new ElevatorCommand(0));
 
         // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
         // m_driver2.leftStick().onTrue(new OuttakeCommand());
