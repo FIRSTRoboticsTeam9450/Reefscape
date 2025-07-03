@@ -49,13 +49,12 @@ public class ElevatorSubsystem extends SubsystemBase{
     private boolean inMove;
 
     double velocity = 75; //75
-    double acceleration = 350; // 160
+    double acceleration = 250; // 160
     double jerk = 1000;
-    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
-            
-    double currentLimit = 80;
+    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true);
+    double currentLimit = 120;
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25
-    double kV = 0.1; // A velocity target of 1 rps results in 0.12 V output .12
+    double kV = 0.1875; // A velocity target of 1 rps results in 0.12 V output .12
     double kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output .01
     double kP = 2; // A position error of 2.5 rotations results in 12 V output 3.8
     double kI = 0; // no output for integrated error 0
@@ -135,8 +134,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     // save the last 10 entries for use later
     // HISTORY can be reduced to 2 if desired
     final int HISTORY = 10;  
-    int motionIndex = 0;
-
+    int motionIndexBig = HISTORY; // start at 2 so prevIndex = motionIndex-2 is not a problem
+    
     double[][] motion = new double[HISTORY][MOTIONSIZE];
 
     final int ATLIMIT = 0;
@@ -161,7 +160,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
 
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
-            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
+            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true);
             System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
 
@@ -187,8 +186,9 @@ public class ElevatorSubsystem extends SubsystemBase{
         RobotContainer.setLiftUp(highUp); 
         
         {
-            int prevIndex = motionIndex;
-            motionIndex = (++motionIndex) % HISTORY;
+            motionIndexBig++;
+            int prevIndex = (motionIndexBig-1) % HISTORY;
+            int motionIndex = motionIndexBig % HISTORY;
             
             motion[motionIndex][TIME]      = currTime;
             motion[motionIndex][DELTATIME] = motion[motionIndex][TIME] - motion[prevIndex][TIME];
@@ -202,7 +202,8 @@ public class ElevatorSubsystem extends SubsystemBase{
 
             // motion[motionIndex][OFFSET] = (motion[motionIndex][ACCEL]+motion[prevIndex][ACCEL])/2.0;
             Logger.recordOutput("elev/motion", motion[motionIndex]);
-
+            Logger.recordOutput("elev/Amp", leftMotor.getStatorCurrent().getValueAsDouble());
+            Logger.recordOutput("elev/Supply", leftMotor.getSupplyCurrent().getValueAsDouble());
             state[ATLIMIT] = atLimit;
             state[ATSETPOINT] = atSetpoint;
             state[HIGHUP] = highUp;
@@ -240,7 +241,6 @@ public class ElevatorSubsystem extends SubsystemBase{
         //     velocity = 20;
         // }
         //velocity = 40 * multiplier;
-        System.out.println();
         //acceleration = 125 * multiplier;
     }
 
