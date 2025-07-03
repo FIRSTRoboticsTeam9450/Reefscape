@@ -112,8 +112,9 @@ public class ElevatorSubsystem extends SubsystemBase{
         slot0Configs.kG = kG; // for gravity
 
         var motionMagicConfigs = config1.MotionMagic;
-        motionMagicConfigs.MotionMagicAcceleration = 40;
-        motionMagicConfigs.MotionMagicJerk = 0;
+        motionMagicConfigs.MotionMagicCruiseVelocity = velocity;
+        motionMagicConfigs.MotionMagicAcceleration = acceleration;
+        motionMagicConfigs.MotionMagicJerk = jerk;
 
         temp1.apply(config1);
 
