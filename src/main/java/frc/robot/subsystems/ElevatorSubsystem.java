@@ -130,7 +130,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     final int OFFSET = 6;
     final int SETPOINT = 7;
     final int MOVETIME = 8;
-    final int MOTIONSIZE = MOVETIME+1;
+    final int SMOOTHACCEL = MOVETIME+1;
+    final int MOTIONSIZE = MOVETIME+2;
 
     // save the last 10 entries for use later
     // HISTORY can be reduced to 2 if desired
@@ -149,8 +150,15 @@ public class ElevatorSubsystem extends SubsystemBase{
     boolean flag = true;
     boolean flag2 = true;
 
+    int index = 0;
+    double[] l = {0,0,0,0,0,0,0,0,0,0};
+    
+    int c = 0;
+    int log = 0;
     @Override
     public void periodic() {
+        log++;
+        log%=1;
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
         
@@ -187,6 +195,7 @@ public class ElevatorSubsystem extends SubsystemBase{
         RobotContainer.setLiftUp(highUp); 
         
         {
+            if(log==0){
             int prevIndex = motionIndex;
             motionIndex = (++motionIndex) % HISTORY;
             
@@ -200,9 +209,17 @@ public class ElevatorSubsystem extends SubsystemBase{
             motion[motionIndex][SETPOINT]  = setpoint;
             motion[motionIndex][MOVETIME]  = moveTime;
 
+            
+            index ++;
+            index = index % 10;
+            c-=l[index];
+            l[index] = motion[motionIndex][ACCEL];
+            c += motion[motionIndex][ACCEL];
+            motion[motionIndex][SMOOTHACCEL]  = c/10;
+
             // motion[motionIndex][OFFSET] = (motion[motionIndex][ACCEL]+motion[prevIndex][ACCEL])/2.0;
             Logger.recordOutput("elev/motion", motion[motionIndex]);
-
+            }
             state[ATLIMIT] = atLimit;
             state[ATSETPOINT] = atSetpoint;
             state[HIGHUP] = highUp;
