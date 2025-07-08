@@ -22,7 +22,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(5, 0, 0);
+    private PIDController pitchPID = new PIDController(4, 0, 0.25);
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
@@ -45,6 +45,22 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     private int pitchDeadCounter;
     private int rollDeadCounter;
+
+    /*
+     * Setpoints Y
+     * Positions Y (already gotten)
+     * Accel? Y
+     * Veloc? Y
+     */
+
+    double pitchSetpoint;
+    double rollSetpoint;
+    
+    double leftAccel;
+    double rightAccel;
+
+    double leftVeloc;
+    double rightVeloc;
 
     // Variables
     private boolean runPID = true;
@@ -118,17 +134,35 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
+
         pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
         rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
+
+        pitchSetpoint = getPitchSetpoint();
+        rollSetpoint = getRollSetpoint();
+
+        leftAccel = leftMotor.getAcceleration().getValueAsDouble();
+        rightAccel = rightMotor.getAcceleration().getValueAsDouble();
+
+        leftVeloc = leftMotor.getVelocity().getValueAsDouble();
+        rightVeloc = rightMotor.getVelocity().getValueAsDouble();
+        
         if (runPID) {
             updatePID(pitchPos, rollPos);
         }
-        if (debugging.CoordPositionDebugging) {
-            Logger.recordOutput("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
-            Logger.recordOutput("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
-            Logger.recordOutput("Reefscape/DiffWrist/pitchPID Setpoint", getPitchSetpoint());
-            Logger.recordOutput("Reefscape/DiffWrist/rollPID Setpoint", getRollSetpoint());
+        if (debugging.DiffyTuningValues) {
+            Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
+            Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
+            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
+            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
+            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
+            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360);
+            Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
+            Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
+            Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
+            Logger.recordOutput("Diffy Tuning/Right Motor Velco", rightVeloc);
         }
 
     }

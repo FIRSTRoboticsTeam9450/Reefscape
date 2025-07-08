@@ -12,46 +12,34 @@ public class DiffWristCommand extends Command {
     private DiffWristSubsystem DW = DiffWristSubsystem.getInstance();
 
     /* ----- Variables ----- */
-    private double leftVoltage;
-    private double rightVoltage;
-    private double setpoint;
-    private boolean pitchPID = false;
+    private double rollSetpoint;
+    private double pitchSetpoint;
+
 
     /* ----------- Initialization ----------- */
 
     /**
-     * Sets the voltage of both motors on the Differental Wrist
-     * @param leftVoltage voltage for the left motor to be set to
-     * @param rightVoltage Voltage for the right motor to be set to
+     * Sets the setpoints of both motors on the Differental Wrist
+     * @param rollSetpoint setpoint for the roll to go to
+     * @param pitchSetpoint setpoint for the pitch to go to
      */
-    public DiffWristCommand(double leftVoltage, double rightVoltage) {
-        this.leftVoltage = leftVoltage;
-        this.rightVoltage = rightVoltage;
+    public DiffWristCommand(double rollSetpoint, double pitchSetpoint) {
+        this.rollSetpoint = rollSetpoint;
+        this.pitchSetpoint = pitchSetpoint;
     }
 
     /**
      * Will set one of the two PIDs on the Different wrist to the given setpoint
      * @param setpoint setpoint to go to
-     * @param pitchPID True if for the roll PID, false if for the Yaw pid
+     * @param pitchPID True if for the roll PID, false if for the Pitch pid
      */
-    public DiffWristCommand(double setpoint, boolean pitchPID) {
-        this.setpoint = setpoint;
-        this.pitchPID = pitchPID;
-    }
+
 
     @Override
     public void initialize() {
         addRequirements(DW);
-        boolean runPID = DW.getIfDoingPIDS();
-        if (runPID) {
-            if (pitchPID) {
-                DW.setPitchSetpoint(setpoint);
-            } else {
-                DW.setRollSetpoint(setpoint);
-            }
-        } else {
-            DW.setVoltage(leftVoltage, rightVoltage);
-        }
+        DW.setRollSetpoint(rollSetpoint);
+        DW.setPitchSetpoint(pitchSetpoint);
     }
 
     /* ----------- Finishers ----------- */

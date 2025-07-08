@@ -74,7 +74,7 @@ public class ElbowSubsystem extends SubsystemBase {
         cc_cfg.MagnetSensor.MagnetOffset = Constants.robotConfig.getElbowOffset();
         encoder.getConfigurator().apply(cc_cfg);
 
-        setSetpoint(0);
+        setSetpoint(50);
     }
 
     public void motorConfig() {

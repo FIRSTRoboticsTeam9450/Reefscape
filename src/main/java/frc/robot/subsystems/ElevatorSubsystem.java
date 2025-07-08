@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.BaseStatusSignal;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -69,6 +70,11 @@ public class ElevatorSubsystem extends SubsystemBase{
     // kv is multiplied by desired velocity
     // ka is multi
     private CANdi candi = new CANdi(ElevatorIDs.kCANdiID, "CantDrive");
+
+    private double cachedPosition = 0;
+    private double cachedVelocity = 0;
+    private double cachedAcceleration = 0;
+    private double cachedMotorVoltage = 0;
 
     public static ElevatorSubsystem getInstance() {
         if (elev == null) {
@@ -156,6 +162,9 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+
+        BaseStatusSignal.refreshAll(leftMotor.getPosition(), leftMotor.getAcceleration(), leftMotor.getVelocity(), leftMotor.getMotorVoltage());
+
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
         
@@ -242,6 +251,17 @@ public class ElevatorSubsystem extends SubsystemBase{
             state[RESETDONE] = resetDone;
             Logger.recordOutput("elev/state", state);
         }
+
+        cachedPosition = leftMotor.getPosition().getValueAsDouble();
+        cachedVelocity = leftMotor.getVelocity().getValueAsDouble();
+        cachedAcceleration = leftMotor.getAcceleration().getValueAsDouble();
+        cachedMotorVoltage = leftMotor.getMotorVoltage().getValueAsDouble();
+        
+        Logger.recordOutput("Status Signal Testing/ElevL Position", cachedPosition);
+        Logger.recordOutput("Status Signal Testing/ElevL Velocity", cachedVelocity);
+        Logger.recordOutput("Status Signal Testing/ElevL Acceleration", cachedAcceleration);
+        Logger.recordOutput("Status Signal Testing/ElevL Motor Voltage", cachedMotorVoltage);
+
     }
 
     /* ----- Getters & Setters ----- */

@@ -43,6 +43,7 @@ import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.commands.CoordinationCommand;
+import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
@@ -210,15 +211,20 @@ public class RobotContainer {
         // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
         // m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
         
-        m_driver2.y().onTrue(new ElbowCommand(8.78));
-        m_driver2.x().onTrue(new ElbowCommand(26));
-        m_driver2.b().onTrue(new ElbowCommand(50));
-        m_driver2.a().onTrue(new ElbowCommand(100.81));
+        // m_driver2.y().onTrue(new ElbowCommand(8.78));
+        // m_driver2.x().onTrue(new ElbowCommand(26));
+        // m_driver2.b().onTrue(new ElbowCommand(50));
+        // m_driver2.a().onTrue(new ElbowCommand(100.81));
 
         // m_driver2.y().onTrue(new ElevatorCommand(38));
         // m_driver2.x().onTrue(new ElevatorCommand(26));
         // m_driver2.b().onTrue(new ElevatorCommand(13));
         // m_driver2.a().onTrue(new ElevatorCommand(0));
+
+        m_driver2.y().onTrue(new DiffWristCommand(0, -60));
+        m_driver2.x().onTrue(new DiffWristCommand(90, -90));
+        m_driver2.b().onTrue(new DiffWristCommand(-90, -90));
+        m_driver2.a().onTrue(new DiffWristCommand(0, -120));
 
         // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
         // m_driver2.leftStick().onTrue(new OuttakeCommand());
