@@ -49,25 +49,25 @@ public class ElbowSubsystem extends SubsystemBase {
     private double position;
     private final double offsetToZeroDegrees = -110.3;
     // Not used currently
-    double velocity = 6; //77 is closest to max velocity time: 0.82
-    double acceleration = 5; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
-    double jerk = 256; // Make sure it's not 0 because the arm hit something
+    double velocity = 18; //6 is closest to max velocity time: 0.82
+    double acceleration = 11; // 5 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
+    double jerk = 400; //256 Make sure it's not 0 because the arm hit something
 
     double currentLimit = 110; // 100 is the max stator current pull
     double kS = 0; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
-    double kV = 0.32; // A velocity target of 1 rps results in 0.12 V output .12
-    double kA = 0.01; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
-    double kP = 80; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
-    double kI = 0; // no output for integrated error 0
-    double kD = 0.1; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
-    double kG = 0;
+    double kV = 0.33; //0.32 A velocity target of 1 rps results in 0.12 V output .12
+    double kA = 0.05; //0.01 An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
+    double kP = 90; //80 A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
+    double kI = 0.001; //0 no output for integrated error 0
+    double kD = 0.35; //0.1 A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
+    double kG = 0.001;
     // Add kG with arm setting later
     
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0,velocity,acceleration,jerk);
 
     Log logger;
     private ElbowSubsystem() {
-        logger = new Log("elbow", motor, 0, 0.32, 0.01, 80, 0, 0.1, 0, 6, 5, 256, 110);
+        logger = new Log("elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;

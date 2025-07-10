@@ -214,12 +214,12 @@ public class RobotContainer {
         // m_driver2.y().onTrue(new ElbowCommand(8.78));
         // m_driver2.x().onTrue(new ElbowCommand(26));
         // m_driver2.b().onTrue(new ElbowCommand(50));
-        // m_driver2.a().onTrue(new ElbowCommand(100.81));
+        // m_driver2.a().onTrue(new ElbowCommand(89));
 
-        // m_driver2.y().onTrue(new ElevatorCommand(38));
-        // m_driver2.x().onTrue(new ElevatorCommand(26));
-        // m_driver2.b().onTrue(new ElevatorCommand(13));
-        // m_driver2.a().onTrue(new ElevatorCommand(0));
+        // m_driver2.povUp().onTrue(new ElevatorCommand(38));
+        // m_driver2.povRight().onTrue(new ElevatorCommand(26));
+        // m_driver2.povLeft().onTrue(new ElevatorCommand(13));
+        // m_driver2.povDown().onTrue(new ElevatorCommand(0));
 
         // m_driver2.y().onTrue(new DiffWristCommand(0, -60));
         // m_driver2.x().onTrue(new DiffWristCommand(90, -90));
