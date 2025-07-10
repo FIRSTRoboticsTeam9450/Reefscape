@@ -192,19 +192,19 @@ public class RobotContainer {
          * D-pad Down = Intake Algae Ground
          */
 
-        // m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
-        // m_driver2.leftTrigger().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
-        // m_driver2.leftBumper().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
-        //m_driver2.rightBumper().onTrue(new RollSideSwitcher());
-        // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        m_driver2.leftTrigger().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
+        m_driver2.leftBumper().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
+        // m_driver2.rightBumper().onTrue(new RollSideSwitcher());
+        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         
-        // m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        // m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        // m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
-        // m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
         // m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
         // m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
@@ -221,10 +221,10 @@ public class RobotContainer {
         // m_driver2.b().onTrue(new ElevatorCommand(13));
         // m_driver2.a().onTrue(new ElevatorCommand(0));
 
-        m_driver2.y().onTrue(new DiffWristCommand(0, -60));
-        m_driver2.x().onTrue(new DiffWristCommand(90, -90));
-        m_driver2.b().onTrue(new DiffWristCommand(-90, -90));
-        m_driver2.a().onTrue(new DiffWristCommand(0, -120));
+        // m_driver2.y().onTrue(new DiffWristCommand(0, -60));
+        // m_driver2.x().onTrue(new DiffWristCommand(90, -90));
+        // m_driver2.b().onTrue(new DiffWristCommand(-90, -90));
+        // m_driver2.a().onTrue(new DiffWristCommand(0, -120));
 
         // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
         // m_driver2.leftStick().onTrue(new OuttakeCommand());

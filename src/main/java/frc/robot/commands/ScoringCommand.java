@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -29,12 +31,14 @@ public class ScoringCommand extends Command {
     private boolean algae;
     private double coralTriggerDistance = Constants.robotConfig.getCoralTriggerDistance();
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+    private double runDelay;
     private boolean running;
 
     /* ----------- Initialization ----------- */
 
     @Override
     public void initialize() {
+        runDelay = 0;
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
         if (scoreSub.getPos() != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
@@ -68,10 +72,16 @@ public class ScoringCommand extends Command {
 
     @Override
     public void execute() {
-        if (running && scoreSub.getAllAtSetpoints()) {
-            score();
-            running = false;
+        if (runDelay > 20) {
+            if (running && scoreSub.getAllAtSetpoints()) {
+                score();
+                running = false;
+            }
+        } else {
+            scoreSub.checkAllAtSetpoints();
+            runDelay++;
         }
+        Logger.recordOutput("Reefscape/Debugging/Scoring Run Delay", runDelay);
     }
 
     /* ----------- Finishers ----------- */

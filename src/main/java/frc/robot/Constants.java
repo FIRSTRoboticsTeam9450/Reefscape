@@ -127,7 +127,7 @@ public final class Constants {
     public static final boolean LimelightDebugging = false;
     public static final boolean CoordAllowedPathsDebugging = false;
     public static final boolean CoordPositionDebugging = false;
-    public static final boolean CoordAllAtSetpoint = false;
+    public static final boolean CoordAllAtSetpoint = true;
     public static final boolean ClimberPos = false;
     public static final boolean currentPos = false;
     public static final boolean DiffyTuningValues = true;

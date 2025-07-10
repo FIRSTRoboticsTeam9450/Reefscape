@@ -285,6 +285,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             debugger();
         }
         Logger.recordOutput("Reefscape/Scoring/AutoIntakeMode", autoGround);
+        Logger.recordOutput("Reefscape/Scoring/State", pos);
     }
 
 
@@ -378,7 +379,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         // } else {
         rollToClosestSide();
         DW.setPitchSetpoint(-120);
-        Elbow.setSetpoint(50); //90
+        Elbow.setSetpoint(90);
         // } 
         if (
             DW.atRollSetpoint()
@@ -870,6 +871,18 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public boolean getAllAtSetpoints() {
         return allAtSetpoints;
+    }
+
+    public void checkAllAtSetpoints() {
+        if (Elev.atSetpoint()
+            && Elbow.atSetpoint()
+            && DW.atPitchSetpoint()
+            && DW.atRollSetpoint()
+            ) {
+                allAtSetpoints = true;
+            } else {
+                allAtSetpoints = false;
+            }
     }
 
     public int getScoringLevel() {

@@ -62,6 +62,9 @@ public class DiffWristSubsystem extends SubsystemBase {
     double leftVeloc;
     double rightVeloc;
 
+    double leftStatorPull;
+    double rightStatorPull;
+
     // Variables
     private boolean runPID = true;
 
@@ -148,6 +151,9 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         leftVeloc = leftMotor.getVelocity().getValueAsDouble();
         rightVeloc = rightMotor.getVelocity().getValueAsDouble();
+
+        leftStatorPull = leftMotor.getStatorCurrent().getValueAsDouble();
+        rightStatorPull = rightMotor.getStatorCurrent().getValueAsDouble();
         
         if (runPID) {
             updatePID(pitchPos, rollPos);
@@ -163,6 +169,8 @@ public class DiffWristSubsystem extends SubsystemBase {
             Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
             Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
             Logger.recordOutput("Diffy Tuning/Right Motor Velco", rightVeloc);
+            Logger.recordOutput("Diffy Tuning/Left Motor Stator Current", leftStatorPull);
+            Logger.recordOutput("Diffy Tuning/Right Motor Stator Current", rightStatorPull);
         }
 
     }

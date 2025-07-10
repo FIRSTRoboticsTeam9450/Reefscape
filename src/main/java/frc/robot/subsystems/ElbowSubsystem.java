@@ -106,8 +106,12 @@ public class ElbowSubsystem extends SubsystemBase {
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         configurator.apply(config);
     }
+
+    double motorStatorPull;
+
     @Override
     public void periodic() {
+        motorStatorPull = motor.getStatorCurrent().getValueAsDouble();
         elbowAngle = motor.getPosition().getValueAsDouble() * -360 - offsetToZeroDegrees;
         Logger.recordOutput("Reefscape/Elbow/Motor ENcoder", motor.getRotorPosition().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/Raw Setpoint", offsetSetpoint);
@@ -126,6 +130,7 @@ public class ElbowSubsystem extends SubsystemBase {
         {
             logger.updateLogger(elbowAngle, setpoint, atSetpoint());
         }
+        Logger.recordOutput("Diffy Tuning/Elbow Stator Pull", motorStatorPull);
     }
 
     public double getAngle() {
