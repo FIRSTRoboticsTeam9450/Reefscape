@@ -6,6 +6,7 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -15,6 +16,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
@@ -27,6 +29,7 @@ import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElbowCommand;
 import frc.robot.commands.ElevatorCommand;
+import frc.robot.commands.ElevatorVoltageCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.GoToScorePosCommand;
 import frc.robot.commands.ManualElevatorCommand;
@@ -108,132 +111,151 @@ public class RobotContainer {
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
+    /**
+     * configureSysIdBindings() - Configures SysID bindings for the drivetrain. Keep
+     *                            commented out when not in use
+     */
+    public void configureSysIdBindings() {
+        m_driver2.leftBumper().onTrue(Commands.runOnce(SignalLogger::start));
+        m_driver2.rightBumper().onTrue(Commands.runOnce(SignalLogger::stop));
+        // drivetrain.registerTelemetry(logger::telemeterize);
+        m_driver2.povUp().onTrue(elevator.sysIdQuasistatic(Direction.kForward)); // First
+        m_driver2.povDown().onTrue(elevator.sysIdQuasistatic(Direction.kReverse)); // Second
+        m_driver2.povLeft().onTrue(elevator.sysIdDynamic(Direction.kForward)); // Third
+        m_driver2.povRight().onTrue(elevator.sysIdDynamic(Direction.kReverse)); // Fourth
+    }
+
+
+
     private void configureBindings() {
-        // Note that X is defined as forward according to WPILib convention,
-        // and Y is defined as to the left according to WPILib convention.
-        drivetrain.setDefaultCommand(
-            // Drivetrain will execute this command periodically
-            drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-            )
-        );
 
-        scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
-        elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
+        configureSysIdBindings();
 
-        m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
-        // ));
+        // // Note that X is defined as forward according to WPILib convention,
+        // // and Y is defined as to the left according to WPILib convention.
+        // drivetrain.setDefaultCommand(
+        //     // Drivetrain will execute this command periodically
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+        //             .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        //     )
+        // );
 
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        m_driver1.back().and(m_driver2.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        m_driver1.back().and(m_driver2.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        m_driver1.start().and(m_driver2.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        m_driver1.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
+        // scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
+        // elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
 
-        // reset the field-centric heading on left bumper press
+        // m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
+        // //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
+        // // ));
 
-        drivetrain.registerTelemetry(logger::telemeterize);
+        // // Run SysId routines when holding back/start and X/Y.
+        // // Note that each routine should be run exactly once in a single log.
+        // m_driver1.back().and(m_driver2.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
+        // m_driver1.back().and(m_driver2.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
+        // m_driver1.start().and(m_driver2.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
+        // m_driver1.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
 
-        /* ----- Main Driver Keybinds ----- */
-        /* Keybinds:
-         * Right Trigger = Score
-         * Left Trigger = Go To Scoring Pos
-         * Right Bumper = Outtake
-         * Left Bumper = Flip
-         * X = Cancel All + Store
-         * Y = IMU Reset
-         * Left Stick = Movement/Align Left
-         * Right Stick = Rotate/Align Right
-         * D-pad Up = Deploy Climber
-         * D-pad Down = Climb
-         * D-pad Right = Store Climber 
-         */
+        // // reset the field-centric heading on left bumper press
+
+        // drivetrain.registerTelemetry(logger::telemeterize);
+
+        // /* ----- Main Driver Keybinds ----- */
+        // /* Keybinds:
+        //  * Right Trigger = Score
+        //  * Left Trigger = Go To Scoring Pos
+        //  * Right Bumper = Outtake
+        //  * Left Bumper = Flip
+        //  * X = Cancel All + Store
+        //  * Y = IMU Reset
+        //  * Left Stick = Movement/Align Left
+        //  * Right Stick = Rotate/Align Right
+        //  * D-pad Up = Deploy Climber
+        //  * D-pad Down = Climb
+        //  * D-pad Right = Store Climber 
+        //  */
         
-        m_driver1.rightTrigger().onTrue(new ScoringCommand());
-        m_driver1.leftTrigger().onTrue(new DriverIntakeCommand(m_driver1, drivetrain));
-        m_driver1.leftBumper().onTrue(new RollSideSwitcher(true));
-        m_driver1.rightBumper().onTrue(new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround));
-        m_driver1.x().onTrue(
-            new InstantCommand(() -> intake.setVoltage(0))
-            .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
-            .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
-            ));
-        m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
-        m_driver1.leftStick().whileTrue(new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1));
-        m_driver1.rightStick().whileTrue(new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1));
-        m_driver1.povUp().onTrue(new ClimbCommand(0.9, 12));
-        m_driver1.povDown().onTrue(new ClimbCommand(0.300, 9).andThen(new CoordinationCommand(ScoringPos.START)));
-        m_driver1.povRight().onTrue(new ClimbCommand(0.1, 3));
+        // m_driver1.rightTrigger().onTrue(new ScoringCommand());
+        // m_driver1.leftTrigger().onTrue(new DriverIntakeCommand(m_driver1, drivetrain));
+        // m_driver1.leftBumper().onTrue(new RollSideSwitcher(true));
+        // m_driver1.rightBumper().onTrue(new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround));
+        // m_driver1.x().onTrue(
+        //     new InstantCommand(() -> intake.setVoltage(0))
+        //     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+        //     .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+        //     ));
+        // m_driver1.y().onTrue(new ResetIMUCommand(drivetrain));
+        // m_driver1.leftStick().whileTrue(new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1));
+        // m_driver1.rightStick().whileTrue(new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1));
+        // m_driver1.povUp().onTrue(new ClimbCommand(0.9, 12));
+        // m_driver1.povDown().onTrue(new ClimbCommand(0.300, 9).andThen(new CoordinationCommand(ScoringPos.START)));
+        // m_driver1.povRight().onTrue(new ClimbCommand(0.1, 3));
         
-        m_driver1.povLeft().toggleOnTrue(new FieldCentricCommand(drivetrain, () -> -driveBezier.getOutput(m_driver1.getLeftX()), 
-            () -> -driveBezier.getOutput(m_driver1.getLeftY()), 
-            () -> rotateBezier.getOutput(m_driver1.getRightX())));
+        // m_driver1.povLeft().toggleOnTrue(new FieldCentricCommand(drivetrain, () -> -driveBezier.getOutput(m_driver1.getLeftX()), 
+        //     () -> -driveBezier.getOutput(m_driver1.getLeftY()), 
+        //     () -> rotateBezier.getOutput(m_driver1.getRightX())));
         
-        m_driver1.start().onTrue(new InstantCommand(() -> scoreSub.toggleCoralInFront()));
+        // m_driver1.start().onTrue(new InstantCommand(() -> scoreSub.toggleCoralInFront()));
 
-        /* ----- Operator Driver Keybinds ----- */
-        /* Keybinds:
-         * Right Trigger = Intake Coral Ground
-         * Left Trigger = Set Processor Score
-         * Right Bumper = Flip
-         * Left Bumper = Set Net Score
-         * X = L2
-         * A = L1
-         * B = L3
-         * Y = L4
-         * D-pad Up = Intake Algae High
-         * D-pad Left = Intake Algae Low
-         * D-pad Down = Intake Algae Ground
-         */
+        // /* ----- Operator Driver Keybinds ----- */
+        // /* Keybinds:
+        //  * Right Trigger = Intake Coral Ground
+        //  * Left Trigger = Set Processor Score
+        //  * Right Bumper = Flip
+        //  * Left Bumper = Set Net Score
+        //  * X = L2
+        //  * A = L1
+        //  * B = L3
+        //  * Y = L4
+        //  * D-pad Up = Intake Algae High
+        //  * D-pad Left = Intake Algae Low
+        //  * D-pad Down = Intake Algae Ground
+        //  */
 
-        // m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
-        // m_driver2.leftTrigger().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
-        // m_driver2.leftBumper().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
-        //m_driver2.rightBumper().onTrue(new RollSideSwitcher());
-        // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        // // m_driver2.rightTrigger().onTrue(new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)));
+        // // m_driver2.leftTrigger().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
+        // // m_driver2.leftBumper().onTrue(new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
+        // //m_driver2.rightBumper().onTrue(new RollSideSwitcher());
+        // // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        // // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        // // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        // // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         
-        // m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        // m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        // m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
-        // m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        // // m_driver2.povUp().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        // // m_driver2.povLeft().onTrue(new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        // // m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
+        // // m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
-        // m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
-        // m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
-        // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
-        // m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
+        // // m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
+        // // m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
+        // // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
+        // // m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
         
-        m_driver2.y().onTrue(new ElbowCommand(8.78));
-        m_driver2.x().onTrue(new ElbowCommand(26));
-        m_driver2.b().onTrue(new ElbowCommand(50));
-        m_driver2.a().onTrue(new ElbowCommand(100.81));
+        // // m_driver2.y().onTrue(new ElbowCommand(8.78));
+        // // m_driver2.x().onTrue(new ElbowCommand(26));
+        // // m_driver2.b().onTrue(new ElbowCommand(50));
+        // // m_driver2.a().onTrue(new ElbowCommand(100.81));
 
-        // m_driver2.y().onTrue(new ElevatorCommand(38));
-        // m_driver2.x().onTrue(new ElevatorCommand(26));
-        // m_driver2.b().onTrue(new ElevatorCommand(13));
-        // m_driver2.a().onTrue(new ElevatorCommand(0));
+        m_driver2.y().onTrue(new ElevatorVoltageCommand(9));
+        m_driver2.x().onTrue(new ElevatorVoltageCommand(9));
+        m_driver2.b().onTrue(new ElevatorVoltageCommand(-1));
+        m_driver2.a().onTrue(new ElevatorVoltageCommand(10));
 
-        // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
-        // m_driver2.leftStick().onTrue(new OuttakeCommand());
+        // // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
+        // // m_driver2.leftStick().onTrue(new OuttakeCommand());
 
-        /* ----- Commands not currently in use ----- */
+        // /* ----- Commands not currently in use ----- */
         
-        // SOURCE INTAKE
-        // m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
+        // // SOURCE INTAKE
+        // // m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
     
-        // VERTICAL CORAL
-        //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
+        // // VERTICAL CORAL
+        // //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
-        // UNCOMMENT FOR MANUAL CLIMB
-        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // // UNCOMMENT FOR MANUAL CLIMB
+        // //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
     }
 
     public static void setLiftUp(boolean up) {

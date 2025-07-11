@@ -51,7 +51,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     m_robotContainer.driveBezier.dashboardInitialSettings();
     m_robotContainer.rotateBezier.dashboardInitialSettings();
-    elev.putParams();
+    // elev.putParams();
     elbow.putParams();
 
   }
@@ -94,7 +94,7 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    elev.updateParams();
+    // elev.updateParams();
     elbow.updateParams();
 
 

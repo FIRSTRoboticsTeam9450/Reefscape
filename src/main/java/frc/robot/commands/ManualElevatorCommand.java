@@ -16,7 +16,7 @@ public class ManualElevatorCommand extends Command {
     @Override
     public void execute() {
         double multiplier = -input.getAsDouble();
-        elevator.updateMotionMagic(multiplier);
+        // elevator.updateMotionMagic(multiplier); fix this
     }
 
     @Override
