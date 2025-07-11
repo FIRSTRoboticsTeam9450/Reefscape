@@ -21,6 +21,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.WristIDs;
 import frc.robot.Constants;
+import frc.robot.MotionMagSys;
 
 
 /**
@@ -46,6 +47,8 @@ public class ElbowSubsystem extends SubsystemBase {
 
     final MotionMagicVoltage m_request = new MotionMagicVoltage(0);
 
+    MotionMagSys MotionMag;
+
     private ElbowSubsystem() {
 
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
@@ -63,7 +66,16 @@ public class ElbowSubsystem extends SubsystemBase {
         slot0Configs.kP = 80; // A position error of 2.5 rotations results in 12 V output
         slot0Configs.kI = 0; // no output for integrated error
         slot0Configs.kD = 0.1; // A velocity error of 1 rps results in 0.1 V output
+        double[] v = {0,
+            slot0Configs.kS, 
+            slot0Configs.kV,
+            slot0Configs.kA,
+            slot0Configs.kP,
+            slot0Configs.kI,
+            slot0Configs.kD,
+        };
 
+        MotionMag = new MotionMagSys(motor, true, false, 0, v);
         config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.SensorToMechanismRatio = Constants.robotConfig.getElbowRatio();
@@ -111,7 +123,8 @@ public class ElbowSubsystem extends SubsystemBase {
     public void setSetpoint(double setpoint) {
         this.setpoint = setpoint;
         offsetSetpoint = (setpoint + offsetToZeroDegrees) / -360;
-        motor.setControl(m_request.withPosition(offsetSetpoint));
+        //motor.setControl(m_request.withPosition(offsetSetpoint));
+        MotionMag.setTargetParams(offsetSetpoint, 6, 5, 256);
     }
 
     public boolean atSetpoint() {

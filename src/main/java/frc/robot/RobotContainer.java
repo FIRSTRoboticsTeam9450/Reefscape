@@ -25,6 +25,7 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
+import frc.robot.commands.ElbowCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.GoToScorePosCommand;
@@ -63,6 +64,7 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
+    
     public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
     public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
     
@@ -209,10 +211,19 @@ public class RobotContainer {
         // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));
         // m_driver2.povDown().onTrue(new ElevatorCommandRelative(-1));
         
+        /////UNCOMMENT TO USE ELEVATOR INSTEAD OF ELBOW
         m_driver2.y().onTrue(new ElevatorCommand(38));
         m_driver2.x().onTrue(new ElevatorCommand(26));
         m_driver2.b().onTrue(new ElevatorCommand(13));
         m_driver2.a().onTrue(new ElevatorCommand(0));
+        
+        /////UNCOMMENT TO USE ELBOW INSTEAD OF ELEVATOR
+        /*m_driver2.y().onTrue(new ElbowCommand(8.78));
+        m_driver2.x().onTrue(new ElbowCommand(26));
+        m_driver2.b().onTrue(new ElbowCommand(50));
+        m_driver2.a().onTrue(new ElbowCommand(100.81));*/
+
+        
 
         // m_driver2.rightTrigger().onTrue(new ElevatorCommand(8));
         // m_driver2.leftStick().onTrue(new OuttakeCommand());

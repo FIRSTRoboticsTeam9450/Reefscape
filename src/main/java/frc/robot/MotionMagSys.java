@@ -10,7 +10,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 
 public class MotionMagSys {
 
-    TalonFXConfiguration config = new TalonFXConfiguration();
+    public TalonFXConfiguration config = new TalonFXConfiguration();
     TalonFXConfigurator temp;
     MotionMagicConfigs mag = config.MotionMagic;
     DynamicMotionMagicVoltage m_request;
