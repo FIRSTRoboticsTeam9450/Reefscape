@@ -3,6 +3,7 @@ package frc.robot;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
+import com.ctre.phoenix6.controls.Follower;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.hardware.TalonFX;
@@ -76,5 +77,9 @@ public class MotionMagSys {
             config.Slot0.kI,
             config.Slot0.kD};
         return v;
+    }
+
+    public void addFollower(TalonFX FollowMotor, boolean inverted){
+        FollowMotor.setControl(new Follower(motor.getDeviceID(), inverted));
     }
 }

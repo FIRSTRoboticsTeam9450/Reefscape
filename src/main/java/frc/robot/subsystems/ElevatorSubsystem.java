@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
+import frc.robot.MotionMagSys;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ElevatorIDs;
 
@@ -47,11 +48,11 @@ public class ElevatorSubsystem extends SubsystemBase{
     private boolean highUp;
     private boolean resetDone;
     private boolean inMove;
-
+    
     double velocity = 75; //75
     double acceleration = 350; // 160
     double jerk = 1000;
-    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
+    //DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
             
     double currentLimit = 80;
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25
@@ -61,6 +62,8 @@ public class ElevatorSubsystem extends SubsystemBase{
     double kI = 0; // no output for integrated error 0
     double kD = 0.0; // A velocity error of 1 rps results in 0.1 V output 0.1
     double kG = 0.45; // was originally left to default. this was added so it could be updated 0.55
+    double[] v = {kG,kS,kV,kA,kP,kI,kD};
+    MotionMagSys MotionMag = new MotionMagSys(leftMotor, true, true, currentLimit, v);
 
     // kg is always applied, it counters gravity. 
     //     start low and increase until the elevator slowly creeps up, then backoff
@@ -91,7 +94,8 @@ public class ElevatorSubsystem extends SubsystemBase{
         config2.CurrentLimits.StatorCurrentLimitEnable = true;
         config2.CurrentLimits.StatorCurrentLimit = 80;
 
-        rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+        //rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+        MotionMag.addFollower(rightMotor, true);
     }
 
     private void leftMotorConfig(){
@@ -168,12 +172,14 @@ public class ElevatorSubsystem extends SubsystemBase{
             resetDone = true;
         }
 
-        if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
+        /*if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
             m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
             System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
 
-        leftMotor.setControl(m_request.withPosition(setpoint + offset));
+        leftMotor.setControl(m_request.withPosition(setpoint + offset));*/
+
+        MotionMag.setTargetParams(setpoint + offset, velocity, acceleration, jerk);
         
         atSetpoint = Math.abs(position - setpoint) < .3;
         double currTime = Timer.getFPGATimestamp();
