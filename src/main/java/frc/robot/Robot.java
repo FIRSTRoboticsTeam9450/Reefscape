@@ -21,6 +21,8 @@ import org.littletonrobotics.junction.Logger;
 import org.littletonrobotics.junction.networktables.NT4Publisher;
 import org.littletonrobotics.junction.wpilog.WPILOGWriter;
 
+import com.ctre.phoenix6.SignalLogger;
+
 import edu.wpi.first.cameraserver.CameraServer;
 
 import au.grapplerobotics.CanBridge;
@@ -53,12 +55,12 @@ public class Robot extends LoggedRobot {
     m_robotContainer.rotateBezier.dashboardInitialSettings();
     elev.putParams();
     elbow.putParams();
-
   }
 
   @Override
   public void disabledInit() {
     RobotContainer.toggleDrive(true);
+    SignalLogger.stop();
   }
 
   @Override
@@ -68,7 +70,9 @@ public class Robot extends LoggedRobot {
   }
 
   @Override
-  public void disabledExit() {}
+  public void disabledExit() {
+    SignalLogger.start();
+  }
 
   @Override
   public void autonomousInit() {

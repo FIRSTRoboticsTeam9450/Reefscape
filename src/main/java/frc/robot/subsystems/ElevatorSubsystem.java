@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -121,39 +122,6 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
     /* ----- Updaters ----- */
 
-    // timestamp, delta time, position (rotation), speed, acceleration, jerk
-    final int POSITION = 0;
-    final int SPEED = 1;
-    final int ACCEL = 2;
-    final int JERK = 3;
-    final int TIME = 4;
-    final int DELTATIME = 5;
-    final int OFFSET = 6;
-    final int SETPOINT = 7;
-    final int MOVETIME = 8;
-    final int MOTIONSIZE = MOVETIME+1;
-
-    // save the last 10 entries for use later
-    // HISTORY can be reduced to 2 if desired
-    final int HISTORY = 10;  
-    int motionIndexBig = HISTORY; // start at 2 so prevIndex = motionIndex-2 is not a problem
-    
-    double[][] motion = new double[HISTORY][MOTIONSIZE];
-    double[] motionAdj = new double[MOTIONSIZE];
-
-    int adjustSize = 9;
-    int[] indices = new int[adjustSize];
-
-    final int ATLIMIT = 0;
-    final int HIGHUP = 1;
-    final int ATSETPOINT = 2;
-    final int RESETDONE = 3;
-
-    final int STATESIZE = RESETDONE+1;
-    boolean[] state = new boolean[STATESIZE];
-    boolean flag = true;
-    boolean flag2 = true;
-
     @Override
     public void periodic() {
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
@@ -184,64 +152,20 @@ public class ElevatorSubsystem extends SubsystemBase{
         else if (inMove){
             inMove = false;
         }
+        Logger.recordOutput("Elevator/Time", moveTime);
+        SignalLogger.writeDouble("Elevator/SignalTime", moveTime);
+        Logger.recordOutput("Elevator/PositionLeft", leftMotor.getPosition().getValueAsDouble());
+        Logger.recordOutput("Elevator/PositionRight", rightMotor.getPosition().getValueAsDouble());
+        Logger.recordOutput("Elevator/Offset", offset);
 
         boolean highUp = position > 24;
 
         // we really don't want our subsystem calling into the RobotContainer
         // but a simple solution is not apparent
         RobotContainer.setLiftUp(highUp); 
+
         
-        {
-            motionIndexBig++;
-            int prevIndex = (motionIndexBig-1) % HISTORY;
-            int motionIndex = motionIndexBig % HISTORY;
-            
-            motion[motionIndex][TIME]      = currTime;
-            motion[motionIndex][DELTATIME] = motion[motionIndex][TIME] - motion[prevIndex][TIME];
-            motion[motionIndex][POSITION]  = position;
-            motion[motionIndex][SPEED]     = (motion[motionIndex][POSITION] - motion[prevIndex][POSITION])/motion[motionIndex][DELTATIME];
-            motion[motionIndex][ACCEL]     = (motion[motionIndex][SPEED]    - motion[prevIndex][SPEED])   /motion[motionIndex][DELTATIME];
-            motion[motionIndex][JERK]      = (motion[motionIndex][ACCEL]    - motion[prevIndex][ACCEL])   /motion[motionIndex][DELTATIME];
-            motion[motionIndex][OFFSET]    = offset;
-            motion[motionIndex][SETPOINT]  = setpoint;
-            motion[motionIndex][MOVETIME]  = moveTime;
-
-            // motion[motionIndex][OFFSET] = (motion[motionIndex][ACCEL]+motion[prevIndex][ACCEL])/2.0;
-
-            if (motionIndexBig>adjustSize){
-                for (int i=0; i<adjustSize; i++){
-                    indices[i] = (motionIndexBig-i) % HISTORY;
-                }
-                int middleIndex = indices[(adjustSize+1)/2];
-
-                for (int j=0; j<MOTIONSIZE; j++){
-                    motionAdj[j] = motion[middleIndex][j];
-                }
-                
-                motionAdj[SPEED] = 0;
-                motionAdj[ACCEL] = 0;
-                motionAdj[JERK] = 0;
-
-                for (int j=0; j<adjustSize; j++){
-                    motionAdj[SPEED] += motion[indices[j]][SPEED];
-                    motionAdj[ACCEL] += motion[indices[j]][ACCEL];
-                    motionAdj[JERK] += motion[indices[j]][JERK];
-                }
-                motionAdj[SPEED] /= adjustSize;
-                motionAdj[ACCEL] /= adjustSize;
-                motionAdj[JERK] /= adjustSize;
-                Logger.recordOutput("elev/motionAdj", motionAdj);
-                
-            }
-            Logger.recordOutput("elev/motion", motion[motionIndex]);
-            Logger.recordOutput("elev/Stator", leftMotor.getStatorCurrent().getValueAsDouble());
-            Logger.recordOutput("elev/Supply", leftMotor.getSupplyCurrent().getValueAsDouble());
-            state[ATLIMIT] = atLimit;
-            state[ATSETPOINT] = atSetpoint;
-            state[HIGHUP] = highUp;
-            state[RESETDONE] = resetDone;
-            Logger.recordOutput("elev/state", state);
-        }
+       
     }
 
     /* ----- Getters & Setters ----- */
