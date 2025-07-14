@@ -70,6 +70,7 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     /* ----- Initialization ----- */
 
+    RadioSoftware radio = RadioSoftware.getInstance();
     private DiffWristSubsystem() {
 
         //Telemetry
@@ -89,6 +90,8 @@ public class DiffWristSubsystem extends SubsystemBase {
             pitchPID.setSetpoint(0);
             rollPID.setSetpoint(0);
         }
+        radio.addMotor(leftMotor);
+        radio.addMotor(rightMotor);
     }
 
     /* ----- Updaters ----- */

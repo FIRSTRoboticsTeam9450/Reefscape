@@ -42,6 +42,7 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
+import frc.robot.subsystems.RadioSoftware;
 import frc.robot.commands.CoordinationCommand;
 import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DriverIntakeCommand;
@@ -94,6 +95,7 @@ public class RobotContainer {
 
     private ClimbSubsystem climb = ClimbSubsystem.getInstance();
 
+    private RadioSoftware radio = RadioSoftware.getInstance();
     public static double pigeonOffset = 0;
 
     public RobotContainer() {
@@ -206,6 +208,7 @@ public class RobotContainer {
         m_driver2.povDown().onTrue(new CoordinationCommand(ScoringPos.INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
         m_driver2.povRight().onTrue(new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE).andThen(new DualIntakeCommand(true)));
 
+        m_driver2.rightBumper().onTrue(new InstantCommand(() -> radio.playMusic()));
         // m_driver2.povUp().onTrue(new ElevatorCommandRelative(1));
         // m_driver2.povLeft().onTrue(new ElevatorCommandRelative(.05));
         // m_driver2.povRight().onTrue(new ElevatorCommandRelative(-.05));

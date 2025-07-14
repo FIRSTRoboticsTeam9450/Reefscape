@@ -6,6 +6,7 @@ import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.Orchestra;
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
@@ -48,6 +49,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     VoltageOut request = new VoltageOut(0).withEnableFOC(true);
 
     CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    RadioSoftware radio = RadioSoftware.getInstance();
+
     /* ----- Initialization ----- */
 
     /**
@@ -70,6 +73,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 50;
         configurator.apply(config);
+
+        radio.addMotor(motor);
 
         //coralMeasurement = coralLaserCan.getMeasurement();
     }

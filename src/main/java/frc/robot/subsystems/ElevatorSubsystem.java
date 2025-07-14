@@ -82,10 +82,13 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
         return elev;
     }
+    RadioSoftware radio = RadioSoftware.getInstance();
 
     private ElevatorSubsystem() {
         leftMotorConfig();
         rightMotorConfig();
+        radio.addMotor(rightMotor);
+        radio.addMotor(leftMotor);
     }
 
     private void rightMotorConfig(){
