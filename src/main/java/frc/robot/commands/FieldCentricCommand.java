@@ -6,13 +6,9 @@ import java.util.function.DoubleSupplier;
 
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
-import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.RobotContainer;
-import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
-import frc.robot.subsystems.CoordinationSubsytem;
-import frc.robot.subsystems.DualIntakeSubsystem;
 
 /**
  * Honestly got no clue what this does, but I reckon its something to do with the robot driving field centricly
@@ -21,8 +17,6 @@ public class FieldCentricCommand extends Command {
 
     /* ----- Subsystem Instances ----- */
     private CommandSwerveDrivetrain drive;
-    private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
 
     /* ----- Swerve Drive ----- */
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()

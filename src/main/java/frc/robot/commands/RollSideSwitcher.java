@@ -1,13 +1,9 @@
 package frc.robot.commands;
 
-import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
-
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DiffWristSubsystem;
-import frc.robot.subsystems.DualIntakeSubsystem;
-import frc.robot.subsystems.ElbowSubsystem;
 
 /*
  * Roll wrist to opposite side
@@ -17,7 +13,6 @@ public class RollSideSwitcher extends Command{
     /* ----- Subsystem Instance ----- */
     private CoordinationSubsytem CT = CoordinationSubsytem.getInstance();
     private DiffWristSubsystem wrist = DiffWristSubsystem.getInstance();
-    private DualIntakeSubsystem Intake = DualIntakeSubsystem.getInstance();
 
     boolean finished = false;
     int count = 0;

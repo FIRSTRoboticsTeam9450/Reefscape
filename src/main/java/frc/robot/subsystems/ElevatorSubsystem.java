@@ -3,27 +3,19 @@ package frc.robot.subsystems;
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.BaseStatusSignal;
-import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.controls.DynamicMotionMagicVoltage;
 import com.ctre.phoenix6.controls.Follower;
-import com.ctre.phoenix6.controls.MotionMagicVelocityVoltage;
-import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.S1StateValue;
 
-import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.RobotContainer;
 import frc.robot.Constants.ElevatorIDs;
@@ -44,8 +36,6 @@ public class ElevatorSubsystem extends SubsystemBase{
     private double moveStartTime;
 
     private boolean atSetpoint;
-    private boolean atLimit;
-    private boolean highUp;
     private boolean resetDone;
     private boolean inMove;
 
@@ -93,7 +83,6 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     private void rightMotorConfig(){
         TalonFXConfiguration config2 = new TalonFXConfiguration();
-        TalonFXConfigurator temp2 = rightMotor.getConfigurator();
         
         config2.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;

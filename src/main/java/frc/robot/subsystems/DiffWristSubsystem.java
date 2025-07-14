@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -26,32 +25,15 @@ public class DiffWristSubsystem extends SubsystemBase {
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
-    // private SparkFlex leftMotor = new SparkFlex(WristIDs.kDiffWristLeftMotorID, MotorType.kBrushless);
-    // private SparkFlex rightMotor = new SparkFlex(WristIDs.kDiffWristRightMotorID, MotorType.kBrushless);
     private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
     private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.CTRE_BUS);
 
     //Encoders
-    // private AbsoluteEncoder pitchEncoder = leftMotor.getAbsoluteEncoder(); //Max: 0.35, 0.8    positions to go to: Score: .75, hold: .5
-    // private AbsoluteEncoder rollEncoder = rightMotor.getAbsoluteEncoder(); //Max: .75, .16   Positions to go to:  Grab: .7,  Score: .2   hold: .45
     private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
     private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
 
     private double pitchPos;
     private double rollPos;
-
-    private double lastPitchPos;
-    private double lastRollPos;
-
-    private int pitchDeadCounter;
-    private int rollDeadCounter;
-
-    /*
-     * Setpoints Y
-     * Positions Y (already gotten)
-     * Accel? Y
-     * Veloc? Y
-     */
 
     double pitchSetpoint;
     double rollSetpoint;
@@ -111,31 +93,9 @@ public class DiffWristSubsystem extends SubsystemBase {
         double rVolts = pitchVoltage + rollVoltage;
         lVolts = MathUtil.clamp(lVolts, -8, 8);
         rVolts = MathUtil.clamp(rVolts, -8, 8);
-
-        if ((lVolts > 0.1 || rVolts > 0.1) && DriverStation.isEnabled()) {
-            if (pitchPos == lastPitchPos) {
-                pitchDeadCounter++;
-            } else {
-                pitchDeadCounter = 0;
-            }
-            if (rollPos == lastRollPos) {
-                rollDeadCounter++;
-            } else {
-                rollDeadCounter = 0;
-            }
-        }
         
-        // if (rollDeadCounter > 4 || pitchDeadCounter > 4) {
-        //     setVoltage(0, 0);
-        //     System.out.println("THE DIFFY ENCODERS ARE ANGRY!! STOPPING DIFFY");
-        // } else {
-        //     setVoltage(lVolts, rVolts);
-        // }
 
         setVoltage(lVolts, rVolts);
-
-        lastPitchPos = pitchPos;
-        lastRollPos = rollPos;
     }
 
     @Override

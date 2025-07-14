@@ -8,7 +8,6 @@ import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
 import frc.robot.Constants.ScoringPos;
@@ -26,7 +25,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     //private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     /* ----- Encoders ----- */
-    private double pitchEncoder; 
     private double rollEncoder;
     private double elbowEncoder;
     private double elevEncoder;
@@ -75,10 +73,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double elevOriginalSetpoint;
     private double elbowOriginalSetpoint;
     private double pitchOriginalSetpoint;
-    private double rollOriginalSetpoint;
 
     private double elevAllowedDifference = 1.5;
-    private double elbowAllowedDifference = 15;
     private double pitchAllowedDifference = 12;
 
     private boolean coralSideLeft;
@@ -95,7 +91,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     private CoordinationSubsytem() {
         pos = ScoringPos.START;
 
-        pitchEncoder = DW.getPitchAngle();
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
@@ -268,7 +263,6 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     @Override
     public void periodic() {
-        pitchEncoder = DW.getPitchAngle();
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
@@ -281,7 +275,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             justFinished = false;
         }
 
-        if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint || debugging.currentPos) {
+        if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint) {
             debugger();
         }
         Logger.recordOutput("Reefscape/Scoring/AutoIntakeMode", autoGround);
@@ -341,7 +335,6 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void pitchManualMovement(double change) {
 
-        double changeTemp = Math.abs(change);
         double setpoint = DW.getPitchSetpoint();
 
         //DW.setPitchSetpoint(setpoint + change);
@@ -370,7 +363,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         elevOriginalSetpoint = Elev.getSetpoint();
         elbowOriginalSetpoint = Elbow.getSetpoint();
         pitchOriginalSetpoint = DW.getPitchSetpoint();
-        rollOriginalSetpoint = DW.getRollSetpoint();
     }
 
     public void goToStart() {
