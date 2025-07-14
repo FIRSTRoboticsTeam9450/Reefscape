@@ -97,10 +97,6 @@ public final class Constants {
     ALGAE_STORE,
     SCORE_NET,
     SCORE_PROCESSOR,
-    CORAL_SCOREL1,
-    CORAL_SCOREL2,
-    CORAL_SCOREL3,
-    CORAL_SCOREL4,
     SCORE_CORAL,
     ScoreL4,
     ALGAEL1,
@@ -109,7 +105,6 @@ public final class Constants {
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,
     PRE_L4,
-    L1_STORE,
     LOLIPOP_INTAKE_ALGAE
   }
 

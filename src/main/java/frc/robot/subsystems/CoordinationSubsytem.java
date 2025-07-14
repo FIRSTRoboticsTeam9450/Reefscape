@@ -53,7 +53,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Coral_Score_Go_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet<>();
     private Set<ScoringPos> Pre_L4_Set = new HashSet<>();
-    private Set<ScoringPos> L1_Store_Set = new HashSet<>();
     private Set<ScoringPos> Lolipop_Intake_Set = new HashSet<>();
     
     boolean algae;
@@ -97,11 +96,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         Start_Set.add(ScoringPos.CORAL_STORE);
         Start_Set.add(ScoringPos.GO_SCORE_CORAL);
-
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL1);
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL2);
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL3);
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL4);
+        
         Coral_Store_Set.add(ScoringPos.PRE_L4);
 
         Coral_Store_Set.add(ScoringPos.START);
@@ -213,10 +208,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         Pre_L4_Set.add(ScoringPos.GO_SCORE_CORAL);
         Pre_L4_Set.add(ScoringPos.INTAKE_CORAL);
 
-        L1_Store_Set.add(ScoringPos.CORAL_STORE);
-        L1_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
-        L1_Store_Set.add(ScoringPos.INTAKE_CORAL);
-
         Lolipop_Intake_Set.add(ScoringPos.CORAL_STORE);
         Lolipop_Intake_Set.add(ScoringPos.INTAKE_CORAL);
         Lolipop_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
@@ -241,10 +232,6 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         allowedPaths.put(ScoringPos.SCORE_PROCESSOR, Algae_Processor_Score_Set);
 
-        allowedPaths.put(ScoringPos.CORAL_SCOREL1, Coral_ScoreL1_Set);
-        allowedPaths.put(ScoringPos.CORAL_SCOREL2, Coral_ScoreL2_Set);
-        allowedPaths.put(ScoringPos.CORAL_SCOREL3, Coral_ScoreL3_Set);
-        allowedPaths.put(ScoringPos.CORAL_SCOREL4, Coral_ScoreL4_Set);
 
         allowedPaths.put(ScoringPos.ScoreL4, Score_L4_Set);
         allowedPaths.put(ScoringPos.SCORE_CORAL, Coral_Score_Set);
@@ -258,7 +245,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         allowedPaths.put(ScoringPos.INTAKE_VERTICAL_CORAL, Coral_Intake_Vertical_Set);
         allowedPaths.put(ScoringPos.PRE_L4, Pre_L4_Set);
 
-        allowedPaths.put(ScoringPos.L1_STORE, L1_Store_Set);
     }
 
     @Override
