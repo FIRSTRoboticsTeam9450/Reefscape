@@ -51,10 +51,10 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     // 0.82 is the record going up and down
     double velocity = 90; //77 is closest to max velocity time: 0.82
-    double acceleration = 270; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
-    double jerk = 1000; // Make sure it's not 0 because the arm hit something
-    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); FOC slowed us down from 0.82 to 0.84
-    double currentLimit = 110; // 100 is the max stator current pull
+    double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
+    double jerk = 1500; // Make sure it's not 0 because the arm hit something
+    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+    double currentLimit = 130; // 100 is the max stator current pull
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
     double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
     double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
@@ -129,12 +129,14 @@ public class ElevatorSubsystem extends SubsystemBase{
         
         boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         if (!resetDone && atLimit){
-            offset =  rawPosition;
+            offset =  0;
+            leftMotor.setPosition(-.5,.5);
+            rightMotor.setPosition(-.5,.5);
             resetDone = true;
         }
 
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
-            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); FOC slowed us down from 0.82 to 0.84
+            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
             System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
 
@@ -157,6 +159,10 @@ public class ElevatorSubsystem extends SubsystemBase{
         Logger.recordOutput("Elevator/PositionLeft", leftMotor.getPosition().getValueAsDouble());
         Logger.recordOutput("Elevator/PositionRight", rightMotor.getPosition().getValueAsDouble());
         Logger.recordOutput("Elevator/Offset", offset);
+        Logger.recordOutput("Elevator/LeftMotorStator", leftMotor.getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("Elevator/LeftMotorSupply", leftMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Elevator/RightMotorStator", rightMotor.getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("Elevator/RightMotorSupply", rightMotor.getSupplyCurrent().getValueAsDouble());
 
         boolean highUp = position > 24;
 
