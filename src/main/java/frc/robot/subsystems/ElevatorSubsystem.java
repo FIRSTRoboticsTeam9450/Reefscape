@@ -2,6 +2,8 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.BaseStatusSignal;
+import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -13,6 +15,7 @@ import com.ctre.phoenix6.controls.MotionMagicVoltage;
 import com.ctre.phoenix6.hardware.CANdi;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 import com.ctre.phoenix6.signals.S1StateValue;
 
 import edu.wpi.first.math.MathUtil;
@@ -34,7 +37,7 @@ import frc.robot.RobotContainer;
 public class ElevatorSubsystem extends SubsystemBase {
 
     //Instance of Elevator Subsystem
-    private static ElevatorSubsystem elev;
+    private static ElevatorSubsystem instance;
 
     //Motor instances
     private TalonFX leftMotor = new TalonFX(ElevatorIDs.kLeftMotorID, "CantDrive");
@@ -56,7 +59,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     double velocity = 90; //77 is closest to max velocity time: 0.82
     double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
     double jerk = 1500; // Make sure it's not 0 because the arm hit something
-    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+    DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
     double currentLimit = 130; // 100 is the max stator current pull
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
     double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
@@ -79,6 +82,11 @@ public class ElevatorSubsystem extends SubsystemBase {
             instance = new ElevatorSubsystem();
         }
         return instance;
+    }
+
+    public ElevatorSubsystem(){
+        configureLeftMotor();
+        configureRightMotor();
     }
 
     /* -------------------- Motor Configuration -------------------- */
@@ -105,7 +113,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void configureRightMotor() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;//Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -114,55 +122,58 @@ public class ElevatorSubsystem extends SubsystemBase {
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }
 
-    private void leftMotorConfig(){
-        TalonFXConfiguration config1 = new TalonFXConfiguration();
-        TalonFXConfigurator temp1 = leftMotor.getConfigurator();
-        config1.MotorOutput.NeutralMode = Constants.defaultNeutral; //temp for when default neutral mode is coast
-        config1.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        config1.CurrentLimits.StatorCurrentLimitEnable = true;
-        config1.CurrentLimits.StatorCurrentLimit = currentLimit;
+    // private void leftMotorConfig(){
+    //     TalonFXConfiguration config1 = new TalonFXConfiguration();
+    //     TalonFXConfigurator temp1 = leftMotor.getConfigurator();
+    //     config1.MotorOutput.NeutralMode = Constants.defaultNeutral; //temp for when default neutral mode is coast
+    //     config1.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    //     config1.CurrentLimits.StatorCurrentLimitEnable = true;
+    //     config1.CurrentLimits.StatorCurrentLimit = currentLimit;
         
-        Slot0Configs slot0Configs = config1.Slot0;
-        slot0Configs.kS = kS; // Add 0.25 V output to overcome static friction
-        slot0Configs.kV = kV; // A velocity target of 1 rps results in 0.12 V output
-        slot0Configs.kA = kA; // An acceleration of 1 rps/s requires 0.01 V output
-        slot0Configs.kP = kP; // A position error of 2.5 rotations results in 12 V output
-        slot0Configs.kI = kI; // no output for integrated error
-        slot0Configs.kD = kD; // A velocity error of 1 rps results in 0.1 V output
-        slot0Configs.kG = kG; // for gravity
+    //     Slot0Configs slot0Configs = config1.Slot0;
+    //     slot0Configs.kS = kS; // Add 0.25 V output to overcome static friction
+    //     slot0Configs.kV = kV; // A velocity target of 1 rps results in 0.12 V output
+    //     slot0Configs.kA = kA; // An acceleration of 1 rps/s requires 0.01 V output
+    //     slot0Configs.kP = kP; // A position error of 2.5 rotations results in 12 V output
+    //     slot0Configs.kI = kI; // no output for integrated error
+    //     slot0Configs.kD = kD; // A velocity error of 1 rps results in 0.1 V output
+    //     slot0Configs.kG = kG; // for gravity
 
-        var motionMagicConfigs = config1.MotionMagic;
-        motionMagicConfigs.MotionMagicCruiseVelocity = velocity;
-        motionMagicConfigs.MotionMagicAcceleration = acceleration;
-        motionMagicConfigs.MotionMagicJerk = jerk;
+    //     var motionMagicConfigs = config1.MotionMagic;
+    //     motionMagicConfigs.MotionMagicCruiseVelocity = velocity;
+    //     motionMagicConfigs.MotionMagicAcceleration = acceleration;
+    //     motionMagicConfigs.MotionMagicJerk = jerk;
 
-        temp1.apply(config1);
+    //     temp1.apply(config1);
 
-    }
+    // }
     /* ----- Updaters ----- */
 
     @Override
     public void periodic() {
-        BaseStatusSignal.refreshAll(
-            leftMotor.getPosition(),
-            leftMotor.getAcceleration(),
-            leftMotor.getVelocity(),
-            leftMotor.getMotorVoltage()
-        );
+        // BaseStatusSignal.refreshAll(
+        //     leftMotor.getPosition(),
+        //     leftMotor.getAcceleration(),
+        //     leftMotor.getVelocity(),
+        //     leftMotor.getMotorVoltage()
+        // );
 
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
 
-        boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
-        if (!resetDone && atLimit){
-            offset =  0;
-            leftMotor.setPosition(-.5,.5);
-            rightMotor.setPosition(-.5,.5);
-            resetDone = true;
+        if (!resetDone){
+            boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
+            if (atLimit){
+                offset =  0;
+                leftMotor.setPosition(-.5,.5);
+                rightMotor.setPosition(-.5,.5);
+                System.out.println("MOTOR POSITIONS RESET");
+                resetDone = true;
+            }
         }
 
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk){
-            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
             System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
 
@@ -173,10 +184,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         boolean highUp = position > 24;
         RobotContainer.setLiftUp(highUp);  // Could be abstracted for testability
 
-        recordMotionData();
-        recordTelemetry();
+        // recordMotionData();
+        // recordTelemetry();
 
-        cacheSignals();
+        // cacheSignals();
     }
 
     private boolean profileChanged() {

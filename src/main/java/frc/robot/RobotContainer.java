@@ -24,6 +24,7 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
+import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
@@ -241,25 +242,25 @@ public class RobotContainer {
         );
 
         // Trigger algae intake sequence
-        m_driver2.povDown().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povRight().onTrue(
-            new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povDown().onTrue(
+        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povRight().onTrue(
+        //     new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
-        // === Algae Positioning Controls ===
-        // Score algae at level 1 or 2 depending on POV
-        m_driver2.povLeft().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL1)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povUp().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL2)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // // === Algae Positioning Controls ===
+        // // Score algae at level 1 or 2 depending on POV
+        // m_driver2.povLeft().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL1)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povUp().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL2)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -294,10 +295,10 @@ public class RobotContainer {
         // m_driver2.b().onTrue(new ElbowCommand(50));
         // m_driver2.a().onTrue(new ElbowCommand(89));
 
-        // m_driver2.povUp().onTrue(new ElevatorCommand(38));
-        // m_driver2.povRight().onTrue(new ElevatorCommand(26));
-        // m_driver2.povLeft().onTrue(new ElevatorCommand(13));
-        // m_driver2.povDown().onTrue(new ElevatorCommand(0));
+        m_driver2.povUp().onTrue(new ElevatorCommand(38));
+        m_driver2.povRight().onTrue(new ElevatorCommand(26));
+        m_driver2.povLeft().onTrue(new ElevatorCommand(13));
+        m_driver2.povDown().onTrue(new ElevatorCommand(0));
 
         // m_driver2.y().onTrue(new DiffWristCommand(0, -60));
         // m_driver2.x().onTrue(new DiffWristCommand(90, -90));
