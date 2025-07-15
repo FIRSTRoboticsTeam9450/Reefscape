@@ -1,7 +1,6 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
-import com.pathplanner.lib.config.RobotConfig;
 
 import java.util.HashMap;
 
@@ -19,15 +18,14 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.RobotContainer;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
+
 /**
  * Uses April Tags to understand where it is and to align with primary april tag with certain offsets depending on which reef pole is choosen.
  */
-import frc.robot.subsystems.ElevatorSubsystem;
 public class AlignCommand extends Command {
 
     /* ----- April Tag ID - Positions ----- */
@@ -41,7 +39,6 @@ public class AlignCommand extends Command {
     /* ----- Subsystem Instances ----- */
     private CommandSwerveDrivetrain drive;
     private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
-    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
     /* ----- Variables ----- */
     private boolean hasTarget;
@@ -50,7 +47,7 @@ public class AlignCommand extends Command {
     private int tid;
     private boolean up = false;
     private Pose2d currentPose;
-    private boolean algae;
+
     int stuckCounter = 0;
     
     // Controller rumbles when at setpoint
@@ -140,7 +137,6 @@ public class AlignCommand extends Command {
 
         // Algae
         if (position == AlignPos.CENTER || score.getPos() == ScoringPos.ALGAEL1 || score.getPos() == ScoringPos.ALGAEL2) {
-            algae = true;
             tagLeftOffset = Constants.AlignOffsets.algaeLeft; // Set left offset for center
             tagForwardOffset = Constants.AlignOffsets.algaeBack; ; // Set forward offset for center
         }

@@ -2,9 +2,7 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkAbsoluteEncoder;
-import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.*;
 import com.revrobotics.spark.SparkBase.PersistMode;
 import com.revrobotics.spark.SparkBase.ResetMode;
 import com.revrobotics.spark.SparkLowLevel.MotorType;
@@ -13,8 +11,8 @@ import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+
 import frc.robot.Constants;
 import frc.robot.Constants.ClimberIDs;
 import frc.robot.Constants.debugging;
@@ -22,57 +20,40 @@ import frc.robot.Constants.debugging;
 /**
  * Climbers, they go up and down... is fun :)
  * <p>
- *  Grabbing Cage: 0.11
- * </p>
- * <p>
- *  Climbing: 0.6
- * </p>
- * <p>
- *  Store: 0.9
- * </p>
+ * They do be lifting the hefty robot
+ * 
+ * <p> Grabbing Cage: 0.9 </p>
+ * <p> Climbing: 0.3 </p>
+ * <p> Store: 0.1 </p>
  */
 public class ClimbSubsystem extends SubsystemBase {
 
-    /* ----- Subsystem Instance ----- */
+    /* -------- Instance -------- */
     private static ClimbSubsystem CS;
 
-    /* ----- PID Controller ----- */
-    private PIDController pid = new PIDController(55, 0, 0.5);
-    
-    /* ----- Motor ----- */
-    private SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    private SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
+    /* -------- Components -------- */
+    private final SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
+    private final SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
+    private final PIDController pid = new PIDController(55, 0, 0.5);
+    private final boolean runClimber = Constants.robotConfig.getRunClimber();
 
     private double maxVolts = 12;
 
-    private boolean runClimber = Constants.robotConfig.getRunClimber();
-
-    /* ----------- Initializaton ----------- */
-
+    /* -------- Constructor -------- */
     private ClimbSubsystem() {
-        // 0.1
-        pid.setSetpoint(0.1);
+        pid.setSetpoint(0.1); // Store position
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
-    /* ----------- Updaters ----------- */
-
-    /*
-     * POSITIONS
-     * 
-     * Grabbing: 0.98
-     * Climbing: 0.649
-     * Store: 0.211
-     * 
-     */
-
+    /* -------- Periodic Update -------- */
     @Override
     public void periodic() {
         if (runClimber) {
             double voltage = updatePIDs(encoder.getPosition());
             setVoltage(-voltage);
+
             if (debugging.ClimberPos) {
                 Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
                 Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
@@ -81,14 +62,13 @@ public class ClimbSubsystem extends SubsystemBase {
         }
     }
 
+    /* -------- PID Helpers -------- */
     public double updatePIDs(double pos) {
         double voltage = pid.calculate(pos);
-        voltage = MathUtil.clamp(voltage, -maxVolts, maxVolts);
-        return voltage;
+        return MathUtil.clamp(voltage, -maxVolts, maxVolts);
     }
 
-    /* ----------- Setters & Getters ----------- */
-
+    /* -------- Setters -------- */
     public void setVoltage(double voltage) {
         climb.setVoltage(voltage);
     }
@@ -101,11 +81,11 @@ public class ClimbSubsystem extends SubsystemBase {
         this.maxVolts = Math.abs(maxVolts);
     }
 
+    /* -------- Singleton -------- */
     public static ClimbSubsystem getInstance() {
         if (CS == null) {
             CS = new ClimbSubsystem();
         }
         return CS;
     }
-
 }

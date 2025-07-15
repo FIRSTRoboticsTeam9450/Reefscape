@@ -1,29 +1,17 @@
 package frc.robot.subsystems;
 
-import static edu.wpi.first.units.Units.Amps;
-
-import java.util.concurrent.ThreadPoolExecutor.DiscardOldestPolicy;
-
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.configs.CANrangeConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
-import com.ctre.phoenix6.controls.TorqueCurrentFOC;
 import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANrange;
 import com.ctre.phoenix6.hardware.TalonFX;
-import com.ctre.phoenix6.hardware.core.CoreTalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import au.grapplerobotics.ConfigurationFailedException;
-import au.grapplerobotics.LaserCan;
-import edu.wpi.first.math.filter.MedianFilter;
-import edu.wpi.first.units.measure.Velocity;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.IntakeIDS;
+import frc.robot.Constants.IntakeIDs;
 import frc.robot.Constants;
 
 public class DualIntakeSubsystem extends SubsystemBase{
@@ -33,10 +21,10 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
     int coralValidCount = 0;
 
-    CANrange laser = new CANrange(Constants.IntakeIDS.kDualIntakeCoralLaserID);
+    CANrange laser = new CANrange(Constants.IntakeIDs.kDualIntakeCoralLaserID);
 
     /* ----- Motors ----- */
-    private TalonFX motor = new TalonFX(IntakeIDS.kDualIntakeMotorID, Constants.CTRE_BUS);
+    private TalonFX motor = new TalonFX(IntakeIDs.kDualIntakeMotorID, Constants.CTRE_BUS);
 
     boolean hasCoral;
     boolean hasAlgae;
@@ -50,6 +38,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
     VoltageOut request = new VoltageOut(0).withEnableFOC(true);
 
     CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    RadioSoftware radio = RadioSoftware.getInstance();
+
     /* ----- Initialization ----- */
 
     /**
@@ -72,6 +62,8 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 50;
         configurator.apply(config);
+
+        radio.addMotor(motor);
 
         //coralMeasurement = coralLaserCan.getMeasurement();
     }

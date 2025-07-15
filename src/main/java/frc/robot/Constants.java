@@ -1,33 +1,51 @@
 // Copyright (c) FIRST and other WPILib contributors.
-// Open Source Software; you can modify and/or share it under the terms of
-// the WPILib BSD license file in the root directory of this project.
+// Open Source Software: you can modify and/or share under the terms of the WPILib BSD license.
 
 package frc.robot;
 
-
 import com.ctre.phoenix6.signals.NeutralModeValue;
-
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
 
 /**
- * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
- * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
- *
- * <p>It is advised to statically import this class (or one of its inner classes) wherever the
- * constants are needed, to reduce verbosity.
+ * A central place to declare constants used across the robot project.
+ * This file should only contain public static final variables.
  */
 public final class Constants {
 
-  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("0329F2BF") ? new ThingOneConfig() : new ThingTwoConfig();
+  // =========================
+  // General Robot Configuration
+  // =========================
 
+  /** Select configuration based on the RoboRIO serial number */
+  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("0329F2BF")
+      ? new ThingOneConfig()
+      : new ThingTwoConfig();
+
+  /** Enables L4 scoring behavior */
   public static boolean l4mode = false;
+
+  /** Default CAN bus used for CTRE devices */
+  public static final String CTRE_BUS = "Rio";
+
+  /** Default neutral mode for motors */
+  public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake;
+
+  /** Read-only serial number of the RoboRIO */
+  public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
+
+  // =========================
+  // Controller Ports
+  // =========================
 
   public static class OperatorConstants {
     public static final int kDriverControllerPort = 0;
   }
-  public static class IntakeIDS {
+
+  // =========================
+  // Subsystem CAN IDs
+  // =========================
+
+  public static class IntakeIDs {
     public static final int kDualIntakeMotorID = 25;
     public static final int kDualIntakeCoralLaserID = 34;
     public static final int kDualIntakeAlgaeLaserID = 35;
@@ -38,8 +56,8 @@ public final class Constants {
     public static final int kDiffWristRightMotorID = 24;
     public static final int kDiffWristPitchCANCoderID = 32;
     public static final int kDiffWristRollCANCoderID = 33;
-    public static final int KElbowWristMotorID = 22;
-    public static final int KElbowWristEncoderID = 31;
+    public static final int kElbowWristMotorID = 22;
+    public static final int kElbowWristEncoderID = 31;
   }
 
   public static class ElevatorIDs {
@@ -52,27 +70,9 @@ public final class Constants {
     public static final int kMotorID = 27;
   }
 
-  public static class ArmConstraints {
-    public static final double kRollHorizontal = 0; // temp
-    public static final double kRollVerticalCoralBottom = 0; // temp
-    public static final double kRollVerticalAlgaeBottom = 0; // temp
-    public static final double kPitchMax = 0; // temp
-    public static final double kPitchMin = 0; // temp
-    public static final double kElbowMax = 0; // temp
-    public static final double kElbowMin = 0; // temp
-  }
-
-  public static class ArmPositions {
-    public static final double kSourceElbow = 0; // temp
-    public static final double kSourcePitch = 0; // temp
-    public static final double kSourceElevator = 0; // temp
-    public static final double kGroundIntakeCoralElbow = 0; // temp
-    public static final double kGroundIntakeCoralPitch = 0; // temp
-    public static final double kGroundIntakeCoralElevator = 0; // temp
-    public static final double kGroundIntakeAlgaeElbow = 0; // temp
-    public static final double kGroundIntakeAlgaePitch = 0; // temp
-    public static final double kGroundIntakeAlgaeElevator = 0; // temp
-  }
+  // =========================
+  // Field Alignment Offsets
+  // =========================
 
   public static class AlignOffsets {
     public static final double leftReef = 0.173;
@@ -80,13 +80,14 @@ public final class Constants {
     public static final double firstCoralBack = 0.6;
     public static final double scoreCoralBack = 0.44;
     public static final double algaeBack = 0.65;
-    public static final double algaeLeft = 0;
+    public static final double algaeLeft = 0.0;
   }
 
-  public static final String CTRE_BUS = "Rio";
-  public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake; //normally brake, temporarly coast
-  public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
-// 0.05
+  // =========================
+  // Enumerations
+  // =========================
+
+  /** Describes robot's current scoring or intake position */
   public enum ScoringPos {
     START,
     INTAKE_CORAL,
@@ -96,10 +97,6 @@ public final class Constants {
     ALGAE_STORE,
     SCORE_NET,
     SCORE_PROCESSOR,
-    CORAL_SCOREL1,
-    CORAL_SCOREL2,
-    CORAL_SCOREL3,
-    CORAL_SCOREL4,
     SCORE_CORAL,
     ScoreL4,
     ALGAEL1,
@@ -108,28 +105,33 @@ public final class Constants {
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,
     PRE_L4,
-    L1_STORE,
     LOLIPOP_INTAKE_ALGAE
   }
 
+  /** Used for aligning robot to field features */
   public enum AlignPos {
     LEFT,
     RIGHT,
     CENTER
   }
 
+  /** Reserved for future scoring tier/priority logic */
   public enum ScoringLevel {
-    
+    // Empty – define levels if needed
   }
+
+  // =========================
+  // Debugging Controls
+  // =========================
 
   public static class debugging {
     public static final boolean SwerveDebugging = false;
     public static final boolean LimelightDebugging = false;
     public static final boolean CoordAllowedPathsDebugging = false;
-    public static final boolean CoordPositionDebugging = true;
-    public static final boolean CoordAllAtSetpoint = false;
-    public static final boolean ClimberPos = true;
-    public static final boolean currentPos = true;
+    public static final boolean CoordPositionDebugging = false;
+    public static final boolean CoordAllAtSetpoint = true;
+    public static final boolean ClimberPos = false;
+    public static final boolean currentPos = false;
+    public static final boolean DiffyTuningValues = true;
   }
-
 }

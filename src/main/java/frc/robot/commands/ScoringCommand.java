@@ -1,60 +1,55 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
-import frc.robot.subsystems.ElevatorSubsystem;
 
-/*
- * Score a game piece - automatic for coral and algae
+/**
+ * Command to score a game piece. Automatically determines scoring logic 
+ * based on coral or algae detection and scoring position/state.
  */
 public class ScoringCommand extends Command {
 
-    /* ----- Subsystem Instances ----- */
-    private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    private CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
-    private CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
-    private CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
-    private CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
-    private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
+    // ----- Subsystem Instances -----
+    private final DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    private final CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
+    private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
+    private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
+    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
+    private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
-    /* ----- Variables ----- */
-    private Timer timer = new Timer();
+    // ----- Variables -----
+    private final Timer timer = new Timer();
     private ScoringPos position;
     private boolean algae;
-    private double coralTriggerDistance = Constants.robotConfig.getCoralTriggerDistance();
-    private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+    private double runDelay;
     private boolean running;
 
-    /* ----------- Initialization ----------- */
-
+    /** Initialization logic based on current scoring position. */
     @Override
     public void initialize() {
+        runDelay = 0;
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
-        if (scoreSub.getPos() != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
+
+        if (position != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
             running = true;
         } else {
-            score();
+            score(); // Direct scoring if already in correct state
         }
-        
-        
     }
 
+    /** Handles the actual scoring based on detected conditions. */
     public void score() {
-        if (scoreSub.getAlgae() || position == ScoringPos.ALGAE_STORE) {
-            if (scoreSub.getAlgaeNet()) {
-                intake.setVoltage(-10.5);
-            } else {
-                intake.setVoltage(-3);
-            }
-        } else if(scoreSub.getScoringLevel() == 4) {
+        if (algae || position == ScoringPos.ALGAE_STORE) {
+            intake.setVoltage(scoreSub.getAlgaeNet() ? -10.5 : -3);
+        } else if (scoreSub.getScoringLevel() == 4) {
             elev.schedule();
             intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
@@ -66,52 +61,46 @@ public class ScoringCommand extends Command {
         timer.restart();
     }
 
+    /** Main execution logic - monitors subsystem state before initiating score. */
     @Override
     public void execute() {
-        if (running && scoreSub.getAllAtSetpoints()) {
-            score();
-            running = false;
+        if (runDelay > 20) {
+            if (running && scoreSub.getAllAtSetpoints()) {
+                score();
+                running = false;
+            }
+        } else {
+            scoreSub.checkAllAtSetpoints();
+            runDelay++;
         }
+        Logger.recordOutput("Reefscape/Debugging/Scoring Run Delay", runDelay);
     }
 
-    /* ----------- Finishers ----------- */
-
+    /** Determines if the command has completed its scoring cycle. */
     @Override
     public boolean isFinished() {
-        // finish after one second
-        if (running) {
-            return false;
-        }
-        if (DriverStation.isAutonomous()) {
-            return timer.get() > 0.5;
-        } else {
-            if (algae) {
-                return timer.get() > 0.5;
-            } else {
-                return timer.get() > 1;
-            }
-        }
+        if (running) return false;
+
+        double timeElapsed = timer.get();
+        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1;
     }
-    
+
+    /** Logic to run at command end - retries or transitions to storage depending on state. */
     @Override
     public void end(boolean interrupted) {
+        intake.setVoltage(0);
+
         if (intake.hasCoral() && !DriverStation.isAutonomous()) {
             retry.schedule();
-        } else {
-            // go to store
-            intake.setVoltage(0);
-            if (!algae && CoordinationSubsytem.autoGround) {
-                new CoordinationCommand(ScoringPos.CORAL_STORE)
+        } else if (!algae && CoordinationSubsytem.autoGround) {
+            new CoordinationCommand(ScoringPos.CORAL_STORE)
                 .andThen(new WaitCommand(0.65))
                 .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
-                .andThen(new DualIntakeCommand(false))
-                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
+                    .andThen(new DualIntakeCommand(false))
+                    .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
                 .schedule();
-            } else {
-                store.schedule();
-            }
+        } else {
+            store.schedule();
         }
-
-        
     }
 }

@@ -10,7 +10,6 @@ import com.ctre.phoenix6.signals.InvertedValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -22,35 +21,38 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(5, 0, 0);
+    private PIDController pitchPID = new PIDController(4, 0, 0.25);
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
-    // private SparkFlex leftMotor = new SparkFlex(WristIDs.kDiffWristLeftMotorID, MotorType.kBrushless);
-    // private SparkFlex rightMotor = new SparkFlex(WristIDs.kDiffWristRightMotorID, MotorType.kBrushless);
     private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
     private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.CTRE_BUS);
 
     //Encoders
-    // private AbsoluteEncoder pitchEncoder = leftMotor.getAbsoluteEncoder(); //Max: 0.35, 0.8    positions to go to: Score: .75, hold: .5
-    // private AbsoluteEncoder rollEncoder = rightMotor.getAbsoluteEncoder(); //Max: .75, .16   Positions to go to:  Grab: .7,  Score: .2   hold: .45
     private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
     private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
 
     private double pitchPos;
     private double rollPos;
 
-    private double lastPitchPos;
-    private double lastRollPos;
+    double pitchSetpoint;
+    double rollSetpoint;
+    
+    double leftAccel;
+    double rightAccel;
 
-    private int pitchDeadCounter;
-    private int rollDeadCounter;
+    double leftVeloc;
+    double rightVeloc;
+
+    double leftStatorPull;
+    double rightStatorPull;
 
     // Variables
     private boolean runPID = true;
 
     /* ----- Initialization ----- */
 
+    RadioSoftware radio = RadioSoftware.getInstance();
     private DiffWristSubsystem() {
 
         //Telemetry
@@ -70,6 +72,8 @@ public class DiffWristSubsystem extends SubsystemBase {
             pitchPID.setSetpoint(0);
             rollPID.setSetpoint(0);
         }
+        radio.addMotor(leftMotor);
+        radio.addMotor(rightMotor);
     }
 
     /* ----- Updaters ----- */
@@ -89,46 +93,47 @@ public class DiffWristSubsystem extends SubsystemBase {
         double rVolts = pitchVoltage + rollVoltage;
         lVolts = MathUtil.clamp(lVolts, -8, 8);
         rVolts = MathUtil.clamp(rVolts, -8, 8);
-
-        if ((lVolts > 0.1 || rVolts > 0.1) && DriverStation.isEnabled()) {
-            if (pitchPos == lastPitchPos) {
-                pitchDeadCounter++;
-            } else {
-                pitchDeadCounter = 0;
-            }
-            if (rollPos == lastRollPos) {
-                rollDeadCounter++;
-            } else {
-                rollDeadCounter = 0;
-            }
-        }
         
-        // if (rollDeadCounter > 4 || pitchDeadCounter > 4) {
-        //     setVoltage(0, 0);
-        //     System.out.println("THE DIFFY ENCODERS ARE ANGRY!! STOPPING DIFFY");
-        // } else {
-        //     setVoltage(lVolts, rVolts);
-        // }
 
         setVoltage(lVolts, rVolts);
-
-        lastPitchPos = pitchPos;
-        lastRollPos = rollPos;
     }
 
     @Override
     public void periodic() {
+
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
+
         pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
         rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
+
+        pitchSetpoint = getPitchSetpoint();
+        rollSetpoint = getRollSetpoint();
+
+        leftAccel = leftMotor.getAcceleration().getValueAsDouble();
+        rightAccel = rightMotor.getAcceleration().getValueAsDouble();
+
+        leftVeloc = leftMotor.getVelocity().getValueAsDouble();
+        rightVeloc = rightMotor.getVelocity().getValueAsDouble();
+
+        leftStatorPull = leftMotor.getStatorCurrent().getValueAsDouble();
+        rightStatorPull = rightMotor.getStatorCurrent().getValueAsDouble();
+        
         if (runPID) {
             updatePID(pitchPos, rollPos);
         }
-        if (debugging.CoordPositionDebugging) {
-            Logger.recordOutput("Reefscape/DiffWrist/pitch Encoder Pos", getPitchAngle());
-            Logger.recordOutput("Reefscape/DiffWrist/roll Encoder Pos", getRollAngle());
-            Logger.recordOutput("Reefscape/DiffWrist/pitchPID Setpoint", getPitchSetpoint());
-            Logger.recordOutput("Reefscape/DiffWrist/rollPID Setpoint", getRollSetpoint());
+        if (debugging.DiffyTuningValues) {
+            Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
+            Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
+            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
+            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
+            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
+            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360);
+            Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
+            Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
+            Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
+            Logger.recordOutput("Diffy Tuning/Right Motor Velco", rightVeloc);
+            Logger.recordOutput("Diffy Tuning/Left Motor Stator Current", leftStatorPull);
+            Logger.recordOutput("Diffy Tuning/Right Motor Stator Current", rightStatorPull);
         }
 
     }

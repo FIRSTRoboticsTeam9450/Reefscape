@@ -8,7 +8,6 @@ import java.util.Set;
 import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
 import frc.robot.Constants.ScoringPos;
@@ -26,7 +25,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     //private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     /* ----- Encoders ----- */
-    private double pitchEncoder; 
     private double rollEncoder;
     private double elbowEncoder;
     private double elevEncoder;
@@ -55,7 +53,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Coral_Score_Go_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet<>();
     private Set<ScoringPos> Pre_L4_Set = new HashSet<>();
-    private Set<ScoringPos> L1_Store_Set = new HashSet<>();
     private Set<ScoringPos> Lolipop_Intake_Set = new HashSet<>();
     
     boolean algae;
@@ -75,11 +72,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double elevOriginalSetpoint;
     private double elbowOriginalSetpoint;
     private double pitchOriginalSetpoint;
-    private double rollOriginalSetpoint;
 
     private double elevAllowedDifference = 1.5;
-    private double elbowAllowedDifference = 15;
-    private double pitchAllowedDifference = 6;
+    private double pitchAllowedDifference = 12;
 
     private boolean coralSideLeft;
     private boolean l4Extend;
@@ -95,18 +90,13 @@ public class CoordinationSubsytem extends SubsystemBase{
     private CoordinationSubsytem() {
         pos = ScoringPos.START;
 
-        pitchEncoder = DW.getPitchAngle();
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
 
         Start_Set.add(ScoringPos.CORAL_STORE);
         Start_Set.add(ScoringPos.GO_SCORE_CORAL);
-
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL1);
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL2);
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL3);
-        Coral_Store_Set.add(ScoringPos.CORAL_SCOREL4);
+        
         Coral_Store_Set.add(ScoringPos.PRE_L4);
 
         Coral_Store_Set.add(ScoringPos.START);
@@ -218,10 +208,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         Pre_L4_Set.add(ScoringPos.GO_SCORE_CORAL);
         Pre_L4_Set.add(ScoringPos.INTAKE_CORAL);
 
-        L1_Store_Set.add(ScoringPos.CORAL_STORE);
-        L1_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
-        L1_Store_Set.add(ScoringPos.INTAKE_CORAL);
-
         Lolipop_Intake_Set.add(ScoringPos.CORAL_STORE);
         Lolipop_Intake_Set.add(ScoringPos.INTAKE_CORAL);
         Lolipop_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
@@ -246,10 +232,6 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         allowedPaths.put(ScoringPos.SCORE_PROCESSOR, Algae_Processor_Score_Set);
 
-        allowedPaths.put(ScoringPos.CORAL_SCOREL1, Coral_ScoreL1_Set);
-        allowedPaths.put(ScoringPos.CORAL_SCOREL2, Coral_ScoreL2_Set);
-        allowedPaths.put(ScoringPos.CORAL_SCOREL3, Coral_ScoreL3_Set);
-        allowedPaths.put(ScoringPos.CORAL_SCOREL4, Coral_ScoreL4_Set);
 
         allowedPaths.put(ScoringPos.ScoreL4, Score_L4_Set);
         allowedPaths.put(ScoringPos.SCORE_CORAL, Coral_Score_Set);
@@ -263,12 +245,10 @@ public class CoordinationSubsytem extends SubsystemBase{
         allowedPaths.put(ScoringPos.INTAKE_VERTICAL_CORAL, Coral_Intake_Vertical_Set);
         allowedPaths.put(ScoringPos.PRE_L4, Pre_L4_Set);
 
-        allowedPaths.put(ScoringPos.L1_STORE, L1_Store_Set);
     }
 
     @Override
     public void periodic() {
-        pitchEncoder = DW.getPitchAngle();
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
@@ -281,10 +261,11 @@ public class CoordinationSubsytem extends SubsystemBase{
             justFinished = false;
         }
 
-        if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint || debugging.currentPos) {
+        if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint) {
             debugger();
         }
         Logger.recordOutput("Reefscape/Scoring/AutoIntakeMode", autoGround);
+        Logger.recordOutput("Reefscape/Scoring/State", pos);
     }
 
 
@@ -340,7 +321,6 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void pitchManualMovement(double change) {
 
-        double changeTemp = Math.abs(change);
         double setpoint = DW.getPitchSetpoint();
 
         //DW.setPitchSetpoint(setpoint + change);
@@ -369,7 +349,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         elevOriginalSetpoint = Elev.getSetpoint();
         elbowOriginalSetpoint = Elbow.getSetpoint();
         pitchOriginalSetpoint = DW.getPitchSetpoint();
-        rollOriginalSetpoint = DW.getRollSetpoint();
     }
 
     public void goToStart() {
@@ -870,6 +849,18 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public boolean getAllAtSetpoints() {
         return allAtSetpoints;
+    }
+
+    public void checkAllAtSetpoints() {
+        if (Elev.atSetpoint()
+            && Elbow.atSetpoint()
+            && DW.atPitchSetpoint()
+            && DW.atRollSetpoint()
+            ) {
+                allAtSetpoints = true;
+            } else {
+                allAtSetpoints = false;
+            }
     }
 
     public int getScoringLevel() {

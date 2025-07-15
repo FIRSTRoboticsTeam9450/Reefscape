@@ -2,7 +2,6 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
-import com.ctre.phoenix6.SignalLogger;
 import com.ctre.phoenix6.configs.MotionMagicConfigs;
 import com.ctre.phoenix6.configs.Slot0Configs;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
@@ -23,12 +22,16 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
-import frc.robot.RobotContainer;
-import frc.robot.Constants.ElevatorIDs;
 
-public class ElevatorSubsystem extends SubsystemBase{
+import frc.robot.Constants;
+import frc.robot.Constants.ElevatorIDs;
+import frc.robot.RobotContainer;
+
+/**
+ * ElevatorSubsystem manages a synchronized two-motor elevator using Motion Magic,
+ * PIDF tuning, and live telemetry logging for performance monitoring.
+ */
+public class ElevatorSubsystem extends SubsystemBase {
 
     //Instance of Elevator Subsystem
     private static ElevatorSubsystem elev;
@@ -72,25 +75,41 @@ public class ElevatorSubsystem extends SubsystemBase{
     private CANdi candi = new CANdi(ElevatorIDs.kCANdiID, "CantDrive");
 
     public static ElevatorSubsystem getInstance() {
-        if (elev == null) {
-            elev = new ElevatorSubsystem();
+        if (instance == null) {
+            instance = new ElevatorSubsystem();
         }
-        return elev;
+        return instance;
     }
 
-    private ElevatorSubsystem() {
-        leftMotorConfig();
-        rightMotorConfig();
+    /* -------------------- Motor Configuration -------------------- */
+    private void configureLeftMotor() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = currentLimit;
+
+        Slot0Configs slot0 = config.Slot0;
+        slot0.kS = kS; slot0.kV = kV; slot0.kA = kA;
+        slot0.kP = kP; slot0.kI = kI; slot0.kD = kD;
+        slot0.kG = kG;
+
+        MotionMagicConfigs mm = config.MotionMagic;
+        mm.MotionMagicCruiseVelocity = velocity;
+        mm.MotionMagicAcceleration = acceleration;
+        mm.MotionMagicJerk = jerk;
+
+        leftMotor.getConfigurator().apply(config);
     }
 
-    private void rightMotorConfig(){
-        TalonFXConfiguration config2 = new TalonFXConfiguration();
-        TalonFXConfigurator temp2 = rightMotor.getConfigurator();
-        
-        config2.MotorOutput.NeutralMode = Constants.defaultNeutral;
-        config2.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-        config2.CurrentLimits.StatorCurrentLimitEnable = true;
-        config2.CurrentLimits.StatorCurrentLimit = currentLimit;
+    private void configureRightMotor() {
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = currentLimit;
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }
@@ -124,9 +143,16 @@ public class ElevatorSubsystem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        BaseStatusSignal.refreshAll(
+            leftMotor.getPosition(),
+            leftMotor.getAcceleration(),
+            leftMotor.getVelocity(),
+            leftMotor.getMotorVoltage()
+        );
+
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
-        
+
         boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
         if (!resetDone && atLimit){
             offset =  0;
@@ -141,17 +167,31 @@ public class ElevatorSubsystem extends SubsystemBase{
         }
 
         leftMotor.setControl(m_request.withPosition(setpoint + offset));
-        
-        atSetpoint = Math.abs(position - setpoint) < .3;
+        atSetpoint = Math.abs(position - setpoint) < 0.3;
+
+        trackMovementTiming();
+        boolean highUp = position > 24;
+        RobotContainer.setLiftUp(highUp);  // Could be abstracted for testability
+
+        recordMotionData();
+        recordTelemetry();
+
+        cacheSignals();
+    }
+
+    private boolean profileChanged() {
+        return m_request.Velocity != velocity ||
+               m_request.Acceleration != acceleration ||
+               m_request.Jerk != jerk;
+    }
+
+    private void trackMovementTiming() {
         double currTime = Timer.getFPGATimestamp();
-        if (!atSetpoint){
-            if (!inMove){
-                moveStartTime = currTime;
-                inMove = true;
-            }
+        if (!atSetpoint) {
+            if (!inMove) moveStartTime = currTime;
+            inMove = true;
             moveTime = currTime - moveStartTime;
-        }
-        else if (inMove){
+        } else if (inMove) {
             inMove = false;
         }
         Logger.recordOutput("Elevator/Time", moveTime);
@@ -174,8 +214,7 @@ public class ElevatorSubsystem extends SubsystemBase{
        
     }
 
-    /* ----- Getters & Setters ----- */
-
+    /* -------------------- Getters & Setters -------------------- */
     public double getPosition() {
         return position;
     }
@@ -193,64 +232,48 @@ public class ElevatorSubsystem extends SubsystemBase{
     }
 
     public void updateMotionMagic(double multiplier) {
-        // if(multiplier < 0) {
-        //     velocity = -20;
-        // }
-        // else if(multiplier == 0) {
-        //     velocity = 0;
-        // }
-        // else{
-        //     velocity = 20;
-        // }
-        //velocity = 40 * multiplier;
-        //acceleration = 125 * multiplier;
+        // Placeholder for dynamic velocity/acceleration scaling
+        // velocity = 40 * multiplier;
+        // acceleration = 125 * multiplier;
     }
 
-    private double dynamicUpdate(String desc, double current){
-        double v = SmartDashboard.getNumber(desc,current);
-        // if (v == current){
-        //     SmartDashboard.putNumber(desc,current);
-        // }
-        return v;
+    /* -------------------- SmartDashboard Param Sync -------------------- */
+    private double dynamicUpdate(String desc, double current) {
+        return SmartDashboard.getNumber(desc, current);
     }
 
-    private void dynamicPut(String desc, double current){
-        SmartDashboard.putNumber(desc,current);
+    private void dynamicPut(String desc, double current) {
+        SmartDashboard.putNumber(desc, current);
     }
 
-    public void putParams(){
-        dynamicPut("elev_velocity",velocity);
+    public void putParams() {
+        dynamicPut("elev_velocity", velocity);
         dynamicPut("elev_acc", acceleration);
-        dynamicPut("elev_jerk",jerk);
-
-        dynamicPut("elev_currentlimit",currentLimit);
-
-        dynamicPut("elev_kS",kS);
-        dynamicPut("elev_kV",kV);
-        dynamicPut("elev_kA",kA);
-        dynamicPut("elev_kP",kP);
-        dynamicPut("elev_kI",kI);
-        dynamicPut("elev_kD",kD);
-        dynamicPut("elev_kG",kG);
-  
-        leftMotorConfig();
+        dynamicPut("elev_jerk", jerk);
+        dynamicPut("elev_currentlimit", currentLimit);
+        dynamicPut("elev_kS", kS);
+        dynamicPut("elev_kV", kV);
+        dynamicPut("elev_kA", kA);
+        dynamicPut("elev_kP", kP);
+        dynamicPut("elev_kI", kI);
+        dynamicPut("elev_kD", kD);
+        dynamicPut("elev_kG", kG);
+        configureLeftMotor();
     }
 
-    public void updateParams(){
-        velocity = dynamicUpdate("elev_velocity",velocity);
+    public void updateParams() {
+        velocity = dynamicUpdate("elev_velocity", velocity);
         acceleration = dynamicUpdate("elev_acc", acceleration);
-        jerk = dynamicUpdate("elev_jerk",jerk);
-
-        currentLimit = dynamicUpdate("elev_currentlimit",currentLimit);
-
-        kS = dynamicUpdate("elev_kS",kS);
-        kV = dynamicUpdate("elev_kV",kV);
-        kA = dynamicUpdate("elev_kA",kA);
-        kP = dynamicUpdate("elev_kP",kP);
-        kI = dynamicUpdate("elev_kI",kI);
-        kD = dynamicUpdate("elev_kD",kD);
-        kG = dynamicUpdate("elev_kG",kG);
-  
-        leftMotorConfig();
+        jerk = dynamicUpdate("elev_jerk", jerk);
+        currentLimit = dynamicUpdate("elev_currentlimit", currentLimit);
+        kS = dynamicUpdate("elev_kS", kS);
+        kV = dynamicUpdate("elev_kV", kV);
+        kA = dynamicUpdate("elev_kA", kA);
+        kP = dynamicUpdate("elev_kP", kP);
+        kI = dynamicUpdate("elev_kI", kI);
+        kD = dynamicUpdate("elev_kD", kD);
+        kG = dynamicUpdate("elev_kG", kG);
+        configureLeftMotor();
     }
 }
+
