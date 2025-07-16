@@ -23,21 +23,21 @@ public class ElbowSubsystem extends SubsystemBase {
     private static ElbowSubsystem instance;
 
     // Motor and encoder
-    private final TalonFX motor = new TalonFX(WristIDs.kElbowWristMotorID, "CantDrive");//Constants.CTRE_BUS);
-    private final CANcoder encoder = new CANcoder(WristIDs.kElbowWristEncoderID, "CantDrive");//Constants.CTRE_BUS);
+    private final TalonFX motor = new TalonFX(WristIDs.kElbowWristMotorID, Constants.CTRE_BUS);
+    private final CANcoder encoder = new CANcoder(WristIDs.kElbowWristEncoderID, Constants.CTRE_BUS);
 
     // Measurement and control variables
     private double elbowAngle;
     private double setpoint;
-    private final double offsetToZeroDegrees = 0.8;//-110.3;
+    private final double offsetToZeroDegrees = -110.3;
 
     // Motion Magic parameters
-    private double velocity = 1; //18;
-    private double acceleration = 1; //11;
-    private double jerk = 1; //400;
+    private double velocity = 18;
+    private double acceleration = 11;
+    private double jerk = 400;
 
     // Feedforward and PIDF constants
-    private double currentLimit = 10;//110;
+    private double currentLimit = 110;
     private double kS = 0;
     private double kV = 0.33;
     private double kA = 0.05;
@@ -50,27 +50,18 @@ public class ElbowSubsystem extends SubsystemBase {
     private DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
     private final Log logger;
 
-    public boolean newRobot = true;
-
     private ElbowSubsystem() {
         logger = new Log("elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);
-        motorConfig();
         configureEncoder();
-        
-        setSetpoint(0); // 50 default starting position
+        setSetpoint(50); // default starting position
     }
 
     // Configure CANcoder settings
     private void configureEncoder() {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-        // if (newRobot){
-        //     cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        // }
-        // else{
-            cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        // }
-        cc_cfg.MagnetSensor.MagnetOffset = .8; //Constants.robotConfig.getElbowOffset();
+        cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        cc_cfg.MagnetSensor.MagnetOffset = Constants.robotConfig.getElbowOffset();
         encoder.getConfigurator().apply(cc_cfg);
     }
 
@@ -103,7 +94,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
         // Motor output settings
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive; // flipped
+        config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         motor.getConfigurator().apply(config);
     }
@@ -111,13 +102,13 @@ public class ElbowSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Update readings
-        // elbowAngle = motor.getPosition().getValueAsDouble() * -360 - offsetToZeroDegrees;
+        elbowAngle = motor.getPosition().getValueAsDouble() * -360 - offsetToZeroDegrees;
         double motorStatorPull = motor.getStatorCurrent().getValueAsDouble();
 
         // Logging outputs
         Logger.recordOutput("Reefscape/Elbow/Motor Encoder", motor.getRotorPosition().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/Raw Motor Rotations", (elbowAngle + offsetToZeroDegrees) / -360);
-        // Logger.recordOutput("Reefscape/Elbow/Elbow Angle", elbowAngle);
+        Logger.recordOutput("Reefscape/Elbow/Elbow Angle", elbowAngle);
         Logger.recordOutput("Reefscape/Elbow/Elbow Setpoint", getSetpoint());
         Logger.recordOutput("Diffy Tuning/Elbow Stator Pull", motorStatorPull);
 
@@ -127,7 +118,7 @@ public class ElbowSubsystem extends SubsystemBase {
             System.out.println("Updated motion profile: (" + velocity + ", " + acceleration + ", " + jerk + ")");
         }
 
-        motor.setControl(m_request.withPosition(setpoint));//(setpoint + offsetToZeroDegrees) / -360));
+        motor.setControl(m_request.withPosition((setpoint + offsetToZeroDegrees) / -360));
         logger.updateLogger(elbowAngle, setpoint, atSetpoint());
     }
 

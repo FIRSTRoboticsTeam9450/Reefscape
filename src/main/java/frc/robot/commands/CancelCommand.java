@@ -10,27 +10,27 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class CancelCommand extends Command {
 
-    // CoordinationSubsytem score = CoordinationSubsytem.getInstance();
-    // DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    // Command stop = new SequentialCommandGroup(
-    //     new CoordinationCommand(ScoringPos.CORAL_STORE), 
-    //     new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
-    // );
+    CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    Command stop = new SequentialCommandGroup(
+        new CoordinationCommand(ScoringPos.CORAL_STORE), 
+        new InstantCommand(() -> CommandScheduler.getInstance().cancelAll())
+    );
 
-    // @Override
-    // public void initialize() {
-    //     CoordinationCommand.justCancelled = true;
-    //     if (score.getPos() == ScoringPos.INTAKE_CORAL) {
-    //         intake.setVoltage(5);
-    //     } else {
-    //         intake.setVoltage(0);
-    //     }
-    //     stop.schedule();
-    // }
+    @Override
+    public void initialize() {
+        CoordinationCommand.justCancelled = true;
+        if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+            intake.setVoltage(5);
+        } else {
+            intake.setVoltage(0);
+        }
+        stop.schedule();
+    }
 
-    // @Override
-    // public boolean isFinished() {
-    //     return true;
-    // }
+    @Override
+    public boolean isFinished() {
+        return true;
+    }
 
 }

@@ -26,7 +26,7 @@ public class Robot extends LoggedRobot {
   private Command m_autonomousCommand;
 
   private final RobotContainer m_robotContainer;
-  // private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
+  private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
   private ElbowSubsystem elbow = ElbowSubsystem.getInstance();
 
   //public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
@@ -48,7 +48,7 @@ public class Robot extends LoggedRobot {
   public void robotInit() {
     m_robotContainer.driveBezier.dashboardInitialSettings();
     m_robotContainer.rotateBezier.dashboardInitialSettings();
-    // elev.putParams();
+    elev.putParams();
     elbow.putParams();
   }
 
@@ -93,7 +93,7 @@ public class Robot extends LoggedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    // elev.updateParams();
+    elev.updateParams();
     elbow.updateParams();
 
 

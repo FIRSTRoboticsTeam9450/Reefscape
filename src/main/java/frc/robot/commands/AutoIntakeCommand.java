@@ -8,59 +8,59 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class AutoIntakeCommand extends Command{
 
-    // /* ----- Instance of the subsystem ----- */
-    // private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
+    /* ----- Instance of the subsystem ----- */
+    private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
 
-    // Timer timer = new Timer();
-    // Timer grabbedTimer = new Timer();
+    Timer timer = new Timer();
+    Timer grabbedTimer = new Timer();
 
-    // boolean grabbed = false;
-    // boolean source;
+    boolean grabbed = false;
+    boolean source;
 
-    // public AutoIntakeCommand(boolean source) {
-    //     this.source = source;
-    //     addRequirements(DI);
-    // }
+    public AutoIntakeCommand(boolean source) {
+        this.source = source;
+        addRequirements(DI);
+    }
 
-    // /* ----- Initialization ----- */
+    /* ----- Initialization ----- */
 
-    // @Override
-    // public void initialize() {
-    //     //System.out.println("INTAKING");
-    //     timer.restart();
-    //     DI.setVoltage(12);
-    //     grabbed = false;
-    // }
+    @Override
+    public void initialize() {
+        //System.out.println("INTAKING");
+        timer.restart();
+        DI.setVoltage(12);
+        grabbed = false;
+    }
 
-    // /* ----- Updaters ----- */
+    /* ----- Updaters ----- */
 
-    // @Override
-    // public void execute() {
-    //     if (DI.hasCoral() && !grabbed) {
-    //         grabbedTimer.restart();
-    //         grabbed = true;
-    //     }
+    @Override
+    public void execute() {
+        if (DI.hasCoral() && !grabbed) {
+            grabbedTimer.restart();
+            grabbed = true;
+        }
         
-    // }
+    }
 
-    // /* ----- Finishers ----- */
+    /* ----- Finishers ----- */
 
-    // @Override
-    // public boolean isFinished() {
-    //     if (source) {
-    //         return DI.hasCoral() || timer.get() > 3;
-    //     }
-    //     return timer.get() > 5 || (DI.hasCoral() && grabbedTimer.get() > 0.3);
+    @Override
+    public boolean isFinished() {
+        if (source) {
+            return DI.hasCoral() || timer.get() > 3;
+        }
+        return timer.get() > 5 || (DI.hasCoral() && grabbedTimer.get() > 0.3);
 
-    //     // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
-    // }
+        // return (DI.getCoralLaserDistance() < coralTriggerDistance || DI.getAlgaeLaserDistance() < algaeTriggerDistance);
+    }
 
-    // @Override
-    // public void end(boolean interrupted) {
-    //     DI.setVoltage(6);
-    //     new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0.5))).schedule();
-    //     System.out.println("SLOW INTAKE SAD NO WHY ACTUALLY SOBBING :'(");
-    //     //store.schedule();
-    // }
+    @Override
+    public void end(boolean interrupted) {
+        DI.setVoltage(6);
+        new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0.5))).schedule();
+        System.out.println("SLOW INTAKE SAD NO WHY ACTUALLY SOBBING :'(");
+        //store.schedule();
+    }
     
 }

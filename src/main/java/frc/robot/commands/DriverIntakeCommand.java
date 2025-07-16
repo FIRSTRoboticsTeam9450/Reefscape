@@ -9,49 +9,49 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class DriverIntakeCommand extends Command {
 
-    // DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    // CoordinationSubsytem score = CoordinationSubsytem.getInstance();
-    // CommandSwerveDrivetrain drive;
-    // CommandXboxController driveController;
+    DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    CommandSwerveDrivetrain drive;
+    CommandXboxController driveController;
 
-    // DriveForwardCommand forward;
+    DriveForwardCommand forward;
 
 
-    // public DriverIntakeCommand (CommandXboxController driveController, CommandSwerveDrivetrain drive) {
-    //     this.drive = drive;
-    //     this.driveController = driveController;
-    //     forward = new DriveForwardCommand(drive, driveController);
-    // }
+    public DriverIntakeCommand (CommandXboxController driveController, CommandSwerveDrivetrain drive) {
+        this.drive = drive;
+        this.driveController = driveController;
+        forward = new DriveForwardCommand(drive, driveController);
+    }
 
-    // @Override
-    // public void initialize() {
-    //     if (score.getPos() == ScoringPos.INTAKE_CORAL) {
-    //         if (driveController.getLeftTriggerAxis() > 0.05) {
-    //             if (!forward.isScheduled()) {
-    //                 forward.schedule();
-    //             }
-    //         } else {
-    //             forward.cancel();
-    //         }
-    //     } else {
-    //         new GoToScorePosCommand().schedule();
-    //     }
+    @Override
+    public void initialize() {
+        if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+            if (driveController.getLeftTriggerAxis() > 0.05) {
+                if (!forward.isScheduled()) {
+                    forward.schedule();
+                }
+            } else {
+                forward.cancel();
+            }
+        } else {
+            new GoToScorePosCommand().schedule();
+        }
 
-    //     // if (!score.getAlgae()) {
-    //     //     new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)).schedule();
-    //     // } else {
-    //     //     new GoToScorePosCommand().schedule();
-    //     // }
-    // }
+        // if (!score.getAlgae()) {
+        //     new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)).schedule();
+        // } else {
+        //     new GoToScorePosCommand().schedule();
+        // }
+    }
 
-    // @Override
-    // public boolean isFinished() {
-    //     return driveController.getLeftTriggerAxis() < 0.02;
-    // }
+    @Override
+    public boolean isFinished() {
+        return driveController.getLeftTriggerAxis() < 0.02;
+    }
 
-    // @Override
-    // public void end(boolean interrupted) {
-    //     forward.cancel();
-    // }
+    @Override
+    public void end(boolean interrupted) {
+        forward.cancel();
+    }
     
 }
