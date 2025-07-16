@@ -18,217 +18,217 @@ import frc.robot.Constants.debugging;
 
 public class DiffWristSubsystem extends SubsystemBase {
     
-    private static DiffWristSubsystem DW;
+    // private static DiffWristSubsystem DW;
     
-    // PID
-    private PIDController pitchPID = new PIDController(4, 0, 0.25);
-    private PIDController rollPID = new PIDController(50, 0, 0);
+    // // PID
+    // private PIDController pitchPID = new PIDController(4, 0, 0.25);
+    // private PIDController rollPID = new PIDController(50, 0, 0);
 
-    // // Motors
-    private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
-    private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.CTRE_BUS);
+    // // // Motors
+    // private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
+    // private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.CTRE_BUS);
 
-    //Encoders
-    private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
-    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
+    // //Encoders
+    // private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
+    // private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
 
-    private double pitchPos;
-    private double rollPos;
+    // private double pitchPos;
+    // private double rollPos;
 
-    double pitchSetpoint;
-    double rollSetpoint;
+    // double pitchSetpoint;
+    // double rollSetpoint;
     
-    double leftAccel;
-    double rightAccel;
+    // double leftAccel;
+    // double rightAccel;
 
-    double leftVeloc;
-    double rightVeloc;
+    // double leftVeloc;
+    // double rightVeloc;
 
-    double leftStatorPull;
-    double rightStatorPull;
+    // double leftStatorPull;
+    // double rightStatorPull;
 
-    // Variables
-    private boolean runPID = true;
+    // // Variables
+    // private boolean runPID = true;
 
-    /* ----- Initialization ----- */
+    // /* ----- Initialization ----- */
 
-    RadioSoftware radio = RadioSoftware.getInstance();
-    private DiffWristSubsystem() {
+    // RadioSoftware radio = RadioSoftware.getInstance();
+    // private DiffWristSubsystem() {
 
-        //Telemetry
-        SmartDashboard.putBoolean("Reefscape/DiffWrist/RunPID?", runPID);
+    //     //Telemetry
+    //     SmartDashboard.putBoolean("Reefscape/DiffWrist/RunPID?", runPID);
 
-        //Motor Configuration
-        TalonFXConfigurator leftConfigurator = leftMotor.getConfigurator();
-        TalonFXConfigurator rightConfigurator = rightMotor.getConfigurator();
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
-        leftConfigurator.apply(config);
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        rightConfigurator.apply(config);
+    //     //Motor Configuration
+    //     TalonFXConfigurator leftConfigurator = leftMotor.getConfigurator();
+    //     TalonFXConfigurator rightConfigurator = rightMotor.getConfigurator();
+    //     TalonFXConfiguration config = new TalonFXConfiguration();
+    //     config.MotorOutput.NeutralMode = Constants.defaultNeutral;
+    //     leftConfigurator.apply(config);
+    //     config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+    //     rightConfigurator.apply(config);
 
-        //Diff Wrist Start point
-        if (runPID) {
-            pitchPID.setSetpoint(0);
-            rollPID.setSetpoint(0);
-        }
-        radio.addMotor(leftMotor);
-        radio.addMotor(rightMotor);
-    }
+    //     //Diff Wrist Start point
+    //     if (runPID) {
+    //         pitchPID.setSetpoint(0);
+    //         rollPID.setSetpoint(0);
+    //     }
+    //     radio.addMotor(leftMotor);
+    //     radio.addMotor(rightMotor);
+    // }
 
-    /* ----- Updaters ----- */
+    // /* ----- Updaters ----- */
 
-    /**
-     * Will update the volts to use calculated by the PID
-     * @param pos current position
-     */
-    public void updatePID(double pitchPos, double rollPos) {
-        double pitchVoltage = pitchPID.calculate(pitchPos);
-        double rollVoltage = rollPID.calculate(rollPos);
+    // /**
+    //  * Will update the volts to use calculated by the PID
+    //  * @param pos current position
+    //  */
+    // public void updatePID(double pitchPos, double rollPos) {
+    //     double pitchVoltage = pitchPID.calculate(pitchPos);
+    //     double rollVoltage = rollPID.calculate(rollPos);
 
-        //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
-        pitchVoltage *= 3;
+    //     //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
+    //     pitchVoltage *= 3;
 
-        double lVolts = pitchVoltage - rollVoltage;
-        double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -8, 8);
-        rVolts = MathUtil.clamp(rVolts, -8, 8);
+    //     double lVolts = pitchVoltage - rollVoltage;
+    //     double rVolts = pitchVoltage + rollVoltage;
+    //     lVolts = MathUtil.clamp(lVolts, -8, 8);
+    //     rVolts = MathUtil.clamp(rVolts, -8, 8);
         
 
-        setVoltage(lVolts, rVolts);
-    }
+    //     setVoltage(lVolts, rVolts);
+    // }
 
-    @Override
-    public void periodic() {
+    // @Override
+    // public void periodic() {
 
-        runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
+    //     runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
 
-        pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
-        rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
+    //     pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
+    //     rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
 
-        pitchSetpoint = getPitchSetpoint();
-        rollSetpoint = getRollSetpoint();
+    //     pitchSetpoint = getPitchSetpoint();
+    //     rollSetpoint = getRollSetpoint();
 
-        leftAccel = leftMotor.getAcceleration().getValueAsDouble();
-        rightAccel = rightMotor.getAcceleration().getValueAsDouble();
+    //     leftAccel = leftMotor.getAcceleration().getValueAsDouble();
+    //     rightAccel = rightMotor.getAcceleration().getValueAsDouble();
 
-        leftVeloc = leftMotor.getVelocity().getValueAsDouble();
-        rightVeloc = rightMotor.getVelocity().getValueAsDouble();
+    //     leftVeloc = leftMotor.getVelocity().getValueAsDouble();
+    //     rightVeloc = rightMotor.getVelocity().getValueAsDouble();
 
-        leftStatorPull = leftMotor.getStatorCurrent().getValueAsDouble();
-        rightStatorPull = rightMotor.getStatorCurrent().getValueAsDouble();
+    //     leftStatorPull = leftMotor.getStatorCurrent().getValueAsDouble();
+    //     rightStatorPull = rightMotor.getStatorCurrent().getValueAsDouble();
         
-        if (runPID) {
-            updatePID(pitchPos, rollPos);
-        }
-        if (debugging.DiffyTuningValues) {
-            Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
-            Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
-            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
-            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
-            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
-            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360);
-            Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
-            Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
-            Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
-            Logger.recordOutput("Diffy Tuning/Right Motor Velco", rightVeloc);
-            Logger.recordOutput("Diffy Tuning/Left Motor Stator Current", leftStatorPull);
-            Logger.recordOutput("Diffy Tuning/Right Motor Stator Current", rightStatorPull);
-        }
+    //     if (runPID) {
+    //         updatePID(pitchPos, rollPos);
+    //     }
+    //     if (debugging.DiffyTuningValues) {
+    //         Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
+    //         Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
+    //         Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
+    //         Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
+    //         Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
+    //         Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360);
+    //         Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
+    //         Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
+    //         Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
+    //         Logger.recordOutput("Diffy Tuning/Right Motor Velco", rightVeloc);
+    //         Logger.recordOutput("Diffy Tuning/Left Motor Stator Current", leftStatorPull);
+    //         Logger.recordOutput("Diffy Tuning/Right Motor Stator Current", rightStatorPull);
+    //     }
 
-    }
+    // }
 
 
-    /* ----- Setters & Getters ----- */
+    // /* ----- Setters & Getters ----- */
 
-    public static DiffWristSubsystem getInstance() {
-        if (DW == null) {
-            DW = new DiffWristSubsystem();
-        }
-        return DW;
-    }
+    // public static DiffWristSubsystem getInstance() {
+    //     if (DW == null) {
+    //         DW = new DiffWristSubsystem();
+    //     }
+    //     return DW;
+    // }
 
-    /**
-     * Finds the current encoder value for the wrist's pitch
-     * @return the current encoder value for pitch in degrees
-     */
-    public double getPitchAngle() {
-        return pitchPos * 360;
-    }
+    // /**
+    //  * Finds the current encoder value for the wrist's pitch
+    //  * @return the current encoder value for pitch in degrees
+    //  */
+    // public double getPitchAngle() {
+    //     return pitchPos * 360;
+    // }
 
-    /**
-     * Finds the current encoder value for the wrist's roll
-     * @return the current encoder value for roll in degrees
-     */
-    public double getRollAngle() {
-        return rollPos * 360;
-    }
+    // /**
+    //  * Finds the current encoder value for the wrist's roll
+    //  * @return the current encoder value for roll in degrees
+    //  */
+    // public double getRollAngle() {
+    //     return rollPos * 360;
+    // }
 
-    /**
-     * Sets both of the motors is the Diff Wrist system to same voltage
-     * Temporary way of usage, use till deemed safe to use a PID
-     * @param leftVoltage voltage to set left motor to
-     * @param rightVoltage voltage to set right motor to
-     */
-    public void setVoltage(double leftVoltage, double rightVoltage) {
-        leftMotor.setVoltage(leftVoltage);
-        rightMotor.setVoltage(rightVoltage);
-    }
+    // /**
+    //  * Sets both of the motors is the Diff Wrist system to same voltage
+    //  * Temporary way of usage, use till deemed safe to use a PID
+    //  * @param leftVoltage voltage to set left motor to
+    //  * @param rightVoltage voltage to set right motor to
+    //  */
+    // public void setVoltage(double leftVoltage, double rightVoltage) {
+    //     leftMotor.setVoltage(leftVoltage);
+    //     rightMotor.setVoltage(rightVoltage);
+    // }
 
-    /**
-     * sets the target position of the pitch PID
-     * @param setpoint
-     */
-    public void setPitchSetpoint(double setpoint) {
-        setpoint /= 360;
-        pitchPID.setSetpoint(setpoint);
-    }
+    // /**
+    //  * sets the target position of the pitch PID
+    //  * @param setpoint
+    //  */
+    // public void setPitchSetpoint(double setpoint) {
+    //     setpoint /= 360;
+    //     pitchPID.setSetpoint(setpoint);
+    // }
 
-    public boolean atPitchSetpoint() {
-        double pitchAngle = getPitchAngle();
-        double pitchSetpoint = getPitchSetpoint();
-        if ((pitchAngle > pitchSetpoint - 18) && (pitchAngle < pitchSetpoint + 18)) {
-            return true;
-        }
-        return false;
-    }
+    // public boolean atPitchSetpoint() {
+    //     double pitchAngle = getPitchAngle();
+    //     double pitchSetpoint = getPitchSetpoint();
+    //     if ((pitchAngle > pitchSetpoint - 18) && (pitchAngle < pitchSetpoint + 18)) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
-    /**
-     * sets the target position of the roll PID
-     * @param setpoint
-     */
-    public void setRollSetpoint(double setpoint) {
-        setpoint /= 360;
-        rollPID.setSetpoint(setpoint);
-    }
+    // /**
+    //  * sets the target position of the roll PID
+    //  * @param setpoint
+    //  */
+    // public void setRollSetpoint(double setpoint) {
+    //     setpoint /= 360;
+    //     rollPID.setSetpoint(setpoint);
+    // }
 
-    public boolean atRollSetpoint() {
-        double rollAngle = getRollAngle();
-        double rollSetpoint = getRollSetpoint();
-        if ((rollAngle > rollSetpoint - 10) && (rollAngle < rollSetpoint + 10)) {
-            return true;
-        }
-        return false;
-    }
+    // public boolean atRollSetpoint() {
+    //     double rollAngle = getRollAngle();
+    //     double rollSetpoint = getRollSetpoint();
+    //     if ((rollAngle > rollSetpoint - 10) && (rollAngle < rollSetpoint + 10)) {
+    //         return true;
+    //     }
+    //     return false;
+    // }
 
-    /**
-     * Used for getting the current target of the Pitch
-     * @return angle of pitch
-     */
-    public double getPitchSetpoint() {
-        return pitchPID.getSetpoint() * 360;
-    }
+    // /**
+    //  * Used for getting the current target of the Pitch
+    //  * @return angle of pitch
+    //  */
+    // public double getPitchSetpoint() {
+    //     return pitchPID.getSetpoint() * 360;
+    // }
 
-    /**
-     * Used for getting the current target of the Roll
-     * @return angle of roll
-     */
-    public double getRollSetpoint() {
-        return rollPID.getSetpoint() * 360;
-    }
+    // /**
+    //  * Used for getting the current target of the Roll
+    //  * @return angle of roll
+    //  */
+    // public double getRollSetpoint() {
+    //     return rollPID.getSetpoint() * 360;
+    // }
 
-    public boolean getIfDoingPIDS() {
-        return runPID;
-    }
+    // public boolean getIfDoingPIDS() {
+    //     return runPID;
+    // }
 
 }

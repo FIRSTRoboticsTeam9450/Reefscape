@@ -15,92 +15,92 @@ import frc.robot.subsystems.DualIntakeSubsystem;
  */
 public class ScoringCommand extends Command {
 
-    // ----- Subsystem Instances -----
-    private final DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
-    private final CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
-    private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
-    private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
-    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
-    private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
+    // // ----- Subsystem Instances -----
+    // private final DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    // private final CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
+    // private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
+    // private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
+    // private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
+    // private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
-    // ----- Variables -----
-    private final Timer timer = new Timer();
-    private ScoringPos position;
-    private boolean algae;
-    private double runDelay;
-    private boolean running;
+    // // ----- Variables -----
+    // private final Timer timer = new Timer();
+    // private ScoringPos position;
+    // private boolean algae;
+    // private double runDelay;
+    // private boolean running;
 
-    /** Initialization logic based on current scoring position. */
-    @Override
-    public void initialize() {
-        runDelay = 0;
-        algae = scoreSub.getAlgae();
-        position = scoreSub.getPos();
+    // /** Initialization logic based on current scoring position. */
+    // @Override
+    // public void initialize() {
+    //     runDelay = 0;
+    //     algae = scoreSub.getAlgae();
+    //     position = scoreSub.getPos();
 
-        if (position != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
-            running = true;
-        } else {
-            score(); // Direct scoring if already in correct state
-        }
-    }
+    //     if (position != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
+    //         new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+    //         running = true;
+    //     } else {
+    //         score(); // Direct scoring if already in correct state
+    //     }
+    // }
 
-    /** Handles the actual scoring based on detected conditions. */
-    public void score() {
-        if (algae || position == ScoringPos.ALGAE_STORE) {
-            intake.setVoltage(scoreSub.getAlgaeNet() ? -10.5 : -3);
-        } else if (scoreSub.getScoringLevel() == 4) {
-            elev.schedule();
-            intake.setVoltage(0.5);
-        } else if (scoreSub.getScoringLevel() == 1) {
-            intake.setVoltage(-4);
-        } else {
-            score.schedule();
-            intake.setVoltage(0);
-        }
-        timer.restart();
-    }
+    // /** Handles the actual scoring based on detected conditions. */
+    // public void score() {
+    //     if (algae || position == ScoringPos.ALGAE_STORE) {
+    //         intake.setVoltage(scoreSub.getAlgaeNet() ? -10.5 : -3);
+    //     } else if (scoreSub.getScoringLevel() == 4) {
+    //         elev.schedule();
+    //         intake.setVoltage(0.5);
+    //     } else if (scoreSub.getScoringLevel() == 1) {
+    //         intake.setVoltage(-4);
+    //     } else {
+    //         score.schedule();
+    //         intake.setVoltage(0);
+    //     }
+    //     timer.restart();
+    // }
 
-    /** Main execution logic - monitors subsystem state before initiating score. */
-    @Override
-    public void execute() {
-        if (runDelay > 20) {
-            if (running && scoreSub.getAllAtSetpoints()) {
-                score();
-                running = false;
-            }
-        } else {
-            scoreSub.checkAllAtSetpoints();
-            runDelay++;
-        }
-        Logger.recordOutput("Reefscape/Debugging/Scoring Run Delay", runDelay);
-    }
+    // /** Main execution logic - monitors subsystem state before initiating score. */
+    // @Override
+    // public void execute() {
+    //     if (runDelay > 20) {
+    //         if (running && scoreSub.getAllAtSetpoints()) {
+    //             score();
+    //             running = false;
+    //         }
+    //     } else {
+    //         scoreSub.checkAllAtSetpoints();
+    //         runDelay++;
+    //     }
+    //     Logger.recordOutput("Reefscape/Debugging/Scoring Run Delay", runDelay);
+    // }
 
-    /** Determines if the command has completed its scoring cycle. */
-    @Override
-    public boolean isFinished() {
-        if (running) return false;
+    // /** Determines if the command has completed its scoring cycle. */
+    // @Override
+    // public boolean isFinished() {
+    //     if (running) return false;
 
-        double timeElapsed = timer.get();
-        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1;
-    }
+    //     double timeElapsed = timer.get();
+    //     return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1;
+    // }
 
-    /** Logic to run at command end - retries or transitions to storage depending on state. */
-    @Override
-    public void end(boolean interrupted) {
-        intake.setVoltage(0);
+    // /** Logic to run at command end - retries or transitions to storage depending on state. */
+    // @Override
+    // public void end(boolean interrupted) {
+    //     intake.setVoltage(0);
 
-        if (intake.hasCoral() && !DriverStation.isAutonomous()) {
-            retry.schedule();
-        } else if (!algae && CoordinationSubsytem.autoGround) {
-            new CoordinationCommand(ScoringPos.CORAL_STORE)
-                .andThen(new WaitCommand(0.65))
-                .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
-                    .andThen(new DualIntakeCommand(false))
-                    .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
-                .schedule();
-        } else {
-            store.schedule();
-        }
-    }
+    //     if (intake.hasCoral() && !DriverStation.isAutonomous()) {
+    //         retry.schedule();
+    //     } else if (!algae && CoordinationSubsytem.autoGround) {
+    //         new CoordinationCommand(ScoringPos.CORAL_STORE)
+    //             .andThen(new WaitCommand(0.65))
+    //             .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+    //                 .andThen(new DualIntakeCommand(false))
+    //                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
+    //             .schedule();
+    //     } else {
+    //         store.schedule();
+    //     }
+    // }
 }

@@ -12,29 +12,29 @@ import frc.robot.subsystems.CommandSwerveDrivetrain;
  */
 public class DriveInAutoCommand extends Command {
 
-    /* ----- Swerve Drive ----- */
-    private CommandSwerveDrivetrain drivetrain;
-    private SwerveRequest.FieldCentric request = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage).withVelocityX(0.5);
+    // /* ----- Swerve Drive ----- */
+    // private CommandSwerveDrivetrain drivetrain;
+    // private SwerveRequest.FieldCentric request = new SwerveRequest.FieldCentric().withDriveRequestType(DriveRequestType.OpenLoopVoltage).withVelocityX(0.5);
 
-    /* ----------- Initialization ----------- */
+    // /* ----------- Initialization ----------- */
 
-    public DriveInAutoCommand(CommandSwerveDrivetrain drivetrain) {
-        this.drivetrain = drivetrain;
-        addRequirements(drivetrain);
-    }
+    // public DriveInAutoCommand(CommandSwerveDrivetrain drivetrain) {
+    //     this.drivetrain = drivetrain;
+    //     addRequirements(drivetrain);
+    // }
 
-    /* ----------- Updaters ----------- */
+    // /* ----------- Updaters ----------- */
 
-    @Override
-    public void execute() {
-        CommandScheduler.getInstance().schedule(drivetrain.applyRequest(()-> request));
-    }
+    // @Override
+    // public void execute() {
+    //     // CommandScheduler.getInstance().schedule(drivetrain.applyRequest(()-> request));
+    // }
 
-    /* ----------- Finishers ----------- */
+    // /* ----------- Finishers ----------- */
 
-    @Override
-    public boolean isFinished() {
-        return false;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return false;
+    // }
     
 }

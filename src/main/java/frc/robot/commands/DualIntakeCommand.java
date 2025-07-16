@@ -10,92 +10,92 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class DualIntakeCommand extends Command{
 
-    /* ----- Subsystem Instance ----- */
-    private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
-    private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
+    // /* ----- Subsystem Instance ----- */
+    // private DualIntakeSubsystem DI = DualIntakeSubsystem.getInstance();
+    // private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
 
-    /* ----- Variables ----- */
-    private boolean algae;
-    private boolean finished;
-    private Timer algaeTimer = new Timer();
+    // /* ----- Variables ----- */
+    // private boolean algae;
+    // private boolean finished;
+    // private Timer algaeTimer = new Timer();
 
-    /* ----- Command :) ----- */
-    private Command wristUpGround = new CoordinationCommand(ScoringPos.ALGAE_STORE);
+    // /* ----- Command :) ----- */
+    // private Command wristUpGround = new CoordinationCommand(ScoringPos.ALGAE_STORE);
 
-    public DualIntakeCommand(boolean algae) {
-        this.algae = algae;
-        addRequirements(DI);
-    }
+    // public DualIntakeCommand(boolean algae) {
+    //     this.algae = algae;
+    //     addRequirements(DI);
+    // }
 
-    /* ----------- Initialization ----------- */
+    // /* ----------- Initialization ----------- */
 
-    @Override
-    public void initialize() {
-        finished = false;
-        if (algae) {
-            DI.setVoltage(12);
-        } else {
-            DI.setVoltage(12);
-        }
-    }
+    // @Override
+    // public void initialize() {
+    //     finished = false;
+    //     if (algae) {
+    //         DI.setVoltage(12);
+    //     } else {
+    //         DI.setVoltage(12);
+    //     }
+    // }
 
-    /* ----------- Updaters ----------- */
+    // /* ----------- Updaters ----------- */
 
-    @Override
-    public void execute() {
-        if (finished) {
-            return;
-        }
-        if (algae) {
-            if (DI.hasAlgae()) {
-                DI.setVoltage(12);
-                finished = true;
-                if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
-                    //wristUpReef.schedule();
-                } 
-                algaeTimer.restart();
-            }
-        } else {
-            if (DI.hasCoral()) {
-                DI.setVoltage(0);
-                finished = true;
-            }
-        }
+    // @Override
+    // public void execute() {
+    //     if (finished) {
+    //         return;
+    //     }
+    //     if (algae) {
+    //         if (DI.hasAlgae()) {
+    //             DI.setVoltage(12);
+    //             finished = true;
+    //             if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
+    //                 //wristUpReef.schedule();
+    //             } 
+    //             algaeTimer.restart();
+    //         }
+    //     } else {
+    //         if (DI.hasCoral()) {
+    //             DI.setVoltage(0);
+    //             finished = true;
+    //         }
+    //     }
 
-        if (finished) {
-            algaeTimer.restart();
-        }
+    //     if (finished) {
+    //         algaeTimer.restart();
+    //     }
         
-    }
+    // }
 
-    /* ----------- Finishers ----------- */
+    // /* ----------- Finishers ----------- */
 
-    @Override
-    public boolean isFinished() {
-        // if (algae) {
-        //     return finished && algaeTimer.get() > 0.5;
-        // }
-        if (algae) {
-            return finished && algaeTimer.get() > 0.25;
-        }
-        return finished && algaeTimer.get() > 0.1;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     // if (algae) {
+    //     //     return finished && algaeTimer.get() > 0.5;
+    //     // }
+    //     if (algae) {
+    //         return finished && algaeTimer.get() > 0.25;
+    //     }
+    //     return finished && algaeTimer.get() > 0.1;
+    // }
 
-    @Override
-    public void end(boolean interrupted) {
-        if (interrupted) {
-            DI.setVoltage(0);
-            return;
-        }
-        if (algae) {
-            wristUpGround.schedule();
-            if (score.getPos() == ScoringPos.INTAKE_ALGAE || true) {
-                //wristUpGround.schedule();
-            }
-        } else {
-            DI.setVoltage(6);
-            new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0.5))).schedule();;
-        }
-    }
+    // @Override
+    // public void end(boolean interrupted) {
+    //     if (interrupted) {
+    //         DI.setVoltage(0);
+    //         return;
+    //     }
+    //     if (algae) {
+    //         wristUpGround.schedule();
+    //         if (score.getPos() == ScoringPos.INTAKE_ALGAE || true) {
+    //             //wristUpGround.schedule();
+    //         }
+    //     } else {
+    //         DI.setVoltage(6);
+    //         new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0.5))).schedule();;
+    //     }
+    // }
     
 }

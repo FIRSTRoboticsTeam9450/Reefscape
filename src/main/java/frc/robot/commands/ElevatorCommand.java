@@ -8,36 +8,36 @@ import frc.robot.subsystems.ElevatorSubsystem;
  */
 public class ElevatorCommand extends Command {
     
-    /* ----- Subsystem Instance ----- */
-    private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
+    // /* ----- Subsystem Instance ----- */
+    // private ElevatorSubsystem elev = ElevatorSubsystem.getInstance();
 
-    /* ----- Variables ----- */
-    private double setpoint;
+    // /* ----- Variables ----- */
+    // private double setpoint;
 
-    /* ----------- Initialization ----------- */
+    // /* ----------- Initialization ----------- */
 
-    /**
-     * Constructer of the Elevator command
-     * @param setpoint The position(motor revolutions) of where the elevator should go
-     */
-    public ElevatorCommand(double setpoint) {
-        this.setpoint = setpoint;
-    }
+    // /**
+    //  * Constructer of the Elevator command
+    //  * @param setpoint The position(motor revolutions) of where the elevator should go
+    //  */
+    // public ElevatorCommand(double setpoint) {
+    //     this.setpoint = setpoint;
+    // }
 
-    /**
-     * sets the elevator's setpoint to the previously given setpoint
-     */
-    @Override
-    public void initialize() {
-        addRequirements(elev);
-        elev.setSetpoint(setpoint);
-    }
+    // /**
+    //  * sets the elevator's setpoint to the previously given setpoint
+    //  */
+    // @Override
+    // public void initialize() {
+    //     addRequirements(elev);
+    //     elev.setSetpoint(setpoint);
+    // }
 
-    /* ----------- Finishers ----------- */
+    // /* ----------- Finishers ----------- */
 
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return true;
+    // }
 
 }

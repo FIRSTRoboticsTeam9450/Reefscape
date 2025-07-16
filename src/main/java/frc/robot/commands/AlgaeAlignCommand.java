@@ -21,88 +21,88 @@ import frc.robot.subsystems.DualIntakeSubsystem;
  */
 public class AlgaeAlignCommand extends Command {
     
-    /* ----- Max Speeds ----- */
-    private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
-    private Timer timer = new Timer();
+    // /* ----- Max Speeds ----- */
+    // private double MaxSpeed = TunerConstants.kSpeedAt12Volts.in(MetersPerSecond); // kSpeedAt12Volts desired top speed
+    // private Timer timer = new Timer();
 
-    //Limelight
-    //LimelightSubsystem limelight = LimelightSubsystem.getInstance();
-    DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
+    // //Limelight
+    // //LimelightSubsystem limelight = LimelightSubsystem.getInstance();
+    // DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
-    /* ----- PID's ----- */
-    private PIDController pid = new PIDController(0.03, 0, 0); //0.015, 0, 0.01
-    private PIDController pidForward = new PIDController(0.05, 0, 0); //0.035, 0, 0.01
+    // /* ----- PID's ----- */
+    // private PIDController pid = new PIDController(0.03, 0, 0); //0.015, 0, 0.01
+    // private PIDController pidForward = new PIDController(0.05, 0, 0); //0.035, 0, 0.01
 
-    /* ----- Variables ----- */
-    private double taTarget = 10.3;
-    private CommandSwerveDrivetrain drive;
-    private double power = 0;
-    private boolean atTarget;
+    // /* ----- Variables ----- */
+    // private double taTarget = 10.3;
+    // private CommandSwerveDrivetrain drive;
+    // private double power = 0;
+    // private boolean atTarget;
 
-    /* ----- Swerve Drive ----- */
-    private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    // /* ----- Swerve Drive ----- */
+    // private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric() // Add a 10% deadband
+    // .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
-    /* ----------- Initialization ----------- */
+    // /* ----------- Initialization ----------- */
 
-    /**
-     * Constructor
-     * @param drive instance of CommandSwerveDrive
-     * @param target PID target/setpoint
-     */
-    public AlgaeAlignCommand(CommandSwerveDrivetrain drive, double target) {
-        this.drive = drive;
-        pid.setSetpoint(-18);
-        pidForward.setSetpoint(taTarget);
-        addRequirements(drive);
-    }
+    // /**
+    //  * Constructor
+    //  * @param drive instance of CommandSwerveDrive
+    //  * @param target PID target/setpoint
+    //  */
+    // public AlgaeAlignCommand(CommandSwerveDrivetrain drive, double target) {
+    //     this.drive = drive;
+    //     pid.setSetpoint(-18);
+    //     pidForward.setSetpoint(taTarget);
+    //     addRequirements(drive);
+    // }
 
-    @Override
-    public void initialize() {
-        timer.restart();
-        atTarget = false;
-    }
+    // @Override
+    // public void initialize() {
+    //     timer.restart();
+    //     atTarget = false;
+    // }
 
-    /* ----------- Updaters ----------- */
+    // /* ----------- Updaters ----------- */
 
-    // x = 4
-    // y = 5.2
-    // yaw -60
-    @Override
-    public void execute() {
-        double tx = LimelightHelpers.getTX("limelight-coral");
-        double ta = LimelightHelpers.getTA("limelight-coral");
+    // // x = 4
+    // // y = 5.2
+    // // yaw -60
+    // @Override
+    // public void execute() {
+    //     double tx = LimelightHelpers.getTX("limelight-coral");
+    //     double ta = LimelightHelpers.getTA("limelight-coral");
         
-        pid.setSetpoint(-Math.sqrt(25 * ta) - 1);
+    //     pid.setSetpoint(-Math.sqrt(25 * ta) - 1);
         
-        if (Math.abs(pid.getError()) < 1 && Math.abs(pidForward.getError()) < 2) {
-            atTarget = true;
-        }
-        //pid.setSetpoint(-0.75 * ta - 11);
+    //     if (Math.abs(pid.getError()) < 1 && Math.abs(pidForward.getError()) < 2) {
+    //         atTarget = true;
+    //     }
+    //     //pid.setSetpoint(-0.75 * ta - 11);
 
-        power = pid.calculate(tx);
-        double powerForward = pidForward.calculate(ta);
-        if (atTarget) {
-            SwerveRequest driveForward = driveRequest.withVelocityY(0).withVelocityX(0.35 * MaxSpeed);
-            drive.setControl(driveForward);
-        } else {
-            SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.35, 0.35) * MaxSpeed).withVelocityX(MathUtil.clamp(powerForward, -0.25, 0.25) * MaxSpeed);
-            drive.setControl(driveAlign);
-        }
+    //     power = pid.calculate(tx);
+    //     double powerForward = pidForward.calculate(ta);
+    //     if (atTarget) {
+    //         SwerveRequest driveForward = driveRequest.withVelocityY(0).withVelocityX(0.35 * MaxSpeed);
+    //         drive.setControl(driveForward);
+    //     } else {
+    //         SwerveRequest driveAlign = driveRequest.withVelocityY(MathUtil.clamp(power, -0.35, 0.35) * MaxSpeed).withVelocityX(MathUtil.clamp(powerForward, -0.25, 0.25) * MaxSpeed);
+    //         drive.setControl(driveAlign);
+    //     }
         
 
-    }
+    // }
 
-    /* ----------- Finishers ----------- */
+    // /* ----------- Finishers ----------- */
 
-    @Override
-    public boolean isFinished() {
-        return intake.hasCoral() || timer.get() > 2;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return intake.hasCoral() || timer.get() > 2;
+    // }
 
-    @Override
-    public void end(boolean interrupted) {
-        drive.setControl(driveRequest.withVelocityX(0).withVelocityY(0));
-    }
+    // @Override
+    // public void end(boolean interrupted) {
+    //     drive.setControl(driveRequest.withVelocityX(0).withVelocityY(0));
+    // }
 
 }

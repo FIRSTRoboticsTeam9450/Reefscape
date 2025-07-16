@@ -5,25 +5,25 @@ import frc.robot.subsystems.ClimbSubsystem;
 
 public class ClimbCommand extends Command{
 
-    private ClimbSubsystem CS = ClimbSubsystem.getInstance();
+    // private ClimbSubsystem CS = ClimbSubsystem.getInstance();
     
-    private double setpoint;
-    private double maxVolts;
+    // private double setpoint;
+    // private double maxVolts;
 
-    public ClimbCommand(double setpoint, double maxVolts) {
-        this.setpoint = setpoint;
-        this.maxVolts = maxVolts;
-    }
+    // public ClimbCommand(double setpoint, double maxVolts) {
+    //     this.setpoint = setpoint;
+    //     this.maxVolts = maxVolts;
+    // }
 
-    @Override
-    public void initialize() {
-        CS.setSetpoint(setpoint);
-        CS.setMaxVolts(maxVolts);
-    }
+    // @Override
+    // public void initialize() {
+    //     CS.setSetpoint(setpoint);
+    //     CS.setMaxVolts(maxVolts);
+    // }
 
-    @Override
-    public boolean isFinished() {
-        return true;
-    }
+    // @Override
+    // public boolean isFinished() {
+    //     return true;
+    // }
 
 }

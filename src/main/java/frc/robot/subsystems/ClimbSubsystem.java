@@ -28,64 +28,64 @@ import frc.robot.Constants.debugging;
  */
 public class ClimbSubsystem extends SubsystemBase {
 
-    /* -------- Instance -------- */
-    private static ClimbSubsystem CS;
+    // /* -------- Instance -------- */
+    // private static ClimbSubsystem CS;
 
-    /* -------- Components -------- */
-    private final SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
-    private final SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
-    private final PIDController pid = new PIDController(55, 0, 0.5);
-    private final boolean runClimber = Constants.robotConfig.getRunClimber();
+    // /* -------- Components -------- */
+    // private final SparkFlex climb = new SparkFlex(ClimberIDs.kMotorID, MotorType.kBrushless);
+    // private final SparkAbsoluteEncoder encoder = climb.getAbsoluteEncoder();
+    // private final PIDController pid = new PIDController(55, 0, 0.5);
+    // private final boolean runClimber = Constants.robotConfig.getRunClimber();
 
-    private double maxVolts = 12;
+    // private double maxVolts = 12;
 
-    /* -------- Constructor -------- */
-    private ClimbSubsystem() {
-        pid.setSetpoint(0.1); // Store position
-        SparkFlexConfig config = new SparkFlexConfig();
-        config.idleMode(IdleMode.kBrake);
-        climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
-    }
+    // /* -------- Constructor -------- */
+    // private ClimbSubsystem() {
+    //     pid.setSetpoint(0.1); // Store position
+    //     SparkFlexConfig config = new SparkFlexConfig();
+    //     config.idleMode(IdleMode.kBrake);
+    //     climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
+    // }
 
-    /* -------- Periodic Update -------- */
-    @Override
-    public void periodic() {
-        if (runClimber) {
-            double voltage = updatePIDs(encoder.getPosition());
-            setVoltage(-voltage);
+    // /* -------- Periodic Update -------- */
+    // @Override
+    // public void periodic() {
+    //     if (runClimber) {
+    //         double voltage = updatePIDs(encoder.getPosition());
+    //         setVoltage(-voltage);
 
-            if (debugging.ClimberPos) {
-                Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
-                Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
-                Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
-            }
-        }
-    }
+    //         if (debugging.ClimberPos) {
+    //             Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
+    //             Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
+    //             Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+    //         }
+    //     }
+    // }
 
-    /* -------- PID Helpers -------- */
-    public double updatePIDs(double pos) {
-        double voltage = pid.calculate(pos);
-        return MathUtil.clamp(voltage, -maxVolts, maxVolts);
-    }
+    // /* -------- PID Helpers -------- */
+    // public double updatePIDs(double pos) {
+    //     double voltage = pid.calculate(pos);
+    //     return MathUtil.clamp(voltage, -maxVolts, maxVolts);
+    // }
 
-    /* -------- Setters -------- */
-    public void setVoltage(double voltage) {
-        climb.setVoltage(voltage);
-    }
+    // /* -------- Setters -------- */
+    // public void setVoltage(double voltage) {
+    //     climb.setVoltage(voltage);
+    // }
 
-    public void setSetpoint(double setpoint) {
-        pid.setSetpoint(setpoint);
-    }
+    // public void setSetpoint(double setpoint) {
+    //     pid.setSetpoint(setpoint);
+    // }
 
-    public void setMaxVolts(double maxVolts) {
-        this.maxVolts = Math.abs(maxVolts);
-    }
+    // public void setMaxVolts(double maxVolts) {
+    //     this.maxVolts = Math.abs(maxVolts);
+    // }
 
-    /* -------- Singleton -------- */
-    public static ClimbSubsystem getInstance() {
-        if (CS == null) {
-            CS = new ClimbSubsystem();
-        }
-        return CS;
-    }
+    // /* -------- Singleton -------- */
+    // public static ClimbSubsystem getInstance() {
+    //     if (CS == null) {
+    //         CS = new ClimbSubsystem();
+    //     }
+    //     return CS;
+    // }
 }
