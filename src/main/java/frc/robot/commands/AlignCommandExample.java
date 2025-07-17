@@ -152,7 +152,7 @@
 //         }
 
 //         // Calculate the new x and y coordinates based on the offsets and rotation
-//         double x = targetPos[0] - tagForwardOffset * Math.cos(rotation) - tagLeftOffset * Math.sin(rotation);
+//         double x = targetPos[0] - tagForwardOffset * Math.cos(rotation) - tagLeftOffset * Math.sin(rotation); -> multiplies offset by rotation to make it work for every position
 //         double y = targetPos[1] - tagForwardOffset * Math.sin(rotation) + tagLeftOffset * Math.cos(rotation);
 
 //         // Create an array with the calculated x, y, and rotation values and return it
