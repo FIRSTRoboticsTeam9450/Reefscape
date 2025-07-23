@@ -181,7 +181,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         atSetpoint = Math.abs(position - setpoint) < 0.3;
 
         trackMovementTiming();
-        boolean highUp = position > 24;
+        boolean highUp = position >= 20;
         RobotContainer.setLiftUp(highUp);  // Could be abstracted for testability
 
         // recordMotionData();
@@ -215,7 +215,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         Logger.recordOutput("Elevator/RightMotorStator", rightMotor.getStatorCurrent().getValueAsDouble());
         Logger.recordOutput("Elevator/RightMotorSupply", rightMotor.getSupplyCurrent().getValueAsDouble());
 
-        boolean highUp = position > 24;
+        boolean highUp = position >= 20;
 
         // we really don't want our subsystem calling into the RobotContainer
         // but a simple solution is not apparent
