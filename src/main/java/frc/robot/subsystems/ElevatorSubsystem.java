@@ -58,7 +58,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     // 0.82 is the record going up and down
     double velocity = 90; //77 is closest to max velocity time: 0.82
     double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
-    double jerk = 1500; // Make sure it's not 0 because the arm hit something
+    double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
     double currentLimit = 130; // 100 is the max stator current pull
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
@@ -179,7 +179,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         leftMotor.setControl(m_request.withPosition(setpoint + offset));
         atSetpoint = Math.abs(position - setpoint) < 0.3;
-
+        //System.out.println("Position and setpoint" + position + " " + setpoint);
         trackMovementTiming();
         boolean highUp = position >= 20;
         RobotContainer.setLiftUp(highUp);  // Could be abstracted for testability
