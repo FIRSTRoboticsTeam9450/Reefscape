@@ -107,6 +107,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public void periodic() {
 
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
+        System.out.println(runPID);
 
         pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
         rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();

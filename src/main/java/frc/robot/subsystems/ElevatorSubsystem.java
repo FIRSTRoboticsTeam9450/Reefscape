@@ -240,7 +240,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public boolean atSetpoint() {
-        return atSetpoint;
+        return Math.abs(leftMotor.getPosition().getValueAsDouble() - offset - setpoint) < 0.3;
     }
 
     public double getSetpoint() {
