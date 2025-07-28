@@ -17,9 +17,7 @@ public final class Constants {
   // =========================
 
   /** Select configuration based on the RoboRIO serial number */
-  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("0329F2BF")
-      ? new ThingOneConfig()
-      : new ThingTwoConfig();
+  public static RobotConfig robotConfig = new ThingThreeConfig();
 
   /** Enables L4 scoring behavior */
   public static boolean l4mode = false;

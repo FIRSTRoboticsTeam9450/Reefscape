@@ -56,11 +56,11 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean inMove;
 
     // 0.82 is the record going up and down
-    double velocity = 90; //77 is closest to max velocity time: 0.82
-    double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
+    double velocity = 10; //77 is closest to max velocity time: 0.82         Used to be 90
+    double acceleration = 10; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
     double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
-    double currentLimit = 130; // 100 is the max stator current pull
+    double currentLimit = 50; // 100 is the max stator current pull
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
     double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
     double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
@@ -97,6 +97,8 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = currentLimit;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = 30;
 
         Slot0Configs slot0 = config.Slot0;
         slot0.kS = kS; slot0.kV = kV; slot0.kA = kA;
@@ -118,6 +120,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = currentLimit;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = 30;
+        
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }

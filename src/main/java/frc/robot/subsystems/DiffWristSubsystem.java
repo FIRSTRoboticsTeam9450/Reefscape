@@ -62,11 +62,16 @@ public class DiffWristSubsystem extends SubsystemBase {
         TalonFXConfigurator leftConfigurator = leftMotor.getConfigurator();
         TalonFXConfigurator rightConfigurator = rightMotor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = 50;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = 30;
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         leftConfigurator.apply(config);
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         rightConfigurator.apply(config);
 
+        
         //Diff Wrist Start point
         if (runPID) {
             pitchPID.setSetpoint(0);
@@ -91,8 +96,8 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         double lVolts = pitchVoltage - rollVoltage;
         double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -8, 8);
-        rVolts = MathUtil.clamp(rVolts, -8, 8);
+        lVolts = MathUtil.clamp(lVolts, -3, 3); // Used to be 8
+        rVolts = MathUtil.clamp(rVolts, -3, 3); // Used to be 8
         
 
         setVoltage(lVolts, rVolts);

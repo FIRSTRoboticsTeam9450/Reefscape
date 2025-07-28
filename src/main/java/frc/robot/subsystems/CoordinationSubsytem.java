@@ -357,8 +357,8 @@ public class CoordinationSubsytem extends SubsystemBase{
             // Elbow.setSetpoint(19); 
         // } else {
         rollToClosestSide();
-        DW.setPitchSetpoint(-120);
-        Elbow.setSetpoint(90);
+        DW.setPitchSetpoint(-50); // used to be -120
+        Elbow.setSetpoint(40); // used to be 90
         // } 
         if (
             DW.atRollSetpoint()

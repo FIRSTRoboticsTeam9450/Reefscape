@@ -32,12 +32,12 @@ public class ElbowSubsystem extends SubsystemBase {
     private final double offsetToZeroDegrees = -110.3;
 
     // Motion Magic parameters
-    private double velocity = 18;
-    private double acceleration = 11;
-    private double jerk = 400;
+    private double velocity = .5; // Used to be 18
+    private double acceleration = .5; // Used to be 11
+    private double jerk = 400; // Used to be 400
 
     // Feedforward and PIDF constants
-    private double currentLimit = 110;
+    private double currentLimit = 50;
     private double kS = 0;
     private double kV = 0.33;
     private double kA = 0.05;
@@ -60,7 +60,7 @@ public class ElbowSubsystem extends SubsystemBase {
     private void configureEncoder() {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
-        cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
         cc_cfg.MagnetSensor.MagnetOffset = Constants.robotConfig.getElbowOffset();
         encoder.getConfigurator().apply(cc_cfg);
     }
@@ -95,6 +95,11 @@ public class ElbowSubsystem extends SubsystemBase {
         // Motor output settings
         config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
+        
+        config.CurrentLimits.StatorCurrentLimitEnable = true;
+        config.CurrentLimits.StatorCurrentLimit = currentLimit;
+        config.CurrentLimits.SupplyCurrentLimitEnable = true;
+        config.CurrentLimits.SupplyCurrentLimit = 30;
 
         motor.getConfigurator().apply(config);
     }

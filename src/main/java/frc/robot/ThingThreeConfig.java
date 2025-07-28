@@ -7,7 +7,7 @@ import com.ctre.phoenix6.signals.StaticFeedforwardSignValue;
 
 import edu.wpi.first.units.measure.Angle;
 
-public class ThingTwoConfig implements RobotConfig {
+public class ThingThreeConfig implements RobotConfig {
     
     Angle frontLeftOffset = Rotations.of(-0.46044921875);
     Angle frontRightOffset = Rotations.of(-0.343994140625);
@@ -23,6 +23,9 @@ public class ThingTwoConfig implements RobotConfig {
         .withKP(0.1).withKI(0).withKD(0)
         .withKS(0).withKV(0.124);
     
+    double currentLimitStator = 50;
+    double currentLimitSupply = 30;
+
     double elbowOffset = -0.171875;
     double elbowRatio = 92.99 / 90.0;
     
@@ -129,6 +132,13 @@ public class ThingTwoConfig implements RobotConfig {
         return runClimber;
     }
 
+    public double getStatorLimit() {
+        return currentLimitStator;
+    }
+
+    public double getSupplyLimit() {
+        return currentLimitSupply;
+    }
 }
 
 //Krish, Andrew, and Aviel were here
