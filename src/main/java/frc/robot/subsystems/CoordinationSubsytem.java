@@ -357,8 +357,8 @@ public class CoordinationSubsytem extends SubsystemBase{
             // Elbow.setSetpoint(19); 
         // } else {
         rollToClosestSide();
-        DW.setPitchSetpoint(-50); // used to be -120
-        Elbow.setSetpoint(40); // used to be 90
+        DW.setPitchSetpoint(-120); // used to be -120     gear ratio: 20 -> 28
+        Elbow.setSetpoint(90); // used to be 90
         // } 
         if (
             DW.atRollSetpoint()
@@ -822,7 +822,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void rollToClosestSide() {
         if (rollEncoder <= -5) {
-            DW.setRollSetpoint(-94);
+            DW.setRollSetpoint(-94); // Just multiply the original values by 1.4 the gear ratio
             coralSideLeft = false;
         } else if (rollEncoder > 5) {
             DW.setRollSetpoint(90);

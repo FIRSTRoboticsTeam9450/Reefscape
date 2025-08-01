@@ -2,11 +2,14 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
+import com.ctre.phoenix6.signals.SensorDirectionValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
@@ -66,12 +69,21 @@ public class DiffWristSubsystem extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
         config.CurrentLimits.SupplyCurrentLimit = 30;
-        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Coast; //Constants.defaultNeutral;
         leftConfigurator.apply(config);
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         rightConfigurator.apply(config);
 
-        
+        CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
+        cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
+        cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
+        cc_cfg.MagnetSensor.MagnetOffset = -0.1630859375;
+        rollEncoder.getConfigurator().apply(cc_cfg);
+        cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
+        cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.102783203125;
+        pitchEncoder.getConfigurator().apply(cc_cfg);
+
         //Diff Wrist Start point
         if (runPID) {
             pitchPID.setSetpoint(0);
@@ -132,8 +144,8 @@ public class DiffWristSubsystem extends SubsystemBase {
             Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
             Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
             Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
-            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
-            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360);
+            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360 / 1.4));
+            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360 / 1.4);
             Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
             Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
             Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
@@ -159,7 +171,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return the current encoder value for pitch in degrees
      */
     public double getPitchAngle() {
-        return pitchPos * 360;
+        return pitchPos * 360 / 1.4;
     }
 
     /**
@@ -167,7 +179,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return the current encoder value for roll in degrees
      */
     public double getRollAngle() {
-        return rollPos * 360;
+        return rollPos * 360 / 1.4;
     }
 
     /**
@@ -187,6 +199,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setPitchSetpoint(double setpoint) {
         setpoint /= 360;
+        setpoint *= 1.4;
         pitchPID.setSetpoint(setpoint);
     }
 
@@ -205,6 +218,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setRollSetpoint(double setpoint) {
         setpoint /= 360;
+        setpoint *= 1.4;
         rollPID.setSetpoint(setpoint);
     }
 
@@ -222,7 +236,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of pitch
      */
     public double getPitchSetpoint() {
-        return pitchPID.getSetpoint() * 360;
+        return pitchPID.getSetpoint() * 360 / 1.4;
     }
 
     /**
@@ -230,7 +244,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of roll
      */
     public double getRollSetpoint() {
-        return rollPID.getSetpoint() * 360;
+        return rollPID.getSetpoint() * 360 / 1.4;
     }
 
     public boolean getIfDoingPIDS() {

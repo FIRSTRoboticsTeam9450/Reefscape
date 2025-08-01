@@ -32,8 +32,8 @@ public class ElbowSubsystem extends SubsystemBase {
     private final double offsetToZeroDegrees = -110.3;
 
     // Motion Magic parameters
-    private double velocity = .5; // Used to be 18
-    private double acceleration = .5; // Used to be 11
+    private double velocity = 5; // Used to be 18
+    private double acceleration = 5; // Used to be 11
     private double jerk = 400; // Used to be 400
 
     // Feedforward and PIDF constants
@@ -47,7 +47,7 @@ public class ElbowSubsystem extends SubsystemBase {
     private double kG = 0.001;
 
     // Control request and logging
-    private DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
+    private DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true);
     private final Log logger;
 
     private ElbowSubsystem() {
@@ -119,7 +119,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
         // Reconstruct control request if parameters changed
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk) {
-            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);
+            m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk).withEnableFOC(true);
             System.out.println("Updated motion profile: (" + velocity + ", " + acceleration + ", " + jerk + ")");
         }
 
