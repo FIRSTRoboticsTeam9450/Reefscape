@@ -177,7 +177,6 @@ public class AlignCommand extends Command {
         // Raise elevator right away for L1-3
         if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up) {
             up = true;
-            System.out.println("WEIRDDDDDDDD");
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
 
@@ -194,7 +193,6 @@ public class AlignCommand extends Command {
             if (atSetpoint(0.3, 0.6)) {
                 if (score.getDesiredLevel() == 4 && !up && !score.getAlgae()) {
                     up = true;
-                    System.out.println("ok got in here at least ig");
                     new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
                 }
             }

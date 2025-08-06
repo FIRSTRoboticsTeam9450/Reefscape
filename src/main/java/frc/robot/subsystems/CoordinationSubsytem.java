@@ -294,7 +294,6 @@ public class CoordinationSubsytem extends SubsystemBase{
                 level = desiredLevel;
                 algaeNet = desiredAlgaeNet;
             }
-            System.out.println(level + "YIPPPEEEEE");
             goScoreLevel();
         }else if(pos == ScoringPos.SCORE_CORAL) {
             goToScoreCoral();
@@ -356,7 +355,10 @@ public class CoordinationSubsytem extends SubsystemBase{
         // if (elbowEncoder > 20 && (rollEncoder > -45 && rollEncoder < 45)) {
             // Elbow.setSetpoint(19); 
         // } else {
+        
+        
         rollToClosestSide();
+        //DW.setRollSetpoint(90);
         DW.setPitchSetpoint(-120); // used to be -120     gear ratio: 20 -> 28
         Elbow.setSetpoint(90); // used to be 90
         // } 
@@ -638,15 +640,12 @@ public class CoordinationSubsytem extends SubsystemBase{
                     //rollToClosestSide();
                     break;
                 case 4:
-                    System.out.println("Got into the case");
                     if (l4Extend) {
-                        System.out.println("Extend---------------------------"); // Jumppoint
                         coralScorePitch = -132;
                         coralScoreElbow = 37;
                         coralScoreElev = 36;
                     } else {
                         coralScorePitch = Constants.robotConfig.getL4Pitch();
-                        System.out.println(pos + "using: " + coralScorePitch);
                         coralScoreElbow = Constants.robotConfig.getL4Elbow();
                         coralScoreElev = Constants.robotConfig.getL4Elevator();
                     }
@@ -683,9 +682,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
         } else if (level == 4) {
             Elev.setSetpoint(coralScoreElev);
-            System.out.println("please please please repeat: " + coralScorePitch);
             if (elevEncoder > 25) {
-                System.out.println("YAYAYYAYAYAYAYAYAYA");
                 DW.setPitchSetpoint(coralScorePitch);
                 rollToL4();
                 Elbow.setSetpoint(coralScoreElbow);
@@ -708,7 +705,6 @@ public class CoordinationSubsytem extends SubsystemBase{
             && Elev.atSetpoint()
             )
         {
-            System.out.println("What the sigma" + Elev.getPosition() + " " + Elev.getSetpoint() + " :: " + Elev.atSetpoint());
             allAtSetpoints = true;
             justFinished = true;
         }

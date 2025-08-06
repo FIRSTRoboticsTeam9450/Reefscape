@@ -56,8 +56,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean inMove;
 
     // 0.82 is the record going up and down
-    double velocity = 10; //77 is closest to max velocity time: 0.82         Used to be 90
-    double acceleration = 10; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
+    double velocity = 50; //77 is closest to max velocity time: 0.82         Used to be 90
+    double acceleration = 70; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
     double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
     double currentLimit = 50; // 100 is the max stator current pull

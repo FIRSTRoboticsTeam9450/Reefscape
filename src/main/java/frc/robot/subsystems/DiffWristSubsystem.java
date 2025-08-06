@@ -69,7 +69,7 @@ public class DiffWristSubsystem extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
         config.CurrentLimits.SupplyCurrentLimit = 30;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast; //Constants.defaultNeutral;
+        config.MotorOutput.NeutralMode = NeutralModeValue.Brake; //Constants.defaultNeutral;
         leftConfigurator.apply(config);
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         rightConfigurator.apply(config);
@@ -77,11 +77,11 @@ public class DiffWristSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = -0.1630859375;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.3984375;
         rollEncoder.getConfigurator().apply(cc_cfg);
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = 0.102783203125;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.058837890625;
         pitchEncoder.getConfigurator().apply(cc_cfg);
 
         //Diff Wrist Start point
@@ -108,8 +108,8 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         double lVolts = pitchVoltage - rollVoltage;
         double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -3, 3); // Used to be 8
-        rVolts = MathUtil.clamp(rVolts, -3, 3); // Used to be 8
+        lVolts = MathUtil.clamp(lVolts, -5, 5); // Used to be 8
+        rVolts = MathUtil.clamp(rVolts, -5, 5); // Used to be 8
         
 
         setVoltage(lVolts, rVolts);
@@ -119,7 +119,6 @@ public class DiffWristSubsystem extends SubsystemBase {
     public void periodic() {
 
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
-        System.out.println(runPID);
 
         pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
         rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
@@ -171,7 +170,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return the current encoder value for pitch in degrees
      */
     public double getPitchAngle() {
-        return pitchPos * 360 / 1.4;
+        return pitchPos * 360 / 1.2;
     }
 
     /**
@@ -199,7 +198,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setPitchSetpoint(double setpoint) {
         setpoint /= 360;
-        setpoint *= 1.4;
+        setpoint *= 1.2;
         pitchPID.setSetpoint(setpoint);
     }
 
@@ -236,7 +235,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of pitch
      */
     public double getPitchSetpoint() {
-        return pitchPID.getSetpoint() * 360 / 1.4;
+        return pitchPID.getSetpoint() * 360 / 1.2;
     }
 
     /**
