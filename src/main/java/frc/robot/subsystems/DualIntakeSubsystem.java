@@ -60,7 +60,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
         config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
-        config.CurrentLimits.StatorCurrentLimit = 50;
+        config.CurrentLimits.StatorCurrentLimit = 80;
         configurator.apply(config);
 
         radio.addMotor(motor);
