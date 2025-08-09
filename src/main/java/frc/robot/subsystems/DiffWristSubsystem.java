@@ -21,7 +21,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(4, 0, 0.25);
+    private PIDController pitchPID = new PIDController(5, 0, 0); // Used to be 4, 0, 0.25
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors

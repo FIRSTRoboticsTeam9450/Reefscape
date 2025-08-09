@@ -165,8 +165,8 @@ public class ElevatorSubsystem extends SubsystemBase {
             boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
             if (atLimit){
                 offset =  0;
-                leftMotor.setPosition(-.5,.5);
-                rightMotor.setPosition(-.5,.5);
+                leftMotor.setPosition(0,0);
+                rightMotor.setPosition(0,0);
                 System.out.println("MOTOR POSITIONS RESET");
                 resetDone = true;
             }

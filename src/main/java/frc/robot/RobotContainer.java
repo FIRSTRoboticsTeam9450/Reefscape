@@ -60,7 +60,7 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.1, 0.01); //deadbang original:0.07, minOutput: 0.03
     public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -163,9 +163,14 @@ public class RobotContainer {
             new DriverIntakeCommand(m_driver1, drivetrain)
         );
 
-        // Bumpers
+        // Bumpers PUT THIS BACK LATER
+        // m_driver1.leftBumper().onTrue(
+        //     new RollSideSwitcher(true)
+        // );
         m_driver1.leftBumper().onTrue(
-            new RollSideSwitcher(true)
+            new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                .andThen(new DualIntakeCommand(false))
+                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
         m_driver1.rightBumper().onTrue(
             new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
@@ -281,9 +286,9 @@ public class RobotContainer {
 
         // === Miscellaneous ===
         // Play music on command
-        m_driver2.rightBumper().onTrue(
-            new InstantCommand(() -> radio.playMusic())
-        );
+        // m_driver2.rightBumper().onTrue(
+        //     new InstantCommand(() -> radio.playMusic())
+        // );
 
         // Optional: Uncomment if RollSideSwitcher is needed
         // m_driver2.rightBumper().onTrue(new RollSideSwitcher());
@@ -308,7 +313,7 @@ public class RobotContainer {
         /* ----- Commands not currently in use ----- */
         
         // SOURCE INTAKE
-        // m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
+         m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
     
         // VERTICAL CORAL
         //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));

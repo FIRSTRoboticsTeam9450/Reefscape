@@ -16,7 +16,7 @@ public class BezierCurve {
     private double x1, y1, x2, y2;
 
     // Joystick deadband and output shaping
-    private double deadband = 0.05;
+    private double deadband = 0.1;
     private double minOutput = 0.1;
 
     // Dashboard identifiers and state
