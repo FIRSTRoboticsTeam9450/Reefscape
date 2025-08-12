@@ -90,7 +90,6 @@ public class RobotContainer {
     private RadioSoftware radio = RadioSoftware.getInstance();
     public static double pigeonOffset = 0;
 
-    private boolean disableDrive = true;
     public RobotContainer() {
         configureBindings();
         registeredCommands();
@@ -107,23 +106,20 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        if(!disableDrive) {
-            drivetrain.setDefaultCommand( // Uncomment later
-                // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() ->
-                    drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
-                        .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-                )
-            );
-        }
+        drivetrain.setDefaultCommand( // Uncomment later
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
 
         scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
         elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
 
-        if(!disableDrive) {
-            m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        }
+        m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
         // ));
@@ -137,9 +133,8 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
 
-        if(!disableDrive) {
-            drivetrain.registerTelemetry(logger::telemeterize);
-        }
+        
+        drivetrain.registerTelemetry(logger::telemeterize);
 
         /* ----- Main Driver Keybinds ----- */
         /* 
@@ -208,16 +203,14 @@ public class RobotContainer {
         m_driver1.povRight().onTrue(
             new ClimbCommand(0.1, 3)
         );
-        if(!disableDrive) {
-            m_driver1.povLeft().toggleOnTrue(
-                new FieldCentricCommand(
-                    drivetrain,
-                    () -> -driveBezier.getOutput(m_driver1.getLeftX()),
-                    () -> -driveBezier.getOutput(m_driver1.getLeftY()),
-                    () -> rotateBezier.getOutput(m_driver1.getRightX())
-                )
-            );
-        }
+        m_driver1.povLeft().toggleOnTrue(
+            new FieldCentricCommand(
+                drivetrain,
+                () -> -driveBezier.getOutput(m_driver1.getLeftX()),
+                () -> -driveBezier.getOutput(m_driver1.getLeftY()),
+                () -> rotateBezier.getOutput(m_driver1.getRightX())
+            )
+        );
         m_driver1.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
         );

@@ -81,7 +81,7 @@ public class DiffWristSubsystem extends SubsystemBase {
         rollEncoder.getConfigurator().apply(cc_cfg);
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = 0.058837890625;
+        cc_cfg.MagnetSensor.MagnetOffset = -0.07421875;
         pitchEncoder.getConfigurator().apply(cc_cfg);
 
         //Diff Wrist Start point
