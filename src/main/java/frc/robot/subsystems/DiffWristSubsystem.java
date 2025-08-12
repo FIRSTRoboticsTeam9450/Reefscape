@@ -108,8 +108,8 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         double lVolts = pitchVoltage - rollVoltage;
         double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -5, 5); // Used to be 8
-        rVolts = MathUtil.clamp(rVolts, -5, 5); // Used to be 8
+        lVolts = MathUtil.clamp(lVolts, -2, 2); // Used to be 8
+        rVolts = MathUtil.clamp(rVolts, -2, 2); // Used to be 8
         
 
         setVoltage(lVolts, rVolts);
