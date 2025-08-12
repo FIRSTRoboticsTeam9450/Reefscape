@@ -45,6 +45,7 @@ public class ElbowSubsystem extends SubsystemBase {
     private double kI = 0.001;
     private double kD = 0.35;
     private double kG = 0.001;
+    
 
     //private Log log = new Log("Elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);
     // Control request and logging
@@ -119,6 +120,7 @@ public class ElbowSubsystem extends SubsystemBase {
         Logger.recordOutput("Diffy Tuning/Elbow Stator Pull", motorStatorPull);
         Logger.recordOutput("Reefscape/Elbow/velocity", motor.getVelocity().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/acceleration", motor.getAcceleration().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
 
         // Reconstruct control request if parameters changed
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk) {
