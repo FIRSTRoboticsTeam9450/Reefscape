@@ -56,18 +56,31 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean inMove;
 
     // 0.82 is the record going up and down
-    double velocity = 90; //77 is closest to max velocity time: 0.82         Used to be 90
-    double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
+    // double velocity = 90; //77 is closest to max velocity time: 0.82         Used to be 90
+    // double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
+    // double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
+    // DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+    // double currentLimit = 50; // 100 is the max stator current pull
+    // double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
+    // double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
+    // double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
+    // double kP = 6.5; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
+    // double kI = 0; // no output for integrated error 0
+    // double kD = 0.35; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
+    // double kG = 0.3; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
+
+    double velocity = 90; //77 is closest to max velocity time: 0.82
+    double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
     double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
-    double currentLimit = 50; // 100 is the max stator current pull
+    double currentLimit = 130; // 100 is the max stator current pull
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
     double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
     double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
-    double kP = 6.5; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
+    double kP = 3; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
     double kI = 0; // no output for integrated error 0
-    double kD = 0.35; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
-    double kG = 0.3; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
+    double kD = 0.12; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
+    double kG = 0.45; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
 
     // kg is always applied, it counters gravity. 
     //     start low and increase until the elevator slowly creeps up, then backoff
