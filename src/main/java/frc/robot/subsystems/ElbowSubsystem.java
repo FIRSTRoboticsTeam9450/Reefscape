@@ -86,7 +86,7 @@ public class ElbowSubsystem extends SubsystemBase {
         config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.SensorToMechanismRatio = Constants.robotConfig.getElbowRatio();
-        config.Feedback.RotorToSensorRatio = 30;
+        config.Feedback.RotorToSensorRatio = 27.6;
 
         // Motion Magic parameters
         MotionMagicConfigs mm = config.MotionMagic;
@@ -114,6 +114,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
         // Logging outputs
         Logger.recordOutput("Reefscape/Elbow/Motor Encoder", motor.getRotorPosition().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Encoder", encoder.getPosition().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/Raw Motor Rotations", (elbowAngle + offsetToZeroDegrees) / -360);
         Logger.recordOutput("Reefscape/Elbow/Elbow Angle", elbowAngle);
         Logger.recordOutput("Reefscape/Elbow/Elbow Setpoint", getSetpoint());
@@ -134,7 +135,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     // Get current elbow angle
     public double getAngle() {
-        return elbowAngle;
+        return elbowAngle / 1.1;
     }
 
     // Set target setpoint

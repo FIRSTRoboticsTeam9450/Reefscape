@@ -27,7 +27,7 @@ public class ThingThreeConfig implements RobotConfig {
     double currentLimitSupply = 30;
 
     double elbowOffset = -0.171875;
-    double elbowRatio = 92.99 / 90.0;
+    double elbowRatio = 92.99 / 90.0; // 27.6 / 1
     
     double elbowGroundSetpoint = -5;
     double pitchGroundSetpoint = -148;
