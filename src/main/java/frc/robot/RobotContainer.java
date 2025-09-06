@@ -40,6 +40,7 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.RadioSoftware;
 import frc.robot.commands.CoordinationCommand;
+import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
@@ -48,8 +49,8 @@ public class RobotContainer {
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
     // Normal top speed
-    private static double DefaultMaxSpeed = 5.14;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxSpeed = 2.57;
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.5625).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -186,23 +187,23 @@ public class RobotContainer {
         );
 
         // Sticks
-        // m_driver1.leftStick().whileTrue( // Uncomment later
-        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1)
-        // );
-        // m_driver1.rightStick().whileTrue(
-        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1)
-        // );
+        m_driver1.leftStick().whileTrue( // Uncomment later
+            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1)
+        );
+        m_driver1.rightStick().whileTrue(
+            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1)
+        );
 
         // D-pad
         m_driver1.povUp().onTrue(
-            new ClimbCommand(0.9, 12)
+            new ClimbCommand(0.9, 2) // Used to be 0.9, 12
         );
         m_driver1.povDown().onTrue(
-            new ClimbCommand(0.300, 9)
+            new ClimbCommand(0.300, 2) // Used to be .3, 9
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.1, 3)
+            new ClimbCommand(0.1, 2) // Used to be .1, 3
         );
         m_driver1.povLeft().toggleOnTrue(
             new FieldCentricCommand(
@@ -237,33 +238,33 @@ public class RobotContainer {
         
 
         // === Intake & Storage Controls ===
-        // Trigger coral intake and then store it
+        // // Trigger coral intake and then store it
         m_driver2.rightTrigger().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_CORAL)
                 .andThen(new DualIntakeCommand(false))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
 
-        //Trigger algae intake sequence
-        // m_driver2.povDown().onTrue(
-        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
-        // m_driver2.povRight().onTrue(
-        //     new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
+        // //Trigger algae intake sequence
+        m_driver2.povDown().onTrue(
+            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                .andThen(new DualIntakeCommand(true))
+        );
+        m_driver2.povRight().onTrue(
+            new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
+                .andThen(new DualIntakeCommand(true))
+        );
 
         // // === Algae Positioning Controls ===
         // // Score algae at level 1 or 2 depending on POV
-        // m_driver2.povLeft().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAEL1)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
-        // m_driver2.povUp().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAEL2)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
+        m_driver2.povLeft().onTrue(
+            new CoordinationCommand(ScoringPos.ALGAEL1)
+                .andThen(new DualIntakeCommand(true))
+        );
+        m_driver2.povUp().onTrue(
+            new CoordinationCommand(ScoringPos.ALGAEL2)
+                .andThen(new DualIntakeCommand(true))
+        );
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -276,32 +277,32 @@ public class RobotContainer {
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
 
-        // ] === Scoring Level Controls ===
-        // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        //  === Scoring Level Controls ===
+        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         // === Miscellaneous ===
         // Play music on command
-        m_driver2.rightBumper().onTrue(
-            new InstantCommand(() -> radio.playMusic())
-        );
+        // m_driver2.rightBumper().onTrue(
+        //     new InstantCommand(() -> radio.playMusic())
+        // );
 
         // Optional: Uncomment if RollSideSwitcher is needed
         // m_driver2.rightBumper().onTrue(new RollSideSwitcher());
 
         /* ----------- Manual Tuning Assistance ----------- */
         
-        m_driver2.y().onTrue(new ElbowCommand(8.78));
-        m_driver2.x().onTrue(new ElbowCommand(26));
-        m_driver2.b().onTrue(new ElbowCommand(50));
-        m_driver2.a().onTrue(new ElbowCommand(89));
+        // m_driver2.y().onTrue(new ElbowCommand(8.78));
+        // m_driver2.x().onTrue(new ElbowCommand(26));
+        // m_driver2.b().onTrue(new ElbowCommand(50));
+        // m_driver2.a().onTrue(new ElbowCommand(89));
 
-        // m_driver2.povUp().onTrue(new ElevatorCommand(38));
-        // m_driver2.povRight().onTrue(new ElevatorCommand(26));
-        // m_driver2.povLeft().onTrue(new ElevatorCommand(13));
-        // m_driver2.povDown().onTrue(new ElevatorCommand(0));
+        m_driver2.povUp().onTrue(new ElevatorCommand(38));
+        m_driver2.povRight().onTrue(new ElevatorCommand(26));
+        m_driver2.povLeft().onTrue(new ElevatorCommand(13));
+        m_driver2.povDown().onTrue(new ElevatorCommand(0));
 
         // m_driver2.y().onTrue(new DiffWristCommand(0, -60));
         // m_driver2.x().onTrue(new DiffWristCommand(90, -90));

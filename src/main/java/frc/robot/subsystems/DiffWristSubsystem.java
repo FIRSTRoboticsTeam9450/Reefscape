@@ -24,7 +24,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(4, 0, 0.25);
+    private PIDController pitchPID = new PIDController(5, 0, 0.25);
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
@@ -69,7 +69,7 @@ public class DiffWristSubsystem extends SubsystemBase {
         config.CurrentLimits.StatorCurrentLimit = 50;
         config.CurrentLimits.SupplyCurrentLimitEnable = true;
         config.CurrentLimits.SupplyCurrentLimit = 30;
-        config.MotorOutput.NeutralMode = NeutralModeValue.Brake; //Constants.defaultNeutral;
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         leftConfigurator.apply(config);
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
         rightConfigurator.apply(config);
@@ -77,11 +77,11 @@ public class DiffWristSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = -0.39111328125;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.39697265625;
         rollEncoder.getConfigurator().apply(cc_cfg);
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = -0.07421875;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.39453125;
         pitchEncoder.getConfigurator().apply(cc_cfg);
 
         //Diff Wrist Start point
@@ -113,6 +113,8 @@ public class DiffWristSubsystem extends SubsystemBase {
         
 
         setVoltage(lVolts, rVolts);
+        Logger.recordOutput("Reefscape/DiffWrist/PID/Expected Left Motor Voltage", lVolts);
+        Logger.recordOutput("Reefscape/DiffWrist/PID/Expected Right Motor Voltage", rVolts);
     }
 
     @Override
@@ -137,13 +139,15 @@ public class DiffWristSubsystem extends SubsystemBase {
         
         if (runPID) {
             updatePID(pitchPos, rollPos);
+            Logger.recordOutput("Reefscape/DiffWrist/PID/Acctual Left Motor Voltage", leftMotor.getMotorVoltage().getValueAsDouble());
+            Logger.recordOutput("Reefscape/DiffWrist/PID/Acctual Right Motor Voltage", rightMotor.getMotorVoltage().getValueAsDouble());
         }
         if (debugging.DiffyTuningValues) {
             Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
             Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
-            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
-            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
-            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360 / 1.4));
+            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint * 1.5);
+            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint / 1.4);
+            Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
             Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360 / 1.4);
             Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
             Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
@@ -170,7 +174,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return the current encoder value for pitch in degrees
      */
     public double getPitchAngle() {
-        return pitchPos * 360 / 1.2;
+        return pitchPos * 360;
     }
 
     /**
@@ -198,14 +202,14 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setPitchSetpoint(double setpoint) {
         setpoint /= 360;
-        setpoint *= 1.2;
+        setpoint /= 1.5;
         pitchPID.setSetpoint(setpoint);
     }
 
     public boolean atPitchSetpoint() {
-        double pitchAngle = getPitchAngle();
+        double pitchAngle = getPitchAngle() * 1.5;
         double pitchSetpoint = getPitchSetpoint();
-        if ((pitchAngle > pitchSetpoint - 18) && (pitchAngle < pitchSetpoint + 18)) {
+        if ((pitchAngle > pitchSetpoint - 27) && (pitchAngle < pitchSetpoint + 27)) {
             return true;
         }
         return false;
@@ -235,7 +239,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of pitch
      */
     public double getPitchSetpoint() {
-        return pitchPID.getSetpoint() * 360 / 1.2;
+        return pitchPID.getSetpoint() * 360 * 1.5;
     }
 
     /**

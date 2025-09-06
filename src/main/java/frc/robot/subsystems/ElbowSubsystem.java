@@ -32,19 +32,19 @@ public class ElbowSubsystem extends SubsystemBase {
     private final double offsetToZeroDegrees = -110.3;
 
     // Motion Magic parameters
-    private double velocity = 5; // Used to be 18
-    private double acceleration = 5; // Used to be 11
+    private double velocity = 18; // Used to be 18
+    private double acceleration = 11; // Used to be 11
     private double jerk = 400; // Used to be 400
 
     // Feedforward and PIDF constants
     private double currentLimit = 50;
     private double kS = 0;
-    private double kV = 0.33;
-    private double kA = 0.05;
-    private double kP = 90;
-    private double kI = 0.001;
-    private double kD = 0.35;
-    private double kG = 0.001;
+    private double kV = 0.7;
+    private double kA = 0.06;
+    private double kP = 120;
+    private double kI = 0.000;
+    private double kD = 0.65;
+    private double kG = 0.15;
     
 
     //private Log log = new Log("Elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);
@@ -135,12 +135,12 @@ public class ElbowSubsystem extends SubsystemBase {
 
     // Get current elbow angle
     public double getAngle() {
-        return elbowAngle / 1.1;
+        return elbowAngle;
     }
 
     // Set target setpoint
     public void setSetpoint(double setpoint) {
-        this.setpoint = setpoint * 1.1;
+        this.setpoint = setpoint;
     }
 
     // Check if elbow has reached setpoint
