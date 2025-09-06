@@ -113,7 +113,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void configureRightMotor() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;//Constants.defaultNeutral;
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;

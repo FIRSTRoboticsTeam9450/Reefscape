@@ -31,14 +31,17 @@ import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
+import frc.robot.commands.SetClimberVoltageCommand;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.RadioSoftware;
 import frc.robot.commands.CoordinationCommand;
+import frc.robot.commands.DriveForwardCommand;
 import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
@@ -86,6 +89,7 @@ public class RobotContainer {
 
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
 
+    private ClimbSubsystem climber = ClimbSubsystem.getInstance();
 
     private RadioSoftware radio = RadioSoftware.getInstance();
     public static double pigeonOffset = 0;
@@ -118,7 +122,7 @@ public class RobotContainer {
         scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
         elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
 
-        m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
         // ));
@@ -195,16 +199,38 @@ public class RobotContainer {
         );
 
         // D-pad
+        
+        // Move up climber
         m_driver1.povUp().onTrue(
-            new ClimbCommand(0.9, 12)
-        );
-        m_driver1.povDown().onTrue(
-            new ClimbCommand(0.300, 9)
+            new ClimbCommand(0.9257, 9) // 9
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
-        m_driver1.povRight().onTrue(
-            new ClimbCommand(0.1, 3)
+        m_driver1.povDown().onTrue(
+            new ClimbCommand(0.5, 3)
         );
+        m_driver1.povRight().onTrue(
+            new ClimbCommand(0.05, 12) // 12
+        );
+
+        // // Move up climber
+        // m_driver1.povUp().whileTrue(
+        //     new InstantCommand(() -> climber.setVoltage(-1))
+
+        // );
+        // m_driver1.povUp().onFalse(
+        //     new InstantCommand(() -> climber.setVoltage(0))
+
+        // );
+
+        // m_driver1.povDown().whileTrue(
+        //     new InstantCommand(() -> climber.setVoltage(1))
+
+        // );
+        // m_driver1.povDown().onFalse(
+        //     new InstantCommand(() -> climber.setVoltage(0))
+
+        // );
+        // Reset climber
         m_driver1.povLeft().toggleOnTrue(
             new FieldCentricCommand(
                 drivetrain,
@@ -213,6 +239,8 @@ public class RobotContainer {
                 () -> rotateBezier.getOutput(m_driver1.getRightX())
             )
         );
+
+        m_driver1.a().whileTrue(new DriveForwardCommand(drivetrain, m_driver1));
                 
         m_driver1.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
@@ -277,6 +305,7 @@ public class RobotContainer {
         m_driver2.leftBumper().onTrue(
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
+
 
         // === Scoring Level Controls ===
         m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));

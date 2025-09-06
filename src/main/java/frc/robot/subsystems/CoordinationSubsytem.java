@@ -58,7 +58,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     boolean algae;
 
     private int level = 3;
-    private int desiredLevel = 3;
+    private int desiredLevel = 1;
 
     private boolean algaeNet = true;
     private boolean desiredAlgaeNet = true;
@@ -416,7 +416,11 @@ public class CoordinationSubsytem extends SubsystemBase{
         if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous()) {
             goToPreL4();
         } else if (desiredLevel == 1) {
-            goToL1Store();
+            if (lastPos == ScoringPos.INTAKE_CORAL || lastPos == ScoringPos.GO_SCORE_CORAL) {
+                goScoreLevel();
+            } else {
+                goToL1Store();
+            }
         } else {
             if (lastPos == ScoringPos.INTAKE_CORAL) {
                 if (elbowEncoder > 15) {

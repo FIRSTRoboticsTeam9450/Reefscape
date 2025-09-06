@@ -94,7 +94,7 @@ public class ScoringCommand extends Command {
             retry.schedule();
         } else if (!algae && CoordinationSubsytem.autoGround) {
             new CoordinationCommand(ScoringPos.CORAL_STORE)
-                .andThen(new WaitCommand(0.65))
+                // .andThen(new WaitCommand(0.455))
                 .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
                     .andThen(new DualIntakeCommand(false))
                     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
