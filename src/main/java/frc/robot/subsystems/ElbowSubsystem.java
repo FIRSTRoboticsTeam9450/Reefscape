@@ -111,7 +111,6 @@ public class ElbowSubsystem extends SubsystemBase {
         Logger.recordOutput("Reefscape/Elbow/Elbow Angle", elbowAngle);
         Logger.recordOutput("Reefscape/Elbow/Elbow Setpoint", getSetpoint());
         Logger.recordOutput("Diffy Tuning/Elbow Stator Pull", motorStatorPull);
-
         // Reconstruct control request if parameters changed
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk) {
             m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);

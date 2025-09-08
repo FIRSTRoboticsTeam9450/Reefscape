@@ -75,11 +75,14 @@ public final class Constants {
   // =========================
 
   public static class AlignOffsets {
-    public static final double leftReef = 0.173;
-    public static final double rightReef = -0.173;
+    public static final double leftReef = 0.173; //0.173
+    public static final double rightReef = -0.173; //-0.173
+    public static final double leftReefL1 = 0.224;
+    public static final double rightReefL1 = -0.224;
     public static final double firstCoralBack = 0.6;
     public static final double scoreCoralBack = 0.44;
-    public static final double algaeBack = 0.65;
+    public static final double algaeIn = 0.65;
+    public static final double algaeBack = 1;
     public static final double algaeLeft = 0.0;
   }
 
@@ -101,6 +104,7 @@ public final class Constants {
     ScoreL4,
     ALGAEL1,
     ALGAEL2,
+    ALGAE_COMBINED,
     GRABBED_ALGAE,
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,

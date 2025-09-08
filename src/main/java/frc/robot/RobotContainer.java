@@ -49,8 +49,8 @@ public class RobotContainer {
     private static double LiftMaxSpeed = 1;
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
-    // Normal top speed
     private static double DefaultMaxSpeed = 5.14;
+
     private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
@@ -63,7 +63,7 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.1, 0.01); //deadbang original:0.07, minOutput: 0.03
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
     public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -280,8 +280,8 @@ public class RobotContainer {
                 .andThen(new DualIntakeCommand(true))
         );
         m_driver2.povRight().onTrue(
-            new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
+            new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
+                // .andThen(new DualIntakeCommand(true))
         );
 
         // // === Algae Positioning Controls ===

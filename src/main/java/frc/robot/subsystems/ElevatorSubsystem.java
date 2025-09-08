@@ -27,6 +27,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.ElevatorIDs;
 import frc.robot.RobotContainer;
 
@@ -118,8 +119,12 @@ public class ElevatorSubsystem extends SubsystemBase {
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = currentLimit;
+        System.out.println("ELEVATOR: RIGHT STATOR CURRENT LIMIT: " + currentLimit);
+
+        System.out.println("ELEVATOR: CONFIGURE RIGHT HAS BEEN REACHED");
 
         rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+        System.out.println(rightMotor.getControlMode(true));
     }
 
     // private void leftMotorConfig(){
@@ -188,6 +193,12 @@ public class ElevatorSubsystem extends SubsystemBase {
         // recordTelemetry();
 
         // cacheSignals();
+
+        /* ----- Unrealted stuff, I just need some place that runs consistently ----- */
+
+        int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
+        Logger.recordOutput("Reefscape/Align/tids", tid);
+
     }
 
     private boolean profileChanged() {

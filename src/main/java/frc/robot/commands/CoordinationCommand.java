@@ -32,20 +32,17 @@ public class CoordinationCommand extends Command {
     public CoordinationCommand(ScoringPos pos) {
         this.targetPos = pos;
         currentPos = CT.getPos();
-        System.out.println(currentPos+"WOW" + pos + " CRAZY");
         this.mode = false;
     }
 
     public CoordinationCommand(ScoringPos pos, boolean mode) {
         this.targetPos = pos;
         currentPos = CT.getPos();
-        System.out.println(currentPos+"WHAT THE..." + pos + " CRAZY");
         this.mode = mode;
     }
 
     @Override
     public void initialize() {
-        System.out.println("made it here ikyklk");
         currentPos = CT.getPos(); 
         boolean validPath = false;
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);
@@ -56,16 +53,13 @@ public class CoordinationCommand extends Command {
                 }
             }
             if (connectedPathsSet.contains(targetPos) && !justCancelled) {
-                System.out.println(currentPos + " CURRENT POS " + targetPos + " TARGETPOS " + "GOING UP");
         
                 CT.setPosition(targetPos);
                 validPath = true;
-            } else if (debugging.CoordAllowedPathsDebugging) {
-                validPath = false;
-                System.out.println("Invalid Path");
             }
             if (debugging.CoordAllowedPathsDebugging) {
                 Logger.recordOutput("Reefscape/Debugging/Coordination/Valid Path?", validPath);
+                Logger.recordOutput("Reefscape/Debugging/Coordination/Trying to go to", targetPos);
             }
             if (debugging.CoordAllowedPathsDebugging) {
                 Logger.recordOutput("Reefscape/Debugging/Paths", currentPos + "");
