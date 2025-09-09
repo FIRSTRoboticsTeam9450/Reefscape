@@ -158,7 +158,7 @@ public class AlignCommand extends Command {
         } else {
             // Algae
             tagLeftOffset = Constants.AlignOffsets.algaeLeft; // Set left offset for center
-            tagForwardOffset = .65; //temp: 0.65 is old value of algaeBack // 0.45
+            tagForwardOffset = Constants.AlignOffsets.algaeBack; //temp: 0.65 is old value of algaeBack // 0.45
             // if (tagForwardOffset == Constants.AlignOffsets.firstCoralBack) {
             //     tagForwardOffset = Constants.AlignOffsets.algaeBack; // Set forward offset for center
             // } else if (tagForwardOffset == Constants.AlignOffsets.scoreCoralBack){
@@ -229,12 +229,12 @@ public class AlignCommand extends Command {
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
             }
-            // else if(atSetpoint(0.06, 0.3) && score.getAlgae()) {
-            //     double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.score);
-            //     pidX.setSetpoint(pose[0]);
-            //     pidY.setSetpoint(pose[1]);
-            //     pidRotate.setSetpoint(pose[2]);
-            // }
+            else if(atSetpoint(0.06, 0.3) && !hasCoral) {
+                double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.algaeIn);
+                pidX.setSetpoint(pose[0]);
+                pidY.setSetpoint(pose[1]);
+                pidRotate.setSetpoint(pose[2]);
+            }
 
             // Send elevator up if within tolerance at L4
             if (atSetpoint(0.3, 0.6)) {

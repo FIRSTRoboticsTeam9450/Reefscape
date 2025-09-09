@@ -20,7 +20,7 @@ public class FieldCentricCommand extends Command {
 
     /* ----- Swerve Drive ----- */
     private final SwerveRequest.RobotCentric driveRobotCentric = new SwerveRequest.RobotCentric()
-            .withDeadband(RobotContainer.MaxSpeed * 0.1).withRotationalDeadband(RobotContainer.MaxAngularRate * 0.1) // Add a 10% deadband
+            .withDeadband(RobotContainer.MaxSpeed * 0.15).withRotationalDeadband(RobotContainer.MaxAngularRate * 0.15) // Add a 10% deadband
             .withDriveRequestType(DriveRequestType.OpenLoopVoltage); // Use open-loop control for drive motors
     
     /* ----- Variables? (I think) ----- */
