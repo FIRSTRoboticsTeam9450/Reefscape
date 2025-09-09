@@ -24,6 +24,7 @@ import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
+import frc.robot.commands.ElbowCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.FieldCentricCommand;
 import frc.robot.commands.ManualElevatorCommand;
@@ -39,6 +40,7 @@ import frc.robot.subsystems.DualIntakeSubsystem;
 import frc.robot.subsystems.ElevatorSubsystem;
 import frc.robot.subsystems.RadioSoftware;
 import frc.robot.commands.CoordinationCommand;
+import frc.robot.commands.DiffWristCommand;
 import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
@@ -47,8 +49,8 @@ public class RobotContainer {
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
     // Normal top speed
-    private static double DefaultMaxSpeed = 5.14;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxSpeed = 2.57;
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.5625).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -90,7 +92,6 @@ public class RobotContainer {
     private RadioSoftware radio = RadioSoftware.getInstance();
     public static double pigeonOffset = 0;
 
-    private boolean disableDrive = true;
     public RobotContainer() {
         configureBindings();
         registeredCommands();
@@ -107,23 +108,20 @@ public class RobotContainer {
     private void configureBindings() {
         // Note that X is defined as forward according to WPILib convention,
         // and Y is defined as to the left according to WPILib convention.
-        if(!disableDrive) {
-            drivetrain.setDefaultCommand( // Uncomment later
-                // Drivetrain will execute this command periodically
-                drivetrain.applyRequest(() ->
-                    drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
-                        .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                        .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
-                )
-            );
-        }
+        drivetrain.setDefaultCommand( // Uncomment later
+            // Drivetrain will execute this command periodically
+            drivetrain.applyRequest(() ->
+                drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+            )
+        );
 
         scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
         elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
 
-        if(!disableDrive) {
-            m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        }
+        m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
         // ));
@@ -137,9 +135,8 @@ public class RobotContainer {
 
         // reset the field-centric heading on left bumper press
 
-        if(!disableDrive) {
-            drivetrain.registerTelemetry(logger::telemeterize);
-        }
+        
+        drivetrain.registerTelemetry(logger::telemeterize);
 
         /* ----- Main Driver Keybinds ----- */
         /* 
@@ -190,34 +187,32 @@ public class RobotContainer {
         );
 
         // Sticks
-        // m_driver1.leftStick().whileTrue( // Uncomment later
-        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1)
-        // );
-        // m_driver1.rightStick().whileTrue(
-        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1)
-        // );
+        m_driver1.leftStick().whileTrue( // Uncomment later
+            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1)
+        );
+        m_driver1.rightStick().whileTrue(
+            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1)
+        );
 
         // D-pad
         m_driver1.povUp().onTrue(
-            new ClimbCommand(0.9, 12)
+            new ClimbCommand(0.9, 2) // Used to be 0.9, 12
         );
         m_driver1.povDown().onTrue(
-            new ClimbCommand(0.300, 9)
+            new ClimbCommand(0.300, 2) // Used to be .3, 9
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.1, 3)
+            new ClimbCommand(0.1, 2) // Used to be .1, 3
         );
-        if(!disableDrive) {
-            m_driver1.povLeft().toggleOnTrue(
-                new FieldCentricCommand(
-                    drivetrain,
-                    () -> -driveBezier.getOutput(m_driver1.getLeftX()),
-                    () -> -driveBezier.getOutput(m_driver1.getLeftY()),
-                    () -> rotateBezier.getOutput(m_driver1.getRightX())
-                )
-            );
-        }
+        m_driver1.povLeft().toggleOnTrue(
+            new FieldCentricCommand(
+                drivetrain,
+                () -> -driveBezier.getOutput(m_driver1.getLeftX()),
+                () -> -driveBezier.getOutput(m_driver1.getLeftY()),
+                () -> rotateBezier.getOutput(m_driver1.getRightX())
+            )
+        );
         m_driver1.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
         );
@@ -243,33 +238,33 @@ public class RobotContainer {
         
 
         // === Intake & Storage Controls ===
-        // Trigger coral intake and then store it
+        // // Trigger coral intake and then store it
         m_driver2.rightTrigger().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_CORAL)
                 .andThen(new DualIntakeCommand(false))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
 
-        //Trigger algae intake sequence
-        // m_driver2.povDown().onTrue(
-        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
-        // m_driver2.povRight().onTrue(
-        //     new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
+        // //Trigger algae intake sequence
+        m_driver2.povDown().onTrue(
+            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                .andThen(new DualIntakeCommand(true))
+        );
+        m_driver2.povRight().onTrue(
+            new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
+                .andThen(new DualIntakeCommand(true))
+        );
 
         // // === Algae Positioning Controls ===
         // // Score algae at level 1 or 2 depending on POV
-        // m_driver2.povLeft().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAEL1)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
-        // m_driver2.povUp().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAEL2)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
+        m_driver2.povLeft().onTrue(
+            new CoordinationCommand(ScoringPos.ALGAEL1)
+                .andThen(new DualIntakeCommand(true))
+        );
+        m_driver2.povUp().onTrue(
+            new CoordinationCommand(ScoringPos.ALGAEL2)
+                .andThen(new DualIntakeCommand(true))
+        );
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -282,7 +277,7 @@ public class RobotContainer {
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
 
-        // === Scoring Level Controls ===
+        //  === Scoring Level Controls ===
         m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
         m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
@@ -290,9 +285,9 @@ public class RobotContainer {
 
         // === Miscellaneous ===
         // Play music on command
-        m_driver2.rightBumper().onTrue(
-            new InstantCommand(() -> radio.playMusic())
-        );
+        // m_driver2.rightBumper().onTrue(
+        //     new InstantCommand(() -> radio.playMusic())
+        // );
 
         // Optional: Uncomment if RollSideSwitcher is needed
         // m_driver2.rightBumper().onTrue(new RollSideSwitcher());

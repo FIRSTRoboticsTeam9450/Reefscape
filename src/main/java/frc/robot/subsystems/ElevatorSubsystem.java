@@ -1,5 +1,7 @@
 package frc.robot.subsystems;
 
+import java.time.format.FormatStyle;
+
 import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.BaseStatusSignal;
@@ -28,6 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.Constants.ElevatorIDs;
+import frc.robot.Constants.ScoringPos;
 import frc.robot.RobotContainer;
 
 /**
@@ -52,22 +55,35 @@ public class ElevatorSubsystem extends SubsystemBase {
     private boolean atSetpoint;
     private boolean atLimit;
     private boolean highUp;
-    private boolean resetDone;
+    private boolean resetDone = false;
     private boolean inMove;
 
     // 0.82 is the record going up and down
-    double velocity = 90; //77 is closest to max velocity time: 0.82         Used to be 90
-    double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
+    // double velocity = 90; //77 is closest to max velocity time: 0.82         Used to be 90
+    // double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84      Used to be 400
+    // double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
+    // DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+    // double currentLimit = 50; // 100 is the max stator current pull
+    // double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
+    // double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
+    // double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
+    // double kP = 6.5; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
+    // double kI = 0; // no output for integrated error 0
+    // double kD = 0.35; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
+    // double kG = 0.3; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
+
+    double velocity = 90; //77 is closest to max velocity time: 0.82
+    double acceleration = 400; // 260 is closest to max acceleration tim: 0.82, going lower makes it between 0.86-0.84
     double jerk = 1300; // 1500 will make it faster, 1300 is good for no bad sound - Make sure it's not 0 because the arm hit something
     DynamicMotionMagicVoltage m_request = new DynamicMotionMagicVoltage(0, velocity, acceleration, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
-    double currentLimit = 50; // 100 is the max stator current pull
+    double currentLimit = 130; // 100 is the max stator current pull
     double kS = 0.6; // Add 0.25 V output to overcome static friction .25 - Gives it a little boost in the very beginning
     double kV = 0.26; // A velocity target of 1 rps results in 0.12 V output .12
     double kA = 0.017; // An acceleration of 1 rps/s requires 0.01 V output .01 - Adds a little boost
-    double kP = 6.5; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
+    double kP = 3; // A position error of 2.5 rotations results in 12 V output 3.8 - Helps correct positional error
     double kI = 0; // no output for integrated error 0
-    double kD = 0.35; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
-    double kG = 0.3; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
+    double kD = 0.12; // A velocity error of 1 rps results in 0.1 V output 0.1 - Can help correct kV and kA error
+    double kG = 0.45; // was originally left to default. this was added so it could be updated 0.55 - Perfect value is when it goes up when you push it up and doesn't go down when you push it down
 
     // kg is always applied, it counters gravity. 
     //     start low and increase until the elevator slowly creeps up, then backoff
@@ -153,7 +169,9 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     // }
     /* ----- Updaters ----- */
-    double atLimitCount = 0;
+    double atLimitCount = 4;
+    double justACoupeTimes = 0;
+    double cooldown = 0;
     @Override
     public void periodic() {
         // BaseStatusSignal.refreshAll(
@@ -166,6 +184,25 @@ public class ElevatorSubsystem extends SubsystemBase {
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
 
+        if(resetDone && Math.abs(leftMotor.getVelocity().getValueAsDouble()) <= 0.01 && Math.abs(leftMotor.getMotorVoltage().getValueAsDouble()) > 0.05 && leftMotor.getPosition().getValueAsDouble() <= 1) {
+            if (justACoupeTimes < 15 && resetDone) {
+                setSetpoint(getSetpoint() - 0.05);
+                justACoupeTimes++;
+            }
+            if (cooldown > 0) {
+                cooldown--;
+            } else {
+                atLimitCount++;
+                if (atLimitCount >= 4) {
+                    resetDone = false;
+                    justACoupeTimes = 0;
+                }
+            }
+        }
+        Logger.recordOutput("Elevator/Resetting?", !resetDone);
+        Logger.recordOutput("Elevator/Resetting Count", atLimitCount);
+        Logger.recordOutput("Elevator/Left Motor Velocity", leftMotor.getVelocity().getValueAsDouble());
+
         if (!resetDone){
             // boolean atLimit = candi.getS1State().getValue() == S1StateValue.Low;
             // if (atLimit){
@@ -175,16 +212,15 @@ public class ElevatorSubsystem extends SubsystemBase {
             //     System.out.println("MOTOR POSITIONS RESET");
             //     resetDone = true;
             // }
-            if(leftMotor.getVelocity().getValueAsDouble() <= 0.01 && leftMotor.getMotorVoltage().getValueAsDouble() > 4) {
-                atLimitCount++;
-                System.out.println("WORKING");
-            }
+            
             if(atLimitCount >= 4) {
-                leftMotor.setPosition(-.5, .5);
-                leftMotor.setPosition(-.5, .5);
+                leftMotor.setPosition(-.05, .5);
+                rightMotor.setPosition(-.05, .5);
                 resetDone = true;
-                offset = 0;
                 atLimitCount = 0;
+                offset = 0.1;
+                cooldown = 500;
+                setSetpoint(0);
             }
         }
 
@@ -230,8 +266,10 @@ public class ElevatorSubsystem extends SubsystemBase {
         Logger.recordOutput("Elevator/Offset", offset);
         Logger.recordOutput("Elevator/LeftMotorStator", leftMotor.getStatorCurrent().getValueAsDouble());
         Logger.recordOutput("Elevator/LeftMotorSupply", leftMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Elevator/LeftMotorVoltage", leftMotor.getMotorVoltage().getValueAsDouble());
         Logger.recordOutput("Elevator/RightMotorStator", rightMotor.getStatorCurrent().getValueAsDouble());
         Logger.recordOutput("Elevator/RightMotorSupply", rightMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Elevator/RightMotorVoltage", rightMotor.getMotorVoltage().getValueAsDouble());
 
         boolean highUp = position >= 20;
 
@@ -249,6 +287,9 @@ public class ElevatorSubsystem extends SubsystemBase {
     }
 
     public void setSetpoint(double pSetpoint) {
+        // if (pSetpoint > 20) {
+        //     pSetpoint = 20;
+        // }
         setpoint = pSetpoint;
     }
 

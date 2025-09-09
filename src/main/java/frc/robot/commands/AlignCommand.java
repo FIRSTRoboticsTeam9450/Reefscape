@@ -96,6 +96,17 @@ public class AlignCommand extends Command {
         this.drive = drive;
     }
 
+    /**
+     * <p> Initializes vision alignment process for autonomous driving:</p>
+     * <p> • Enables vision processing and resets stuck counter</p>
+     * <p> • Checks alliance color and updates current robot pose</p>
+     * <p> • Retrieves target tag ID using Limelight camera</p>
+     * <p> • If tag matches a known coral location:
+     *   → Sets PID controller setpoints for X, Y, and rotation to align</p>
+     * <p> • Otherwise:
+     *   → Marks target as not found and disables alignment</p>
+     * <p> • Resets upward motion flag</p>
+     */
     @Override
     public void initialize() {
         drive.runVision = true;
@@ -124,10 +135,17 @@ public class AlignCommand extends Command {
     /* ----------- Updaters ----------- */
 
     /**
-     * Calculates the aligned position based on the given target position.
+     * Calculates an alignment position offset relative to a given target position,
+     * based on predefined constants and alignment scenarios such as reef or algae zones.
      *
-     * @param targetPos An array containing the target position with [x, y, rotation].
-     * @return An array containing the aligned position with [x, y, rotation].
+     * <p>The method adjusts the forward and lateral offsets depending on alignment position
+     * and scoring conditions, then computes a new position by applying rotation and trigonometric
+     * adjustments to the target position.</p>
+     *
+     * @param targetPos A double array representing the target position in the format [x, y, rotation],
+     *                  where rotation is in radians.
+     * @param tagForwardOffset The default forward offset to apply; may be overridden based on context.
+     * @return A double array containing the calculated alignment position as [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
         double tagLeftOffset = Constants.AlignOffsets.leftReef;

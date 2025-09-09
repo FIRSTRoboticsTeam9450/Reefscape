@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DiffWristSubsystem;
 
 /**
@@ -10,10 +11,12 @@ public class DiffWristCommand extends Command {
 
     /* ----- Subsystem Instance ----- */
     private DiffWristSubsystem DW = DiffWristSubsystem.getInstance();
+    private CoordinationSubsytem Coord = CoordinationSubsytem.getInstance();
 
     /* ----- Variables ----- */
     private double rollSetpoint;
     private double pitchSetpoint;
+    private boolean rollEitherSide = false;
 
 
     /* ----------- Initialization ----------- */
@@ -28,6 +31,11 @@ public class DiffWristCommand extends Command {
         this.pitchSetpoint = pitchSetpoint;
     }
 
+    public DiffWristCommand(boolean rollEitherSide, double pitchSetpoint) {
+        this.rollEitherSide = rollEitherSide;
+        this.pitchSetpoint = pitchSetpoint;
+    }
+
     /**
      * Will set one of the two PIDs on the Different wrist to the given setpoint
      * @param setpoint setpoint to go to
@@ -38,8 +46,13 @@ public class DiffWristCommand extends Command {
     @Override
     public void initialize() {
         addRequirements(DW);
-        DW.setRollSetpoint(rollSetpoint);
-        DW.setPitchSetpoint(pitchSetpoint);
+        if (rollEitherSide) {
+            Coord.rollToClosestSide();
+            DW.setPitchSetpoint(pitchSetpoint);
+        } else {
+            DW.setRollSetpoint(rollSetpoint);
+            DW.setPitchSetpoint(pitchSetpoint);
+        }
     }
 
     /* ----------- Finishers ----------- */

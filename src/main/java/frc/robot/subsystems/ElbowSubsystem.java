@@ -32,19 +32,20 @@ public class ElbowSubsystem extends SubsystemBase {
     private final double offsetToZeroDegrees = -110.3;
 
     // Motion Magic parameters
-    private double velocity = 5; // Used to be 18
-    private double acceleration = 5; // Used to be 11
+    private double velocity = 18; // Used to be 18
+    private double acceleration = 11; // Used to be 11
     private double jerk = 400; // Used to be 400
 
     // Feedforward and PIDF constants
     private double currentLimit = 50;
     private double kS = 0;
-    private double kV = 0.33;
-    private double kA = 0.05;
-    private double kP = 90;
-    private double kI = 0.001;
-    private double kD = 0.35;
-    private double kG = 0.001;
+    private double kV = 0.7;
+    private double kA = 0.06;
+    private double kP = 120;
+    private double kI = 0.000;
+    private double kD = 0.65;
+    private double kG = 0.15;
+    
 
     //private Log log = new Log("Elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);
     // Control request and logging
@@ -85,7 +86,7 @@ public class ElbowSubsystem extends SubsystemBase {
         config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
         config.Feedback.SensorToMechanismRatio = Constants.robotConfig.getElbowRatio();
-        config.Feedback.RotorToSensorRatio = 30;
+        config.Feedback.RotorToSensorRatio = 27.6;
 
         // Motion Magic parameters
         MotionMagicConfigs mm = config.MotionMagic;
@@ -113,12 +114,14 @@ public class ElbowSubsystem extends SubsystemBase {
 
         // Logging outputs
         Logger.recordOutput("Reefscape/Elbow/Motor Encoder", motor.getRotorPosition().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Encoder", encoder.getPosition().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/Raw Motor Rotations", (elbowAngle + offsetToZeroDegrees) / -360);
         Logger.recordOutput("Reefscape/Elbow/Elbow Angle", elbowAngle);
         Logger.recordOutput("Reefscape/Elbow/Elbow Setpoint", getSetpoint());
         Logger.recordOutput("Diffy Tuning/Elbow Stator Pull", motorStatorPull);
         Logger.recordOutput("Reefscape/Elbow/velocity", motor.getVelocity().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/acceleration", motor.getAcceleration().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
 
         // Reconstruct control request if parameters changed
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk) {
@@ -137,7 +140,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     // Set target setpoint
     public void setSetpoint(double setpoint) {
-        this.setpoint = setpoint * 1.1;
+        this.setpoint = setpoint;
     }
 
     // Check if elbow has reached setpoint

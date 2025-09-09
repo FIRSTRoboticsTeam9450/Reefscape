@@ -43,6 +43,7 @@ public class ScoringCommand extends Command {
         } else {
             score(); // Direct scoring if already in correct state
         }
+        Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
     }
 
     /** Handles the actual scoring based on detected conditions. */
@@ -53,7 +54,7 @@ public class ScoringCommand extends Command {
             elev.schedule();
             intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
-            intake.setVoltage(-4);
+            intake.setVoltage(-2);
         } else {
             score.schedule();
             intake.setVoltage(0);
@@ -91,6 +92,7 @@ public class ScoringCommand extends Command {
         intake.setVoltage(0);
 
         if (intake.hasCoral() && !DriverStation.isAutonomous()) {
+            Logger.recordOutput("Reefscape/Debugging/Score/Retry?", true);
             retry.schedule();
         } else if (!algae && CoordinationSubsytem.autoGround) {
             new CoordinationCommand(ScoringPos.CORAL_STORE)
@@ -99,8 +101,10 @@ public class ScoringCommand extends Command {
                     .andThen(new DualIntakeCommand(false))
                     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
                 .schedule();
+                Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
         } else {
             store.schedule();
+            Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
         }
     }
 }

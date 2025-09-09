@@ -66,6 +66,7 @@ public final class Constants {
 
   public static class ClimberIDs {
     public static final int kMotorID = 27;
+    public static final int kEncoderID = 28;
   }
 
   // =========================
@@ -76,7 +77,7 @@ public final class Constants {
     public static final double leftReef = 0.173;
     public static final double rightReef = -0.173;
     public static final double firstCoralBack = 0.6;
-    public static final double scoreCoralBack = 0.44;
+    public static final double scoreCoralBack = 0.33; //.44, .3638
     public static final double algaeBack = 0.65;
     public static final double algaeLeft = 0.0;
   }
@@ -103,7 +104,8 @@ public final class Constants {
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,
     PRE_L4,
-    LOLIPOP_INTAKE_ALGAE
+    LOLIPOP_INTAKE_ALGAE,
+    NONE
   }
 
   /** Used for aligning robot to field features */
