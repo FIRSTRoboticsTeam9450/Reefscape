@@ -7,50 +7,49 @@
         {
           "type": "named",
           "data": {
-            "name": "Start"
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.75
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "named",
-                "data": {
-                  "name": "CoralStore"
-                }
-              },
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Preload testing"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "CoralL4"
-                }
-              }
-            ]
+            "name": "IntakeHold"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "GoToScore"
+            "name": "CoralStore"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralL1"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Copy of StartToFLR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FLRBackup"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
           }
         }
       ]
     }
   },
   "resetOdom": true,
-  "folder": "Unfinished",
+  "folder": null,
   "choreoAuto": false
 }

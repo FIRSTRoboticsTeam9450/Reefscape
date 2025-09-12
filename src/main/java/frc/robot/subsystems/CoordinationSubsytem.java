@@ -653,7 +653,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 5.5;
                     } else {
-                        coralScoreElev = 4.5; //Comp: 3.75
+                        coralScoreElev = 4; //4.5 //Comp: 3.75
                     }
                     //rollToClosestSide();
                     break;
@@ -661,9 +661,9 @@ public class CoordinationSubsytem extends SubsystemBase{
                     coralScorePitch = -112;
                     coralScoreElbow = 78;
                     if (l4Extend) {
-                        coralScoreElev = 14.25;
+                        coralScoreElev = 14; //14.25
                     } else {
-                        coralScoreElev = 13.25;
+                        coralScoreElev = 13; //13.25
                     }
                     //rollToClosestSide();
                     break;
@@ -810,7 +810,11 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToScoreCoral() {
-        DW.setPitchSetpoint(-107.19);
+        if (level == 2) {
+            DW.setPitchSetpoint(-128);
+        } else {
+            DW.setPitchSetpoint(-107.19);
+        }
         Elbow.setSetpoint(32.91);
         if (level == 3 && Elbow.atSetpoint()) {
             Elev.setSetpoint(11.5);

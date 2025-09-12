@@ -50,13 +50,16 @@ public class ScoringCommand extends Command {
         if (algae || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(scoreSub.getAlgaeNet() ? -10.5 : -3);
         } else if (scoreSub.getScoringLevel() == 4) {
-            elev.schedule();
+            new WaitCommand(0.2).andThen(elev).schedule();
             intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-4);
         } else {
             score.schedule();
             intake.setVoltage(0);
+            if (scoreSub.getScoringLevel() == 2) {
+                intake.setVoltage(-0.5);
+            }
         }
         timer.restart();
     }
@@ -93,12 +96,20 @@ public class ScoringCommand extends Command {
         if (intake.hasCoral() && !DriverStation.isAutonomous()) {
             retry.schedule();
         } else if (!algae && CoordinationSubsytem.autoGround) {
-            new CoordinationCommand(ScoringPos.CORAL_STORE)
-                // .andThen(new WaitCommand(0.455))
+            if (scoreSub.getDesiredLevel() != 1) {
+                new CoordinationCommand(ScoringPos.CORAL_STORE)
+                    .andThen(new WaitCommand(0.455))
+                    .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                        .andThen(new DualIntakeCommand(false))
+                        .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
+                    .schedule();
+            } else {
+                new CoordinationCommand(ScoringPos.CORAL_STORE)
                 .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
                     .andThen(new DualIntakeCommand(false))
                     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
                 .schedule();
+            }
         } else {
             store.schedule();
         }

@@ -104,6 +104,7 @@ public class RobotContainer {
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
         //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
         autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
+        autoChooser.addOption("TEST", drivetrain.getAutoPath("TEST", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -168,13 +169,8 @@ public class RobotContainer {
         );
 
         // Bumpers PUT THIS BACK LATER
-        // m_driver1.leftBumper().onTrue(
-        //     new RollSideSwitcher(true)
-        // );
         m_driver1.leftBumper().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_CORAL)
-                .andThen(new DualIntakeCommand(false))
-                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+            new RollSideSwitcher(true)
         );
         m_driver1.rightBumper().onTrue(
             new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
@@ -202,34 +198,31 @@ public class RobotContainer {
         
         // Move up climber
         m_driver1.povUp().onTrue(
-            new ClimbCommand(0.9257, 9) // 9
+            new ClimbCommand(0.881, 9) // 9
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver1.povDown().onTrue(
-            new ClimbCommand(0.5, 3)
+            new ClimbCommand(0.20, 10.5)
         );
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.05, 12) // 12
+            new ClimbCommand(0.035, 12) // 12
         );
 
         // // Move up climber
         // m_driver1.povUp().whileTrue(
         //     new InstantCommand(() -> climber.setVoltage(-1))
-
         // );
         // m_driver1.povUp().onFalse(
         //     new InstantCommand(() -> climber.setVoltage(0))
-
         // );
 
         // m_driver1.povDown().whileTrue(
         //     new InstantCommand(() -> climber.setVoltage(1))
-
         // );
         // m_driver1.povDown().onFalse(
         //     new InstantCommand(() -> climber.setVoltage(0))
-
         // );
+
         // Reset climber
         m_driver1.povLeft().toggleOnTrue(
             new FieldCentricCommand(

@@ -22,9 +22,9 @@ import frc.robot.Constants.debugging;
  * <p>
  * They do be lifting the hefty robot
  * 
- * <p> Grabbing Cage: 0.9 </p>
- * <p> Climbing: 0.3 </p>
- * <p> Store: 0.1 </p>
+ * <p> Grabbing Cage: 0.831 </p>
+ * <p> Climbing: 0.26 </p>
+ * <p> Store: 0.055 </p>
  */
 public class ClimbSubsystem extends SubsystemBase {
 
@@ -41,7 +41,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     /* -------- Constructor -------- */
     private ClimbSubsystem() {
-        pid.setSetpoint(0.05); // Store position
+        pid.setSetpoint(0.035); // Store position
         SparkFlexConfig config = new SparkFlexConfig();
         config.idleMode(IdleMode.kBrake);
         climb.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
@@ -57,7 +57,7 @@ public class ClimbSubsystem extends SubsystemBase {
             if (debugging.ClimberPos) {
                 Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());
                 Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
-                Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+                // Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
             }
         }
     }

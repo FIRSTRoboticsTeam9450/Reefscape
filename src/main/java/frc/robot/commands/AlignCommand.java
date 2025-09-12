@@ -1,6 +1,7 @@
 package frc.robot.commands;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest.RobotCentric;
 
 import java.util.HashMap;
 
@@ -60,6 +61,7 @@ public class AlignCommand extends Command {
     int stuckCounter = 0;
 
     private Timer timer = new Timer();
+    private boolean hasScored = false;
     
     // Controller rumbles when at setpoint
     CommandXboxController controller;
@@ -109,6 +111,7 @@ public class AlignCommand extends Command {
 
     @Override
     public void initialize() {
+        hasScored = false;
         timer.restart();
         wentup = false;
         intaking = false;
@@ -138,6 +141,7 @@ public class AlignCommand extends Command {
         //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
         //     new DualIntakeCommand(true).schedule();
         // }
+        hasCoral = intake.hasCoral();
     }
 
     /* ----------- Updaters ----------- */
@@ -194,7 +198,7 @@ public class AlignCommand extends Command {
      */
     @Override
     public void execute() {
-        hasCoral = intake.hasCoral();
+        // hasCoral = intake.hasCoral();
 
         double time = timer.get();
 
@@ -247,6 +251,10 @@ public class AlignCommand extends Command {
             // Rumble controller to let driver know robot is ready to score
             if (atSetpoint()) {
                 controller.setRumble(RumbleType.kBothRumble, 0.5);
+                if (up && score.getDesiredLevel() != 1 && !hasScored) {
+                    new ScoringCommand().schedule();
+                    hasScored = true;
+                }
             } else {
                 controller.setRumble(RumbleType.kBothRumble, 0);
             }
