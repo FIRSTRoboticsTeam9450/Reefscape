@@ -34,6 +34,7 @@ import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
+import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -87,6 +88,7 @@ public class RobotContainer {
     private CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
 
     private ElevatorSubsystem elevator = ElevatorSubsystem.getInstance();
+    private ClimbSubsystem climb = ClimbSubsystem.getInstance();
 
 
     private RadioSoftware radio = RadioSoftware.getInstance();
@@ -195,13 +197,13 @@ public class RobotContainer {
         );
 
         // D-pad
-        m_driver1.povUp().onTrue(
-            new ClimbCommand(0.9, 2) // Used to be 0.9, 12
-        );
-        m_driver1.povDown().onTrue(
-            new ClimbCommand(0.300, 2) // Used to be .3, 9
-                .andThen(new CoordinationCommand(ScoringPos.START))
-        );
+        // m_driver1.povUp().onTrue(
+        //     new ClimbCommand(0.9, 2) // Used to be 0.9, 12
+        // );
+        // m_driver1.povDown().onTrue(
+        //     new ClimbCommand(0.300, 2) // Used to be .3, 9
+        //         .andThen(new CoordinationCommand(ScoringPos.START))
+        // );
         m_driver1.povRight().onTrue(
             new ClimbCommand(0.1, 2) // Used to be .1, 3
         );
@@ -215,6 +217,26 @@ public class RobotContainer {
         );
         m_driver1.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
+        );
+
+        // m_driver1.a().whileTrue(
+        //     new InstantCommand(() -> climb.setVoltage(-1))
+        // );
+        // m_driver1.a().onFalse(
+        //     new InstantCommand(() -> climb.setVoltage(0))
+        // );
+
+        m_driver1.povUp().whileTrue(
+            new InstantCommand(() -> climb.setVoltage(-1))
+        );
+        m_driver1.povUp().onFalse(
+            new InstantCommand(() -> climb.setVoltage(0))
+        );
+        m_driver1.povDown().whileTrue(
+            new InstantCommand(() -> climb.setVoltage(1))
+        );
+        m_driver1.povDown().onFalse(
+            new InstantCommand(() -> climb.setVoltage(0))
         );
 
         /* ----- Operator Driver Keybinds ----- */
@@ -246,25 +268,25 @@ public class RobotContainer {
         );
 
         // //Trigger algae intake sequence
-        m_driver2.povDown().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povRight().onTrue(
-            new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povDown().onTrue(
+        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povRight().onTrue(
+        //     new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         // // === Algae Positioning Controls ===
         // // Score algae at level 1 or 2 depending on POV
-        m_driver2.povLeft().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL1)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povUp().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL2)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povLeft().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL1)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povUp().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL2)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -299,10 +321,10 @@ public class RobotContainer {
         // m_driver2.b().onTrue(new ElbowCommand(50));
         // m_driver2.a().onTrue(new ElbowCommand(89));
 
-        m_driver2.povUp().onTrue(new ElevatorCommand(38));
-        m_driver2.povRight().onTrue(new ElevatorCommand(26));
-        m_driver2.povLeft().onTrue(new ElevatorCommand(13));
-        m_driver2.povDown().onTrue(new ElevatorCommand(0));
+        // m_driver2.povUp().onTrue(new ElevatorCommand(38));
+        // m_driver2.povRight().onTrue(new ElevatorCommand(26));
+        // m_driver2.povLeft().onTrue(new ElevatorCommand(13));
+        // m_driver2.povDown().onTrue(new ElevatorCommand(0));
 
         // m_driver2.y().onTrue(new DiffWristCommand(0, -60));
         // m_driver2.x().onTrue(new DiffWristCommand(90, -90));
@@ -318,8 +340,8 @@ public class RobotContainer {
         //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
-        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        m_driver2.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        m_driver2.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
     }
 
     public static void setLiftUp(boolean up) {

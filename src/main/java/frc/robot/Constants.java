@@ -65,8 +65,8 @@ public final class Constants {
   }
 
   public static class ClimberIDs {
-    public static final int kMotorID = 27;
-    public static final int kEncoderID = 28;
+    public static final int kMotorID = 40;
+    public static final int kEncoderID = 41;
   }
 
   // =========================
@@ -130,7 +130,7 @@ public final class Constants {
     public static final boolean CoordAllowedPathsDebugging = true;
     public static final boolean CoordPositionDebugging = false;
     public static final boolean CoordAllAtSetpoint = true;
-    public static final boolean ClimberPos = false;
+    public static final boolean ClimberPos = true;
     public static final boolean currentPos = false;
     public static final boolean DiffyTuningValues = true;
   }

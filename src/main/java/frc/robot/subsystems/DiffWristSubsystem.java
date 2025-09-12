@@ -192,8 +192,8 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param rightVoltage voltage to set right motor to
      */
     public void setVoltage(double leftVoltage, double rightVoltage) {
-        leftMotor.setVoltage(leftVoltage);
-        rightMotor.setVoltage(rightVoltage);
+        // leftMotor.setVoltage(leftVoltage);
+        // rightMotor.setVoltage(rightVoltage);
     }
 
     /**
