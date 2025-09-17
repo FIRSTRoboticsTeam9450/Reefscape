@@ -197,15 +197,15 @@ public class RobotContainer {
         // D-pad
         
         // Move up climber
-        m_driver1.povUp().onTrue(
-            new ClimbCommand(0.881, 9) // 9
-                .andThen(new CoordinationCommand(ScoringPos.START))
-        );
-        m_driver1.povDown().onTrue(
-            new ClimbCommand(0.20, 10.5)
-        );
+        // m_driver1.povUp().onTrue(
+        //     new ClimbCommand(0.881, 9)
+        //         .andThen(new CoordinationCommand(ScoringPos.START))
+        // );
+        // m_driver1.povDown().onTrue(
+        //     new ClimbCommand(0.20, 10.5)
+        // );
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.035, 12) // 12
+            new ClimbCommand(0.035, 12)
         );
 
         // // Move up climber
@@ -268,25 +268,25 @@ public class RobotContainer {
         );
 
         // Trigger algae intake sequence
-        m_driver2.povDown().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povRight().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
-                // .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povDown().onTrue(
+        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povRight().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
+        //         // .andThen(new DualIntakeCommand(true))
+        // );
 
         // // === Algae Positioning Controls ===
         // // Score algae at level 1 or 2 depending on POV
-        m_driver2.povLeft().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL1)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povUp().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL2)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povLeft().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL1)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povUp().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL2)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -305,6 +305,14 @@ public class RobotContainer {
         m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+
+        m_driver2.povRight().onTrue(
+            new ClimbCommand(0.881, 9)
+                .andThen(new CoordinationCommand(ScoringPos.START))
+        );
+        m_driver2.povLeft().onTrue(
+            new ClimbCommand(0.20, 10.5)
+        );
 
         // === Miscellaneous ===
         // Play music on command

@@ -82,7 +82,7 @@ public final class Constants {
     public static final double firstCoralBack = 0.6;
     public static final double scoreCoralBack = 0.44;
     public static final double algaeIn = 0.65;
-    public static final double algaeBack = 1;
+    public static final double algaeBack = 0.7;
     public static final double algaeLeft = 0.0;
   }
 

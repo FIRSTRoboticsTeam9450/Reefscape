@@ -84,9 +84,16 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Score"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Score"
+                      }
+                    }
+                  ]
                 }
               },
               {
@@ -104,17 +111,17 @@
                       "data": {
                         "pathName": "IntakeCenterGround"
                       }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CoralStore"
+                      }
                     }
                   ]
                 }
               }
             ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "CoralStore"
           }
         },
         {
@@ -128,9 +135,16 @@
           "data": {
             "commands": [
               {
-                "type": "named",
+                "type": "sequential",
                 "data": {
-                  "name": "Score"
+                  "commands": [
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Score"
+                      }
+                    }
+                  ]
                 }
               },
               {
