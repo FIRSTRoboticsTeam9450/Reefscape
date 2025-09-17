@@ -22,6 +22,7 @@ public class ScoringCommand extends Command {
     private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
     private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
     private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
+    //private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new CoordinationCommand(ScoringPos.ScoreL4));
     private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.ScoreL4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
@@ -53,8 +54,8 @@ public class ScoringCommand extends Command {
             intake.setVoltage(scoreSub.getAlgaeNet() ? -10.5 : -3);
         } else if (scoreSub.getScoringLevel() == 4) {
             // new WaitCommand(0.2).andThen(elev).schedule();
-            // elev.schedule();
-            elevAndWait.schedule();
+            elev.schedule();
+            //elevAndWait.schedule();
             intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-4);
@@ -89,7 +90,7 @@ public class ScoringCommand extends Command {
         if (running) return false;
 
         double timeElapsed = timer.get();
-        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1;
+        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1.25;
     }
 
     /** Logic to run at command end - retries or transitions to storage depending on state. */

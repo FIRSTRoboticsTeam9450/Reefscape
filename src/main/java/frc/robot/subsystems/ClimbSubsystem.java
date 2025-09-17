@@ -52,7 +52,7 @@ public class ClimbSubsystem extends SubsystemBase {
     public void periodic() {
         if (runClimber) {
             double voltage = updatePIDs(encoder.getPosition());
-            setVoltage(-voltage);
+            // setVoltage(-voltage);
 
             if (debugging.ClimberPos) {
                 Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", encoder.getPosition());

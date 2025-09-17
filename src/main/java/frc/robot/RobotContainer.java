@@ -209,19 +209,19 @@ public class RobotContainer {
         );
 
         // // Move up climber
-        // m_driver1.povUp().whileTrue(
-        //     new InstantCommand(() -> climber.setVoltage(-1))
-        // );
-        // m_driver1.povUp().onFalse(
-        //     new InstantCommand(() -> climber.setVoltage(0))
-        // );
+        m_driver1.povUp().whileTrue(
+            new InstantCommand(() -> climber.setVoltage(-1))
+        );
+        m_driver1.povUp().onFalse(
+            new InstantCommand(() -> climber.setVoltage(0))
+        );
 
-        // m_driver1.povDown().whileTrue(
-        //     new InstantCommand(() -> climber.setVoltage(1))
-        // );
-        // m_driver1.povDown().onFalse(
-        //     new InstantCommand(() -> climber.setVoltage(0))
-        // );
+        m_driver1.povDown().whileTrue(
+            new InstantCommand(() -> climber.setVoltage(1))
+        );
+        m_driver1.povDown().onFalse(
+            new InstantCommand(() -> climber.setVoltage(0))
+        );
 
         // Reset climber
         m_driver1.povLeft().toggleOnTrue(
@@ -268,10 +268,10 @@ public class RobotContainer {
         );
 
         // Trigger algae intake sequence
-        // m_driver2.povDown().onTrue(
-        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
+        m_driver2.povDown().onTrue(
+            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                .andThen(new DualIntakeCommand(true))
+        );
         // m_driver2.povRight().onTrue(
         //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
         //         // .andThen(new DualIntakeCommand(true))
@@ -306,11 +306,11 @@ public class RobotContainer {
         m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
-        m_driver2.povRight().onTrue(
+        m_driver2.povLeft().onTrue(
             new ClimbCommand(0.881, 9)
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
-        m_driver2.povLeft().onTrue(
+        m_driver2.povRight().onTrue(
             new ClimbCommand(0.20, 10.5)
         );
 

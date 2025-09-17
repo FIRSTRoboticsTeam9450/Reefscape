@@ -439,7 +439,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         setL4RollSide(false);
         algae = false;
         l4Extend = false;
-        if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous()) {
+        if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE) {
             goToPreL4();
         } else if (desiredLevel == 1) {
             if (lastPos == ScoringPos.INTAKE_CORAL || lastPos == ScoringPos.GO_SCORE_CORAL) {
