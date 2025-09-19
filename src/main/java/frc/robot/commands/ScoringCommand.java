@@ -58,7 +58,7 @@ public class ScoringCommand extends Command {
             //elevAndWait.schedule();
             intake.setVoltage(0.5);
         } else if (scoreSub.getScoringLevel() == 1) {
-            intake.setVoltage(-4);
+            intake.setVoltage(-3);
         } else {
             score.schedule();
             intake.setVoltage(0);
@@ -90,7 +90,7 @@ public class ScoringCommand extends Command {
         if (running) return false;
 
         double timeElapsed = timer.get();
-        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1.25;
+        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : scoreSub.getScoringLevel() == 4 ? timeElapsed > 1.25 : timeElapsed > 0.9;
     }
 
     /** Logic to run at command end - retries or transitions to storage depending on state. */

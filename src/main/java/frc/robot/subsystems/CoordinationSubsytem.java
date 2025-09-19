@@ -94,6 +94,10 @@ public class CoordinationSubsytem extends SubsystemBase{
      * gets the starting angle / position of the encoders
      */
     private CoordinationSubsytem() {
+        // if(!DriverStation.isAutonomous()) {
+        //     autoGround = true;
+        // }
+        autoGround = false;
         pos = ScoringPos.START;
 
         rollEncoder = DW.getRollAngle();

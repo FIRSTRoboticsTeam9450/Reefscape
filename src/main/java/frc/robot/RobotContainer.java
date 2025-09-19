@@ -102,6 +102,7 @@ public class RobotContainer {
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
+        autoChooser.addOption("BackReefReorderedTest", drivetrain.getAutoPath("BackReefReorderedTest", false));
         //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
         autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
         autoChooser.addOption("TEST", drivetrain.getAutoPath("TEST", false));
@@ -258,6 +259,11 @@ public class RobotContainer {
         * D-pad Right       → Intake Algae Lolipop Style
         */
         
+        m_driver2.rightStick().onTrue(
+            new InstantCommand(() -> intake.setVoltage(0))
+                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+                .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
+        );
 
         // === Intake & Storage Controls ===
         // Trigger coral intake and then store it

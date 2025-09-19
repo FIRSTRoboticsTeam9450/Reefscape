@@ -3,42 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9919057377049176,
-        "y": 5.205788934426229
+        "x": 3.217,
+        "y": 4.179
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.6030444363350544,
-        "y": 6.106871982371435
+        "x": 2.5010220076358727,
+        "y": 4.465678573426326
       },
       "isLocked": false,
-      "linkedName": "BLL"
+      "linkedName": "DL"
     },
     {
       "anchor": {
-        "x": 1.690266393442623,
-        "y": 4.403
+        "x": 1.786,
+        "y": 3.98
       },
       "prevControl": {
-        "x": 2.441550640017968,
-        "y": 4.868796232876714
+        "x": 2.0991582640916238,
+        "y": 4.017482104760834
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "CenterCoralLeft"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.7314629258517036,
+      "rotationDegrees": 180.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8570750237416913,
+      "minWaypointRelativePos": 0.9119047619047618,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.75,
-        "maxAcceleration": 3.0,
+        "maxVelocity": 0.6,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
+        "maxAngularAcceleration": 700.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
@@ -48,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "CoralIntake",
-      "waypointRelativePos": 0.4999999999999999,
+      "waypointRelativePos": 0.15852649006622752,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -59,8 +64,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 1.0,
-    "maxAcceleration": 0.4,
+    "maxVelocity": 0.95,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -68,13 +73,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -142.3343788014167
+    "rotation": 178.66209100200132
   },
   "reversed": false,
-  "folder": "Ground3Coral",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 0.0
   },
   "useDefaultConstraints": false
 }
