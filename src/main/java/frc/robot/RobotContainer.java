@@ -22,6 +22,7 @@ import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
+import frc.robot.commands.BetterAutoAlignTest;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -63,8 +64,22 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
-    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
+
+    /*
+     * Old Rotate Curve Values:
+     * x1: 89.4
+     * y1 = 0.117
+     * x2: 88.5
+     * y2: 0.896
+     * 
+     * Old Drive Curve Values:
+     * x1: 89.4
+     * y1: 0.117
+     * x2: 88.5
+     * y2: 0.896
+     */
+    public BezierCurve driveBezier = new BezierCurve("drive", 117.4, 0.054, 91.4, 0.76, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
+    public BezierCurve rotateBezier = new BezierCurve("drive", 104, -0.022, 88.5, 0.896, 0.07, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -121,8 +136,9 @@ public class RobotContainer {
             )
         );
 
-        scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
-        elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
+        //Manual pitch and Elev adjustments on Operator
+        // scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
+        // elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
 
         // m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
@@ -173,16 +189,17 @@ public class RobotContainer {
         m_driver1.leftBumper().onTrue(
             new RollSideSwitcher(true)
         );
-        m_driver1.rightBumper().onTrue(
-            new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
-        );
+        // m_driver1.rightBumper().onTrue(
+        //     new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        // );
 
         // Face Buttons
-        m_driver1.x().onTrue(
-            new InstantCommand(() -> intake.setVoltage(0))
-                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
-                .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
-        );
+        // m_driver1.x().onTrue(
+        //     new InstantCommand(() -> intake.setVoltage(0))
+        //         .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+        //         .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
+        // );
+        
         m_driver1.y().onTrue(
             new ResetIMUCommand(drivetrain)
         );
@@ -206,23 +223,23 @@ public class RobotContainer {
         //     new ClimbCommand(0.20, 10.5)
         // );
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.035, 12)
+            new ClimbCommand(0.17, 12)
         );
 
         // // Move up climber
-        m_driver1.povUp().whileTrue(
-            new InstantCommand(() -> climber.setVoltage(-1))
-        );
-        m_driver1.povUp().onFalse(
-            new InstantCommand(() -> climber.setVoltage(0))
-        );
+        // m_driver1.povUp().whileTrue(
+        //     new InstantCommand(() -> climber.setVoltage(-1))
+        // );
+        // m_driver1.povUp().onFalse(
+        //     new InstantCommand(() -> climber.setVoltage(0))
+        // );
 
-        m_driver1.povDown().whileTrue(
-            new InstantCommand(() -> climber.setVoltage(1))
-        );
-        m_driver1.povDown().onFalse(
-            new InstantCommand(() -> climber.setVoltage(0))
-        );
+        // m_driver1.povDown().whileTrue(
+        //     new InstantCommand(() -> climber.setVoltage(1))
+        // );
+        // m_driver1.povDown().onFalse(
+        //     new InstantCommand(() -> climber.setVoltage(0))
+        // );
 
         // Reset climber
         m_driver1.povLeft().toggleOnTrue(
@@ -240,6 +257,8 @@ public class RobotContainer {
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
         );
 
+        m_driver1.povUp().toggleOnTrue(new BetterAutoAlignTest(drivetrain));
+
         /* ----- Operator Driver Keybinds ----- */
         /*
         * ┌────────────────────┐
@@ -247,16 +266,16 @@ public class RobotContainer {
         * └────────────────────┘
         * Right Trigger     → Intake Coral Ground
         * Left Trigger      → Set Processor Score (Algae Net Off)
-        * Right Bumper      → Play Music 🎵
+        * Right Bumper      → Set Auto Intake
         * Left Bumper       → Set Net Score (Algae Net On)
         * X Button          → Set Scoring Level: L2
         * A Button          → Set Scoring Level: L1
         * B Button          → Set Scoring Level: L3
         * Y Button          → Set Scoring Level: L4
         * D-pad Up          → Intake Algae High (L2)
-        * D-pad Left        → Intake Algae Low (L1)
+        * D-pad Left        → Climber Out
         * D-pad Down        → Intake Algae Ground
-        * D-pad Right       → Intake Algae Lolipop Style
+        * D-pad Right       → Climber In
         */
         
         m_driver2.rightStick().onTrue(
@@ -278,6 +297,12 @@ public class RobotContainer {
             new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
                 .andThen(new DualIntakeCommand(true))
         );
+
+        m_driver2.leftStick().onTrue(
+            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                .andThen(new DualIntakeCommand(true))
+        );
+        
         // m_driver2.povRight().onTrue(
         //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
         //         // .andThen(new DualIntakeCommand(true))
@@ -305,6 +330,10 @@ public class RobotContainer {
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
 
+        m_driver2.rightBumper().onTrue(
+            new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        );
+
 
         // === Scoring Level Controls ===
         m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
@@ -313,11 +342,11 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.881, 9)
+            new ClimbCommand(0.937, 9)
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.20, 10.5)
+            new ClimbCommand(0.3, 10.5)
         );
 
         // === Miscellaneous ===
@@ -349,7 +378,7 @@ public class RobotContainer {
         /* ----- Commands not currently in use ----- */
         
         // SOURCE INTAKE
-         m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
+        //  m_driver2.rightBumper().onTrue(new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new DualIntakeCommand(false).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))));
     
         // VERTICAL CORAL
         //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));

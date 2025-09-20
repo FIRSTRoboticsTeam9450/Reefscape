@@ -62,6 +62,9 @@ public class AlignCommand extends Command {
 
     private Timer timer = new Timer();
     private boolean hasScored = false;
+
+    private double robotRotation;
+    private int[] possibleTags = new int[4];
     
     // Controller rumbles when at setpoint
     CommandXboxController controller;
@@ -142,6 +145,13 @@ public class AlignCommand extends Command {
         //     new DualIntakeCommand(true).schedule();
         // }
         hasCoral = intake.hasCoral();
+
+        possibleTags[0] = -1;
+        possibleTags[1] = -1;
+        possibleTags[2] = -1;
+        possibleTags[3] = -1;
+
+        robotRotation = 0;
     }
 
     /* ----------- Updaters ----------- */
@@ -199,14 +209,15 @@ public class AlignCommand extends Command {
     @Override
     public void execute() {
         // hasCoral = intake.hasCoral();
+        robotRotation = drive.getState().Pose.getRotation().getDegrees();
 
         double time = timer.get();
 
-        if (!hasCoral && time > .05 && !wentup) {
+        if (!hasCoral && time > .05 && !wentup && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
             new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
             wentup = true;
         }
-        if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking) {
+        if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
             new DualIntakeCommand(true).schedule();
             intaking = true;
         }
@@ -220,12 +231,29 @@ public class AlignCommand extends Command {
         }
 
         // Raise elevator right away for L1-3
-        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral) {
+        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
             up = true;
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
 
-        if (hasTarget) {
+        if ((-30 < robotRotation && robotRotation < 30) || ((-150 > robotRotation && robotRotation > -180) || (150 < robotRotation && robotRotation < 180))) {
+            possibleTags[0] = 18;
+            possibleTags[1] = 21;
+            possibleTags[2] = 7;
+            possibleTags[3] = 10;
+        } else if ((30 < robotRotation && robotRotation < 90) || (-90 > robotRotation && robotRotation > -150)) {
+            possibleTags[0] = 17;
+            possibleTags[1] = 20;
+            possibleTags[2] = 11;
+            possibleTags[3] = 8;
+        } else if (-30 > robotRotation && robotRotation > -90 || (90 < robotRotation && robotRotation < 150)) {
+            possibleTags[0] = 19;
+            possibleTags[1] = 22;
+            possibleTags[2] = 9;
+            possibleTags[3] = 6;
+        }
+
+        if (hasTarget && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
             // Scoot forward to scoring position once initial target is reached
             if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.scoreCoralBack);
@@ -324,6 +352,8 @@ public class AlignCommand extends Command {
                     up = true;
                 }
             }
+
+            Logger.recordOutput("Reefscape/Align/Possible Tags", possibleTags);
 
             // ------------------------------------------------
 

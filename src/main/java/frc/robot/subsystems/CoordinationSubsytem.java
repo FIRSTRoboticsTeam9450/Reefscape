@@ -60,7 +60,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     
     boolean algae;
 
-    private int level = 3;
+    private int level = 1;
     private int desiredLevel = 1;
 
     private boolean algaeNet = true;
@@ -646,8 +646,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         } else {
             switch (level) {
                 case 1:
-                    coralScorePitch = -175;
-                    coralScoreElbow = 62;
+                    coralScorePitch = -184;
+                    coralScoreElbow = 60;
                     coralScoreElev = 3;
                     DW.setRollSetpoint(0);
                     break;
@@ -817,11 +817,12 @@ public class CoordinationSubsytem extends SubsystemBase{
         if (level == 2) {
             DW.setPitchSetpoint(-128);
         } else {
+            
             DW.setPitchSetpoint(-107.19);
         }
         Elbow.setSetpoint(32.91);
         if (level == 3 && Elbow.atSetpoint()) {
-            Elev.setSetpoint(11.5);
+            Elev.setSetpoint(11.15);
         }
         if (level == 2 && Elbow.atSetpoint()) {
 
