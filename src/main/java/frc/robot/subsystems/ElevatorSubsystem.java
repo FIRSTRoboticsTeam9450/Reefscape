@@ -197,7 +197,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         /* ----- Unrealted stuff, I just need some place that runs consistently ----- */
 
         int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
-        Logger.recordOutput("Reefscape/Align/tids", tid);
+        // Logger.recordOutput("Reefscape/Align/tids", tid);
 
     }
 

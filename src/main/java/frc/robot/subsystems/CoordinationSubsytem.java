@@ -88,15 +88,15 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     ScoringPos lastPos = ScoringPos.START;
 
+    private boolean onlyOnce;
+
     private int tid;
 
     /**
      * gets the starting angle / position of the encoders
      */
     private CoordinationSubsytem() {
-        // if(!DriverStation.isAutonomous()) {
-        //     autoGround = true;
-        // }
+        onlyOnce = false;
         autoGround = false;
         pos = ScoringPos.START;
 
@@ -275,6 +275,17 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     @Override
     public void periodic() {
+
+        if (DriverStation.isAutonomous()) {
+            autoGround = false;
+            onlyOnce = false;
+        } else if(DriverStation.isTeleop() && !onlyOnce) {
+            autoGround = true;
+            onlyOnce = true;
+            desiredLevel = 1;
+            level = 1;
+            setScoringLevel(1);
+        }
 
         tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
 

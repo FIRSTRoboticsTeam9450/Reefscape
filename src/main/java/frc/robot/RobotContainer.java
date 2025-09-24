@@ -22,7 +22,6 @@ import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
-import frc.robot.commands.BetterAutoAlignTest;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
@@ -156,6 +155,17 @@ public class RobotContainer {
 
         drivetrain.registerTelemetry(logger::telemeterize);
 
+
+
+
+
+
+
+
+
+
+
+
         /* ----- Main Driver Keybinds ----- */
         /* 
         * ┌──────────────┐
@@ -163,14 +173,10 @@ public class RobotContainer {
         * └──────────────┘
         * Right Trigger     → Score
         * Left Trigger      → Go To Scoring Position
-        * Right Bumper      → Toggle Auto Pickup
         * Left Bumper       → Flip (Roll Side Switch)
-        * X Button          → Cancel All Commands + Store
         * Y Button          → IMU Reset
         * Left Stick        → Movement / Align Left
         * Right Stick       → Rotation / Align Right
-        * D-pad Up          → Deploy Climber
-        * D-pad Down        → Climb
         * D-pad Right       → Store Climber
         * D-pad Left        → Toggle Field Centric Drive
         */
@@ -189,16 +195,6 @@ public class RobotContainer {
         m_driver1.leftBumper().onTrue(
             new RollSideSwitcher(true)
         );
-        // m_driver1.rightBumper().onTrue(
-        //     new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
-        // );
-
-        // Face Buttons
-        // m_driver1.x().onTrue(
-        //     new InstantCommand(() -> intake.setVoltage(0))
-        //         .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
-        //         .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
-        // );
         
         m_driver1.y().onTrue(
             new ResetIMUCommand(drivetrain)
@@ -212,36 +208,13 @@ public class RobotContainer {
             new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1)
         );
 
-        // D-pad
-        
-        // Move up climber
-        // m_driver1.povUp().onTrue(
-        //     new ClimbCommand(0.881, 9)
-        //         .andThen(new CoordinationCommand(ScoringPos.START))
-        // );
-        // m_driver1.povDown().onTrue(
-        //     new ClimbCommand(0.20, 10.5)
-        // );
+
+        //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.17, 12)
+            new ClimbCommand(0.1265, 12)
         );
 
-        // // Move up climber
-        // m_driver1.povUp().whileTrue(
-        //     new InstantCommand(() -> climber.setVoltage(-1))
-        // );
-        // m_driver1.povUp().onFalse(
-        //     new InstantCommand(() -> climber.setVoltage(0))
-        // );
-
-        // m_driver1.povDown().whileTrue(
-        //     new InstantCommand(() -> climber.setVoltage(1))
-        // );
-        // m_driver1.povDown().onFalse(
-        //     new InstantCommand(() -> climber.setVoltage(0))
-        // );
-
-        // Reset climber
+        // Honestly dont know
         m_driver1.povLeft().toggleOnTrue(
             new FieldCentricCommand(
                 drivetrain,
@@ -257,7 +230,55 @@ public class RobotContainer {
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
         );
 
-        m_driver1.povUp().toggleOnTrue(new BetterAutoAlignTest(drivetrain));
+        /* ----- Disabled Keybinds ----- */
+
+        // m_driver1.rightBumper().onTrue(
+        //     new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        // );
+
+        // Face Buttons
+        // m_driver1.x().onTrue(
+        //     new InstantCommand(() -> intake.setVoltage(0))
+        //         .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+        //         .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
+        // );
+
+        // m_driver1.povUp().onTrue(
+        //     new ClimbCommand(0.881, 9)
+        //         .andThen(new CoordinationCommand(ScoringPos.START))
+        // );
+        // m_driver1.povDown().onTrue(
+        //     new ClimbCommand(0.20, 10.5)
+        // );
+
+        // m_driver1.povUp().whileTrue(
+        //     new InstantCommand(() -> climber.setVoltage(-1))
+        // );
+        // m_driver1.povUp().onFalse(
+        //     new InstantCommand(() -> climber.setVoltage(0))
+        // );
+
+        // m_driver1.povDown().whileTrue(
+        //     new InstantCommand(() -> climber.setVoltage(1))
+        // );
+        // m_driver1.povDown().onFalse(
+        //     new InstantCommand(() -> climber.setVoltage(0))
+        // );
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
         /* ----- Operator Driver Keybinds ----- */
         /*
@@ -265,17 +286,16 @@ public class RobotContainer {
         * │ DRIVER 2 KEYBINDS  │
         * └────────────────────┘
         * Right Trigger     → Intake Coral Ground
-        * Left Trigger      → Set Processor Score (Algae Net Off)
-        * Right Bumper      → Set Auto Intake
+        * Left Trigger      → Intake Ground Algae
+        * Right Bumper      → Enable/Disable Auto Ground Intake
         * Left Bumper       → Set Net Score (Algae Net On)
         * X Button          → Set Scoring Level: L2
         * A Button          → Set Scoring Level: L1
         * B Button          → Set Scoring Level: L3
         * Y Button          → Set Scoring Level: L4
-        * D-pad Up          → Intake Algae High (L2)
-        * D-pad Left        → Climber Out
+        * D-pad Left        → Climber engage
         * D-pad Down        → Intake Algae Ground
-        * D-pad Right       → Climber In
+        * D-pad Right       → Climber climb
         */
         
         m_driver2.rightStick().onTrue(
@@ -303,21 +323,6 @@ public class RobotContainer {
                 .andThen(new DualIntakeCommand(true))
         );
         
-        // m_driver2.povRight().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
-        //         // .andThen(new DualIntakeCommand(true))
-        // );
-
-        // // === Algae Positioning Controls ===
-        // // Score algae at level 1 or 2 depending on POV
-        // m_driver2.povLeft().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAEL1)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
-        // m_driver2.povUp().onTrue(
-        //     new CoordinationCommand(ScoringPos.ALGAEL2)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -348,6 +353,35 @@ public class RobotContainer {
         m_driver2.povRight().onTrue(
             new ClimbCommand(0.3, 10.5)
         );
+
+        /* ----- Disabled Keybinds ----- */
+
+        // m_driver2.povRight().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED)
+        //         // .andThen(new DualIntakeCommand(true))
+        // );
+
+        // // === Algae Positioning Controls ===
+        // // Score algae at level 1 or 2 depending on POV
+        // m_driver2.povLeft().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL1)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povUp().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL2)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+
+
+
+
+
+
+
+
+
+
+
 
         // === Miscellaneous ===
         // Play music on command

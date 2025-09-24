@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 1.474487704918033,
-        "y": 5.469518442622951
+        "y": 5.5
       },
       "prevControl": null,
       "nextControl": {
         "x": 1.7793531046485513,
-        "y": 4.939637252975521
+        "y": 4.97011881035257
       },
       "isLocked": false,
       "linkedName": "LeftCoralLeft"
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "up",
-      "waypointRelativePos": 0.36428571428571427,
+      "waypointRelativePos": 0.6536124240378043,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -74,7 +74,7 @@
   "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 115.46334506187162
+    "rotation": 109.463
   },
   "useDefaultConstraints": true
 }

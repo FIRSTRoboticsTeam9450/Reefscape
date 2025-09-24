@@ -61,7 +61,7 @@
   "eventMarkers": [
     {
       "name": "up",
-      "waypointRelativePos": 0.6007231404958666,
+      "waypointRelativePos": 0.8993923024983065,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",

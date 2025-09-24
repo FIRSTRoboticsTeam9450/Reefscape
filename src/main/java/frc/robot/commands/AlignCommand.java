@@ -64,7 +64,13 @@ public class AlignCommand extends Command {
     private boolean hasScored = false;
 
     private double robotRotation;
-    private int[] possibleTags = new int[4];
+    private int[] possibleTags = new int[2];
+    private boolean usedBackLL;
+    private double currentX;
+    
+    private boolean onRedSide;
+
+    private String debuggingCenterAlignIssue = "Null";
     
     // Controller rumbles when at setpoint
     CommandXboxController controller;
@@ -122,17 +128,33 @@ public class AlignCommand extends Command {
         stuckCounter = 0;
         redAlliance = DriverStation.getAlliance().get() == Alliance.Red;
         currentPose = drive.getState().Pose;
+        usedBackLL = false;
+        currentX = currentPose.getX();
+
+        if (currentX > 8.775) {
+            onRedSide = true;
+        } else {
+            onRedSide = false;
+        }
+
+        hasCoral = intake.hasCoral();
 
         // grab target tag from limelight to align to
-        int tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
-        this.tid = tid;
-        Logger.recordOutput("Reefscape/Align/Tid", tid);
+        int seenTid = (int)LimelightHelpers.getFiducialID("limelight-coral");
+        if (!map.containsKey(seenTid)) {
+            seenTid = (int)LimelightHelpers.getFiducialID("limelight-back");
+            usedBackLL = true;
+        }
+
+        this.tid = seenTid;
+        
 
         // if tag not a reef tag ignore it
         if (map.containsKey(tid)) {
             hasTarget = true;
             // Initial position is back ~1 coral width
             double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.firstCoralBack);
+            debuggingCenterAlignIssue = "In Initialization";
             pidX.setSetpoint(pose[0]);
             pidY.setSetpoint(pose[1]);
             pidRotate.setSetpoint(pose[2]);
@@ -140,16 +162,15 @@ public class AlignCommand extends Command {
             hasTarget = false;
         }
         up = false;
+
+        Logger.recordOutput("Reefscape/Align/Tid", tid);
         // if (!hasCoral) {
         //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
         //     new DualIntakeCommand(true).schedule();
         // }
-        hasCoral = intake.hasCoral();
 
         possibleTags[0] = -1;
         possibleTags[1] = -1;
-        possibleTags[2] = -1;
-        possibleTags[3] = -1;
 
         robotRotation = 0;
     }
@@ -163,7 +184,7 @@ public class AlignCommand extends Command {
      * @return An array containing the aligned position with [x, y, rotation].
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
-        double tagLeftOffset = 0;
+        double tagLeftOffset;
         if (hasCoral && score.getPos() != ScoringPos.ALGAE_COMBINED) {
             tagLeftOffset = score.getDesiredLevel() == 1 ? Constants.AlignOffsets.leftReefL1 : Constants.AlignOffsets.leftReef;
             if (position == AlignPos.RIGHT) {
@@ -208,16 +229,25 @@ public class AlignCommand extends Command {
      */
     @Override
     public void execute() {
+
+        if (currentX > 8.775) {
+            onRedSide = true;
+        } else {
+            onRedSide = false;
+        }
+        Logger.recordOutput("Reefscape/Align/On Red Side?", onRedSide);
+        Logger.recordOutput("Reefscape/Align/Debugging centering issue", debuggingCenterAlignIssue);
+
         // hasCoral = intake.hasCoral();
         robotRotation = drive.getState().Pose.getRotation().getDegrees();
 
         double time = timer.get();
 
-        if (!hasCoral && time > .05 && !wentup && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
+        if (!hasCoral && time > .05 && !wentup && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
             new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
             wentup = true;
         }
-        if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
+        if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
             new DualIntakeCommand(true).schedule();
             intaking = true;
         }
@@ -231,38 +261,49 @@ public class AlignCommand extends Command {
         }
 
         // Raise elevator right away for L1-3
-        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
+        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
             up = true;
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
 
         if ((-30 < robotRotation && robotRotation < 30) || ((-150 > robotRotation && robotRotation > -180) || (150 < robotRotation && robotRotation < 180))) {
-            possibleTags[0] = 18;
-            possibleTags[1] = 21;
-            possibleTags[2] = 7;
-            possibleTags[3] = 10;
+            if (!onRedSide) {
+                possibleTags[0] = 18;
+                possibleTags[1] = 21;
+            } else {
+                possibleTags[0] = 7;
+                possibleTags[1] = 10;
+            }
         } else if ((30 < robotRotation && robotRotation < 90) || (-90 > robotRotation && robotRotation > -150)) {
-            possibleTags[0] = 17;
-            possibleTags[1] = 20;
-            possibleTags[2] = 11;
-            possibleTags[3] = 8;
+            if (!onRedSide) {
+                possibleTags[0] = 17;
+                possibleTags[1] = 20;
+            } else {
+                possibleTags[0] = 11;
+                possibleTags[1] = 8;
+            }
         } else if (-30 > robotRotation && robotRotation > -90 || (90 < robotRotation && robotRotation < 150)) {
-            possibleTags[0] = 19;
-            possibleTags[1] = 22;
-            possibleTags[2] = 9;
-            possibleTags[3] = 6;
+            if (!onRedSide) {
+                possibleTags[0] = 19;
+                possibleTags[1] = 22;
+            } else {
+                possibleTags[0] = 9;
+                possibleTags[1] = 6;
+            }
         }
 
-        if (hasTarget && (tid == possibleTags[0] || tid == possibleTags[1] || tid == possibleTags[2] || tid == possibleTags[3])) {
+        if (hasTarget && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
             // Scoot forward to scoring position once initial target is reached
             if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.scoreCoralBack);
+                debuggingCenterAlignIssue = "Scoot";
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
             }
             else if(atSetpoint(0.06, 0.3) && !hasCoral) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.algaeIn);
+                debuggingCenterAlignIssue = "Algae";
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
@@ -303,8 +344,8 @@ public class AlignCommand extends Command {
                 powerY = MathUtil.clamp(powerY, -1.5, 1.5);
             }
             else {
-                powerX = MathUtil.clamp(powerX, -2, 2);
-                powerY = MathUtil.clamp(powerY, -2, 2);
+                powerX = MathUtil.clamp(powerX, -2, 2); // -2, 2
+                powerY = MathUtil.clamp(powerY, -2, 2); // -2, 2
             }
 
             powerX += .05*Math.signum(powerX);
@@ -320,7 +361,7 @@ public class AlignCommand extends Command {
 
             // Calculate the rotational power and clamp it between -2 and 2
             double powerRotate = pidRotate.calculate(currentPose.getRotation().getRadians());
-            powerRotate = MathUtil.clamp(powerRotate, -4, 4);
+            powerRotate = MathUtil.clamp(powerRotate, -6, 6); //-4, 4
 
             if (redAlliance) {
                 powerX *= -1;
