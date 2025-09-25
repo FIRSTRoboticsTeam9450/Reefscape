@@ -29,7 +29,7 @@ public class ElbowSubsystem extends SubsystemBase {
     // Measurement and control variables
     private double elbowAngle;
     private double setpoint;
-    private final double offsetToZeroDegrees = -110.3;
+    private final double offsetToZeroDegrees = 0;
 
     // Motion Magic parameters
     private double velocity = 18; // Used to be 18
@@ -129,7 +129,7 @@ public class ElbowSubsystem extends SubsystemBase {
             System.out.println("Updated motion profile: (" + velocity + ", " + acceleration + ", " + jerk + ")");
         }
 
-        motor.setControl(m_request.withPosition((setpoint + offsetToZeroDegrees) / -360));
+        // motor.setControl(m_request.withPosition((setpoint + offsetToZeroDegrees) / -360));
         logger.updateLogger(elbowAngle, setpoint, atSetpoint());
     }
 

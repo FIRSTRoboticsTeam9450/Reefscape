@@ -300,10 +300,10 @@ public class RobotContainer {
         );
 
         //  === Scoring Level Controls ===
-        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        // m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        // m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        // m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        // m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         // === Miscellaneous ===
         // Play music on command
@@ -316,10 +316,10 @@ public class RobotContainer {
 
         /* ----------- Manual Tuning Assistance ----------- */
         
-        // m_driver2.y().onTrue(new ElbowCommand(8.78));
-        // m_driver2.x().onTrue(new ElbowCommand(26));
-        // m_driver2.b().onTrue(new ElbowCommand(50));
-        // m_driver2.a().onTrue(new ElbowCommand(89));
+        m_driver2.y().onTrue(new ElbowCommand(8.78));
+        m_driver2.x().onTrue(new ElbowCommand(26));
+        m_driver2.b().onTrue(new ElbowCommand(50));
+        m_driver2.a().onTrue(new ElbowCommand(89));
 
         // m_driver2.povUp().onTrue(new ElevatorCommand(38));
         // m_driver2.povRight().onTrue(new ElevatorCommand(26));

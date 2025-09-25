@@ -253,7 +253,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        if (!allAtSetpoints || justChanged) {
+        if (!allAtSetpoints || justChanged && false) {
             justChanged = false;
             updatePosition();
             recordSetpoints();
@@ -360,7 +360,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         rollToClosestSide();
         //DW.setRollSetpoint(90);
         DW.setPitchSetpoint(-120); // used to be -120     gear ratio: 20 -> 28
-        Elbow.setSetpoint(90); // used to be 90
+        // Elbow.setSetpoint(90); // used to be 90
         // } 
         if (
             DW.atRollSetpoint()
@@ -428,7 +428,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 rollToClosestSide();
             }
             //DW.setRollSetpoint(0);
-            Elbow.setSetpoint(90);
+            // Elbow.setSetpoint(90);
             if (lastPos == ScoringPos.INTAKE_VERTICAL_CORAL) {
                 if (elbowEncoder > 30)
                 DW.setPitchSetpoint(-150);
