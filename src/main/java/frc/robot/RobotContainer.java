@@ -211,7 +211,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.1265, 12)
+            new ClimbCommand(0.128, 12)
         );
 
         // Honestly dont know
@@ -351,7 +351,7 @@ public class RobotContainer {
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.3, 10.5)
+            new ClimbCommand(0.335, 10.5)
         );
 
         /* ----- Disabled Keybinds ----- */
