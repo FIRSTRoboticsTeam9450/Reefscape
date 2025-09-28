@@ -4,9 +4,10 @@
   "holonomicMode": true,
   "pathFolders": [
     "2 coral",
+    "CenterReef",
     "Ground3Coral",
     "Ground3CoralRight",
-    "CenterReef"
+    "Algae Stealer"
   ],
   "autoFolders": [
     "Unfinished"
