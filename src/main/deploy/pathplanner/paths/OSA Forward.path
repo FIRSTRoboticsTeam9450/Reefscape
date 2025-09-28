@@ -1,0 +1,59 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 10.667232169555682,
+        "y": 5.739127405803492
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 9.906315017536192,
+        "y": 5.798614493692722
+      },
+      "isLocked": false,
+      "linkedName": "OSA Backup"
+    },
+    {
+      "anchor": {
+        "x": 8.75,
+        "y": 5.804
+      },
+      "prevControl": {
+        "x": 9.306182611861303,
+        "y": 5.766295955494948
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.3944562899786833,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0.0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Algae Stealer",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": true
+}
