@@ -211,7 +211,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.128, 12)
+            new ClimbCommand(0.132, 12)
         );
 
         // Honestly dont know
@@ -460,6 +460,7 @@ public class RobotContainer {
         // Scoring Level Selection
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
         NamedCommands.registerCommand("CoralL3", new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        NamedCommands.registerCommand("CoralL2", new InstantCommand(() -> scoreSub.setScoringLevel(2)));
         NamedCommands.registerCommand("CoralL1", new InstantCommand(() -> scoreSub.setScoringLevel(1)));
 
         // Scoring Actions

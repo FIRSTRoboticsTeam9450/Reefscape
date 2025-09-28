@@ -89,6 +89,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     ScoringPos lastPos = ScoringPos.START;
 
     private boolean onlyOnce;
+    private boolean combinedAlgae;
 
     private int tid;
 
@@ -97,6 +98,7 @@ public class CoordinationSubsytem extends SubsystemBase{
      */
     private CoordinationSubsytem() {
         onlyOnce = false;
+        combinedAlgae = false;
         autoGround = false;
         pos = ScoringPos.START;
 
@@ -287,13 +289,19 @@ public class CoordinationSubsytem extends SubsystemBase{
             setScoringLevel(1);
         }
 
+        if (pos == ScoringPos.ALGAE_COMBINED) {
+            combinedAlgae = true;
+        } else {
+            combinedAlgae = false;
+        }
+
         tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
 
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        if (!allAtSetpoints || justChanged) {
+        if (!allAtSetpoints || justChanged || combinedAlgae) {
             justChanged = false;
             updatePosition();
             recordSetpoints();
@@ -545,8 +553,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     //elbow 28, pitch -80, roll 180
     public void goToAlgaeIntake() {
         algae = true;
-        DW.setPitchSetpoint(-100);
-        Elbow.setSetpoint(-4);
+        DW.setPitchSetpoint(-100.2);
+        Elbow.setSetpoint(-11.4);
         Elev.setSetpoint(0);
         DW.setRollSetpoint(0);
 
