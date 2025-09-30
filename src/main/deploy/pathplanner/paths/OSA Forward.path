@@ -4,12 +4,12 @@
     {
       "anchor": {
         "x": 10.667232169555682,
-        "y": 5.739127405803492
+        "y": 5.7
       },
       "prevControl": null,
       "nextControl": {
         "x": 9.906315017536192,
-        "y": 5.798614493692722
+        "y": 5.75948708788923
       },
       "isLocked": false,
       "linkedName": "OSA Backup"
@@ -17,11 +17,11 @@
     {
       "anchor": {
         "x": 8.75,
-        "y": 5.804
+        "y": 5.7
       },
       "prevControl": {
         "x": 9.306182611861303,
-        "y": 5.766295955494948
+        "y": 5.6622959554949475
       },
       "nextControl": null,
       "isLocked": false,

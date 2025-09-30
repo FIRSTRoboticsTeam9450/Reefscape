@@ -3,13 +3,13 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 5.82,
+        "x": 5.835,
         "y": 4.179
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.789576286952298,
-        "y": 4.231596470546446
+        "x": 7.181595336799149,
+        "y": 4.574800894711225
       },
       "isLocked": false,
       "linkedName": "CR"
@@ -17,27 +17,27 @@
     {
       "anchor": {
         "x": 8.773719547623088,
-        "y": 5.803760359203503
+        "y": 5.7
       },
       "prevControl": {
-        "x": 7.043610849837394,
-        "y": 5.822464237017401
+        "x": 6.299381228492173,
+        "y": 5.705949731633369
       },
       "nextControl": {
-        "x": 10.41240929415335,
-        "y": 5.786044794376149
+        "x": 10.412500313473394,
+        "y": 5.696059429024984
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 12.395239490033491,
-        "y": 5.166658283197498
+        "x": 12.318,
+        "y": 5.308
       },
       "prevControl": {
-        "x": 11.900516739651104,
-        "y": 6.0163471371317545
+        "x": 12.171135923747492,
+        "y": 5.6995901810911915
       },
       "nextControl": null,
       "isLocked": false,
@@ -76,22 +76,59 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "CoralL3",
+      "waypointRelativePos": 0.11315136476427576,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "CoralL3"
+        }
+      }
+    },
+    {
       "name": "Outtake",
       "waypointRelativePos": 0.25,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "Outtake"
+        }
+      }
+    },
+    {
+      "name": "CoralL4",
+      "waypointRelativePos": 0.7880893300247708,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "CoralL4"
+        }
+      }
     },
     {
       "name": "IntakeStop",
       "waypointRelativePos": 0.8048615800134539,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "IntakeStop"
+        }
+      }
     },
     {
       "name": "HighAlgae",
       "waypointRelativePos": 1.45,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "HighAlgae"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -104,7 +141,7 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -60.21845493751993
   },
   "reversed": false,
   "folder": "Algae Stealer",

@@ -119,6 +119,7 @@ public class RobotContainer {
         //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
         autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
         autoChooser.addOption("TEST", drivetrain.getAutoPath("TEST", false));
+        autoChooser.addOption("Algae Steal", drivetrain.getAutoPath("Algae stealer", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -470,8 +471,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralStore", new CoordinationCommand(ScoringPos.CORAL_STORE));
 
         // Algae Related
-        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
         NamedCommands.registerCommand("AlgaeStore", new CoordinationCommand(ScoringPos.ALGAE_STORE).andThen(new InstantCommand(() -> intake.setVoltage(12))));
         NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, -18));
 

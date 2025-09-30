@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.395239490033491,
-        "y": 5.166658283197498
+        "x": 12.318,
+        "y": 5.308
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.386359095881335,
-        "y": 5.65294463727609
+        "x": 11.309119605847844,
+        "y": 5.794286354078592
       },
       "isLocked": false,
       "linkedName": "Other Side Algae"
     },
     {
       "anchor": {
-        "x": 10.055912606739572,
-        "y": 5.739127405803492
+        "x": 10.1,
+        "y": 5.7
       },
       "prevControl": {
-        "x": 11.08543686729276,
-        "y": 5.734658327581274
+        "x": 11.129524260553188,
+        "y": 5.695530921777782
       },
       "nextControl": null,
       "isLocked": false,
@@ -55,13 +55,23 @@
       "name": "AlgaeStore",
       "waypointRelativePos": 0.09453072248480221,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "AlgaeStore"
+        }
+      }
     },
     {
       "name": "up",
       "waypointRelativePos": 0.6887238352464473,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "GoToScore"
+        }
+      }
     }
   ],
   "globalConstraints": {
@@ -80,7 +90,7 @@
   "folder": "Algae Stealer",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -60.21845493751993
   },
   "useDefaultConstraints": true
 }
