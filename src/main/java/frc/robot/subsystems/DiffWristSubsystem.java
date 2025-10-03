@@ -16,6 +16,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Log;
 import frc.robot.Constants.WristIDs;
 import frc.robot.Constants.debugging;
 
@@ -24,7 +25,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(5, 0, 0.25);
+    private PIDController pitchPID = new PIDController(5, 0, 0);
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
@@ -77,11 +78,11 @@ public class DiffWristSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = -0.16064453125;
+        cc_cfg.MagnetSensor.MagnetOffset = -0.158203125;
         rollEncoder.getConfigurator().apply(cc_cfg);
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = 0.574462890625;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.562255859375;
         pitchEncoder.getConfigurator().apply(cc_cfg);
 
         //Diff Wrist Start point
@@ -102,14 +103,16 @@ public class DiffWristSubsystem extends SubsystemBase {
     public void updatePID(double pitchPos, double rollPos) {
         double pitchVoltage = pitchPID.calculate(pitchPos);
         double rollVoltage = rollPID.calculate(rollPos);
-
+        Logger.recordOutput("Diffy Tuning/Pitch PID", pitchVoltage);
+        Logger.recordOutput("Diffy Tuning/Roll PID", rollVoltage);
+        
         //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
         pitchVoltage *= 3;
 
-        double lVolts = pitchVoltage - rollVoltage;
-        double rVolts = pitchVoltage + rollVoltage;
-        lVolts = MathUtil.clamp(lVolts, -2, 2); // Used to be 8
-        rVolts = MathUtil.clamp(rVolts, -2, 2); // Used to be 8
+        double lVolts = pitchVoltage + rollVoltage;
+        double rVolts = pitchVoltage - rollVoltage;
+        lVolts = MathUtil.clamp(lVolts, -8, 8); // Used to be 8
+        rVolts = MathUtil.clamp(rVolts, -8, 8); // Used to be 8
         
 
         setVoltage(lVolts, rVolts);
@@ -145,10 +148,10 @@ public class DiffWristSubsystem extends SubsystemBase {
         if (debugging.DiffyTuningValues) {
             Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
             Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
-            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint * 1.5);
-            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint / 1.4);
+            Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);
+            Logger.recordOutput("Diffy Tuning/Roll Setpoint", rollSetpoint);
             Logger.recordOutput("Diffy Tuning/Pitch Pos", (pitchPos * 360));
-            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360 / 1.4);
+            Logger.recordOutput("Diffy Tuning/Roll Pos", rollPos * 360 );
             Logger.recordOutput("Diffy Tuning/Left Motor Accel", leftAccel);
             Logger.recordOutput("Diffy Tuning/Right Motor Accel", rightAccel);
             Logger.recordOutput("Diffy Tuning/Left Motor Veloc", leftVeloc);
@@ -182,7 +185,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return the current encoder value for roll in degrees
      */
     public double getRollAngle() {
-        return rollPos * 360 / 1.4;
+        return rollPos * 360;// / 1.0957;
     }
 
     /**
@@ -192,8 +195,8 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param rightVoltage voltage to set right motor to
      */
     public void setVoltage(double leftVoltage, double rightVoltage) {
-        // leftMotor.setVoltage(leftVoltage);
-        // rightMotor.setVoltage(rightVoltage);
+        leftMotor.setVoltage(leftVoltage);
+        rightMotor.setVoltage(rightVoltage);
     }
 
     /**
@@ -202,14 +205,14 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setPitchSetpoint(double setpoint) {
         setpoint /= 360;
-        setpoint /= 1.5;
+        // setpoint /= 1.5;
         pitchPID.setSetpoint(setpoint);
     }
 
     public boolean atPitchSetpoint() {
-        double pitchAngle = getPitchAngle() * 1.5;
+        double pitchAngle = getPitchAngle();// * 1.5;
         double pitchSetpoint = getPitchSetpoint();
-        if ((pitchAngle > pitchSetpoint - 27) && (pitchAngle < pitchSetpoint + 27)) {
+        if ((pitchAngle > pitchSetpoint - 18) && (pitchAngle < pitchSetpoint + 18)) {
             return true;
         }
         return false;
@@ -221,7 +224,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setRollSetpoint(double setpoint) {
         setpoint /= 360;
-        setpoint *= 1.4;
+        //setpoint *= 1.0957;
         rollPID.setSetpoint(setpoint);
     }
 
@@ -239,7 +242,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of pitch
      */
     public double getPitchSetpoint() {
-        return pitchPID.getSetpoint() * 360 * 1.5;
+        return pitchPID.getSetpoint() * 360;// * 1.5;
     }
 
     /**
@@ -247,7 +250,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of roll
      */
     public double getRollSetpoint() {
-        return rollPID.getSetpoint() * 360 / 1.4;
+        return rollPID.getSetpoint() * 360; // / 1.4;
     }
 
     public boolean getIfDoingPIDS() {

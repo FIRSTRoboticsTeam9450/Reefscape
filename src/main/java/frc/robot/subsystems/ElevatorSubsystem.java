@@ -140,7 +140,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         config.CurrentLimits.SupplyCurrentLimit = 30;
         
 
-        // rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
+        rightMotor.setControl(new Follower(leftMotor.getDeviceID(), true));
     }
 
     // private void leftMotorConfig(){
@@ -229,7 +229,7 @@ public class ElevatorSubsystem extends SubsystemBase {
             System.out.println("new request("+velocity+", "+acceleration+", "+jerk+")");
         }
 
-        // leftMotor.setControl(m_request.withPosition(setpoint + offset));
+        leftMotor.setControl(m_request.withPosition(setpoint + offset));
         atSetpoint = Math.abs(position - setpoint) < 0.4;
         //System.out.println("Position and setpoint" + position + " " + setpoint);
         trackMovementTiming();

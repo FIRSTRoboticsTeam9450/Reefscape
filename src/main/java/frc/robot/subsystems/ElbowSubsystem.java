@@ -129,7 +129,7 @@ public class ElbowSubsystem extends SubsystemBase {
             System.out.println("Updated motion profile: (" + velocity + ", " + acceleration + ", " + jerk + ")");
         }
 
-        // motor.setControl(m_request.withPosition((setpoint + offsetToZeroDegrees) / -360));
+        motor.setControl(m_request.withPosition((setpoint + offsetToZeroDegrees) / -360));
         logger.updateLogger(elbowAngle, setpoint, atSetpoint());
     }
 

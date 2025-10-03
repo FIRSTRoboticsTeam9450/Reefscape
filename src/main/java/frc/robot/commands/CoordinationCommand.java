@@ -53,7 +53,7 @@ public class CoordinationCommand extends Command {
                 }
             }
             if (connectedPathsSet.contains(targetPos) && !justCancelled) {
-        
+                System.out.println(targetPos + " YIPPEEE");
                 CT.setPosition(targetPos);
                 validPath = true;
             } else if (debugging.CoordAllowedPathsDebugging) {

@@ -84,6 +84,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double coralScorePitch = 0;
 
     ScoringPos lastPos = ScoringPos.START;
+
+    private double justACoupleMore = 0;
     /**
      * gets the starting angle / position of the encoders
      */
@@ -253,12 +255,17 @@ public class CoordinationSubsytem extends SubsystemBase{
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        if (!allAtSetpoints || justChanged && false) {
+        if (!allAtSetpoints || justChanged || justACoupleMore < 20) {
             justChanged = false;
+            if (!allAtSetpoints || justChanged) {
+                justACoupleMore = 0;
+            }
             updatePosition();
             recordSetpoints();
         } else if (allAtSetpoints && justFinished) {
             justFinished = false;
+        } else {
+            justACoupleMore++;
         }
 
         if (debugging.CoordPositionDebugging || debugging.CoordAllAtSetpoint) {
@@ -271,7 +278,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
 
     public void updatePosition() {
-
+        System.out.println("UPDATe poSITION " + pos);
         if (pos != ScoringPos.GO_SCORE_CORAL && pos != ScoringPos.SCORE_CORAL) {
             justHitScore = true;
         }
@@ -296,6 +303,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
             goScoreLevel();
         }else if(pos == ScoringPos.SCORE_CORAL) {
+            System.out.println("go score coral yay");
             goToScoreCoral();
         } else if(pos == ScoringPos.ScoreL4) {
             goScoreL4();
@@ -358,9 +366,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         
         
         rollToClosestSide();
-        //DW.setRollSetpoint(90);
         DW.setPitchSetpoint(-120); // used to be -120     gear ratio: 20 -> 28
-        // Elbow.setSetpoint(90); // used to be 90
+        Elbow.setSetpoint(90); // used to be 90
         // } 
         if (
             DW.atRollSetpoint()
@@ -427,8 +434,12 @@ public class CoordinationSubsytem extends SubsystemBase{
             } else {
                 rollToClosestSide();
             }
-            //DW.setRollSetpoint(0);
-            // Elbow.setSetpoint(90);
+            // DW.setRollSetpoint(0);
+            if (!DW.atRollSetpoint() && lastPos != ScoringPos.INTAKE_CORAL) {
+                Elbow.setSetpoint(50);
+            } else {
+                Elbow.setSetpoint(90);
+            }
             if (lastPos == ScoringPos.INTAKE_VERTICAL_CORAL) {
                 if (elbowEncoder > 30)
                 DW.setPitchSetpoint(-150);
@@ -487,8 +498,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToCoralIntake() {
         DW.setPitchSetpoint(Constants.robotConfig.getPitchGroundPos()); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(Constants.robotConfig.getElbowGroundPos()); // Old: 2
+        Elbow.setSetpoint(Constants.robotConfig.getElbowGroundPos());
         Elev.setSetpoint(0);
+
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -614,7 +626,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         } else {
             switch (level) {
                 case 1:
-                    coralScorePitch = -230;
+                    coralScorePitch = -180; // was -230
                     coralScoreElbow = 62;
                     coralScoreElev = 4;
                     DW.setRollSetpoint(0);
@@ -760,6 +772,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToScoreCoral() {
+        System.out.println("SET ELBOW PLEASE");
         DW.setPitchSetpoint(-107.19);
         Elbow.setSetpoint(32.91);
         if (level == 3 && Elbow.atSetpoint()) {
@@ -794,6 +807,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     /* ----- Setters and Getters ----- */
 
     public void setPosition(ScoringPos pos) {
+        System.out.println("POS: " + pos);
         lastPos = this.pos;
         this.pos = pos;
         justHitScore = true;
