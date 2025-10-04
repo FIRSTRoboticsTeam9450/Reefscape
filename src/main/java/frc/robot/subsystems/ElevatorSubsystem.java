@@ -103,6 +103,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     public ElevatorSubsystem(){
         configureLeftMotor();
         configureRightMotor();
+        resetDone = false;
     }
 
     /* -------------------- Motor Configuration -------------------- */
@@ -189,15 +190,15 @@ public class ElevatorSubsystem extends SubsystemBase {
                 setSetpoint(getSetpoint() - 0.05);
                 justACoupeTimes++;
             }
-            if (cooldown > 0) {
-                cooldown--;
-            } else {
-                atLimitCount++;
-                if (atLimitCount >= 4) {
-                    resetDone = false;
-                    justACoupeTimes = 0;
-                }
-            }
+            // if (cooldown > 0) {
+            //     cooldown--;
+            // } else {
+            //     atLimitCount++;
+            //     if (atLimitCount >= 4) {
+            //         resetDone = false;
+            //         justACoupeTimes = 0;
+            //     }
+            // }
         }
         Logger.recordOutput("Elevator/Resetting?", !resetDone);
         Logger.recordOutput("Elevator/Resetting Count", atLimitCount);
@@ -213,14 +214,17 @@ public class ElevatorSubsystem extends SubsystemBase {
             //     resetDone = true;
             // }
             
-            if(atLimitCount >= 4) {
-                leftMotor.setPosition(-.05, .5);
-                rightMotor.setPosition(-.05, .5);
+            // if(atLimitCount >= 4) {
+            //     leftMotor.setPosition(-.05, .5);
+            //     rightMotor.setPosition(-.05, .5);
+            //     resetDone = true;
+            //     atLimitCount = 0;
+            //     offset = 0.1;
+            //     cooldown = 500;
+            //     setSetpoint(0);
+            // }
+            if(resetCheck()) {
                 resetDone = true;
-                atLimitCount = 0;
-                offset = 0.1;
-                cooldown = 500;
-                setSetpoint(0);
             }
         }
 
@@ -240,6 +244,20 @@ public class ElevatorSubsystem extends SubsystemBase {
         // recordTelemetry();
 
         // cacheSignals();
+    }
+
+    private boolean resetCheck() {
+        m_request = new DynamicMotionMagicVoltage(0, 1, 1, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+        leftMotor.setControl(m_request.withPosition(-.5));
+        if(Math.abs(leftMotor.getVelocity().getValueAsDouble()) < 0.1 ) {
+            System.out.println("WORKS :)");
+            offset = leftMotor.getPosition().getValueAsDouble();
+            setSetpoint(0);
+            m_request = new DynamicMotionMagicVoltage(0, 1, 1, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
+            leftMotor.setControl(m_request.withPosition(setpoint + offset));
+            return true;
+        }
+        return false;
     }
 
     private boolean profileChanged() {

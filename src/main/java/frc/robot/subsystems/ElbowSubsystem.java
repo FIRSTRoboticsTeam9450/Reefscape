@@ -121,7 +121,9 @@ public class ElbowSubsystem extends SubsystemBase {
         Logger.recordOutput("Diffy Tuning/Elbow Stator Pull", motorStatorPull);
         Logger.recordOutput("Reefscape/Elbow/velocity", motor.getVelocity().getValueAsDouble());
         Logger.recordOutput("Reefscape/Elbow/acceleration", motor.getAcceleration().getValueAsDouble());
-        Logger.recordOutput("Reefscape/Elbow/Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Actual Motor Voltage", motor.getMotorVoltage().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Actual Motor velocity", motor.getVelocity().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Elbow/Expected Motor velocity", m_request.getVelocityMeasure());
 
         // Reconstruct control request if parameters changed
         if (m_request.Velocity != velocity || m_request.Acceleration != acceleration || m_request.Jerk != jerk) {

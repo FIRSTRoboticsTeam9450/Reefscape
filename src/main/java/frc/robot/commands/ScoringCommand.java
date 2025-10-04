@@ -38,13 +38,11 @@ public class ScoringCommand extends Command {
         position = scoreSub.getPos();
         if(position == ScoringPos.GO_SCORE_CORAL)
         {
-            System.out.println("ok at least got here");
         }
         if (position != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
             running = true;
         } else {
-            System.out.println("SCORING YAY");
             score(); // Direct scoring if already in correct state
         }
         Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
@@ -60,7 +58,6 @@ public class ScoringCommand extends Command {
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-2);
         } else {
-            System.out.println("SCORE PLEASEE");
             score.schedule();
             intake.setVoltage(0);
         }
@@ -71,9 +68,7 @@ public class ScoringCommand extends Command {
     @Override
     public void execute() {
         if (runDelay > 20) {
-            System.out.println("run delay: " + runDelay + " " + scoreSub.getAllAtSetpoints() + "running " + running);
             if (running && scoreSub.getAllAtSetpoints()) {
-                System.out.println("run delay: " + runDelay + " " + scoreSub.getAllAtSetpoints());
                 score();
                 running = false;
             }
@@ -110,7 +105,6 @@ public class ScoringCommand extends Command {
                 .schedule();
                 Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
         } else {
-            System.out.println("STOREE ");
             store.schedule();
             Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
         }

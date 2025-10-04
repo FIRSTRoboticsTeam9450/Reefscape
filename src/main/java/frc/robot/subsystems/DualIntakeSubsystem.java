@@ -154,7 +154,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
      */
     public void setVoltage(double voltage) {
         this.voltage = voltage;
-        // motor.setControl(request.withOutput(voltage));
+        motor.setControl(request.withOutput(voltage));
         atSpeed = false;
     }
 

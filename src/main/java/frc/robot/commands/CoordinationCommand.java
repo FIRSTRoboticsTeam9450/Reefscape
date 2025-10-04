@@ -30,6 +30,8 @@ public class CoordinationCommand extends Command {
     /* ----------- Initilization ----------- */
 
     public CoordinationCommand(ScoringPos pos) {
+        
+        System.out.println("Pos: " + pos);
         this.targetPos = pos;
         currentPos = CT.getPos();
         this.mode = false;
@@ -53,7 +55,6 @@ public class CoordinationCommand extends Command {
                 }
             }
             if (connectedPathsSet.contains(targetPos) && !justCancelled) {
-                System.out.println(targetPos + " YIPPEEE");
                 CT.setPosition(targetPos);
                 validPath = true;
             } else if (debugging.CoordAllowedPathsDebugging) {

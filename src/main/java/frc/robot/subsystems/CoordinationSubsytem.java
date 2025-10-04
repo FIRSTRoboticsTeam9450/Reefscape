@@ -256,6 +256,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         elevEncoder = Elev.getPosition();
         
         if (!allAtSetpoints || justChanged || justACoupleMore < 20) {
+            
             justChanged = false;
             if (!allAtSetpoints || justChanged) {
                 justACoupleMore = 0;
@@ -278,7 +279,6 @@ public class CoordinationSubsytem extends SubsystemBase{
 
 
     public void updatePosition() {
-        System.out.println("UPDATe poSITION " + pos);
         if (pos != ScoringPos.GO_SCORE_CORAL && pos != ScoringPos.SCORE_CORAL) {
             justHitScore = true;
         }
@@ -303,7 +303,6 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
             goScoreLevel();
         }else if(pos == ScoringPos.SCORE_CORAL) {
-            System.out.println("go score coral yay");
             goToScoreCoral();
         } else if(pos == ScoringPos.ScoreL4) {
             goScoreL4();
@@ -427,15 +426,15 @@ public class CoordinationSubsytem extends SubsystemBase{
         } else if (desiredLevel == 1) {
             goToL1Store();
         } else {
-            if (lastPos == ScoringPos.INTAKE_CORAL) {
-                if (elbowEncoder > 15) {
-                    rollToClosestSide();
-                }
-            } else {
-                rollToClosestSide();
-            }
-            // DW.setRollSetpoint(0);
-            if (!DW.atRollSetpoint() && lastPos != ScoringPos.INTAKE_CORAL) {
+            // if (lastPos == ScoringPos.INTAKE_CORAL) {
+            //     if (elbowEncoder > 15) {
+            //         rollToClosestSide();
+            //     }
+            // } else {
+            //     rollToClosestSide();
+            // }
+            rollToClosestSide();
+            if (lastPos != ScoringPos.INTAKE_CORAL && !DW.atRollSetpoint()) {
                 Elbow.setSetpoint(50);
             } else {
                 Elbow.setSetpoint(90);
@@ -704,8 +703,9 @@ public class CoordinationSubsytem extends SubsystemBase{
             DW.setPitchSetpoint(coralScorePitch);
             Elbow.setSetpoint(coralScoreElbow);
             Elev.setSetpoint(coralScoreElev);
+            rollToClosestSide();
             if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
-                rollToClosestSide();
+                System.out.println("ROLLINGGGGGGGGGGGGGGGGGGGGgggggggggggggggg");
             }
         } else {
             DW.setPitchSetpoint(coralScorePitch);
@@ -772,7 +772,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void goToScoreCoral() {
-        System.out.println("SET ELBOW PLEASE");
         DW.setPitchSetpoint(-107.19);
         Elbow.setSetpoint(32.91);
         if (level == 3 && Elbow.atSetpoint()) {
@@ -807,7 +806,6 @@ public class CoordinationSubsytem extends SubsystemBase{
     /* ----- Setters and Getters ----- */
 
     public void setPosition(ScoringPos pos) {
-        System.out.println("POS: " + pos);
         lastPos = this.pos;
         this.pos = pos;
         justHitScore = true;
