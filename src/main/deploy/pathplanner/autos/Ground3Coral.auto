@@ -160,7 +160,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BackUp"
+                        "pathName": null
                       }
                     }
                   ]

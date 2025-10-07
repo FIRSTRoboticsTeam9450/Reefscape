@@ -37,8 +37,8 @@
       "constraints": {
         "maxVelocity": 0.75,
         "maxAcceleration": 1.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
+        "maxAngularVelocity": 1080.0,
+        "maxAngularAcceleration": 1440.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
@@ -48,7 +48,7 @@
   "eventMarkers": [
     {
       "name": "up",
-      "waypointRelativePos": 0.6536124240378043,
+      "waypointRelativePos": 0.7670492910195694,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -61,8 +61,8 @@
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularVelocity": 1080.0,
+    "maxAngularAcceleration": 1440.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -76,5 +76,5 @@
     "velocity": 0,
     "rotation": 109.463
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

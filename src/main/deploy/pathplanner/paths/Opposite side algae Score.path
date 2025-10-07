@@ -8,8 +8,8 @@
       },
       "prevControl": null,
       "nextControl": {
-        "x": 11.309119605847844,
-        "y": 5.794286354078592
+        "x": 12.169396804677318,
+        "y": 5.794500344424701
       },
       "isLocked": false,
       "linkedName": "Other Side Algae"
@@ -30,18 +30,35 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.5,
+      "waypointRelativePos": 0.14712153518123777,
+      "rotationDegrees": -59.99999999999999
+    },
+    {
+      "waypointRelativePos": 0.6332622601279302,
       "rotationDegrees": 180.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.4132343011478806,
+      "minWaypointRelativePos": 0.7157326130992564,
+      "maxWaypointRelativePos": 0.92,
+      "constraints": {
+        "maxVelocity": 0.75,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 270.0,
+        "maxAngularAcceleration": 360.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.92,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 2.0,
+        "maxVelocity": 0.25,
+        "maxAcceleration": 1.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -53,7 +70,7 @@
   "eventMarkers": [
     {
       "name": "AlgaeStore",
-      "waypointRelativePos": 0.09453072248480221,
+      "waypointRelativePos": 0.18365968939905702,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -64,7 +81,7 @@
     },
     {
       "name": "up",
-      "waypointRelativePos": 0.6887238352464473,
+      "waypointRelativePos": 0.8183659689398951,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -75,8 +92,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
+    "maxVelocity": 2.5,
+    "maxAcceleration": 2.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -90,7 +107,7 @@
   "folder": "Algae Stealer",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -60.21845493751993
+    "rotation": -59.99999999999999
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

@@ -58,7 +58,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     public boolean runVision;
-    public static boolean visionOverride;
+    public static boolean completeVisionOverride;
+    public static boolean frontVisionOverride;
+    public static boolean backVisionOverride;
+    public boolean usingBackLL;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -274,9 +277,11 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //     setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         // }
         visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
+        usingBackLL = false;
         setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         if (visionPose == null || visionPose.tagCount == 0) {
             visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-back");
+            usingBackLL = true;
             //System.out.println("USING BACK LIMELIGHT: " + visionPose.tagCount);
             if (visionPose == null) {
                 return;
@@ -292,8 +297,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         }
         if (!dontUpdate ) {
             Logger.recordOutput("Vision Pose", visionPose.pose);
-            if (!visionOverride) {
-                addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
+            if (!completeVisionOverride) {
+                if (!frontVisionOverride && !usingBackLL) {
+                    addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
+                } else if (!backVisionOverride && usingBackLL) {
+                    addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
+                }
             }
         }
         // if ((limelight.getTagCount() >= 2 || limelight.getTa() > 2) && limelight.getActivePipeline() == 0) {

@@ -23,8 +23,8 @@ public class ElbowSubsystem extends SubsystemBase {
     private static ElbowSubsystem instance;
 
     // Motor and encoder
-    private final TalonFX motor = new TalonFX(WristIDs.kElbowWristMotorID, Constants.CTRE_BUS);
-    private final CANcoder encoder = new CANcoder(WristIDs.kElbowWristEncoderID, Constants.CTRE_BUS);
+    private final TalonFX motor = new TalonFX(WristIDs.kElbowWristMotorID, Constants.RIO_BUS);
+    private final CANcoder encoder = new CANcoder(WristIDs.kElbowWristEncoderID, Constants.RIO_BUS);
 
     // Measurement and control variables
     private double elbowAngle;

@@ -6,6 +6,8 @@ package frc.robot;
 
 import static edu.wpi.first.units.Units.*;
 
+import org.littletonrobotics.junction.Logger;
+
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
 import com.ctre.phoenix6.swerve.SwerveRequest;
@@ -45,12 +47,12 @@ import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
     // Top speed when lift is up
-    private static double LiftMaxSpeed = 1;
-    private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
+    private static double LiftMaxSpeed = 0.68;
+    private static double LiftMaxAngularRate = RotationsPerSecond.of(.18).in(RadiansPerSecond);
 
-    private static double DefaultMaxSpeed = 5.14;
+    private static double DefaultMaxSpeed = 4.112;
 
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.9).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -75,9 +77,21 @@ public class RobotContainer {
      * y1: 0.117
      * x2: 88.5
      * y2: 0.896
+     * 
+     * Woojin Drive Curve Vals:
+     * x1: 117.4
+     * y1: 0.054
+     * x2:91.4
+     * y2:0.76
+     * 
+     * Woojin Rotate Curve Vals:
+     * 104
+     * -0.022
+     * 88.5
+     * 0.896
      */
-    public BezierCurve driveBezier = new BezierCurve("drive", 117.4, 0.054, 91.4, 0.76, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
-    public BezierCurve rotateBezier = new BezierCurve("drive", 104, -0.022, 88.5, 0.896, 0.07, 0.03);
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
+    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -112,6 +126,7 @@ public class RobotContainer {
         registeredCommands();
 
         autoChooser = new SendableChooser<>();
+        autoChooser.setDefaultOption("BackReef", drivetrain.getAutoPath("BackReef", false));
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
@@ -211,7 +226,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.132, 12)
+            new ClimbCommand(0.68, 4) //12
         );
 
         // Honestly dont know
@@ -347,11 +362,11 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.937, 9)
+            new ClimbCommand(0.14, 12)
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.335, 10.5)
+            new ClimbCommand(0.6, 8) //10.5
         );
 
         /* ----- Disabled Keybinds ----- */
@@ -484,14 +499,20 @@ public class RobotContainer {
         );
 
         // Vision Control
-        NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = true));
-        NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = false));
+        NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.completeVisionOverride = true));
+        NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.completeVisionOverride = false));
+
+        NamedCommands.registerCommand("StopFrontVision", new InstantCommand(() -> CommandSwerveDrivetrain.frontVisionOverride = true));
+        NamedCommands.registerCommand("StartFrontVision", new InstantCommand(() -> CommandSwerveDrivetrain.frontVisionOverride = false));
+
+        NamedCommands.registerCommand("StopBackVision", new InstantCommand(() -> CommandSwerveDrivetrain.backVisionOverride = true));
+        NamedCommands.registerCommand("StartBackVision", new InstantCommand(() -> CommandSwerveDrivetrain.backVisionOverride = false));
 
         // Wait Logic
         NamedCommands.registerCommand("WaitForCoral", new WaitForLaserCommand());
     }
 
     public Command getAutonomousCommand() {
-       return autoChooser.getSelected();
+        return autoChooser.getSelected();
     }
 }

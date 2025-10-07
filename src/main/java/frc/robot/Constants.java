@@ -25,7 +25,8 @@ public final class Constants {
   public static boolean l4mode = false;
 
   /** Default CAN bus used for CTRE devices */
-  public static final String CTRE_BUS = "Rio";
+  public static final String RIO_BUS = "Rio";
+  public static final String CTRE_BUS = "CantDrive";
 
   /** Default neutral mode for motors */
   public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake;
@@ -68,6 +69,7 @@ public final class Constants {
 
   public static class ClimberIDs {
     public static final int kMotorID = 27;
+    public static final int kEncoderID = 28;
   }
 
   // =========================

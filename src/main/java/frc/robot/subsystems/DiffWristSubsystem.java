@@ -25,12 +25,12 @@ public class DiffWristSubsystem extends SubsystemBase {
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
-    private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
-    private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.CTRE_BUS);
+    private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.RIO_BUS);
+    private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.RIO_BUS);
 
     //Encoders
-    private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.CTRE_BUS);
-    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.CTRE_BUS);
+    private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.RIO_BUS);
+    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.RIO_BUS);
 
     private double pitchPos;
     private double rollPos;

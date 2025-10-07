@@ -24,7 +24,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
     CANrange laser = new CANrange(Constants.IntakeIDs.kDualIntakeCoralLaserID);
 
     /* ----- Motors ----- */
-    private TalonFX motor = new TalonFX(IntakeIDs.kDualIntakeMotorID, Constants.CTRE_BUS);
+    private TalonFX motor = new TalonFX(IntakeIDs.kDualIntakeMotorID, Constants.RIO_BUS);
 
     boolean hasCoral;
     boolean hasAlgae;
