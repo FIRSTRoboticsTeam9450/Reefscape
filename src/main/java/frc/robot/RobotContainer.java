@@ -47,12 +47,12 @@ import frc.robot.commands.DriverIntakeCommand;
 
 public class RobotContainer {
     // Top speed when lift is up
-    private static double LiftMaxSpeed = 0.68;
-    private static double LiftMaxAngularRate = RotationsPerSecond.of(.18).in(RadiansPerSecond);
+    private static double LiftMaxSpeed = 0.8;
+    private static double LiftMaxAngularRate = RotationsPerSecond.of(.24).in(RadiansPerSecond);
 
-    private static double DefaultMaxSpeed = 4.112;
+    private static double DefaultMaxSpeed = 5.14;
 
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.9).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -90,8 +90,8 @@ public class RobotContainer {
      * 88.5
      * 0.896
      */
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
-    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
+    public BezierCurve driveBezier = new BezierCurve("drive", 117.4, 0.054, 91.4, 0.76, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
+    public BezierCurve rotateBezier = new BezierCurve("drive", 120.1, 0.145, 92.2, 0.362, 0.035, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -226,7 +226,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.68, 4) //12
+            new ClimbCommand(0.712, 4) //12
         );
 
         // Honestly dont know
@@ -362,11 +362,11 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.14, 12)
+            new ClimbCommand(0.14, 12) //8 degree angle going away from robot
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.6, 8) //10.5
+            new ClimbCommand(0.634, 8) //10.5
         );
 
         /* ----- Disabled Keybinds ----- */
@@ -473,6 +473,8 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeStop", new InstantCommand(() -> intake.setVoltage(0)));
         NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand(false)));
         NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand(true)));
+
+        NamedCommands.registerCommand("FlipIntake", new RollSideSwitcher(true));
 
         // Scoring Level Selection
         NamedCommands.registerCommand("CoralL4", new InstantCommand(() -> scoreSub.setScoringLevel(4)));
