@@ -28,7 +28,7 @@
         "y": 5.696059429024984
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "Through Cages"
     },
     {
       "anchor": {
@@ -36,8 +36,8 @@
         "y": 5.308
       },
       "prevControl": {
-        "x": 12.171135923747492,
-        "y": 5.6995901810911915
+        "x": 12.173660376984099,
+        "y": 5.771429796336356
       },
       "nextControl": null,
       "isLocked": false,

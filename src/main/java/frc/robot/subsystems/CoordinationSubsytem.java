@@ -490,7 +490,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             Elbow.setSetpoint(90);
             if (lastPos == ScoringPos.INTAKE_VERTICAL_CORAL) {
                 if (DriverStation.isAutonomous()) {
-                    rollToOtherSide();
+                    // rollToOtherSide();
                 }
                 if (elbowEncoder > 30)
                 DW.setPitchSetpoint(-150);
@@ -668,7 +668,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 coralScoreElev = Constants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
             } else { // processor
-                coralScorePitch = -94;
+                coralScorePitch = -84;
                 coralScoreElbow = 15;
                 coralScoreElev = 0;
                 DW.setRollSetpoint(0);
@@ -695,9 +695,9 @@ public class CoordinationSubsytem extends SubsystemBase{
                     coralScorePitch = -112;
                     coralScoreElbow = 78;
                     if (l4Extend) {
-                        coralScoreElev = 14; //14.25
+                        coralScoreElev = 13.5; //14.25
                     } else {
-                        coralScoreElev = 13; //13.25
+                        coralScoreElev = 12.5; //13.25
                     }
                     //rollToClosestSide();
                     break;

@@ -36,7 +36,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public ClimbSubsystem() {
         configuration();
-        climberPID.setSetpoint(0.712);
+        climberPID.setSetpoint(0.742);
 
         Logger.recordOutput("Reefscape/Climbers/Motor connected?", climbMotor.isConnected());
         Logger.recordOutput("Reefscape/Climbers/Motor alive?", climbMotor.isAlive());
@@ -58,7 +58,7 @@ public class ClimbSubsystem extends SubsystemBase {
         }
         if (runClimber) {
             double voltage = updatePIDs(climbEncoder.getPosition().getValueAsDouble());
-            // setVoltage(voltage);
+            setVoltage(voltage);
 
             totalMotorAMPPull += climbMotor.getSupplyCurrent().getValueAsDouble();
 

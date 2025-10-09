@@ -58,9 +58,9 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     // private final SwerveRequest.SysIdSwerveRotation m_rotationCharacterization = new SwerveRequest.SysIdSwerveRotation();
 
     public boolean runVision;
-    public static boolean completeVisionOverride;
-    public static boolean frontVisionOverride;
-    public static boolean backVisionOverride;
+    public static boolean completeVisionOverride = false;
+    public static boolean frontVisionOverride = false;;
+    public static boolean backVisionOverride = false;
     public boolean usingBackLL;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */

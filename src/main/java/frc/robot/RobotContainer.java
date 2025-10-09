@@ -126,15 +126,16 @@ public class RobotContainer {
         registeredCommands();
 
         autoChooser = new SendableChooser<>();
-        autoChooser.setDefaultOption("BackReef", drivetrain.getAutoPath("BackReef", false));
+        autoChooser.setDefaultOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
-        autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
-        autoChooser.addOption("BackReefReorderedTest", drivetrain.getAutoPath("BackReefReorderedTest", false));
+        // autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
+        // autoChooser.addOption("BackReefReorderedTest", drivetrain.getAutoPath("BackReefReorderedTest", false));
         //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
-        autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
-        autoChooser.addOption("TEST", drivetrain.getAutoPath("TEST", false));
+        // autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
+        // autoChooser.addOption("TEST", drivetrain.getAutoPath("TEST", false));
         autoChooser.addOption("Algae Steal", drivetrain.getAutoPath("Algae stealer", false));
+        autoChooser.addOption("Processor", drivetrain.getAutoPath("Processor", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
     }
 
@@ -226,7 +227,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.712, 4) //12
+            new ClimbCommand(0.742, 4) //12
         );
 
         // Honestly dont know
@@ -362,11 +363,11 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.14, 12) //8 degree angle going away from robot
+            new ClimbCommand(0.17, 12) //8 degree angle going away from robot
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.634, 8) //10.5
+            new ClimbCommand(0.664, 8) //10.5
         );
 
         /* ----- Disabled Keybinds ----- */
@@ -492,6 +493,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
         NamedCommands.registerCommand("AlgaeStore", new CoordinationCommand(ScoringPos.ALGAE_STORE).andThen(new InstantCommand(() -> intake.setVoltage(12))));
         NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, -18));
+
+        NamedCommands.registerCommand("Net", new InstantCommand(() -> scoreSub.setAlgaeNet(true)));
+        NamedCommands.registerCommand("Proc", new InstantCommand(() -> scoreSub.setAlgaeNet(false)));
 
         // Start & Cancel Routines
         NamedCommands.registerCommand("Start", new CoordinationCommand(ScoringPos.START));

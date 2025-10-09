@@ -91,7 +91,7 @@
   "folder": "Ground3CoralRight",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -60.40770364064201
+    "rotation": -59.99999999999999
   },
   "useDefaultConstraints": false
 }

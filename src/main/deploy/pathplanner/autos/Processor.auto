@@ -13,13 +13,13 @@
         {
           "type": "named",
           "data": {
-            "name": "IntakeHold"
+            "name": "CoralStore"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CoralStore"
+            "name": "IntakeHold"
           }
         },
         {
@@ -37,7 +37,7 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.1
           }
         },
         {
@@ -55,38 +55,31 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CR to Opposite side Algae"
+            "pathName": "CR To CA"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Proc"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.25
+            "waitTime": 0.075
           }
         },
         {
-          "type": "parallel",
+          "type": "named",
           "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Opposite side algae Score"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StopVision"
-                }
-              }
-            ]
+            "name": "StopBackVision"
           }
         },
         {
-          "type": "wait",
+          "type": "path",
           "data": {
-            "waitTime": 0.15
+            "pathName": "CA To Proc"
           }
         },
         {
@@ -96,15 +89,33 @@
           }
         },
         {
+          "type": "path",
+          "data": {
+            "pathName": "Proc To LA"
+          }
+        },
+        {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.075
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "OSA Forward"
+            "pathName": "LA To Proc"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Proc Backup"
           }
         }
       ]
