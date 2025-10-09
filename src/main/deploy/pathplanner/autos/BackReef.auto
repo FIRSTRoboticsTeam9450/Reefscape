@@ -121,7 +121,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "Copy of DLToLeftGround"
+                        "pathName": "Alt. DLToLeftGround"
                       }
                     }
                   ]
@@ -145,7 +145,7 @@
         {
           "type": "path",
           "data": {
-            "pathName": "Copy of LeftGroundToDL"
+            "pathName": "Alt. LeftGroundToDL"
           }
         },
         {

@@ -91,7 +91,7 @@
     "rotation": -90.0
   },
   "reversed": false,
-  "folder": "Algae Stealer",
+  "folder": "Algae Stealer & Proc",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0
