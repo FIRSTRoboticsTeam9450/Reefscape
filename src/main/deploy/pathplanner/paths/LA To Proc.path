@@ -3,62 +3,75 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 12.318,
-        "y": 5.308
+        "x": 5.220757254819172,
+        "y": 2.747650661646662
       },
       "prevControl": null,
       "nextControl": {
-        "x": 12.169396804677318,
-        "y": 5.794500344424701
+        "x": 5.868093320392942,
+        "y": 1.6447818091876456
       },
       "isLocked": false,
-      "linkedName": "Other Side Algae"
+      "linkedName": "LA"
     },
     {
       "anchor": {
-        "x": 10.1,
-        "y": 5.7
+        "x": 5.991,
+        "y": 0.55
       },
       "prevControl": {
-        "x": 11.129524260553188,
-        "y": 5.695530921777782
+        "x": 5.979840804299442,
+        "y": 2.330965039620743
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BargeScore"
+      "linkedName": null
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.14712153518123777,
-      "rotationDegrees": -59.99999999999999
+      "waypointRelativePos": 0.26012793176972426,
+      "rotationDegrees": 119.99999999999999
     },
     {
-      "waypointRelativePos": 0.6332622601279302,
-      "rotationDegrees": 180.0
+      "waypointRelativePos": 0.7718550106609736,
+      "rotationDegrees": -90.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.7157326130992564,
-      "maxWaypointRelativePos": 0.92,
+      "minWaypointRelativePos": 0,
+      "maxWaypointRelativePos": 0.33220796758944865,
       "constraints": {
-        "maxVelocity": 0.75,
+        "maxVelocity": 1.5,
         "maxAcceleration": 2.0,
-        "maxAngularVelocity": 270.0,
-        "maxAngularAcceleration": 360.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
     },
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.92,
+      "minWaypointRelativePos": 0.8453747467926573,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.25,
-        "maxAcceleration": 1.0,
+        "maxVelocity": 1.5,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    },
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.19986495611073934,
+      "maxWaypointRelativePos": 0.6644159351789265,
+      "constraints": {
+        "maxVelocity": 0.8,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -70,7 +83,7 @@
   "eventMarkers": [
     {
       "name": "AlgaeStore",
-      "waypointRelativePos": 0.18365968939905702,
+      "waypointRelativePos": 0.17285617825793234,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -81,7 +94,7 @@
     },
     {
       "name": "up",
-      "waypointRelativePos": 0.95,
+      "waypointRelativePos": 0.4699527346387642,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -92,8 +105,8 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 2.5,
-    "maxAcceleration": 2.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,
@@ -101,13 +114,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": -90.0
   },
   "reversed": false,
   "folder": "Algae Stealer",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 119.99999999999999
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

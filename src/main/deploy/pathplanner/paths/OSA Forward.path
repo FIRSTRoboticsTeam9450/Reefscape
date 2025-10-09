@@ -3,25 +3,41 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.667232169555682,
+        "x": 10.1,
         "y": 5.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.906315017536192,
-        "y": 5.75948708788923
+        "x": 9.100251857146027,
+        "y": 5.693568049536967
       },
       "isLocked": false,
-      "linkedName": "OSA Backup"
+      "linkedName": "BargeScore"
     },
     {
       "anchor": {
-        "x": 8.75,
+        "x": 8.773719547623088,
         "y": 5.7
       },
       "prevControl": {
-        "x": 9.306182611861303,
-        "y": 5.6622959554949475
+        "x": 9.77912498004834,
+        "y": 5.6881354211184965
+      },
+      "nextControl": {
+        "x": 7.171207967637031,
+        "y": 5.71891090343863
+      },
+      "isLocked": false,
+      "linkedName": "Through Cages"
+    },
+    {
+      "anchor": {
+        "x": 5.937717093088597,
+        "y": 6.451464435921544
+      },
+      "prevControl": {
+        "x": 6.320153128428941,
+        "y": 5.729683749504556
       },
       "nextControl": null,
       "isLocked": false,
@@ -30,7 +46,11 @@
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.3944562899786833,
+      "waypointRelativePos": 0.35,
+      "rotationDegrees": -90.0
+    },
+    {
+      "waypointRelativePos": 1.2793176972281244,
       "rotationDegrees": -90.0
     }
   ],
@@ -40,14 +60,14 @@
   "globalConstraints": {
     "maxVelocity": 5.0,
     "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxAngularVelocity": 810.0,
+    "maxAngularAcceleration": 1440.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0.0,
-    "rotation": -90.0
+    "rotation": -119.99999999999999
   },
   "reversed": false,
   "folder": "Algae Stealer",
@@ -55,5 +75,5 @@
     "velocity": 0,
     "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

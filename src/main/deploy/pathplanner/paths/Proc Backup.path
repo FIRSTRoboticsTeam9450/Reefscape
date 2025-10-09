@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.8341188524590164,
-        "y": 5.853125
+        "x": 5.991,
+        "y": 0.55
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.532148800739699,
-        "y": 5.623804427592955
+        "x": 5.989877049180326,
+        "y": 1.5375512295081968
       },
       "isLocked": false,
-      "linkedName": "LeftCoral"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 3.7042008196721308,
-        "y": 5.0499487704918025
+        "x": 5.991,
+        "y": 2.0
       },
       "prevControl": {
-        "x": 2.7575809217129468,
-        "y": 5.370446219471393
+        "x": 5.9778893442622945,
+        "y": 1.2258709016393436
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "BLR"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": -90.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Algae Stealer",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -178.56790381583548
+    "rotation": -90.0
   },
   "useDefaultConstraints": true
 }

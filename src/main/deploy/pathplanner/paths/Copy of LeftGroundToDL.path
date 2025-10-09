@@ -3,55 +3,47 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 7.01,
-        "y": 7.3
+        "x": 1.4984631147540983,
+        "y": 5.659
       },
       "prevControl": null,
       "nextControl": {
-        "x": 1.9415088404038308,
-        "y": 7.300000000000001
+        "x": 1.824840606832751,
+        "y": 4.417484690060116
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "BackReef LeftCoral test"
     },
     {
       "anchor": {
         "x": 3.217,
-        "y": 3.852
+        "y": 4.179
       },
       "prevControl": {
-        "x": 1.78955993150742,
-        "y": 4.062359589033781
+        "x": 2.041478246958126,
+        "y": 4.171962031251358
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "DR"
+      "linkedName": "DL"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.9061833688699091,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6874999999999996,
+      "minWaypointRelativePos": 0.8,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
         "maxVelocity": 1.0,
         "maxAcceleration": 1.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
-        "nominalVoltage": 12.0,
-        "unlimited": false
-      }
-    },
-    {
-      "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.3190476190476187,
-      "maxWaypointRelativePos": 0.69,
-      "constraints": {
-        "maxVelocity": 2.5,
-        "maxAcceleration": 7.0,
-        "maxAngularVelocity": 540.0,
-        "maxAngularAcceleration": 720.0,
+        "maxAngularVelocity": 1080.0,
+        "maxAngularAcceleration": 1440.0,
         "nominalVoltage": 12.0,
         "unlimited": false
       }
@@ -61,7 +53,7 @@
   "eventMarkers": [
     {
       "name": "up",
-      "waypointRelativePos": 0.8993923024983065,
+      "waypointRelativePos": 0.7670492910195694,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -72,10 +64,10 @@
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 7.0,
-    "maxAcceleration": 8.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 5.0,
+    "maxAcceleration": 5.0,
+    "maxAngularVelocity": 1080.0,
+    "maxAngularAcceleration": 1440.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
@@ -84,10 +76,10 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": "CenterReef",
+  "folder": null,
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 0.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": false
 }

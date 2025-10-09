@@ -70,7 +70,7 @@ public class ScoringCommand extends Command {
     /** Main execution logic - monitors subsystem state before initiating score. */
     @Override
     public void execute() {
-        if (runDelay > -1) {
+        if (runDelay > 20 || scoreSub.getScoringLevel() != 4) {
             if (running && scoreSub.getAllAtSetpoints()) {
                 score();
                 running = false;
