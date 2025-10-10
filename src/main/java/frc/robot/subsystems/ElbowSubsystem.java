@@ -29,7 +29,7 @@ public class ElbowSubsystem extends SubsystemBase {
     // Measurement and control variables
     private double elbowAngle;
     private double setpoint;
-    private final double offsetToZeroDegrees = -110.3;
+    private final double offsetToZeroDegrees = 0;
 
     // Motion Magic parameters
     private double velocity = 18;

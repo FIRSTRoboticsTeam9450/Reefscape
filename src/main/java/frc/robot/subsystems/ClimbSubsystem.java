@@ -36,7 +36,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public ClimbSubsystem() {
         configuration();
-        climberPID.setSetpoint(0.742);
+        climberPID.setSetpoint(0.71);
 
         Logger.recordOutput("Reefscape/Climbers/Motor connected?", climbMotor.isConnected());
         Logger.recordOutput("Reefscape/Climbers/Motor alive?", climbMotor.isAlive());

@@ -49,6 +49,7 @@ public class AlignCommand extends Command {
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     private SequentialCommandGroup L1ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.1).andThen(new ScoringCommand()));
+    private SequentialCommandGroup L3UpAndWait = new SequentialCommandGroup(new WaitCommand(0.15)).andThen(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
 
     /* ----- Variables ----- */
     private boolean hasTarget;
@@ -147,6 +148,7 @@ public class AlignCommand extends Command {
         }
 
         hasCoral = intake.hasCoral();
+        algae = intake.hasAlgae();
 
         // grab target tag from limelight to align to
         int seenTid = (int)LimelightHelpers.getFiducialID("limelight-coral");
@@ -159,11 +161,11 @@ public class AlignCommand extends Command {
         
 
         // if tag not a reef tag ignore it
-        if (map.containsKey(tid) || (algae && hasCoral)) {
+        if (map.containsKey(tid) || (algae)) {
             hasTarget = true;
             double offset = Constants.AlignOffsets.firstCoralBack;
             // Initial position is back ~1 coral width
-            if (algae && hasCoral) {
+            if (algae) {
                 if (onRedSide) {
                     tid = 3;
                 } else {
@@ -282,12 +284,16 @@ public class AlignCommand extends Command {
         }
 
         // Raise elevator right away for L1-3
-        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (algae && hasCoral)) {
+        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_COMBINED)) {
             up = true;
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            if (score.getDesiredLevel() == 3) {
+                L3UpAndWait.schedule();
+            } else {
+                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            }
         }
 
-        if (algae && hasCoral) {
+        if (algae) {
             if (onRedSide) {
                 possibleTags[0] = 3;
                 possibleTags[1] = -1;
@@ -330,7 +336,7 @@ public class AlignCommand extends Command {
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
             }
-            else if(atSetpoint(0.06, 0.3) && !hasCoral) {
+            else if(atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.algaeIn);
                 debuggingCenterAlignIssue = "Algae";
                 pidX.setSetpoint(pose[0]);
