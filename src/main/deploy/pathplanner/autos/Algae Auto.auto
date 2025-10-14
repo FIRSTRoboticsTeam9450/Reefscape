@@ -13,19 +13,25 @@
         {
           "type": "named",
           "data": {
+            "name": "StopBackVision"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
             "name": "IntakeHold"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CoralStore"
+            "name": "CoralL4"
           }
         },
         {
           "type": "named",
           "data": {
-            "name": "CoralL4"
+            "name": "CoralStore"
           }
         },
         {
@@ -37,13 +43,25 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.4
+            "waitTime": 0.1
           }
         },
         {
           "type": "named",
           "data": {
             "name": "Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.9
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CR To CA"
           }
         },
         {
@@ -55,38 +73,13 @@
         {
           "type": "path",
           "data": {
-            "pathName": "CR to Opposite side Algae"
+            "pathName": "CA to Net"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.25
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "Opposite side algae Score"
-                }
-              },
-              {
-                "type": "named",
-                "data": {
-                  "name": "StopVision"
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "wait",
-          "data": {
-            "waitTime": 0.15
+            "waitTime": 0.1
           }
         },
         {
@@ -98,13 +91,49 @@
         {
           "type": "wait",
           "data": {
-            "waitTime": 1.0
+            "waitTime": 0.9
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "OSA Forward"
+            "pathName": "Net to FLA"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "FLA to Net"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.9
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Net Backup"
           }
         }
       ]

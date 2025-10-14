@@ -3,12 +3,12 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 10.1,
+        "x": 9.95,
         "y": 5.7
       },
       "prevControl": null,
       "nextControl": {
-        "x": 9.100251857146027,
+        "x": 8.950251857146027,
         "y": 5.693568049536967
       },
       "isLocked": false,
@@ -70,7 +70,7 @@
     "rotation": -119.99999999999999
   },
   "reversed": false,
-  "folder": "Algae Stealer & Proc",
+  "folder": "Algae Auto's Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 180.0

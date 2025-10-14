@@ -152,6 +152,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Main Coral",
   "choreoAuto": false
 }

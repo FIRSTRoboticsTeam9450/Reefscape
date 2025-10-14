@@ -3,29 +3,29 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 9.95,
-        "y": 5.7
+        "x": 7.55,
+        "y": 6.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 10.504246841974119,
-        "y": 5.713203142619781
+        "x": 6.549999999999999,
+        "y": 6.0
       },
       "isLocked": false,
-      "linkedName": "BargeScore"
+      "linkedName": null
     },
     {
       "anchor": {
-        "x": 10.667232169555682,
-        "y": 5.7
+        "x": 6.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 10.361879410880022,
-        "y": 5.7051675437072635
+        "x": 7.0,
+        "y": 6.0
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "OSA Backup"
+      "linkedName": null
     }
   ],
   "rotationTargets": [],
@@ -33,7 +33,7 @@
   "pointTowardsZones": [],
   "eventMarkers": [],
   "globalConstraints": {
-    "maxVelocity": 0.5,
+    "maxVelocity": 5.0,
     "maxAcceleration": 4.0,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
@@ -42,13 +42,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
   "folder": "Algae Auto's Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
-  "useDefaultConstraints": false
+  "useDefaultConstraints": true
 }

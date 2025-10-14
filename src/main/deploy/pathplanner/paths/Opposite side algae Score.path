@@ -16,11 +16,11 @@
     },
     {
       "anchor": {
-        "x": 10.1,
+        "x": 9.95,
         "y": 5.7
       },
       "prevControl": {
-        "x": 11.129524260553188,
+        "x": 10.979524260553188,
         "y": 5.695530921777782
       },
       "nextControl": null,
@@ -104,7 +104,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": "Algae Stealer & Proc",
+  "folder": "Algae Auto's Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": -59.99999999999999
