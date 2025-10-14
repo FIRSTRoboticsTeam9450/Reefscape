@@ -78,11 +78,11 @@ public class DiffWristSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = -0.157958984375;
+        cc_cfg.MagnetSensor.MagnetOffset = -0.161376953125;
         rollEncoder.getConfigurator().apply(cc_cfg);
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = 0.562255859375;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.57666015625;
         pitchEncoder.getConfigurator().apply(cc_cfg);
 
         //Diff Wrist Start point
@@ -109,8 +109,8 @@ public class DiffWristSubsystem extends SubsystemBase {
         //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
         pitchVoltage *= 3;
 
-        double lVolts = pitchVoltage + rollVoltage;
-        double rVolts = pitchVoltage - rollVoltage;
+        double lVolts = pitchVoltage - rollVoltage;
+        double rVolts = pitchVoltage + rollVoltage;
         lVolts = MathUtil.clamp(lVolts, -8, 8); // Used to be 8
         rVolts = MathUtil.clamp(rVolts, -8, 8); // Used to be 8
         
