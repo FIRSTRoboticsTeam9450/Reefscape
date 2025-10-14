@@ -50,6 +50,7 @@ public class AlignCommand extends Command {
 
     private SequentialCommandGroup L1ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.1).andThen(new ScoringCommand()));
     private SequentialCommandGroup L3UpAndWait = new SequentialCommandGroup(new WaitCommand(0.15)).andThen(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
+    private SequentialCommandGroup L3ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.25).andThen(new ScoringCommand()));
 
     /* ----- Variables ----- */
     private boolean hasTarget;
@@ -331,6 +332,9 @@ public class AlignCommand extends Command {
             // Scoot forward to scoring position once initial target is reached
             if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.scoreCoralBack);
+                if (score.getDesiredLevel() == 3) {
+                    pose = getAlignPos(map.get(tid), Constants.AlignOffsets.scoreL3Back);
+                }
                 debuggingCenterAlignIssue = "Scoot";
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
@@ -355,11 +359,11 @@ public class AlignCommand extends Command {
             // Rumble controller to let driver know robot is ready to score
             if (atSetpoint()) {
                 controller.setRumble(RumbleType.kBothRumble, 0.5);
-                if (up && !hasScored) {
-                    if (score.getScoringLevel() == 1) {
-                        L1ScoreAndWait.schedule();
+                if (up && !hasScored && score.getDesiredLevel() != 1) {
+                    if (score.getScoringLevel() == 3) {
+                        L3ScoreAndWait.schedule();
                     } else {
-                        new ScoringCommand().schedule();
+                    new ScoringCommand().schedule();
                     }
                     hasScored = true;
                 }

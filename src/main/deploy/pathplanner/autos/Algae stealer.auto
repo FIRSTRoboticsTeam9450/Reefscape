@@ -43,7 +43,7 @@
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "ScoreAndStay"
           }
         },
         {
@@ -53,9 +53,35 @@
           }
         },
         {
-          "type": "path",
+          "type": "parallel",
           "data": {
-            "pathName": "CR to Opposite side Algae"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CR to Opposite side Algae"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CoralStore"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {

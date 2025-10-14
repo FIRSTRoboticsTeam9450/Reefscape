@@ -34,6 +34,7 @@ import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.RotationLock;
 import frc.robot.commands.ScoringCommand;
+import frc.robot.commands.ScoringCommandAuto;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
 import frc.robot.subsystems.ClimbSubsystem;
@@ -213,9 +214,9 @@ public class RobotContainer {
             new RollSideSwitcher(true)
         );
         
-        m_driver1.y().onTrue(
-            new ResetIMUCommand(drivetrain)
-        );
+        // m_driver1.y().onTrue(
+        //     new ResetIMUCommand(drivetrain)
+        // );
 
         // Sticks
         m_driver1.leftStick().whileTrue(
@@ -228,20 +229,23 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.71, 4) //12
+            new ClimbCommand(0.797, 4) //12
         );
 
         // Honestly dont know
-        m_driver1.povLeft().toggleOnTrue(
-            new FieldCentricCommand(
-                drivetrain,
-                () -> -driveBezier.getOutput(m_driver1.getLeftX()),
-                () -> -driveBezier.getOutput(m_driver1.getLeftY()),
-                () -> rotateBezier.getOutput(m_driver1.getRightX())
-            )
-        );
+        // m_driver1.povLeft().toggleOnTrue(
+        //     new FieldCentricCommand(
+        //         drivetrain,
+        //         () -> -driveBezier.getOutput(m_driver1.getLeftX()),
+        //         () -> -driveBezier.getOutput(m_driver1.getLeftY()),
+        //         () -> rotateBezier.getOutput(m_driver1.getRightX())
+        //     )
+        // );
 
         m_driver1.a().whileTrue(new DriveForwardCommand(drivetrain, m_driver1));
+
+        m_driver1.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
+        //m_driver1.x().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2));
                 
         m_driver1.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
@@ -330,10 +334,10 @@ public class RobotContainer {
         );
 
         // Trigger algae intake sequence
-        m_driver2.povDown().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povDown().onTrue(
+        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         m_driver2.leftStick().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
@@ -368,11 +372,13 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.14, 12) //8 degree angle going away from robot
+            new ClimbCommand(0.235, 12) //8 degree angle going away from robot
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.634, 8) //10.5
+            new ClimbCommand(0.68, 8) //10.5
+            .andThen(new CoordinationCommand(ScoringPos.START))
+            .andThen(new InstantCommand(() -> intake.setVoltage(0))) 
         );
 
         m_driver2.povUp().whileTrue(
@@ -443,8 +449,8 @@ public class RobotContainer {
         //m_driver2.rightStick().onTrue(new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new DualIntakeCommand(false)));
         
         // UNCOMMENT FOR MANUAL CLIMB
-        //m_driver1.povRight().onTrue(new InstantCommand(() -> climb.setVoltage(4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
-        //m_driver1.povLeft().onTrue(new InstantCommand(() -> climb.setVoltage(-4))).onFalse(new InstantCommand(() -> climb.setVoltage(0)));
+        // m_driver1.povRight().onTrue(new InstantCommand(() -> climber.setVoltage(4))).onFalse(new InstantCommand(() -> climber.setVoltage(0)));
+        // m_driver1.povLeft().onTrue(new InstantCommand(() -> climber.setVoltage(-4))).onFalse(new InstantCommand(() -> climber.setVoltage(0)));
     }
 
     public static void setLiftUp(boolean up) {
@@ -494,6 +500,7 @@ public class RobotContainer {
 
         // Scoring Actions
         NamedCommands.registerCommand("Score", new ScoringCommand().andThen(new InstantCommand(() -> intake.setHasCoral(false))));
+        NamedCommands.registerCommand("ScoreAndStay", new ScoringCommandAuto().andThen(new InstantCommand(() -> intake.setHasCoral(false))));
         NamedCommands.registerCommand("GoToScore", new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
         NamedCommands.registerCommand("CoralStore", new CoordinationCommand(ScoringPos.CORAL_STORE));
 

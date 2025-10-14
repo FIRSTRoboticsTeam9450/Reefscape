@@ -14,7 +14,7 @@ import frc.robot.subsystems.DualIntakeSubsystem;
  * Command to score a game piece. Automatically determines scoring logic 
  * based on coral or algae detection and scoring position/state.
  */
-public class ScoringCommand extends Command {
+public class ScoringCommandAuto extends Command {
 
     // ----- Subsystem Instances -----
     private final DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
@@ -22,6 +22,7 @@ public class ScoringCommand extends Command {
     private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
     private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
     private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
+    //private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new CoordinationCommand(ScoringPos.ScoreL4));
     private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.ScoreL4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
@@ -50,7 +51,7 @@ public class ScoringCommand extends Command {
     /** Handles the actual scoring based on detected conditions. */
     public void score() {
         if (algae || position == ScoringPos.ALGAE_STORE) {
-            intake.setVoltage(scoreSub.getAlgaeNet() ? -12 : -2);
+            intake.setVoltage(scoreSub.getAlgaeNet() ? -12 : -3);
         } else if (scoreSub.getScoringLevel() == 4) {
             elevAndWait.schedule();
             intake.setVoltage(0.5);
@@ -94,26 +95,5 @@ public class ScoringCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         intake.setVoltage(0);
-
-        if (intake.hasCoral() && !DriverStation.isAutonomous()) {
-            retry.schedule();
-        } else if (!algae && CoordinationSubsytem.autoGround) {
-            if (scoreSub.getDesiredLevel() != 1) {
-                new CoordinationCommand(ScoringPos.CORAL_STORE)
-                    .andThen(new WaitCommand(0.455))
-                    .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
-                        .andThen(new DualIntakeCommand(false))
-                        .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
-                    .schedule();
-            } else {
-                new CoordinationCommand(ScoringPos.CORAL_STORE)
-                .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
-                    .andThen(new DualIntakeCommand(false))
-                    .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
-                .schedule();
-            }
-        } else {
-            store.schedule();
-        }
     }
 }

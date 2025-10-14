@@ -15,7 +15,7 @@ public class RotationLock extends Command{
     private CommandSwerveDrivetrain drive;
     private CommandXboxController controller;
 
-    private PIDController rotatePID = new PIDController(8, 0, 0);
+    private PIDController rotatePID = new PIDController(10, 0, 0);
 
     private BezierCurve driveBezier;
     private double MaxSpeed;

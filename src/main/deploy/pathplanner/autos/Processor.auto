@@ -43,19 +43,39 @@
         {
           "type": "named",
           "data": {
-            "name": "Score"
+            "name": "ScoreAndStay"
           }
         },
         {
-          "type": "wait",
+          "type": "parallel",
           "data": {
-            "waitTime": 0.1
-          }
-        },
-        {
-          "type": "path",
-          "data": {
-            "pathName": "CR To CA"
+            "commands": [
+              {
+                "type": "path",
+                "data": {
+                  "pathName": "CR To CA"
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.1
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CoralStore"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
           }
         },
         {
