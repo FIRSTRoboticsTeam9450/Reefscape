@@ -4,12 +4,16 @@
   "holonomicMode": true,
   "pathFolders": [
     "2 coral",
-    "CenterReef",
+    "Algae Auto's Paths",
+    "Back Reef",
     "Ground3Coral",
     "Ground3CoralRight",
-    "Algae Stealer"
+    "Random (I just want it cleaner)"
   ],
   "autoFolders": [
+    "Main Coral",
+    "Main Algae",
+    "Sparcely Used, yet Finished",
     "Unfinished"
   ],
   "defaultMaxVel": 5.0,

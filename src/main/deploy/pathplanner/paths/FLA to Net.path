@@ -3,40 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 1.4505122950819673,
-        "y": 7.423514344262295
+        "x": 5.215018572781386,
+        "y": 5.285039173786734
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.3650901639344273,
-        "y": 7.192024590163934
+        "x": 6.064462996882159,
+        "y": 6.171831869675954
       },
       "isLocked": false,
-      "linkedName": "LeftSource"
+      "linkedName": "FLA"
     },
     {
       "anchor": {
-        "x": 3.1767418032786883,
-        "y": 4.1748463114754095
+        "x": 7.55,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 2.0858606557377053,
-        "y": 3.9111168032786887
+        "x": 5.873099748104744,
+        "y": 5.99130050290481
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": "FLR"
+      "linkedName": null
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.1855010660980974,
+      "rotationDegrees": -119.99999999999999
+    },
+    {
+      "waypointRelativePos": 0.6631130063965753,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.8399810066476758,
+      "minWaypointRelativePos": 0.7535449020931555,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 0.5,
-        "maxAcceleration": 4.0,
+        "maxVelocity": 0.855,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -47,15 +56,21 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "up",
-      "waypointRelativePos": 0.4639126305792981,
+      "name": "AlgaeStore",
+      "waypointRelativePos": 0.12694125590816185,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "GoToScore"
+          "name": "AlgaeStore"
         }
       }
+    },
+    {
+      "name": "up",
+      "waypointRelativePos": 0.8642808912896264,
+      "endWaypointRelativePos": null,
+      "command": null
     }
   ],
   "globalConstraints": {
@@ -68,13 +83,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 0.20834737080621638
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": "Random (I just want it cleaner)",
+  "folder": "Algae Auto's Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": 125.00000000000001
+    "rotation": -119.99999999999999
   },
   "useDefaultConstraints": true
 }

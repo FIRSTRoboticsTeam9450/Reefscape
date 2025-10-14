@@ -160,7 +160,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": null
+                        "pathName": "BackUp"
                       }
                     }
                   ]
@@ -173,6 +173,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Main Coral",
   "choreoAuto": false
 }

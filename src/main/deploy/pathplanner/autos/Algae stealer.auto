@@ -137,6 +137,6 @@
     }
   },
   "resetOdom": true,
-  "folder": null,
+  "folder": "Main Algae",
   "choreoAuto": false
 }

@@ -71,7 +71,7 @@
     "rotation": 180.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Random (I just want it cleaner)",
   "idealStartingState": {
     "velocity": 0.0,
     "rotation": -172.6462980900178

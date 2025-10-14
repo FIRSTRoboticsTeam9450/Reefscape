@@ -3,45 +3,49 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 8.1,
-        "y": 5.9
+        "x": 5.971,
+        "y": 4.0259
       },
       "prevControl": null,
       "nextControl": {
-        "x": 6.1,
-        "y": 5.9
+        "x": 7.276536885245902,
+        "y": 3.9950307377049183
       },
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CA"
     },
     {
       "anchor": {
-        "x": 1.9147203947368419,
-        "y": 5.7953947368421055
+        "x": 7.55,
+        "y": 4.762243852459016
       },
       "prevControl": {
-        "x": 2.914720394736841,
-        "y": 5.7953947368421055
+        "x": 6.207377049180328,
+        "y": 4.774231557377049
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "CN"
     }
   ],
   "rotationTargets": [
     {
-      "waypointRelativePos": 0.6735187424425643,
-      "rotationDegrees": -90.0
+      "waypointRelativePos": 0.17057569296375652,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.678038379530922,
+      "rotationDegrees": 0.0
     }
   ],
   "constraintZones": [
     {
       "name": "Constraints Zone",
-      "minWaypointRelativePos": 0.6965240641711233,
+      "minWaypointRelativePos": 0.5347738014854838,
       "maxWaypointRelativePos": 1.0,
       "constraints": {
-        "maxVelocity": 2.0,
-        "maxAcceleration": 5.0,
+        "maxVelocity": 0.85,
+        "maxAcceleration": 2.0,
         "maxAngularVelocity": 540.0,
         "maxAngularAcceleration": 720.0,
         "nominalVoltage": 12.0,
@@ -52,26 +56,19 @@
   "pointTowardsZones": [],
   "eventMarkers": [
     {
+      "name": "AlgaeStore",
+      "waypointRelativePos": 0.14044564483456712,
+      "endWaypointRelativePos": null,
+      "command": null
+    },
+    {
       "name": "up",
-      "waypointRelativePos": 0.15,
+      "waypointRelativePos": 0.8,
       "endWaypointRelativePos": null,
       "command": {
-        "type": "sequential",
+        "type": "named",
         "data": {
-          "commands": [
-            {
-              "type": "named",
-              "data": {
-                "name": "CoralL1"
-              }
-            },
-            {
-              "type": "named",
-              "data": {
-                "name": "GoToScore"
-              }
-            }
-          ]
+          "name": "GoToScore"
         }
       }
     }
@@ -86,13 +83,13 @@
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 180.0
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Algae Auto's Paths",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -90.0
+    "rotation": 180.0
   },
   "useDefaultConstraints": true
 }

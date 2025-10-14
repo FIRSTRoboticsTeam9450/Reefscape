@@ -3,25 +3,25 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 2.0,
-        "y": 7.0
+        "x": 7.55,
+        "y": 6.0
       },
       "prevControl": null,
       "nextControl": {
-        "x": 2.1697745901639345,
-        "y": 5.63734631147541
+        "x": 6.549999999999999,
+        "y": 6.0
       },
       "isLocked": false,
       "linkedName": null
     },
     {
       "anchor": {
-        "x": 4.783094262295082,
-        "y": 1.2977971311475414
+        "x": 6.0,
+        "y": 6.0
       },
       "prevControl": {
-        "x": 4.9269467213114755,
-        "y": 3.7432889344262295
+        "x": 7.0,
+        "y": 6.0
       },
       "nextControl": null,
       "isLocked": false,
@@ -45,7 +45,7 @@
     "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Algae Auto's Paths",
   "idealStartingState": {
     "velocity": 0,
     "rotation": 0.0

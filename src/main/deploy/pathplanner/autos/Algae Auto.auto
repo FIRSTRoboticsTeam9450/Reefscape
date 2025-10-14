@@ -13,7 +13,7 @@
         {
           "type": "named",
           "data": {
-            "name": "CoralStore"
+            "name": "StopBackVision"
           }
         },
         {
@@ -26,6 +26,12 @@
           "type": "named",
           "data": {
             "name": "CoralL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
           }
         },
         {
@@ -43,63 +49,37 @@
         {
           "type": "named",
           "data": {
-            "name": "ScoreAndStay"
-          }
-        },
-        {
-          "type": "parallel",
-          "data": {
-            "commands": [
-              {
-                "type": "path",
-                "data": {
-                  "pathName": "CR To CA"
-                }
-              },
-              {
-                "type": "sequential",
-                "data": {
-                  "commands": [
-                    {
-                      "type": "wait",
-                      "data": {
-                        "waitTime": 0.1
-                      }
-                    },
-                    {
-                      "type": "named",
-                      "data": {
-                        "name": "CoralStore"
-                      }
-                    }
-                  ]
-                }
-              }
-            ]
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "Proc"
+            "name": "Score"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.075
-          }
-        },
-        {
-          "type": "named",
-          "data": {
-            "name": "StopBackVision"
+            "waitTime": 0.9
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "CA To Proc"
+            "pathName": "CR To CA"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "CA to Net"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
           }
         },
         {
@@ -109,21 +89,33 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.9
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Proc To LA"
+            "pathName": "Net to FLA"
           }
         },
         {
           "type": "wait",
           "data": {
-            "waitTime": 0.075
+            "waitTime": 0.1
           }
         },
         {
           "type": "path",
           "data": {
-            "pathName": "LA To Proc"
+            "pathName": "FLA to Net"
+          }
+        },
+        {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.1
           }
         },
         {
@@ -133,9 +125,15 @@
           }
         },
         {
+          "type": "wait",
+          "data": {
+            "waitTime": 0.9
+          }
+        },
+        {
           "type": "path",
           "data": {
-            "pathName": "Proc Backup"
+            "pathName": "Net Backup"
           }
         }
       ]
