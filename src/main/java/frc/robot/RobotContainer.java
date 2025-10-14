@@ -32,6 +32,7 @@ import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
+import frc.robot.commands.RotationLock;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
@@ -227,7 +228,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.742, 4) //12
+            new ClimbCommand(0.71, 4) //12
         );
 
         // Honestly dont know
@@ -351,8 +352,12 @@ public class RobotContainer {
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
 
-        m_driver2.rightBumper().onTrue(
+        m_driver2.povDown().onTrue(
             new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        );
+
+        m_driver2.rightBumper().onTrue(
+            new RollSideSwitcher(true)
         );
 
 
@@ -363,11 +368,15 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.17, 12) //8 degree angle going away from robot
+            new ClimbCommand(0.14, 12) //8 degree angle going away from robot
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.664, 8) //10.5
+            new ClimbCommand(0.634, 8) //10.5
+        );
+
+        m_driver2.povUp().whileTrue(
+            new RotationLock(drivetrain, m_driver1, driveBezier, MaxSpeed)
         );
 
         /* ----- Disabled Keybinds ----- */
