@@ -1,0 +1,93 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.217,
+        "y": 4.179
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.481454918032787,
+        "y": 5.577407786885245
+      },
+      "isLocked": false,
+      "linkedName": "DL"
+    },
+    {
+      "anchor": {
+        "x": 1.4984631147540983,
+        "y": 5.659
+      },
+      "prevControl": {
+        "x": 2.99764882331817,
+        "y": 5.657342160297999
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BackReef LeftCoral test"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.1,
+      "rotationDegrees": 0.0
+    },
+    {
+      "waypointRelativePos": 0.3454157782516,
+      "rotationDegrees": 170.0
+    },
+    {
+      "waypointRelativePos": 0.85,
+      "rotationDegrees": 180.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.8507765023632671,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.9,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 810.0,
+        "maxAngularAcceleration": 1440.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "CoralIntake",
+      "waypointRelativePos": 0.15,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "CoralIntake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 3.5,
+    "maxAcceleration": 3.5,
+    "maxAngularVelocity": 810.0,
+    "maxAngularAcceleration": 1440.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "reversed": false,
+  "folder": "Smart Auto Test",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": false
+}

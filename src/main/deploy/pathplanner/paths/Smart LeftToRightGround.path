@@ -1,0 +1,85 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.2227459016393443,
+        "y": 5.2
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 1.1867827868852459,
+        "y": 4.186834016393442
+      },
+      "isLocked": false,
+      "linkedName": "LeftCoralDown"
+    },
+    {
+      "anchor": {
+        "x": 1.225,
+        "y": 2.868186475409835
+      },
+      "prevControl": {
+        "x": 1.2467213114754097,
+        "y": 3.635399590163934
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "RightCoralUp"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.6183368869935881,
+      "rotationDegrees": -90.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.748143146522621,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.6,
+        "maxAcceleration": 2.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "CoralIntake",
+      "waypointRelativePos": 0.5806887238352203,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "CoralIntake"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 5.0,
+    "maxAcceleration": 4.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -90.0
+  },
+  "reversed": false,
+  "folder": "Smart Auto Test",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 90.0
+  },
+  "useDefaultConstraints": true
+}

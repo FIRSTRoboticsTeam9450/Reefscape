@@ -8,11 +8,13 @@
     "Back Reef",
     "Ground3Coral",
     "Ground3CoralRight",
+    "Smart Auto Test",
     "Random (I just want it cleaner)"
   ],
   "autoFolders": [
-    "Main Coral",
     "Main Algae",
+    "Main Coral",
+    "Smart Autos",
     "Sparcely Used, yet Finished",
     "Unfinished"
   ],

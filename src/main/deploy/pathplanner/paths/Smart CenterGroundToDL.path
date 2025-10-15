@@ -1,0 +1,71 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.8221311475409834,
+        "y": 4.016
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.4980095721985185,
+        "y": 4.235718321917807
+      },
+      "isLocked": false,
+      "linkedName": "CenterCoralStraight"
+    },
+    {
+      "anchor": {
+        "x": 3.217,
+        "y": 4.179
+      },
+      "prevControl": {
+        "x": 2.217,
+        "y": 4.179
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "DL"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.68,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "up",
+      "waypointRelativePos": 0.75,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "GoToScore"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 1620.0,
+    "maxAngularAcceleration": 2160.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Smart Auto Test",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

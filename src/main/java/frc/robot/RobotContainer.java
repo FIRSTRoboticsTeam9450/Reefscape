@@ -10,15 +10,18 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.pathplanner.lib.auto.NamedCommands;
+import com.pathplanner.lib.commands.PathPlannerAuto;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
+import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AlignPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlgaeAlignCommand;
@@ -128,6 +131,12 @@ public class RobotContainer {
         registeredCommands();
 
         autoChooser = new SendableChooser<>();
+        configureAutos();
+
+    }
+
+    private void configureAutos() {
+        
         autoChooser.setDefaultOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
@@ -139,6 +148,49 @@ public class RobotContainer {
         autoChooser.addOption("Algae Steal", drivetrain.getAutoPath("Algae stealer", false));
         autoChooser.addOption("Processor", drivetrain.getAutoPath("Processor", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
+
+
+        //Back Reef Auto with hopefully the ability to detect if we have successfuly grabbed a coral, and if not go grab a diff one
+        Command smartAutoTestFull = 
+            Commands.sequence(
+
+                new PathPlannerAuto("Smart Auto Start"),
+
+                Commands.either(
+                    Commands.sequence(
+                        new PathPlannerAuto("Smart Auto Grabbed"),
+                        Commands.either(
+                            new PathPlannerAuto("Smart Auto Grabbed Grabbed"),
+                            new PathPlannerAuto("Smart Auto Grabbed Missed"),
+                            intake::hasCoral
+                        )
+                    ),
+                    Commands.sequence(
+                        new PathPlannerAuto("Smart Auto Missed"),
+                        Commands.either(
+                            new PathPlannerAuto("Smart Auto Missed Grabbed"),
+                            new PathPlannerAuto("Smart Auto Missed Missed"),
+                            intake::hasCoral
+                        )
+                    ),
+                    intake::hasCoral
+                )
+
+            );
+        autoChooser.addOption("Smart Auto Test Full", smartAutoTestFull);
+
+
+
+        Command smartAutoTestSimple = 
+            Commands.sequence(
+                new PathPlannerAuto("Smart Auto Start"),
+                Commands.either(
+                    new PathPlannerAuto("Smart Auto Grabbed"), 
+                    new PathPlannerAuto("Smart Auto Missed"), 
+                    intake::hasCoral)
+            );
+        autoChooser.addOption("Smart Auto Test Simple", smartAutoTestSimple);
+
     }
 
     private void configureBindings() {
@@ -172,8 +224,6 @@ public class RobotContainer {
         // reset the field-centric heading on left bumper press
 
         drivetrain.registerTelemetry(logger::telemeterize);
-
-
 
 
 
