@@ -78,11 +78,11 @@ public class DiffWristSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = -0.158203125;
+        cc_cfg.MagnetSensor.MagnetOffset = -0.161376953125;
         rollEncoder.getConfigurator().apply(cc_cfg);
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.2;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = 0.562255859375;
+        cc_cfg.MagnetSensor.MagnetOffset = 0.57666015625;
         pitchEncoder.getConfigurator().apply(cc_cfg);
 
         //Diff Wrist Start point
@@ -231,7 +231,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public boolean atRollSetpoint() {
         double rollAngle = getRollAngle();
         double rollSetpoint = getRollSetpoint();
-        if ((rollAngle > rollSetpoint - 10) && (rollAngle < rollSetpoint + 10)) {
+        if ((rollAngle > rollSetpoint - 10) && (rollAngle < rollSetpoint + 10)) { // used to be 10
             return true;
         }
         return false;
