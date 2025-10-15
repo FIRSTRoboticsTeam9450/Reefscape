@@ -627,7 +627,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 case 1:
                     coralScorePitch = -180; // was -230
                     coralScoreElbow = 62;
-                    coralScoreElev = 4;
+                    coralScoreElev = 3;
                     DW.setRollSetpoint(0);
                     break;
                 case 2:
