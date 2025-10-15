@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.217,
+        "y": 3.852
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 2.5413934426229505,
+        "y": 3.8511782786885242
+      },
+      "isLocked": false,
+      "linkedName": "DR"
+    },
+    {
+      "anchor": {
+        "x": 2.5,
+        "y": 3.857
+      },
+      "prevControl": {
+        "x": 2.9849385245901634,
+        "y": 3.839190573770491
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 3.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Smart Auto Test",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "useDefaultConstraints": false
+}

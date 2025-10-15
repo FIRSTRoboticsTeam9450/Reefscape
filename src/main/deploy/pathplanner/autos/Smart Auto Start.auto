@@ -1,0 +1,94 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "StartVision"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralL4"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "IntakeHold"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Smart StartToDR"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "parallel",
+          "data": {
+            "commands": [
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "wait",
+                      "data": {
+                        "waitTime": 0.06
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "Score"
+                      }
+                    }
+                  ]
+                }
+              },
+              {
+                "type": "sequential",
+                "data": {
+                  "commands": [
+                    {
+                      "type": "path",
+                      "data": {
+                        "pathName": "Smart DRToCenterGround"
+                      }
+                    },
+                    {
+                      "type": "named",
+                      "data": {
+                        "name": "CoralStore"
+                      }
+                    }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Smart Autos",
+  "choreoAuto": false
+}

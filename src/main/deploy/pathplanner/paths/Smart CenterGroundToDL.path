@@ -3,64 +3,69 @@
   "waypoints": [
     {
       "anchor": {
-        "x": 3.9919057377049176,
-        "y": 5.205788934426229
+        "x": 1.8221311475409834,
+        "y": 4.016
       },
       "prevControl": null,
       "nextControl": {
-        "x": 3.324915941786551,
-        "y": 5.532982811977249
+        "x": 2.4980095721985185,
+        "y": 4.235718321917807
       },
       "isLocked": false,
-      "linkedName": "BLL"
+      "linkedName": "CenterCoralStraight"
     },
     {
       "anchor": {
-        "x": 1.4145491803278687,
-        "y": 7.507428278688524
+        "x": 3.217,
+        "y": 4.179
       },
       "prevControl": {
-        "x": 2.6296875644486413,
-        "y": 6.599498711313629
+        "x": 2.217,
+        "y": 4.179
       },
       "nextControl": null,
       "isLocked": false,
-      "linkedName": null
+      "linkedName": "DL"
     }
   ],
-  "rotationTargets": [],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.68,
+      "rotationDegrees": 0.0
+    }
+  ],
   "constraintZones": [],
   "pointTowardsZones": [],
   "eventMarkers": [
     {
-      "name": "IntakeSource",
-      "waypointRelativePos": 0.7203228869895572,
+      "name": "up",
+      "waypointRelativePos": 0.75,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
         "data": {
-          "name": "IntakeSource"
+          "name": "GoToScore"
         }
       }
     }
   ],
   "globalConstraints": {
-    "maxVelocity": 5.0,
-    "maxAcceleration": 4.0,
-    "maxAngularVelocity": 540.0,
-    "maxAngularAcceleration": 720.0,
+    "maxVelocity": 1.0,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 1620.0,
+    "maxAngularAcceleration": 2160.0,
     "nominalVoltage": 12.0,
     "unlimited": false
   },
   "goalEndState": {
     "velocity": 0,
-    "rotation": 125.00000000000001
+    "rotation": 0.0
   },
   "reversed": false,
-  "folder": null,
+  "folder": "Smart Auto Test",
   "idealStartingState": {
     "velocity": 0,
-    "rotation": -59.99999999999999
+    "rotation": 180.0
   },
-  "useDefaultConstraints": true
+  "useDefaultConstraints": false
 }

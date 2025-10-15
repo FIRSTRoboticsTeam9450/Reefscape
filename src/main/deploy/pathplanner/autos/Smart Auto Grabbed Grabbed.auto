@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralL3"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Smart LeftGroundToDL"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "Smart DLBackUp"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Smart Autos",
+  "choreoAuto": false
+}
