@@ -152,7 +152,21 @@ public class AlignCommand extends Command {
         algae = intake.hasAlgae();
 
         // grab target tag from limelight to align to
-        int seenTid = (int)LimelightHelpers.getFiducialID("limelight-coral");
+
+
+
+
+
+
+        // VVVVVVVVVVVVVVVVVVVVVVVVVVVV uncomment to add front ll back to auto align
+        // int seenTid = (int)LimelightHelpers.getFiducialID("limelight-coral");
+        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+
+
+
+
+        int seenTid = -1;
         if (!map.containsKey(seenTid)) {
             seenTid = (int)LimelightHelpers.getFiducialID("limelight-back");
             usedBackLL = true;

@@ -50,7 +50,7 @@ public class ScoringCommand extends Command {
     /** Handles the actual scoring based on detected conditions. */
     public void score() {
         if (algae || position == ScoringPos.ALGAE_STORE) {
-            intake.setVoltage(scoreSub.getAlgaeNet() ? -12 : -2);
+            intake.setVoltage(scoreSub.getAlgaeNet() ? -5 : -2);
         } else if (scoreSub.getScoringLevel() == 4) {
             elevAndWait.schedule();
             intake.setVoltage(0.5);
