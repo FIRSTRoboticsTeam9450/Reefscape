@@ -1,0 +1,43 @@
+{
+  "version": "2025.0",
+  "command": {
+    "type": "sequential",
+    "data": {
+      "commands": [
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS Intake 1 to Intake 2"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "CoralStore"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS Intake 2 To Score"
+          }
+        },
+        {
+          "type": "named",
+          "data": {
+            "name": "Score"
+          }
+        },
+        {
+          "type": "path",
+          "data": {
+            "pathName": "SS Backup"
+          }
+        }
+      ]
+    }
+  },
+  "resetOdom": true,
+  "folder": "Small Smart Auto",
+  "choreoAuto": false
+}

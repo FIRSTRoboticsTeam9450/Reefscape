@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 2.8530737704918034,
+        "y": 6.524436475409836
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.536372950819672,
+        "y": 5.373616803278688
+      },
+      "isLocked": false,
+      "linkedName": null
+    },
+    {
+      "anchor": {
+        "x": 3.7042008196721308,
+        "y": 5.04
+      },
+      "prevControl": {
+        "x": 3.2127049180327862,
+        "y": 5.937038934426229
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BLR"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "up",
+      "waypointRelativePos": 0.5617825793382778,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "GoToScore"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.85,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "reversed": false,
+  "folder": "Small Smart Auto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "useDefaultConstraints": false
+}

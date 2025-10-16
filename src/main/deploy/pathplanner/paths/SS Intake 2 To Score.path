@@ -1,0 +1,66 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 1.949,
+        "y": 5.706
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.0448770491803274,
+        "y": 6.272694672131147
+      },
+      "isLocked": false,
+      "linkedName": "SS Intake 2"
+    },
+    {
+      "anchor": {
+        "x": 3.972,
+        "y": 5.246
+      },
+      "prevControl": {
+        "x": 3.380532786885246,
+        "y": 6.1648053278688515
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "BLL"
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "up",
+      "waypointRelativePos": 0.7427413909520523,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "GoToScore"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 0.85,
+    "maxAcceleration": 2.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "reversed": false,
+  "folder": "Small Smart Auto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "useDefaultConstraints": false
+}

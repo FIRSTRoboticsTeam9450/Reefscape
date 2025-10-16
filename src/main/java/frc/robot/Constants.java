@@ -72,6 +72,11 @@ public final class Constants {
     public static final int kEncoderID = 28;
   }
 
+  public static class AlignConstants {
+    public static final boolean runFrontLL = true;
+    public static final boolean runBackLL = true;
+  }
+
   // =========================
   // Field Alignment Offsets
   // =========================

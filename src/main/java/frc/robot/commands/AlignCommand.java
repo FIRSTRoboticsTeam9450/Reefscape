@@ -39,8 +39,8 @@ public class AlignCommand extends Command {
     private HashMap<Integer, double[]> map = new HashMap<>();
 
     /* ----- PIDs ----- */
-    private PIDController pidX = new PIDController(6, 0, 0);
-    private PIDController pidY = new PIDController(6, 0, 0);
+    private PIDController pidX = new PIDController(4.5, 0, 0);
+    private PIDController pidY = new PIDController(4.5, 0, 0);
     private PIDController pidRotate = new PIDController(8, 0, 0);
 
     /* ----- Subsystem Instances ----- */
@@ -78,6 +78,9 @@ public class AlignCommand extends Command {
     private boolean onRedSide;
 
     private String debuggingCenterAlignIssue = "Null";
+
+    private boolean runFrontLL;
+    private boolean runBackLL;
     
     // Controller rumbles when at setpoint
     CommandXboxController controller;
@@ -142,6 +145,9 @@ public class AlignCommand extends Command {
         usedBackLL = false;
         currentX = currentPose.getX();
 
+        runFrontLL = Constants.AlignConstants.runFrontLL;
+        runBackLL = Constants.AlignConstants.runBackLL;
+
         if (currentX > 8.775) {
             onRedSide = true;
         } else {
@@ -152,22 +158,11 @@ public class AlignCommand extends Command {
         algae = intake.hasAlgae();
 
         // grab target tag from limelight to align to
-
-
-
-
-
-
-        // VVVVVVVVVVVVVVVVVVVVVVVVVVVV uncomment to add front ll back to auto align
-        // int seenTid = (int)LimelightHelpers.getFiducialID("limelight-coral");
-        // ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-
-
-
-
-
         int seenTid = -1;
-        if (!map.containsKey(seenTid)) {
+        if (runFrontLL) {
+            seenTid = (int)LimelightHelpers.getFiducialID("limelight-coral");
+        }
+        if (!map.containsKey(seenTid) && runBackLL) {
             seenTid = (int)LimelightHelpers.getFiducialID("limelight-back");
             usedBackLL = true;
         }
@@ -267,6 +262,7 @@ public class AlignCommand extends Command {
      */
     @Override
     public void execute() {
+        Logger.recordOutput("Reefscape/Align/FL Drive AMP Pull", drive.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
 
         if (currentX > 8.775) {
             onRedSide = true;
@@ -275,6 +271,8 @@ public class AlignCommand extends Command {
         }
         Logger.recordOutput("Reefscape/Align/On Red Side?", onRedSide);
         Logger.recordOutput("Reefscape/Align/Debugging centering issue", debuggingCenterAlignIssue);
+        Logger.recordOutput("Reefscape/Align/Running Front LL", runFrontLL);
+        Logger.recordOutput("Reefscape/Align/Running Back LL", runBackLL);
 
         // hasCoral = intake.hasCoral();
         robotRotation = drive.getState().Pose.getRotation().getDegrees();
@@ -299,13 +297,9 @@ public class AlignCommand extends Command {
         }
 
         // Raise elevator right away for L1-3
-        if (!score.getAlgae() && score.getDesiredLevel() != 4 && !up && hasCoral && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_COMBINED)) {
+        if (!score.getAlgae() && score.getDesiredLevel() == 1 && !up && hasCoral && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_COMBINED)) {
             up = true;
-            if (score.getDesiredLevel() == 3) {
-                L3UpAndWait.schedule();
-            } else {
-                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
-            }
+            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
 
         if (algae) {
@@ -360,6 +354,13 @@ public class AlignCommand extends Command {
                 pidX.setSetpoint(pose[0]);
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
+            }
+
+            if (atSetpoint(0.5, 0.8)) {
+                if (score.getDesiredLevel() != 4 && !up && !score.getAlgae() && hasCoral) {
+                    up = true;
+                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                }
             }
 
             // Send elevator up if within tolerance at L4

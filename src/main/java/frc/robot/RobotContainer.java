@@ -191,6 +191,17 @@ public class RobotContainer {
             );
         autoChooser.addOption("Smart Auto Test Simple", smartAutoTestSimple);
 
+        Command smallSmartAuto =
+            Commands.sequence(
+                new PathPlannerAuto("SS Start"),
+                Commands.either(
+                    new PathPlannerAuto("SS Grabbed"), 
+                    new PathPlannerAuto("SS Missed"), 
+                    intake::hasCoral
+                )
+            );
+        autoChooser.addOption("Small Smart Auto", smallSmartAuto);
+
     }
 
     private void configureBindings() {
@@ -279,7 +290,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver1.povRight().onTrue(
-            new ClimbCommand(0.797, 4) //12
+            new ClimbCommand(0.822, 4) //12
         );
 
         // Honestly dont know
@@ -422,11 +433,11 @@ public class RobotContainer {
         m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_driver2.povLeft().onTrue(
-            new ClimbCommand(0.235, 12) //8 degree angle going away from robot
+            new ClimbCommand(0.257, 12) //8 degree angle going away from robot
                 .andThen(new CoordinationCommand(ScoringPos.START))
         );
         m_driver2.povRight().onTrue(
-            new ClimbCommand(0.68, 8) //10.5
+            new ClimbCommand(0.702, 8) //10.5
             .andThen(new CoordinationCommand(ScoringPos.START))
             .andThen(new InstantCommand(() -> intake.setVoltage(0))) 
         );

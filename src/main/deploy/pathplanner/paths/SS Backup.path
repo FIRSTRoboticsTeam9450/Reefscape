@@ -1,0 +1,54 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 3.972,
+        "y": 5.246
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 3.800102459016393,
+        "y": 5.529456967213114
+      },
+      "isLocked": false,
+      "linkedName": "BLL"
+    },
+    {
+      "anchor": {
+        "x": 3.512397540983606,
+        "y": 6.0928790983606556
+      },
+      "prevControl": {
+        "x": 3.65625,
+        "y": 5.865112704918032
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": null
+    }
+  ],
+  "rotationTargets": [],
+  "constraintZones": [],
+  "pointTowardsZones": [],
+  "eventMarkers": [],
+  "globalConstraints": {
+    "maxVelocity": 0.5,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "reversed": false,
+  "folder": "Small Smart Auto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": -59.99999999999999
+  },
+  "useDefaultConstraints": false
+}
