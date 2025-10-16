@@ -31,7 +31,6 @@ public class CoordinationCommand extends Command {
 
     public CoordinationCommand(ScoringPos pos) {
         
-        System.out.println("Pos: " + pos);
         this.targetPos = pos;
         currentPos = CT.getPos();
         this.mode = false;

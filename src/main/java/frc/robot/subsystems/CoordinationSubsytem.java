@@ -404,7 +404,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToL1Store() {
         DW.setRollSetpoint(0);
         DW.setPitchSetpoint(-70);
-        Elev.setSetpoint(1);
+        Elev.setSetpoint(0);
         Elbow.setSetpoint(67);
 
         if (DW.atRollSetpoint()
@@ -496,7 +496,7 @@ public class CoordinationSubsytem extends SubsystemBase{
  
     public void goToCoralIntake() {
         DW.setPitchSetpoint(Constants.robotConfig.getPitchGroundPos()); // OLD: -129
-        DW.setRollSetpoint(0); 
+        DW.setRollSetpoint(0);
         Elbow.setSetpoint(Constants.robotConfig.getElbowGroundPos());
         Elev.setSetpoint(0);
 
@@ -636,7 +636,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 6.5;
                     } else {
-                        coralScoreElev = 5.5; //Comp: 3.75
+                        coralScoreElev = 4.5; //Comp: 3.75         used to be 5.5
                     }
                     //rollToClosestSide();
                     break;
@@ -646,7 +646,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 15.25;
                     } else {
-                        coralScoreElev = 14.25;
+                        coralScoreElev = 13.25; // used to b 14.25
 
                     }
                     //rollToClosestSide();
@@ -705,7 +705,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             Elev.setSetpoint(coralScoreElev);
             rollToClosestSide();
             if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
-                System.out.println("ROLLINGGGGGGGGGGGGGGGGGGGGgggggggggggggggg");
+                
             }
         } else {
             DW.setPitchSetpoint(coralScorePitch);

@@ -250,7 +250,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         m_request = new DynamicMotionMagicVoltage(0, 1, 1, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84
         leftMotor.setControl(m_request.withPosition(-.5));
         if(Math.abs(leftMotor.getVelocity().getValueAsDouble()) < 0.1 ) {
-            System.out.println("WORKS :)");
+            // System.out.println("WORKS :)");
             offset = leftMotor.getPosition().getValueAsDouble();
             setSetpoint(0);
             m_request = new DynamicMotionMagicVoltage(0, 1, 1, jerk);//.withEnableFOC(true); //FOC slowed us down from 0.82 to 0.84

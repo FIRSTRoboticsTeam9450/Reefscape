@@ -5,6 +5,7 @@ import org.littletonrobotics.junction.Logger;
 import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
+import com.ctre.phoenix6.controls.VoltageOut;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
@@ -187,7 +188,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public double getRollAngle() {
         return rollPos * 360;// / 1.0957;
     }
-
+    
     /**
      * Sets both of the motors is the Diff Wrist system to same voltage
      * Temporary way of usage, use till deemed safe to use a PID
@@ -195,8 +196,10 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @param rightVoltage voltage to set right motor to
      */
     public void setVoltage(double leftVoltage, double rightVoltage) {
-        leftMotor.setVoltage(leftVoltage);
-        rightMotor.setVoltage(rightVoltage);
+        leftMotor.setControl(new VoltageOut(leftVoltage).withEnableFOC(true));
+        rightMotor.setControl(new VoltageOut(rightVoltage).withEnableFOC(true));
+        // leftMotor.setVoltage(leftVoltage);
+        // rightMotor.setVoltage(rightVoltage);
     }
 
     /**
