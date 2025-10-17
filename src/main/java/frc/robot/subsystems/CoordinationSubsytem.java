@@ -251,6 +251,17 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     @Override
     public void periodic() {
+        if (DriverStation.isAutonomous()) {
+            autoGround = false;
+            onlyOnce = false;
+        } else if(DriverStation.isTeleop() && !onlyOnce) {
+            autoGround = true;
+            onlyOnce = true;
+            desiredLevel = 1;
+            level = 1;
+            setScoringLevel(1);
+        }
+
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
