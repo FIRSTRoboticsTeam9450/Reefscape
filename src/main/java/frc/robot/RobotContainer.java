@@ -403,8 +403,14 @@ public class RobotContainer {
         );
 
         // Vision Control
-        NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = true));
-        NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.visionOverride = false));
+        NamedCommands.registerCommand("StopVision", new InstantCommand(() -> CommandSwerveDrivetrain.completeVisionOverride = true));
+        NamedCommands.registerCommand("StartVision", new InstantCommand(() -> CommandSwerveDrivetrain.completeVisionOverride = false));
+
+        NamedCommands.registerCommand("StopFrontVision", new InstantCommand(() -> CommandSwerveDrivetrain.frontVisionOverride = true));
+        NamedCommands.registerCommand("StartFrontVision", new InstantCommand(() -> CommandSwerveDrivetrain.frontVisionOverride = false));
+
+        NamedCommands.registerCommand("StopBackVision", new InstantCommand(() -> CommandSwerveDrivetrain.backVisionOverride = true));
+        NamedCommands.registerCommand("StartBackVision", new InstantCommand(() -> CommandSwerveDrivetrain.backVisionOverride = false));
 
         // Wait Logic
         NamedCommands.registerCommand("WaitForCoral", new WaitForLaserCommand());
