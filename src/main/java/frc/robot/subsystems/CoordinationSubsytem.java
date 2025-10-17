@@ -10,6 +10,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.debugging;
+import frc.robot.LimelightHelpers;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.Constants;
 
@@ -49,6 +50,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Score_L4_Set = new HashSet<>();
     private Set<ScoringPos> Algae_L1_Set = new HashSet<>();
     private Set<ScoringPos> Algae_L2_Set = new HashSet<>();
+    private Set<ScoringPos> Algae_L3_Set = new HashSet<>();
+    private Set<ScoringPos> Algae_Combined_Set = new HashSet<>();
     private Set<ScoringPos> Algae_Grabbed_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Score_Go_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet<>();
@@ -57,8 +60,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     
     boolean algae;
 
-    private int level = 3;
-    private int desiredLevel = 3;
+    private int level = 1;
+    private int desiredLevel = 1;
 
     private boolean algaeNet = true;
     private boolean desiredAlgaeNet = true;
@@ -86,10 +89,18 @@ public class CoordinationSubsytem extends SubsystemBase{
     ScoringPos lastPos = ScoringPos.START;
 
     private double justACoupleMore = 0;
+    
+    private boolean onlyOnce;
+    private boolean combinedAlgae;
+
+    private int tid;
     /**
      * gets the starting angle / position of the encoders
      */
     private CoordinationSubsytem() {
+        onlyOnce = false;
+        combinedAlgae = false;
+        autoGround = false;
         pos = ScoringPos.START;
 
         rollEncoder = DW.getRollAngle();
@@ -107,6 +118,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Store_Set.add(ScoringPos.INTAKE_SOURCE);
         Coral_Store_Set.add(ScoringPos.INTAKE_VERTICAL_CORAL);
         Coral_Store_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Coral_Store_Set.add(ScoringPos.AlgaeL3);
+        Coral_Store_Set.add(ScoringPos.ALGAE_COMBINED);
 
         Coral_Store_Set.add(ScoringPos.ALGAEL1);
         Coral_Store_Set.add(ScoringPos.ALGAEL2);
@@ -118,6 +131,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Intake_Set.add(ScoringPos.INTAKE_SOURCE);
         Coral_Intake_Set.add(ScoringPos.ALGAEL1);
         Coral_Intake_Set.add(ScoringPos.ALGAEL2);
+        Coral_Intake_Set.add(ScoringPos.AlgaeL3);
         Coral_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
         Coral_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
@@ -129,6 +143,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Intake_Set.add(ScoringPos.ALGAE_STORE);
         Algae_Intake_Set.add(ScoringPos.ALGAEL1);
         Algae_Intake_Set.add(ScoringPos.ALGAEL2);
+        Algae_Intake_Set.add(ScoringPos.AlgaeL3);
+        Algae_Intake_Set.add(ScoringPos.ALGAE_COMBINED);
         Algae_Intake_Set.add(ScoringPos.INTAKE_CORAL);
         Algae_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
 
@@ -138,6 +154,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Store_Set.add(ScoringPos.CORAL_STORE); //temp
         Algae_Store_Set.add(ScoringPos.ALGAEL1);
         Algae_Store_Set.add(ScoringPos.ALGAEL2);
+        Algae_Store_Set.add(ScoringPos.AlgaeL3);
+        Algae_Store_Set.add(ScoringPos.ALGAE_COMBINED);
         Algae_Store_Set.add(ScoringPos.GRABBED_ALGAE);
         Algae_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
         Algae_Store_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
@@ -175,6 +193,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_L1_Set.add(ScoringPos.CORAL_STORE);
         Algae_L1_Set.add(ScoringPos.INTAKE_ALGAE);
         Algae_L1_Set.add(ScoringPos.ALGAEL2);
+        Algae_L1_Set.add(ScoringPos.AlgaeL3);
+        Algae_L1_Set.add(ScoringPos.ALGAE_COMBINED);
         Algae_L1_Set.add(ScoringPos.GO_SCORE_CORAL);
         Algae_L1_Set.add(ScoringPos.INTAKE_CORAL);
         Algae_L1_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
@@ -185,9 +205,34 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_L2_Set.add(ScoringPos.CORAL_STORE);
         Algae_L2_Set.add(ScoringPos.INTAKE_ALGAE);
         Algae_L2_Set.add(ScoringPos.ALGAEL1);
+        Algae_L2_Set.add(ScoringPos.AlgaeL3);
+        Algae_L2_Set.add(ScoringPos.ALGAE_COMBINED);
         Algae_L2_Set.add(ScoringPos.GO_SCORE_CORAL);
         Algae_L2_Set.add(ScoringPos.INTAKE_CORAL);
         Algae_L2_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+
+        Algae_L3_Set.add(ScoringPos.ALGAE_STORE);
+        Algae_L3_Set.add(ScoringPos.SCORE_PROCESSOR);
+        Algae_L3_Set.add(ScoringPos.GRABBED_ALGAE);
+        Algae_L3_Set.add(ScoringPos.CORAL_STORE);
+        Algae_L3_Set.add(ScoringPos.INTAKE_ALGAE);
+        Algae_L3_Set.add(ScoringPos.ALGAEL1);
+        Algae_L3_Set.add(ScoringPos.ALGAEL2);
+        Algae_L3_Set.add(ScoringPos.ALGAE_COMBINED);
+        Algae_L3_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Algae_L3_Set.add(ScoringPos.INTAKE_CORAL);
+        Algae_L3_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+
+        Algae_Combined_Set.add(ScoringPos.ALGAE_STORE);
+        Algae_Combined_Set.add(ScoringPos.CORAL_STORE);
+        Algae_Combined_Set.add(ScoringPos.GRABBED_ALGAE);
+        Algae_Combined_Set.add(ScoringPos.INTAKE_ALGAE);
+        Algae_Combined_Set.add(ScoringPos.ALGAEL1);
+        Algae_Combined_Set.add(ScoringPos.ALGAEL2);
+        Algae_Combined_Set.add(ScoringPos.AlgaeL3);
+        Algae_Combined_Set.add(ScoringPos.SCORE_PROCESSOR);
+        Algae_Combined_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Algae_Combined_Set.add(ScoringPos.INTAKE_CORAL);
 
         Coral_Score_Go_Set.add(ScoringPos.CORAL_STORE);
         Coral_Score_Go_Set.add(ScoringPos.SCORE_CORAL);
@@ -199,6 +244,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Grabbed_Set.add(ScoringPos.SCORE_NET);
         Algae_Grabbed_Set.add(ScoringPos.ALGAEL1);
         Algae_Grabbed_Set.add(ScoringPos.ALGAEL2);
+        Algae_Grabbed_Set.add(ScoringPos.AlgaeL3);
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_COMBINED);
         Algae_Grabbed_Set.add(ScoringPos.INTAKE_ALGAE);
         Algae_Grabbed_Set.add(ScoringPos.GO_SCORE_CORAL);
         Algae_Grabbed_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
@@ -215,6 +262,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Lolipop_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
         Lolipop_Intake_Set.add(ScoringPos.ALGAEL1);
         Lolipop_Intake_Set.add(ScoringPos.ALGAEL2);
+        Lolipop_Intake_Set.add(ScoringPos.AlgaeL3);
         Lolipop_Intake_Set.add(ScoringPos.ALGAE_STORE);
 
         allowedPaths.put(ScoringPos.START, Start_Set);
@@ -240,6 +288,8 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         allowedPaths.put(ScoringPos.ALGAEL1, Algae_L1_Set);
         allowedPaths.put(ScoringPos.ALGAEL2, Algae_L2_Set);
+        allowedPaths.put(ScoringPos.AlgaeL3, Algae_L3_Set);
+        allowedPaths.put(ScoringPos.ALGAE_COMBINED, Algae_Combined_Set);
 
         allowedPaths.put(ScoringPos.GRABBED_ALGAE, Algae_Grabbed_Set);
         allowedPaths.put(ScoringPos.GO_SCORE_CORAL, Coral_Score_Go_Set);
@@ -262,11 +312,19 @@ public class CoordinationSubsytem extends SubsystemBase{
             setScoringLevel(1);
         }
 
+        if (pos == ScoringPos.ALGAE_COMBINED) {
+            combinedAlgae = true;
+        } else {
+            combinedAlgae = false;
+        }
+
+        tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
+
         rollEncoder = DW.getRollAngle();
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        if (!allAtSetpoints || justChanged || justACoupleMore < 20) {
+        if (!allAtSetpoints || justChanged || combinedAlgae || justACoupleMore < 20) { // remove justACoupleMore
             
             justChanged = false;
             if (!allAtSetpoints || justChanged) {
@@ -321,6 +379,10 @@ public class CoordinationSubsytem extends SubsystemBase{
             goL1Algae();
         } else if(pos == ScoringPos.ALGAEL2) {
             goL2Algae();
+        } else if (pos == ScoringPos.ALGAE_COMBINED) {
+            goCombinedAlgae();
+        } else if(pos == ScoringPos.AlgaeL3) {
+            goL3Algae();
         } else if (pos == ScoringPos.SCORE_PROCESSOR) {
 
         } else if (pos == ScoringPos.START) {
@@ -399,7 +461,11 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToPreL4() {
         DW.setRollSetpoint(0);
         DW.setPitchSetpoint(-70);
-        Elev.setSetpoint(4.5);
+        if (!DriverStation.isAutonomous()) {
+            Elev.setSetpoint(4.5);
+        } else {
+            Elev.setSetpoint(0);
+        }
         Elbow.setSetpoint(67);
 
         if (DW.atRollSetpoint()
@@ -432,14 +498,22 @@ public class CoordinationSubsytem extends SubsystemBase{
         setL4RollSide(false);
         algae = false;
         l4Extend = false;
-        if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE || DriverStation.isAutonomous()) {
+        if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE) { // || DriverStation.isAutonomous()) {
             goToPreL4();
         } else if (desiredLevel == 1) {
-            goToL1Store();
+            if (lastPos == ScoringPos.INTAKE_CORAL || lastPos == ScoringPos.GO_SCORE_CORAL) {
+                goScoreLevel();
+            } else {
+                goToL1Store();
+            }
         } else {
-            // if (lastPos == ScoringPos.INTAKE_CORAL) {
+            // if (lastPos == ScoringPos.INTAKE_CORAL) { //CHECK BACK HERE
             //     if (elbowEncoder > 15) {
-            //         rollToClosestSide();
+            //         if (DriverStation.isAutonomous()) {
+                         //rollToOtherSide();
+                    // } else {
+                         //rollToClosestSide();
+                    // }
             //     }
             // } else {
             //     rollToClosestSide();
@@ -782,8 +856,53 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
+    public void goL3Algae() {
+        algae = true;
+        Elev.setSetpoint(29);
+        DW.setPitchSetpoint(-90);
+        Elbow.setSetpoint(37.09);
+        DW.setRollSetpoint(0);
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    public void goCombinedAlgae() {
+        algae = true;
+        Elbow.setSetpoint(37.09);
+        DW.setPitchSetpoint(-110);
+        DW.setRollSetpoint(0);
+        if(Elbow.atSetpoint()) {
+            if (tid == 7 || tid == 9 || tid == 11 || tid == 18 || tid == 20 || tid == 22) {
+                Elev.setSetpoint(20);
+            } else if (tid == 6 || tid == 8 || tid == 10 || tid == 17 || tid == 19 || tid == 21) {
+                Elev.setSetpoint(11);
+            }
+        }
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint() 
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
     public void goToScoreCoral() {
-        DW.setPitchSetpoint(-107.19);
+        
+        if (level == 2) {
+            DW.setPitchSetpoint(-128);
+        } else {
+            
+            DW.setPitchSetpoint(-107.19);
+        }
         Elbow.setSetpoint(32.91);
         if (level == 3 && Elbow.atSetpoint()) {
             Elev.setSetpoint(11.5);
