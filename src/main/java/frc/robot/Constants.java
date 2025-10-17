@@ -68,18 +68,29 @@ public final class Constants {
     public static final int kMotorID = 40;
     public static final int kEncoderID = 41;
   }
+  
+  public static class AlignConstants {
+    public static final boolean runFrontLL = true;
+    public static final boolean runBackLL = true;
+  }
 
   // =========================
   // Field Alignment Offsets
   // =========================
 
   public static class AlignOffsets {
-    public static final double leftReef = 0.173;
-    public static final double rightReef = -0.173;
+    public static final double leftReef = 0.173; //0.173
+    public static final double rightReef = -0.173; //-0.173
+    public static final double leftReefL1 = 0.224;
+    public static final double rightReefL1 = -0.224;
     public static final double firstCoralBack = 0.6;
-    public static final double scoreCoralBack = 0.33; //.44, .3638
-    public static final double algaeBack = 0.65;
+    public static final double scoreCoralBack = 0.44;
+    public static final double scoreL3Back = 0.465;
+    public static final double algaeIn = 0.65;
+    public static final double algaeBack = 0.7;
     public static final double algaeLeft = 0.0;
+    public static final double procOut = 2.5;
+    public static final double procIn = 1;
   }
 
   // =========================
@@ -100,6 +111,8 @@ public final class Constants {
     ScoreL4,
     ALGAEL1,
     ALGAEL2,
+    AlgaeL3,
+    ALGAE_COMBINED,
     GRABBED_ALGAE,
     GO_SCORE_CORAL,
     INTAKE_VERTICAL_CORAL,

@@ -91,7 +91,7 @@ public class Thing2AlignCommand extends Command {
 
     /* ----------- Initialzation ----------- */
 
-    public AlignCommand(CommandSwerveDrivetrain drive, AlignPos position, CommandXboxController controller) {
+    public Thing2AlignCommand(CommandSwerveDrivetrain drive, AlignPos position, CommandXboxController controller) {
         this.position = position;
         this.controller = controller;
 
