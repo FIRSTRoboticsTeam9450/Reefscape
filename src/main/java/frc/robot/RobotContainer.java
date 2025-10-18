@@ -31,6 +31,7 @@ import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
+import frc.robot.commands.RotationLock;
 import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
@@ -226,18 +227,18 @@ public class RobotContainer {
         //     new InstantCommand(() -> climb.setVoltage(0))
         // );
 
-        m_driver1.povUp().whileTrue(
-            new InstantCommand(() -> climb.setVoltage(-1))
-        );
-        m_driver1.povUp().onFalse(
-            new InstantCommand(() -> climb.setVoltage(0))
-        );
-        m_driver1.povDown().whileTrue(
-            new InstantCommand(() -> climb.setVoltage(1))
-        );
-        m_driver1.povDown().onFalse(
-            new InstantCommand(() -> climb.setVoltage(0))
-        );
+        // m_driver1.povUp().whileTrue(
+        //     new InstantCommand(() -> climb.setVoltage(-1))
+        // );
+        // m_driver1.povUp().onFalse(
+        //     new InstantCommand(() -> climb.setVoltage(0))
+        // );
+        // m_driver1.povDown().whileTrue(
+        //     new InstantCommand(() -> climb.setVoltage(1))
+        // );
+        // m_driver1.povDown().onFalse(
+        //     new InstantCommand(() -> climb.setVoltage(0))
+        // );
 
         /* ----- Operator Driver Keybinds ----- */
         /*
@@ -279,14 +280,16 @@ public class RobotContainer {
 
         // === Algae Positioning Controls ===
         // Score algae at level 1 or 2 depending on POV
-        m_driver2.povLeft().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL1)
-                .andThen(new DualIntakeCommand(true))
-        );
-        m_driver2.povUp().onTrue(
-            new CoordinationCommand(ScoringPos.ALGAEL2)
-                .andThen(new DualIntakeCommand(true))
-        );
+        // m_driver2.povLeft().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL1)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        // m_driver2.povUp().onTrue(
+        //     new CoordinationCommand(ScoringPos.ALGAEL2)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+
+        m_driver2.povUp().onTrue(new RotationLock(drivetrain, m_driver2, driveBezier, DefaultMaxSpeed));
 
         // === Algae Net Controls ===
         // Deactivate algae net
