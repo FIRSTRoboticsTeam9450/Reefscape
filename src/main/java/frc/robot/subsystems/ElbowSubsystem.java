@@ -40,11 +40,11 @@ public class ElbowSubsystem extends SubsystemBase {
     private double currentLimit = 50;
     private double kS = 0;
     private double kV = 0.7;
-    private double kA = 0.06;
+    private double kA = 0.7;
     private double kP = 120;
     private double kI = 0.000;
-    private double kD = 0.65;
-    private double kG = 0.15;
+    private double kD = 0.25;
+    private double kG = 0;
     
 
     //private Log log = new Log("Elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);

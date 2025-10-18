@@ -50,8 +50,8 @@ public class RobotContainer {
     private static double LiftMaxAngularRate = RotationsPerSecond.of(.3).in(RadiansPerSecond);
 
     // Normal top speed
-    private static double DefaultMaxSpeed = 2.57;
-    private static double DefaultMaxAngularRate = RotationsPerSecond.of(0.5625).in(RadiansPerSecond); // changed to .6, originaly 1.5
+    private static double DefaultMaxSpeed = 5.15;
+    private static double DefaultMaxAngularRate = RotationsPerSecond.of(1.125).in(RadiansPerSecond); // changed to .6, originaly 1.5
     
     // Current max speed - dont change this one
     public static double MaxSpeed = DefaultMaxSpeed;
@@ -63,8 +63,8 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
-    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.03);
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01);
+    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
