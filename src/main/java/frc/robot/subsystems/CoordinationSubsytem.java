@@ -299,6 +299,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     }
 
+    @SuppressWarnings("unused")
     @Override
     public void periodic() {
 
@@ -1042,7 +1043,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             Logger.recordOutput("Reefscape/Debugging/All At Setpoints", allAtSetpoints);
         }
 
-        if (debugging.currentPos) {
+        if (debugging.CurrentPos) {
             Logger.recordOutput("Reefscape/Debugging/Current Position", getPos());
         }
 

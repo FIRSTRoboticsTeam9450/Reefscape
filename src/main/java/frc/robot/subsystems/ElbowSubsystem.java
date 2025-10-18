@@ -22,6 +22,8 @@ public class ElbowSubsystem extends SubsystemBase {
     // Singleton instance
     private static ElbowSubsystem instance;
 
+    RadioSoftware radio = RadioSoftware.getInstance();
+
     // Motor and encoder
     private final TalonFX motor = new TalonFX(WristIDs.kElbowWristMotorID, Constants.RIO_BUS);
     private final CANcoder encoder = new CANcoder(WristIDs.kElbowWristEncoderID, Constants.RIO_BUS);
@@ -54,6 +56,7 @@ public class ElbowSubsystem extends SubsystemBase {
         logger = new Log("elbow", motor, kS, kV, kA, kP, kI, kD, kG, velocity, acceleration, jerk, currentLimit);
         configureEncoder();
         setSetpoint(50); // default starting position
+        radio.addMotor(motor);
     }
 
     // Configure CANcoder settings

@@ -104,10 +104,12 @@ public class Telemetry {
             m_moduleTargetsArray[i*2 + 1] = state.ModuleTargets[i].speedMetersPerSecond;
         }
 
-        SignalLogger.writeDoubleArray("DriveState/Pose", m_poseArray);
-        SignalLogger.writeDoubleArray("DriveState/ModuleStates", m_moduleStatesArray);
-        SignalLogger.writeDoubleArray("DriveState/ModuleTargets", m_moduleTargetsArray);
-        SignalLogger.writeDouble("DriveState/OdometryPeriod", state.OdometryPeriod, "seconds");
+        if (Constants.debugging.SwerveDebugging) {
+            SignalLogger.writeDoubleArray("DriveState/Pose", m_poseArray);
+            SignalLogger.writeDoubleArray("DriveState/ModuleStates", m_moduleStatesArray);
+            SignalLogger.writeDoubleArray("DriveState/ModuleTargets", m_moduleTargetsArray);
+            SignalLogger.writeDouble("DriveState/OdometryPeriod", state.OdometryPeriod, "seconds");
+        }
 
         /* Telemeterize the pose to a Field2d */
         fieldTypePub.set("Field2d");

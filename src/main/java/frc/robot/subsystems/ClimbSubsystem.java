@@ -22,6 +22,7 @@ import frc.robot.Constants.debugging;
 public class ClimbSubsystem extends SubsystemBase {
 
     private static ClimbSubsystem instance;
+    RadioSoftware radio = RadioSoftware.getInstance();
 
     private final TalonFX climbMotor = new TalonFX(Constants.ClimberIDs.kMotorID, Constants.CTRE_BUS);
     private final CANcoder climbEncoder = new CANcoder(Constants.ClimberIDs.kEncoderID, Constants.CTRE_BUS);
@@ -30,6 +31,8 @@ public class ClimbSubsystem extends SubsystemBase {
 
     private boolean runClimber = Constants.robotConfig.getRunClimber();
 
+    private double debuggingVoltage = 0;
+
     private double maxVolts = 4;
     private double totalMotorAMPPull = 0;
     private Timer timer = new Timer();
@@ -37,10 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
     public ClimbSubsystem() {
         configuration();
         climberPID.setSetpoint(0.822);
-
-        Logger.recordOutput("Reefscape/Climbers/Motor connected?", climbMotor.isConnected());
-        Logger.recordOutput("Reefscape/Climbers/Motor alive?", climbMotor.isAlive());
-        Logger.recordOutput("Reefscape/Climbers/Encoder connected?", climbEncoder.isConnected());
+        radio.addMotor(climbMotor);
 
     }
 
@@ -59,18 +59,12 @@ public class ClimbSubsystem extends SubsystemBase {
         if (runClimber) {
             double voltage = updatePIDs(climbEncoder.getPosition().getValueAsDouble());
             setVoltage(voltage);
-            Logger.recordOutput("Reefscape/Climbers/voltage", voltage);
+            debuggingVoltage = voltage;
 
             totalMotorAMPPull += climbMotor.getSupplyCurrent().getValueAsDouble();
 
             if (debugging.ClimberPos) {
-                Logger.recordOutput("Reefscape/Climbers/Encoder Position", climbEncoder.getPosition(true).getValueAsDouble());
-                Logger.recordOutput("Reefscape/Climbers/PID Setpoint", climberPID.getSetpoint());
-                Logger.recordOutput("Reefscape/Climbers/Motor AMP Pull", climbMotor.getSupplyCurrent().getValueAsDouble());
-                Logger.recordOutput("Reefscape/Climbers/Total Motor AMP Pull", totalMotorAMPPull / 20);
-                Logger.recordOutput("Reefscape/Climbers/Avg Motor AMP Pull a sec", (totalMotorAMPPull / 20) / timer.get());
-
-                // Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+                debugging();
             }
         }
     }
@@ -109,5 +103,14 @@ public class ClimbSubsystem extends SubsystemBase {
             instance = new ClimbSubsystem();
         }
         return instance;
+    }
+
+    private void debugging() {
+        Logger.recordOutput("Reefscape/Climbers/Encoder Position", climbEncoder.getPosition(true).getValueAsDouble());
+        Logger.recordOutput("Reefscape/Climbers/PID Setpoint", climberPID.getSetpoint());
+        Logger.recordOutput("Reefscape/Climbers/Motor AMP Pull", climbMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Climbers/Total Motor AMP Pull", totalMotorAMPPull / 20);
+        Logger.recordOutput("Reefscape/Climbers/Avg Motor AMP Pull a sec", (totalMotorAMPPull / 20) / timer.get());
+        Logger.recordOutput("Reefscape/Climbers/Voltage", debuggingVoltage);
     }
 }

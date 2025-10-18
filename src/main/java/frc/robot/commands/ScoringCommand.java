@@ -78,7 +78,6 @@ public class ScoringCommand extends Command {
             scoreSub.checkAllAtSetpoints();
             runDelay++;
         }
-        Logger.recordOutput("Reefscape/Debugging/Scoring Run Delay", runDelay);
     }
 
     /** Determines if the command has completed its scoring cycle. */

@@ -140,11 +140,6 @@ public class RobotContainer {
         autoChooser.setDefaultOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
-        // autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
-        // autoChooser.addOption("BackReefReorderedTest", drivetrain.getAutoPath("BackReefReorderedTest", false));
-        //autoChooser.addOption("Left Source", drivetrain.getAutoPath("Source", false));
-        // autoChooser.addOption("Left Source", drivetrain.getAutoPath("SourceAlternate", false));
-        // autoChooser.addOption("TEST", drivetrain.getAutoPath("TEST", false));
         autoChooser.addOption("Algae Steal", drivetrain.getAutoPath("Algae stealer", false));
         autoChooser.addOption("Processor", drivetrain.getAutoPath("Processor", false));
         SmartDashboard.putData("Auto Chooser", autoChooser);
@@ -220,20 +215,6 @@ public class RobotContainer {
         // scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
         // elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
 
-        // m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
-        // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
-        //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
-        // ));
-
-        // Run SysId routines when holding back/start and X/Y.
-        // Note that each routine should be run exactly once in a single log.
-        // m_driver1.back().and(m_driver2.y()).whileTrue(drivetrain.sysIdDynamic(Direction.kForward));
-        // m_driver1.back().and(m_driver2.x()).whileTrue(drivetrain.sysIdDynamic(Direction.kReverse));
-        // m_driver1.start().and(m_driver2.y()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kForward));
-        // m_driver1.start().and(m_driver2.x()).whileTrue(drivetrain.sysIdQuasistatic(Direction.kReverse));
-
-        // reset the field-centric heading on left bumper press
-
         drivetrain.registerTelemetry(logger::telemeterize);
 
 
@@ -251,13 +232,13 @@ public class RobotContainer {
         * │ KEYBIND LIST │
         * └──────────────┘
         * Right Trigger     → Score
-        * Left Trigger      → Go To Scoring Position
+        * Left Trigger      → Go To Scoring Position / Driver Intake (Drives forward if intaking)
         * Left Bumper       → Flip (Roll Side Switch)
-        * Y Button          → IMU Reset
+        * Y                 → Proccesor Algae Intake
         * Left Stick        → Movement / Align Left
         * Right Stick       → Rotation / Align Right
         * D-pad Right       → Store Climber
-        * D-pad Left        → Toggle Field Centric Drive
+        * Start             → Score Pos extend toggle
         */
 
         // ──────────────── Keybind Command Assignments ────────────────
@@ -270,14 +251,10 @@ public class RobotContainer {
             new DriverIntakeCommand(m_driver1, drivetrain)
         );
 
-        // Bumpers PUT THIS BACK LATER
         m_driver1.leftBumper().onTrue(
             new RollSideSwitcher(true)
         );
         
-        // m_driver1.y().onTrue(
-        //     new ResetIMUCommand(drivetrain)
-        // );
 
         // Sticks
         m_driver1.leftStick().whileTrue(
@@ -293,26 +270,19 @@ public class RobotContainer {
             new ClimbCommand(0.822, 4) //12
         );
 
-        // Honestly dont know
-        // m_driver1.povLeft().toggleOnTrue(
-        //     new FieldCentricCommand(
-        //         drivetrain,
-        //         () -> -driveBezier.getOutput(m_driver1.getLeftX()),
-        //         () -> -driveBezier.getOutput(m_driver1.getLeftY()),
-        //         () -> rotateBezier.getOutput(m_driver1.getRightX())
-        //     )
-        // );
-
-        m_driver1.a().whileTrue(new DriveForwardCommand(drivetrain, m_driver1));
-
         m_driver1.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
-        //m_driver1.x().onTrue(new CoordinationCommand(ScoringPos.ALGAEL2));
                 
         m_driver1.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
         );
 
         /* ----- Disabled Keybinds ----- */
+
+                // m_driver1.a().whileTrue(new DriveForwardCommand(drivetrain, m_driver1));
+
+        // m_driver1.y().onTrue(
+        //     new ResetIMUCommand(drivetrain)
+        // );
 
         // m_driver1.rightBumper().onTrue(
         //     new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
@@ -394,12 +364,6 @@ public class RobotContainer {
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
 
-        // Trigger algae intake sequence
-        // m_driver2.povDown().onTrue(
-        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-        //         .andThen(new DualIntakeCommand(true))
-        // );
-
         m_driver2.leftStick().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
                 .andThen(new DualIntakeCommand(true))
@@ -447,6 +411,11 @@ public class RobotContainer {
         );
 
         /* ----- Disabled Keybinds ----- */
+
+        // m_driver2.povDown().onTrue(
+        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         // m_driver2.povRight().onTrue(
         //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED)

@@ -80,10 +80,6 @@ public class DualIntakeSubsystem extends SubsystemBase{
         hasCoral = laser.getIsDetected().getValue();
         hasAlgae = score.getAlgae() && hasCoral;
 
-        Logger.recordOutput("Reefscape/DualIntake/distance", laser.getDistance().getValueAsDouble());
-        Logger.recordOutput("Reefscape/DualIntake/signal strength", laser.getSignalStrength().getValueAsDouble());
-        Logger.recordOutput("Reefscape/DualIntake/detected", laser.getIsDetected().getValue());
-
         
         // if (hasCoralNow == lastHadCoral) {
         //     coralValidCount++;
@@ -125,10 +121,9 @@ public class DualIntakeSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         updateLasers();
-        Logger.recordOutput("Reefscape/DualIntake/HasCoral", hasCoral);
-
-        Logger.recordOutput("Reefscape/DualIntake/HasAlgae", hasAlgae);
-        Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
+        if (Constants.debugging.IntakeDebugging) {
+            debugging();
+        }
     }
 
     /* ----- Getters & Setters ----- */
@@ -171,6 +166,15 @@ public class DualIntakeSubsystem extends SubsystemBase{
             DI = new DualIntakeSubsystem();
         }
         return DI;
+    }
+
+    private void debugging() {
+        Logger.recordOutput("Reefscape/DualIntake/distance", laser.getDistance().getValueAsDouble());
+        Logger.recordOutput("Reefscape/DualIntake/signal strength", laser.getSignalStrength().getValueAsDouble());
+        Logger.recordOutput("Reefscape/DualIntake/detected", laser.getIsDetected().getValue());
+        Logger.recordOutput("Reefscape/DualIntake/HasCoral", hasCoral);
+        Logger.recordOutput("Reefscape/DualIntake/HasAlgae", hasAlgae);
+        Logger.recordOutput("Reefscape/DualIntake/MotorTemp", motor.getDeviceTemp().getValueAsDouble());
     }
     
 }

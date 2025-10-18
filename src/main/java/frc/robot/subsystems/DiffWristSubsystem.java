@@ -7,9 +7,11 @@ import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
 import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
+import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -17,6 +19,11 @@ import frc.robot.Constants.WristIDs;
 import frc.robot.Constants.debugging;
 
 public class DiffWristSubsystem extends SubsystemBase {
+
+
+    private final SendableChooser<NeutralModeValue> neutralModeChooser;
+
+
     
     private static DiffWristSubsystem DW;
     
@@ -47,6 +54,8 @@ public class DiffWristSubsystem extends SubsystemBase {
     double leftStatorPull;
     double rightStatorPull;
 
+    private NeutralModeValue currentNeutralModeValue = Constants.defaultNeutral;
+
     // Variables
     private boolean runPID = true;
 
@@ -55,17 +64,13 @@ public class DiffWristSubsystem extends SubsystemBase {
     RadioSoftware radio = RadioSoftware.getInstance();
     private DiffWristSubsystem() {
 
+        neutralModeChooser = new SendableChooser<>();
+        neutralModeChooser.setDefaultOption("Default", Constants.defaultNeutral);
+        neutralModeChooser.addOption("Brake", NeutralModeValue.Brake);
+        neutralModeChooser.addOption("Coast", NeutralModeValue.Coast);
+
         //Telemetry
         SmartDashboard.putBoolean("Reefscape/DiffWrist/RunPID?", runPID);
-
-        //Motor Configuration
-        TalonFXConfigurator leftConfigurator = leftMotor.getConfigurator();
-        TalonFXConfigurator rightConfigurator = rightMotor.getConfigurator();
-        TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
-        leftConfigurator.apply(config);
-        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
-        rightConfigurator.apply(config);
 
         //Diff Wrist Start point
         if (runPID) {
@@ -74,6 +79,21 @@ public class DiffWristSubsystem extends SubsystemBase {
         }
         radio.addMotor(leftMotor);
         radio.addMotor(rightMotor);
+    }
+
+    /**
+     * Method used to confiure both CTRE Kraken x60 motors used in the differential wrist
+     * @param neutralModeValue Neutral Mode Value (kBrake, kCoast), Default is kBrake
+     */
+    private void configureMotors(NeutralModeValue neutralModeValue) {
+        currentNeutralModeValue = neutralModeValue;
+        TalonFXConfigurator leftConfigurator = leftMotor.getConfigurator();
+        TalonFXConfigurator rightConfigurator = rightMotor.getConfigurator();
+        TalonFXConfiguration config = new TalonFXConfiguration();
+        config.MotorOutput.NeutralMode = neutralModeValue;
+        leftConfigurator.apply(config);
+        config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
+        rightConfigurator.apply(config);
     }
 
     /* ----- Updaters ----- */
@@ -229,6 +249,18 @@ public class DiffWristSubsystem extends SubsystemBase {
 
     public boolean getIfDoingPIDS() {
         return runPID;
+    }
+
+    public void putParams(NeutralModeValue neutralModeValue) {
+        SmartDashboard.putData("Diffy Neutral Mode", neutralModeChooser);
+        configureMotors(neutralModeValue);
+    }
+
+    public void updateParams() {
+        NeutralModeValue neutralModeValue = neutralModeChooser.getSelected();
+        if (currentNeutralModeValue != neutralModeValue) {
+        configureMotors(neutralModeValue);
+        }
     }
 
 }

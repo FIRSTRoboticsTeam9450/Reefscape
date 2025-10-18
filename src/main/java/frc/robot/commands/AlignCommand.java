@@ -39,9 +39,13 @@ public class AlignCommand extends Command {
     private HashMap<Integer, double[]> map = new HashMap<>();
 
     /* ----- PIDs ----- */
-    private PIDController pidX = new PIDController(4.5, 0, 0);
-    private PIDController pidY = new PIDController(4.5, 0, 0);
-    private PIDController pidRotate = new PIDController(8, 0, 0);
+    private PIDController FpidX = new PIDController(4.5, 0, 0);
+    private PIDController FpidY = new PIDController(4.5, 0, 0);
+    private PIDController FpidRotate = new PIDController(6, 0, 0);
+
+    private PIDController BpidX = new PIDController(4, 0, 0);
+    private PIDController BpidY = new PIDController(3.25, 0, 0.6);
+    private PIDController BpidRotate = new PIDController(7, 0, 0);
 
     /* ----- Subsystem Instances ----- */
     private CommandSwerveDrivetrain drive;
@@ -78,6 +82,12 @@ public class AlignCommand extends Command {
     private boolean onRedSide;
 
     private String debuggingCenterAlignIssue = "Null";
+    private double debuggingTagForwardOffset = 0;
+    private double debuggingTagLeftOffset = 0;
+    private double debuggingXError = 0;
+    private double debuggingYError = 0;
+    private double debuggingPowMag = 0;
+    private double debuggingVelMag = 0;
 
     private boolean runFrontLL;
     private boolean runBackLL;
@@ -127,7 +137,8 @@ public class AlignCommand extends Command {
         map.put(22, tag22);
         /* ----------------------------------------------------- */
 
-        pidRotate.enableContinuousInput(-Math.PI, Math.PI);
+        FpidRotate.enableContinuousInput(-Math.PI, Math.PI);
+        BpidRotate.enableContinuousInput(-Math.PI, Math.PI);
 
         this.drive = drive;
     }
@@ -185,19 +196,16 @@ public class AlignCommand extends Command {
             }
             double[] pose = getAlignPos(map.get(tid), offset);
             debuggingCenterAlignIssue = "In Initialization";
-            pidX.setSetpoint(pose[0]);
-            pidY.setSetpoint(pose[1]);
-            pidRotate.setSetpoint(pose[2]);
+            FpidX.setSetpoint(pose[0]);
+            FpidY.setSetpoint(pose[1]);
+            FpidRotate.setSetpoint(pose[2]);
+            BpidX.setSetpoint(pose[0]);
+            BpidY.setSetpoint(pose[1]);
+            BpidRotate.setSetpoint(pose[2]);
         } else {
             hasTarget = false;
         }
         up = false;
-
-        Logger.recordOutput("Reefscape/Align/Tid", tid);
-        // if (!hasCoral) {
-        //     new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
-        //     new DualIntakeCommand(true).schedule();
-        // }
 
         possibleTags[0] = -1;
         possibleTags[1] = -1;
@@ -233,6 +241,9 @@ public class AlignCommand extends Command {
             tagLeftOffset = 0;
         }
 
+        debuggingTagForwardOffset = tagForwardOffset;
+        debuggingTagLeftOffset = tagLeftOffset;
+
 
         // Calculate rotation relative to the target position
         double rotation = targetPos[2] - Math.PI;
@@ -251,9 +262,6 @@ public class AlignCommand extends Command {
         // Create an array with the calculated x, y, and rotation values and return it
         double[] out = {x, y, rotation};
 
-        Logger.recordOutput("Reefscape/Align/Tag Left offset", tagLeftOffset);
-        Logger.recordOutput("Reefscape/Align/Tag Forawrd Offset", tagForwardOffset);
-
         return out;
     }
 
@@ -262,17 +270,12 @@ public class AlignCommand extends Command {
      */
     @Override
     public void execute() {
-        Logger.recordOutput("Reefscape/Align/FL Drive AMP Pull", drive.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
 
         if (currentX > 8.775) {
             onRedSide = true;
         } else {
             onRedSide = false;
         }
-        Logger.recordOutput("Reefscape/Align/On Red Side?", onRedSide);
-        Logger.recordOutput("Reefscape/Align/Debugging centering issue", debuggingCenterAlignIssue);
-        Logger.recordOutput("Reefscape/Align/Running Front LL", runFrontLL);
-        Logger.recordOutput("Reefscape/Align/Running Back LL", runBackLL);
 
         // hasCoral = intake.hasCoral();
         robotRotation = drive.getState().Pose.getRotation().getDegrees();
@@ -344,16 +347,22 @@ public class AlignCommand extends Command {
                     pose = getAlignPos(map.get(tid), Constants.AlignOffsets.scoreL3Back);
                 }
                 debuggingCenterAlignIssue = "Scoot";
-                pidX.setSetpoint(pose[0]);
-                pidY.setSetpoint(pose[1]);
-                pidRotate.setSetpoint(pose[2]);
+                FpidX.setSetpoint(pose[0]);
+                FpidY.setSetpoint(pose[1]);
+                FpidRotate.setSetpoint(pose[2]);
+                BpidX.setSetpoint(pose[0]);
+                BpidY.setSetpoint(pose[1]);
+                BpidRotate.setSetpoint(pose[2]);
             }
             else if(atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.algaeIn);
                 debuggingCenterAlignIssue = "Algae";
-                pidX.setSetpoint(pose[0]);
-                pidY.setSetpoint(pose[1]);
-                pidRotate.setSetpoint(pose[2]);
+                FpidX.setSetpoint(pose[0]);
+                FpidY.setSetpoint(pose[1]);
+                FpidRotate.setSetpoint(pose[2]);
+                BpidX.setSetpoint(pose[0]);
+                BpidY.setSetpoint(pose[1]);
+                BpidRotate.setSetpoint(pose[2]);
             }
 
             if (atSetpoint(0.5, 0.8)) {
@@ -389,8 +398,15 @@ public class AlignCommand extends Command {
             currentPose = drive.getState().Pose;
 
             // Calculate drive power
-            double powerX = pidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
-            double powerY = pidY.calculate(currentPose.getY()) * (MathUtil.clamp(time * 0.7, 1, 0));
+            double powerX;
+            double powerY;
+            if (!usedBackLL) {
+                powerX = FpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
+                powerY = FpidY.calculate(currentPose.getY()) * (MathUtil.clamp(time * 0.7, 1, 0));   
+            } else {
+                powerX = BpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
+                powerY = BpidY.calculate(currentPose.getY()) * (MathUtil.clamp(time * 0.7, 1, 0));      
+            }
 
             // Slow down at L4
             if (score.getScoringLevel() == 4 && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
@@ -409,16 +425,27 @@ public class AlignCommand extends Command {
             powerX += .05*Math.signum(powerX);
             powerY += .05*Math.signum(powerY);
             
-            double xError = Math.abs(pidX.getSetpoint() - currentPose.getX());
-            double yError = Math.abs(pidY.getSetpoint() - currentPose.getY());
-            Logger.recordOutput("Reefscape/Align/x error", Math.abs(pidX.getSetpoint() - currentPose.getX()));
-            Logger.recordOutput("Reefscape/Align/y error", Math.abs(pidY.getSetpoint() - currentPose.getY()));
-            Logger.recordOutput("Reefscape/Align/ErrorMag", xError * xError + yError * yError);
-            
-            Logger.recordOutput("Reefscape/Align/rot error", pidRotate.getError());
+            double xError;
+            double yError;
+            if (!usedBackLL) {
+                xError = Math.abs(FpidX.getSetpoint() - currentPose.getX());
+                yError = Math.abs(FpidY.getSetpoint() - currentPose.getY());
+            } else {
+                xError = Math.abs(BpidX.getSetpoint() - currentPose.getX());
+                yError = Math.abs(BpidY.getSetpoint() - currentPose.getY());
+            }
+
+            debuggingXError = xError;
+            debuggingYError = yError;
 
             // Calculate the rotational power and clamp it between -2 and 2
-            double powerRotate = pidRotate.calculate(currentPose.getRotation().getRadians());
+            double powerRotate;
+            if (!usedBackLL) {
+                powerRotate = FpidRotate.calculate(currentPose.getRotation().getRadians());
+            } else {
+                powerRotate = BpidRotate.calculate(currentPose.getRotation().getRadians());
+            }
+
             powerRotate = MathUtil.clamp(powerRotate, -6, 6); //-4, 4
 
             if (redAlliance) {
@@ -431,8 +458,8 @@ public class AlignCommand extends Command {
             double yVel = drive.getState().Speeds.vyMetersPerSecond;
             double powMag = powerX * powerX + powerY * powerY;
             double velMag = xVel * xVel + yVel * yVel;
-            Logger.recordOutput("Reefscape/Align/VelMag", velMag);
-            Logger.recordOutput("Reefscape/Align/PowerMag", powMag);
+            debuggingPowMag = powMag;
+            debuggingVelMag = velMag;
 
             // If power is above a certain threshold and velocity is near zero, must be stuck on a coral
             if (powMag > 0.3 && velMag < 0.02) {
@@ -452,16 +479,18 @@ public class AlignCommand extends Command {
                 }
             }
 
-            Logger.recordOutput("Reefscape/Align/Possible Tags", possibleTags);
 
             // ------------------------------------------------
 
-            //Logger.recordOutput("Reefscape/Align/Stuck", stuck);
             SwerveRequest request = driveRequest.withVelocityX(powerX).withVelocityY(powerY).withRotationalRate(powerRotate);
             
 
             // Set the drive control with the created request
             drive.setControl(request);
+        }
+
+        if (Constants.debugging.AlignDebugging) {
+            debugging();
         }
     }
 
@@ -470,7 +499,26 @@ public class AlignCommand extends Command {
     }
 
     public boolean atSetpoint(double translationTolerance, double rotationTolerance) {
-        return Math.abs(pidX.getSetpoint() - currentPose.getX()) < translationTolerance && Math.abs(pidY.getSetpoint() - currentPose.getY()) < translationTolerance && pidRotate.getError() < rotationTolerance;
+        //We use front LL pid stuff here instead of checking which one to use due to how both have the same setpoint and the currentPose.get... is the same for both
+        return Math.abs(FpidX.getSetpoint() - currentPose.getX()) < translationTolerance && Math.abs(FpidY.getSetpoint() - currentPose.getY()) < translationTolerance && FpidRotate.getError() < rotationTolerance;
+    }
+
+    private void debugging() {
+        Logger.recordOutput("Reefscape/Align/Tid", tid);
+        Logger.recordOutput("Reefscape/Align/Tag Left offset", debuggingTagLeftOffset);
+        Logger.recordOutput("Reefscape/Align/Tag Forawrd Offset", debuggingTagForwardOffset);
+        Logger.recordOutput("Reefscape/Align/FL Drive AMP Pull", drive.getModule(1).getDriveMotor().getStatorCurrent().getValueAsDouble());
+        Logger.recordOutput("Reefscape/Align/On Red Side?", onRedSide);
+        Logger.recordOutput("Reefscape/Align/Debugging centering issue", debuggingCenterAlignIssue);
+        Logger.recordOutput("Reefscape/Align/Running Front LL", runFrontLL);
+        Logger.recordOutput("Reefscape/Align/Running Back LL", runBackLL);
+        Logger.recordOutput("Reefscape/Align/x error", Math.abs(FpidX.getSetpoint() - currentPose.getX()));
+        Logger.recordOutput("Reefscape/Align/y error", Math.abs(FpidY.getSetpoint() - currentPose.getY()));
+        Logger.recordOutput("Reefscape/Align/ErrorMag", debuggingXError * debuggingXError + debuggingYError * debuggingYError);
+        Logger.recordOutput("Reefscape/Align/rot error", FpidRotate.getError());
+        Logger.recordOutput("Reefscape/Align/VelMag", debuggingVelMag);
+        Logger.recordOutput("Reefscape/Align/PowerMag", debuggingPowMag);
+        Logger.recordOutput("Reefscape/Align/Possible Tags", possibleTags);
     }
 
     /* ----------- Finishers ----------- */
