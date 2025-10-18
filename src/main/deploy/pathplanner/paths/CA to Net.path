@@ -1,0 +1,100 @@
+{
+  "version": "2025.0",
+  "waypoints": [
+    {
+      "anchor": {
+        "x": 5.971,
+        "y": 4.026
+      },
+      "prevControl": null,
+      "nextControl": {
+        "x": 7.336475409836066,
+        "y": 4.0549692622950815
+      },
+      "isLocked": false,
+      "linkedName": "CA"
+    },
+    {
+      "anchor": {
+        "x": 7.55,
+        "y": 4.762
+      },
+      "prevControl": {
+        "x": 6.137704918032787,
+        "y": 4.750256147540983
+      },
+      "nextControl": null,
+      "isLocked": false,
+      "linkedName": "Net"
+    }
+  ],
+  "rotationTargets": [
+    {
+      "waypointRelativePos": 0.08742004264392376,
+      "rotationDegrees": 180.0
+    },
+    {
+      "waypointRelativePos": 0.7462686567164164,
+      "rotationDegrees": 0.0
+    }
+  ],
+  "constraintZones": [
+    {
+      "name": "Constraints Zone",
+      "minWaypointRelativePos": 0.7319378798109458,
+      "maxWaypointRelativePos": 1.0,
+      "constraints": {
+        "maxVelocity": 0.5,
+        "maxAcceleration": 1.0,
+        "maxAngularVelocity": 540.0,
+        "maxAngularAcceleration": 720.0,
+        "nominalVoltage": 12.0,
+        "unlimited": false
+      }
+    }
+  ],
+  "pointTowardsZones": [],
+  "eventMarkers": [
+    {
+      "name": "AlgaeStore",
+      "waypointRelativePos": 0.1188386225523274,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "AlgaeStore"
+        }
+      }
+    },
+    {
+      "name": "up",
+      "waypointRelativePos": 1.0,
+      "endWaypointRelativePos": null,
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "GoToScore"
+        }
+      }
+    }
+  ],
+  "globalConstraints": {
+    "maxVelocity": 1.5,
+    "maxAcceleration": 1.0,
+    "maxAngularVelocity": 540.0,
+    "maxAngularAcceleration": 720.0,
+    "nominalVoltage": 12.0,
+    "unlimited": false
+  },
+  "goalEndState": {
+    "velocity": 0,
+    "rotation": 0.0
+  },
+  "reversed": false,
+  "folder": "Simple Auto",
+  "idealStartingState": {
+    "velocity": 0,
+    "rotation": 180.0
+  },
+  "useDefaultConstraints": false
+}

@@ -163,7 +163,7 @@
                     {
                       "type": "path",
                       "data": {
-                        "pathName": "BLLToSource"
+                        "pathName": null
                       }
                     }
                   ]

@@ -100,6 +100,7 @@ public class RobotContainer {
         registeredCommands();
 
         autoChooser = new SendableChooser<>();
+        autoChooser.setDefaultOption("Simple", drivetrain.getAutoPath("Simple", false));
         autoChooser.addOption("Left 3 Coral", drivetrain.getAutoPath("Ground3Coral", false));
         autoChooser.addOption("Right 3 Coral", drivetrain.getAutoPath("Ground3CoralRightFr", true));
         autoChooser.addOption("Back Reef", drivetrain.getAutoPath("BackReef", false));
@@ -289,7 +290,7 @@ public class RobotContainer {
         //         .andThen(new DualIntakeCommand(true))
         // );
 
-        m_driver2.povUp().onTrue(new RotationLock(drivetrain, m_driver2, driveBezier, DefaultMaxSpeed));
+        m_driver2.povUp().whileTrue(new RotationLock(drivetrain, m_driver2, driveBezier, DefaultMaxSpeed));
 
         // === Algae Net Controls ===
         // Deactivate algae net
@@ -393,9 +394,9 @@ public class RobotContainer {
         NamedCommands.registerCommand("CoralStore", new CoordinationCommand(ScoringPos.CORAL_STORE));
 
         // Algae Related
-        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
-        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        NamedCommands.registerCommand("AlgaeProcesser", new CoordinationCommand(ScoringPos.ALGAE_STORE));
+        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("AlgaeStore", new CoordinationCommand(ScoringPos.ALGAE_STORE));
         NamedCommands.registerCommand("AlignAlgae", new AlgaeAlignCommand(drivetrain, -18));
 
         // Start & Cancel Routines

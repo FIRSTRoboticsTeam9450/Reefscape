@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -84,7 +85,9 @@ public class DualIntakeCommand extends Command{
     @Override
     public void end(boolean interrupted) {
         if (interrupted) {
-            DI.setVoltage(0);
+            if (!DriverStation.isAutonomous()) {
+                DI.setVoltage(0);
+            }
             return;
         }
         if (algae) {

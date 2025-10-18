@@ -92,21 +92,22 @@ public class ScoringCommand extends Command {
     @Override
     public void end(boolean interrupted) {
         intake.setVoltage(0);
-
-        if (intake.hasCoral() && !DriverStation.isAutonomous()) {
-            Logger.recordOutput("Reefscape/Debugging/Score/Retry?", true);
-            retry.schedule();
-        } else if (!algae && CoordinationSubsytem.autoGround) {
-            new CoordinationCommand(ScoringPos.CORAL_STORE)
-                .andThen(new WaitCommand(0.65))
-                .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
-                    .andThen(new DualIntakeCommand(false))
-                    .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
-                .schedule();
+        if (!DriverStation.isAutonomous()) {
+            if (intake.hasCoral()) {
+                Logger.recordOutput("Reefscape/Debugging/Score/Retry?", true);
+                retry.schedule();
+            } else if (!algae && CoordinationSubsytem.autoGround) {
+                new CoordinationCommand(ScoringPos.CORAL_STORE)
+                    .andThen(new WaitCommand(0.65))
+                    .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                        .andThen(new DualIntakeCommand(false))
+                        .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
+                    .schedule();
+                    Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
+            } else {
+                store.schedule();
                 Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
-        } else {
-            store.schedule();
-            Logger.recordOutput("Reefscape/Debugging/Score/Retry?", false);
+            }
         }
     }
 }

@@ -4,11 +4,13 @@
   "holonomicMode": true,
   "pathFolders": [
     "2 coral",
+    "CenterReef",
     "Ground3Coral",
     "Ground3CoralRight",
-    "CenterReef"
+    "Simple Auto"
   ],
   "autoFolders": [
+    "Thing 3 Autos",
     "Unfinished"
   ],
   "defaultMaxVel": 5.0,
