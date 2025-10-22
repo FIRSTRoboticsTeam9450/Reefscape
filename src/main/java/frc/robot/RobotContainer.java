@@ -266,21 +266,34 @@ public class RobotContainer {
         //     new RollSideSwitcher(true)
         // );
         
-        m_driver.leftBumper().onTrue(
-            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
-        );
+        // m_driver.leftBumper().onTrue(
+        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        // );
 
-        m_driver.rightBumper().onTrue(
-            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
-        );
+        // m_driver.rightBumper().onTrue(
+        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
+        // );
 
-        // Sticks
+        //Sticks
         m_driver.leftStick().whileTrue(
             new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
         );
         m_driver.rightStick().whileTrue(
             new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
         );
+        
+        // m_driver.a().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        // );
+        // m_driver.x().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        // );
+        // m_driver.y().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
+        // );
+        // m_driver.b().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
+        // );
 
 
         //Store climber
@@ -288,7 +301,7 @@ public class RobotContainer {
             new ClimbCommand(0.822, 4) //12
         );
 
-        m_driver.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
+        // m_driver.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
                 
         m_driver.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
