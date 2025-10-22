@@ -32,8 +32,8 @@ public class ElbowSubsystem extends SubsystemBase {
     private final double offsetToZeroDegrees = 0;
 
     // Motion Magic parameters
-    private double velocity = 18; // Used to be 18
-    private double acceleration = 11; // Used to be 11
+    private double velocity = 36; // Used to be 18
+    private double acceleration = 18; // Used to be 11
     private double jerk = 400; // Used to be 400
 
     // Feedforward and PIDF constants
@@ -41,7 +41,7 @@ public class ElbowSubsystem extends SubsystemBase {
     private double kS = 0;
     private double kV = 0.7;
     private double kA = 0.7;
-    private double kP = 120;
+    private double kP = 420;
     private double kI = 0.000;
     private double kD = 0.25;
     private double kG = 0;
@@ -131,6 +131,7 @@ public class ElbowSubsystem extends SubsystemBase {
             System.out.println("Updated motion profile: (" + velocity + ", " + acceleration + ", " + jerk + ")");
         }
 
+        //have a way to tell if going lower of higher, the use of m_request.withPos...().withSlot(int)
         motor.setControl(m_request.withPosition((setpoint + offsetToZeroDegrees) / -360));
         logger.updateLogger(elbowAngle, setpoint, atSetpoint());
     }

@@ -185,21 +185,6 @@ public class ElevatorSubsystem extends SubsystemBase {
         double rawPosition = leftMotor.getPosition().getValueAsDouble();
         position = rawPosition - offset;
 
-        if(resetDone && Math.abs(leftMotor.getVelocity().getValueAsDouble()) <= 0.01 && Math.abs(leftMotor.getMotorVoltage().getValueAsDouble()) > 0.05 && leftMotor.getPosition().getValueAsDouble() <= 1) {
-            if (justACoupeTimes < 15 && resetDone) {
-                setSetpoint(getSetpoint() - 0.05);
-                justACoupeTimes++;
-            }
-            // if (cooldown > 0) {
-            //     cooldown--;
-            // } else {
-            //     atLimitCount++;
-            //     if (atLimitCount >= 4) {
-            //         resetDone = false;
-            //         justACoupeTimes = 0;
-            //     }
-            // }
-        }
         Logger.recordOutput("Elevator/Resetting?", !resetDone);
         Logger.recordOutput("Elevator/Resetting Count", atLimitCount);
         Logger.recordOutput("Elevator/Left Motor Velocity", leftMotor.getVelocity().getValueAsDouble());

@@ -76,9 +76,9 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController m_driver2 = new CommandXboxController(1);
+    private final CommandXboxController m_operator = new CommandXboxController(1);
 
-    private final CommandXboxController m_driver1 = new CommandXboxController(0);
+    private final CommandXboxController m_driver = new CommandXboxController(0);
 
     public final CommandSwerveDrivetrain drivetrain = TunerConstants.createDrivetrain();
 
@@ -115,16 +115,16 @@ public class RobotContainer {
         drivetrain.setDefaultCommand( // Uncomment later
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driveBezier.getOutput(m_driver1.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driveBezier.getOutput(m_driver1.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-rotateBezier.getOutput(m_driver1.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-driveBezier.getOutput(m_driver.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driveBezier.getOutput(m_driver.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-rotateBezier.getOutput(m_driver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
 
-        scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
-        elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_driver2.getRightY()));
+        // scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_operator.getLeftY()));
+        // elevator.setDefaultCommand(new ManualElevatorCommand(() -> m_operator.getRightY()));
 
-        m_driver1.a().whileTrue(drivetrain.applyRequest(() -> brake));
+        // m_driver.a().whileTrue(drivetrain.applyRequest(() -> brake));
         
         // m_driver1.b().whileTrue(drivetrain.applyRequest(() ->
         //     point.withModuleDirection(new Rotation2d(-m_driver1.getLeftY(), -m_driver1.getLeftX()))
@@ -165,37 +165,37 @@ public class RobotContainer {
         // ──────────────── Keybind Command Assignments ────────────────
 
         // Triggers
-        m_driver1.rightTrigger().onTrue(
+        m_driver.rightTrigger().onTrue(
             new ScoringCommand()
         );
-        m_driver1.leftTrigger().onTrue(
-            new DriverIntakeCommand(m_driver1, drivetrain)
+        m_driver.leftTrigger().onTrue(
+            new DriverIntakeCommand(m_driver, drivetrain)
         );
 
         // Bumpers
-        m_driver1.leftBumper().onTrue(
+        m_driver.leftBumper().onTrue(
             new RollSideSwitcher(true)
         );
-        m_driver1.rightBumper().onTrue(
-            new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
-        );
+        // m_driver.rightBumper().onTrue(
+        //     new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        // );
 
         // Face Buttons
-        m_driver1.x().onTrue(
-            new InstantCommand(() -> intake.setVoltage(0))
-                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
-                .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
-        );
-        m_driver1.y().onTrue(
+        // m_driver.x().onTrue(
+        //     new InstantCommand(() -> intake.setVoltage(0))
+        //         .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+        //         .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
+        // );
+        m_driver.y().onTrue(
             new ResetIMUCommand(drivetrain)
         );
 
         // Sticks
-        m_driver1.leftStick().whileTrue( // Uncomment later
-            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver1)
+        m_driver.leftStick().whileTrue( // Uncomment later
+            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
         );
-        m_driver1.rightStick().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver1)
+        m_driver.rightStick().whileTrue(
+            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
         );
 
         // D-pad
@@ -209,17 +209,17 @@ public class RobotContainer {
         // m_driver1.povRight().onTrue(
         //     new ClimbCommand(0.1, 2) // Used to be .1, 3
         // );
-        m_driver1.povLeft().toggleOnTrue(
-            new FieldCentricCommand(
-                drivetrain,
-                () -> -driveBezier.getOutput(m_driver1.getLeftX()),
-                () -> -driveBezier.getOutput(m_driver1.getLeftY()),
-                () -> rotateBezier.getOutput(m_driver1.getRightX())
-            )
-        );
-        m_driver1.start().onTrue(
-            new InstantCommand(() -> scoreSub.toggleCoralInFront())
-        );
+        // m_driver.povLeft().toggleOnTrue(
+        //     new FieldCentricCommand(
+        //         drivetrain,
+        //         () -> -driveBezier.getOutput(m_driver.getLeftX()),
+        //         () -> -driveBezier.getOutput(m_driver.getLeftY()),
+        //         () -> rotateBezier.getOutput(m_driver.getRightX())
+        //     )
+        // );
+        // m_driver.start().onTrue(
+        //     new InstantCommand(() -> scoreSub.toggleCoralInFront())
+        // );
 
         // m_driver1.a().whileTrue(
         //     new InstantCommand(() -> climb.setVoltage(-1))
@@ -228,18 +228,18 @@ public class RobotContainer {
         //     new InstantCommand(() -> climb.setVoltage(0))
         // );
 
-        m_driver1.povUp().whileTrue(
-            new InstantCommand(() -> climb.setVoltage(-1))
-        );
-        m_driver1.povUp().onFalse(
-            new InstantCommand(() -> climb.setVoltage(0))
-        );
-        m_driver1.povDown().whileTrue(
-            new InstantCommand(() -> climb.setVoltage(1))
-        );
-        m_driver1.povDown().onFalse(
-            new InstantCommand(() -> climb.setVoltage(0))
-        );
+        // m_driver.povUp().whileTrue(
+        //     new InstantCommand(() -> climb.setVoltage(-1))
+        // );
+        // m_driver.povUp().onFalse(
+        //     new InstantCommand(() -> climb.setVoltage(0))
+        // );
+        // m_driver.povDown().whileTrue(
+        //     new InstantCommand(() -> climb.setVoltage(1))
+        // );
+        // m_driver.povDown().onFalse(
+        //     new InstantCommand(() -> climb.setVoltage(0))
+        // );
 
         /* ----- Operator Driver Keybinds ----- */
         /*
@@ -263,21 +263,37 @@ public class RobotContainer {
 
         // === Intake & Storage Controls ===
         // // Trigger coral intake and then store it
-        m_driver2.rightTrigger().onTrue(
+        m_operator.rightTrigger().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_CORAL)
                 .andThen(new DualIntakeCommand(false))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
 
-        //Trigger algae intake sequence
-        m_driver2.povDown().onTrue(
+         m_operator.rightBumper().onTrue(
+            new RollSideSwitcher(false)
+         );
+         m_operator.rightStick().onTrue(
+            new InstantCommand(() -> intake.setVoltage(0))
+                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+                .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
+        );
+        m_operator.leftStick().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
+                    .andThen(new DualIntakeCommand(true))
         );
-        m_driver2.povRight().onTrue(
-            new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
-                .andThen(new DualIntakeCommand(true))
+
+        //Trigger algae intake sequence
+        // m_operator.povDown().onTrue(
+        //     new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
+        m_operator.povDown().onTrue(
+            new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
         );
+        // m_operator.povRight().onTrue(
+        //     new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)
+        //         .andThen(new DualIntakeCommand(true))
+        // );
 
         // === Algae Positioning Controls ===
         // Score algae at level 1 or 2 depending on POV
@@ -290,24 +306,24 @@ public class RobotContainer {
         //         .andThen(new DualIntakeCommand(true))
         // );
 
-        m_driver2.povUp().whileTrue(new RotationLock(drivetrain, m_driver2, driveBezier, DefaultMaxSpeed));
+        m_operator.povUp().whileTrue(new RotationLock(drivetrain, m_operator, driveBezier, DefaultMaxSpeed));
 
         // === Algae Net Controls ===
         // Deactivate algae net
-        m_driver2.leftTrigger().onTrue(
+        m_operator.leftTrigger().onTrue(
             new InstantCommand(() -> scoreSub.setAlgaeNet(false))
         );
 
         // Activate algae net
-        m_driver2.leftBumper().onTrue(
+        m_operator.leftBumper().onTrue(
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
 
         // === Scoring Level Controls ===
-        m_driver2.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        m_driver2.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        m_driver2.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        m_driver2.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        m_operator.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        m_operator.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_operator.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        m_operator.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         // === Miscellaneous ===
         // Play music on command

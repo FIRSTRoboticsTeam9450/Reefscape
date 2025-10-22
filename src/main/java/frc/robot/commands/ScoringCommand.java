@@ -67,7 +67,7 @@ public class ScoringCommand extends Command {
     /** Main execution logic - monitors subsystem state before initiating score. */
     @Override
     public void execute() {
-        if (runDelay > 20) {
+        if (runDelay > -1) {
             if (running && scoreSub.getAllAtSetpoints()) {
                 score();
                 running = false;
@@ -85,7 +85,7 @@ public class ScoringCommand extends Command {
         if (running) return false;
 
         double timeElapsed = timer.get();
-        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : timeElapsed > 1;
+        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : scoreSub.getDesiredLevel() == 4 ? timeElapsed > 1.25 :timeElapsed > 0.8;
     }
 
     /** Logic to run at command end - retries or transitions to storage depending on state. */

@@ -30,7 +30,7 @@ public class ThingThreeConfig implements RobotConfig {
     double elbowRatio = 92.99 / 90.0; // 27.6 / 1
     
     double elbowGroundSetpoint = -9.5;
-    double pitchGroundSetpoint = -135;//208
+    double pitchGroundSetpoint = -145;//208
 
     double elevatorNetPos = 38;
 

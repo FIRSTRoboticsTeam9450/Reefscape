@@ -215,7 +215,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     public boolean atPitchSetpoint() {
         double pitchAngle = getPitchAngle();// * 1.5;
         double pitchSetpoint = getPitchSetpoint();
-        if ((pitchAngle > pitchSetpoint - 5) && (pitchAngle < pitchSetpoint + 5)) {
+        if ((pitchAngle > pitchSetpoint - 15) && (pitchAngle < pitchSetpoint + 15)) {
             return true;
         }
         return false;
