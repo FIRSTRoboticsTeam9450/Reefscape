@@ -151,50 +151,71 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.FeedbackSensorSourceValue;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.SensorDirectionValue;
+import com.revrobotics.spark.SparkAbsoluteEncoder;
+import com.revrobotics.spark.SparkBase.PersistMode;
+import com.revrobotics.spark.SparkBase.ResetMode;
+import com.revrobotics.spark.SparkFlex;
+import com.revrobotics.spark.SparkLowLevel.MotorType;
+import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
+import com.revrobotics.spark.config.SparkFlexConfig;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
+import frc.robot.Constants.debugging;
 import frc.robot.commands.CancelCommand;
 
 public class ClimbSubsystem extends SubsystemBase {
 
     public static ClimbSubsystem instance;
 
-    private TalonFX climbMotor = new TalonFX(Constants.ClimberIDs.kMotorID, Constants.CTRE_BUS);
-    private CANcoder climbEncoder = new CANcoder(Constants.ClimberIDs.kEncoderID, Constants.CTRE_BUS);
+    private SparkFlex climbMotor = new SparkFlex(Constants.ClimberIDs.kMotorID, MotorType.kBrushless);
+    private final SparkAbsoluteEncoder climbEncoder = climbMotor.getAbsoluteEncoder();
+    private final PIDController pid = new PIDController(55, 0, 0.5);
+    private final boolean runClimber = Constants.robotConfig.getRunClimber();
+    // private TalonFX climbMotor = new TalonFX(Constants.ClimberIDs.kMotorID, Constants.CTRE_BUS);
+    // private CANcoder climbEncoder = new CANcoder(Constants.ClimberIDs.kEncoderID, Constants.CTRE_BUS);
     // private TalonFX temporaryEncoderTestingThingyMagigySoICanSeeIfTheEncoderNeedsToBeATalonFXInsteadOfACANCoder = new TalonFX(28, Constants.CTRE_BUS);
 
 
+    private double maxVolts = 12;
 
     public ClimbSubsystem() {
         configuration();
     }
 
     public void configuration() {
-            CANcoderConfiguration encoderConfig = new CANcoderConfiguration();
-            TalonFXConfiguration motorConfig = new TalonFXConfiguration();
-
-            encoderConfig.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.1;
-            encoderConfig.MagnetSensor.SensorDirection = SensorDirectionValue.Clockwise_Positive;
-            encoderConfig.MagnetSensor.MagnetOffset = -0.065673828125;
             
-
-            motorConfig.MotorOutput.NeutralMode = Constants.defaultNeutral;
-            motorConfig.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
-
-            // motorConfig.Feedback.FeedbackRemoteSensorID = climbEncoder.getDeviceID();
-            // motorConfig.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-
-            climbMotor.getConfigurator().apply(motorConfig);
-            climbEncoder.getConfigurator().apply(encoderConfig);
+        SparkFlexConfig config = new SparkFlexConfig();
+        config.idleMode(IdleMode.kBrake);
+        climbMotor.configure(config, ResetMode.kResetSafeParameters, PersistMode.kPersistParameters);
     }
 
+    /* -------- Periodic Update -------- */
+    @Override
     public void periodic() {
-        Logger.recordOutput("Reefscape/ClimberTesting/Encoder value", climbEncoder.getPosition().getValueAsDouble());
+        if (runClimber) {
+            double voltage = updatePIDs(climbEncoder.getPosition());
+            //setVoltage(-voltage);
+
+            if (debugging.ClimberPos) {
+                Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", climbEncoder.getPosition());
+                Logger.recordOutput("Reefscape/Climbers/PID Setpoint", pid.getSetpoint());
+                Logger.recordOutput("Reefscape/Climbers/Voltage", voltage);
+            }
+        }
     }
+
+    /* -------- PID Helpers -------- */
+    public double updatePIDs(double pos) {
+        double voltage = pid.calculate(pos);
+        return MathUtil.clamp(voltage, -maxVolts, maxVolts);
+    }
+
+    /* -------- Setters -------- */
 
     public void setVoltage(double voltage) {
         voltage = MathUtil.clamp(voltage, -12.0, 12.0);
@@ -202,11 +223,11 @@ public class ClimbSubsystem extends SubsystemBase {
     }
 
     public void setSetpoint(double setpoint) {
-
+        pid.setSetpoint(setpoint);
     }
 
-    public void setMaxVolts(double volts) {
-
+    public void setMaxVolts(double maxVolts) {
+        this.maxVolts = Math.abs(maxVolts);
     }
 
     public static ClimbSubsystem getInstance() {

@@ -206,9 +206,9 @@ public class RobotContainer {
         //     new ClimbCommand(0.300, 2) // Used to be .3, 9
         //         .andThen(new CoordinationCommand(ScoringPos.START))
         // );
-        m_driver1.povRight().onTrue(
-            new ClimbCommand(0.1, 2) // Used to be .1, 3
-        );
+        // m_driver1.povRight().onTrue(
+        //     new ClimbCommand(0.1, 2) // Used to be .1, 3
+        // );
         m_driver1.povLeft().toggleOnTrue(
             new FieldCentricCommand(
                 drivetrain,
@@ -228,18 +228,18 @@ public class RobotContainer {
         //     new InstantCommand(() -> climb.setVoltage(0))
         // );
 
-        // m_driver1.povUp().whileTrue(
-        //     new InstantCommand(() -> climb.setVoltage(-1))
-        // );
-        // m_driver1.povUp().onFalse(
-        //     new InstantCommand(() -> climb.setVoltage(0))
-        // );
-        // m_driver1.povDown().whileTrue(
-        //     new InstantCommand(() -> climb.setVoltage(1))
-        // );
-        // m_driver1.povDown().onFalse(
-        //     new InstantCommand(() -> climb.setVoltage(0))
-        // );
+        m_driver1.povUp().whileTrue(
+            new InstantCommand(() -> climb.setVoltage(-1))
+        );
+        m_driver1.povUp().onFalse(
+            new InstantCommand(() -> climb.setVoltage(0))
+        );
+        m_driver1.povDown().whileTrue(
+            new InstantCommand(() -> climb.setVoltage(1))
+        );
+        m_driver1.povDown().onFalse(
+            new InstantCommand(() -> climb.setVoltage(0))
+        );
 
         /* ----- Operator Driver Keybinds ----- */
         /*
