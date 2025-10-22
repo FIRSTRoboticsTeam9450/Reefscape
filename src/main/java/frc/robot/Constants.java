@@ -92,8 +92,8 @@ public final class Constants {
     public static final double algaeIn = 0.65;
     public static final double algaeBack = 0.7;
     public static final double algaeLeft = 0.0;
-    public static final double procOut = 2.5;
-    public static final double procIn = 1;
+    public static final double procOut = 1.5;
+    public static final double procIn = 0.75;
   }
 
   // =========================
@@ -148,7 +148,7 @@ public final class Constants {
     public static final boolean ClimberPos = false;
     public static final boolean CurrentPos = false;
     public static final boolean DiffyTuningValues = false;
-    public static final boolean AlignDebugging = false;
+    public static final boolean AlignDebugging = true;
     public static final boolean IntakeDebugging = false;
   }
 }

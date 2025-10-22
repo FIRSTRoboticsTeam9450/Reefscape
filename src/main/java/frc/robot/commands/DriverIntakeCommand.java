@@ -1,5 +1,6 @@
 package frc.robot.commands;
 
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import frc.robot.Constants.ScoringPos;
@@ -16,6 +17,8 @@ public class DriverIntakeCommand extends Command {
 
     DriveForwardCommand forward;
 
+    private boolean hasCoral;
+
 
     public DriverIntakeCommand (CommandXboxController driveController, CommandSwerveDrivetrain drive) {
         this.drive = drive;
@@ -25,23 +28,36 @@ public class DriverIntakeCommand extends Command {
 
     @Override
     public void initialize() {
-        if (score.getPos() == ScoringPos.INTAKE_CORAL) {
-            if (driveController.getLeftTriggerAxis() > 0.05) {
-                if (!forward.isScheduled()) {
-                    forward.schedule();
+        boolean use1Controller = SmartDashboard.getBoolean("Experimental Keybinds choosen setting", false);
+        if (use1Controller) {
+            hasCoral = intake.hasCoral();
+            if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+                if (driveController.getLeftTriggerAxis() > 0.05) {
+                    if (!forward.isScheduled()) {
+                        forward.schedule();
+                    }
+                } else {
+                    forward.cancel();
                 }
+            } else if (hasCoral) {
+                new GoToScorePosCommand().schedule();
             } else {
-                forward.cancel();
+                new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                    .andThen(new DualIntakeCommand(true)).schedule();
             }
         } else {
-            new GoToScorePosCommand().schedule();
+            if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+                if (driveController.getLeftTriggerAxis() > 0.05) {
+                    if (!forward.isScheduled()) {
+                        forward.schedule();
+                    }
+                } else {
+                    forward.cancel();
+                }
+            } else {
+                new GoToScorePosCommand().schedule();
+            }
         }
-
-        // if (!score.getAlgae()) {
-        //     new CoordinationCommand(ScoringPos.INTAKE_CORAL).andThen(new DualIntakeCommand(false)).andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)).schedule();
-        // } else {
-        //     new GoToScorePosCommand().schedule();
-        // }
     }
 
     @Override

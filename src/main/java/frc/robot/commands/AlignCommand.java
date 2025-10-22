@@ -193,6 +193,7 @@ public class AlignCommand extends Command {
                     tid = 16;
                 }
                 offset = Constants.AlignOffsets.procOut;
+                usedBackLL = false;
             }
             double[] pose = getAlignPos(map.get(tid), offset);
             debuggingCenterAlignIssue = "In Initialization";
@@ -354,9 +355,18 @@ public class AlignCommand extends Command {
                 BpidY.setSetpoint(pose[1]);
                 BpidRotate.setSetpoint(pose[2]);
             }
-            else if(atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
+            else if (atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
                 double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.algaeIn);
                 debuggingCenterAlignIssue = "Algae";
+                FpidX.setSetpoint(pose[0]);
+                FpidY.setSetpoint(pose[1]);
+                FpidRotate.setSetpoint(pose[2]);
+                BpidX.setSetpoint(pose[0]);
+                BpidY.setSetpoint(pose[1]);
+                BpidRotate.setSetpoint(pose[2]);
+            }
+            else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
+                double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.procIn);
                 FpidX.setSetpoint(pose[0]);
                 FpidY.setSetpoint(pose[1]);
                 FpidRotate.setSetpoint(pose[2]);

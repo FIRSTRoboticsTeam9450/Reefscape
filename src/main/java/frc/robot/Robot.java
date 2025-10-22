@@ -6,6 +6,7 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -45,12 +46,18 @@ public class Robot extends LoggedRobot {
   private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
   private CoordinationSubsytem coordSub = CoordinationSubsytem.getInstance();
 
+  private final SendableChooser<Boolean> experimentalKeybindsChooser;
+
   //public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
 
   public Robot() {
     Logger.addDataReceiver(new NT4Publisher());
     Logger.addDataReceiver(new WPILOGWriter("/home/lvuser/logs"));
     Logger.start();
+
+    experimentalKeybindsChooser = new SendableChooser<>();
+    experimentalKeybindsChooser.addOption("Experimentla Keybinds", true);
+    experimentalKeybindsChooser.setDefaultOption("Normal Keybinds", false);
 
     m_robotContainer = new RobotContainer();
     // CameraServer.startAutomaticCapture();
@@ -88,6 +95,8 @@ public class Robot extends LoggedRobot {
       CommandScheduler.getInstance().cancelAll();
     }
     SignalLogger.stop();
+    SmartDashboard.putData("Experimental Keybinds", experimentalKeybindsChooser);
+    SmartDashboard.putBoolean("Experimental Keybinds choosen setting", experimentalKeybindsChooser.getSelected());
   }
 
   @Override
