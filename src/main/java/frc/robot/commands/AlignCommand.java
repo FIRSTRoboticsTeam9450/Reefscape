@@ -39,7 +39,7 @@ public class AlignCommand extends Command {
     private HashMap<Integer, double[]> map = new HashMap<>();
 
     /* ----- PIDs ----- */
-    private PIDController pidX = new PIDController(4.5, 0, 0);
+    private PIDController pidX = new PIDController(6, 0, 0);
     private PIDController pidY = new PIDController(4.5, 0, 0);
     private PIDController pidRotate = new PIDController(8, 0, 0);
 
@@ -220,9 +220,9 @@ public class AlignCommand extends Command {
             if (position == AlignPos.RIGHT) {
                 tagLeftOffset = score.getDesiredLevel() == 1 ? Constants.AlignOffsets.rightReefL1 : Constants.AlignOffsets.rightReef;
             }
-        } else  if (!score.getAlgaeNet() && score.getPos() != ScoringPos.GO_SCORE_CORAL && !hasCoral){
+        } else  if (score.getPos() != ScoringPos.GO_SCORE_CORAL && !hasCoral){
             // Algae
-            tagLeftOffset = Constants.AlignOffsets.algaeLeft; // Set left offset for center
+            tagLeftOffset = 0; //Constants.AlignOffsets.algaeLeft; // Set left offset for center
             tagForwardOffset = Constants.AlignOffsets.algaeBack; //temp: 0.65 is old value of algaeBack // 0.45
             // if (tagForwardOffset == Constants.AlignOffsets.firstCoralBack) {
             //     tagForwardOffset = Constants.AlignOffsets.algaeBack; // Set forward offset for center

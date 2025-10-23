@@ -173,9 +173,9 @@ public class RobotContainer {
         );
 
         // Bumpers
-        m_driver.leftBumper().onTrue(
-            new RollSideSwitcher(true)
-        );
+        // m_driver.leftBumper().onTrue(
+        //     new RollSideSwitcher(true)
+        // );
         // m_driver.rightBumper().onTrue(
         //     new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
         // );
@@ -270,7 +270,7 @@ public class RobotContainer {
         );
 
          m_operator.rightBumper().onTrue(
-            new RollSideSwitcher(false)
+            new RollSideSwitcher(true)
          );
          m_operator.rightStick().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))

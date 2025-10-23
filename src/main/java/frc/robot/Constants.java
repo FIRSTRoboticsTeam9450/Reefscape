@@ -83,8 +83,8 @@ public final class Constants {
     public static final double rightReef = -0.173; //-0.173
     public static final double leftReefL1 = 0.224;
     public static final double rightReefL1 = -0.224;
-    public static final double firstCoralBack = 0.6;
-    public static final double scoreCoralBack = 0.44;
+    public static final double firstCoralBack = 0.55;
+    public static final double scoreCoralBack = 0.43;
     public static final double scoreL3Back = 0.465;
     public static final double algaeIn = 0.65;
     public static final double algaeBack = 0.7;

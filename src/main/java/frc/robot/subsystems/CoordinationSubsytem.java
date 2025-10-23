@@ -780,11 +780,11 @@ public class CoordinationSubsytem extends SubsystemBase{
                 }
             }
         } else if (level == 1) {
+            Elev.setSetpoint(coralScoreElev);
             DW.setPitchSetpoint(coralScorePitch);
             Elbow.setSetpoint(coralScoreElbow);
 
             if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
-                Elev.setSetpoint(coralScoreElev);
             }
         } else if (level == 4) {
             Elev.setSetpoint(coralScoreElev);
