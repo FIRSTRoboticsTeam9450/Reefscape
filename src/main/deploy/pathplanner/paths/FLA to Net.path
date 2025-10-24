@@ -70,7 +70,12 @@
       "name": "up",
       "waypointRelativePos": 0.8642808912896264,
       "endWaypointRelativePos": null,
-      "command": null
+      "command": {
+        "type": "named",
+        "data": {
+          "name": "GoToScore"
+        }
+      }
     }
   ],
   "globalConstraints": {

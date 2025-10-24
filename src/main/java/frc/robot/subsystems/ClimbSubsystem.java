@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
+import frc.robot.Constants.ClimbPos;
 import frc.robot.Constants.ClimberIDs;
 import frc.robot.Constants.debugging;
 
@@ -39,7 +40,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public ClimbSubsystem() {
         configuration();
-        climberPID.setSetpoint(0.822);
+        setSetpoint(ClimbPos.STORE);
         radio.addMotor(climbMotor);
 
     }
@@ -86,12 +87,35 @@ public class ClimbSubsystem extends SubsystemBase {
      * Sets the setpoint of the pid
      * @param setpoint Absolute encoder value of where we wish climber to be
      */
-    public void setSetpoint(double setpoint) {
-        climberPID.setSetpoint(setpoint);
+    public void setSetpoint(ClimbPos setpoint) {
+        double rotSetpoint = 0.25;
+        double maxSpeed = 4;
+        if (setpoint == ClimbPos.STORE) {
+            rotSetpoint = 0.795;
+            maxSpeed = 4;
+        } else if (setpoint == ClimbPos.CLIMBING) {
+            rotSetpoint = 0.71;
+            maxSpeed = 8;
+        } else if (setpoint == ClimbPos.ENGAGING) {
+            rotSetpoint = 0.25;
+            maxSpeed = 12;
+        }
+        climberPID.setSetpoint(rotSetpoint);
+        setMaxVolts(maxSpeed);
     }
 
     public void setMaxVolts(double maxVolts) {
         this.maxVolts = Math.abs(maxVolts);
+    }
+
+    public ClimbPos getSetpoint() {
+        double rotSetpoint = climberPID.getSetpoint();
+        if (rotSetpoint == 0.71) {
+            return ClimbPos.CLIMBING;
+        } else if (rotSetpoint == 0.25) {
+            return ClimbPos.ENGAGING;
+        }
+        return ClimbPos.STORE;
     }
 
     /**
