@@ -355,7 +355,12 @@ public class AlignCommand extends Command {
                 pidY.setSetpoint(pose[1]);
                 pidRotate.setSetpoint(pose[2]);
             }
-
+            else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
+                double[] pose = getAlignPos(map.get(tid), Constants.AlignOffsets.procIn);
+                pidX.setSetpoint(pose[0]);
+                pidY.setSetpoint(pose[1]);
+                pidRotate.setSetpoint(pose[2]);
+            }
             if (atSetpoint(0.5, 0.8)) {
                 if (score.getDesiredLevel() != 4 && !up && !score.getAlgae() && hasCoral) {
                     up = true;
