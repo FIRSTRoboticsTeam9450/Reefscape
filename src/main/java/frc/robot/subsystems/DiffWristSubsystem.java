@@ -27,7 +27,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     
     // PID
     private PIDController pitchPID = new PIDController(5, 0, 0);
-    private PIDController rollPID = new PIDController(50, 0, 0);
+    private PIDController rollPID = new PIDController(40, 0, 0);
 
     // // Motors
     private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.CTRE_BUS);
@@ -227,7 +227,6 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setRollSetpoint(double setpoint) {
         setpoint /= 360;
-        //setpoint *= 1.0957;
         rollPID.setSetpoint(setpoint);
     }
 

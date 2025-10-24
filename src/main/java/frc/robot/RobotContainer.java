@@ -64,8 +64,8 @@ public class RobotContainer {
 
     private static boolean driveEnabled = true;
 
-    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01);
-    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.01);
+    public BezierCurve driveBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.005);
+    public BezierCurve rotateBezier = new BezierCurve("drive", 89.4, 0.117, 88.5, 0.896, 0.07, 0.005);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
     private final SwerveRequest.FieldCentric drive = new SwerveRequest.FieldCentric()
@@ -199,16 +199,16 @@ public class RobotContainer {
         );
 
         // D-pad
-        // m_driver1.povUp().onTrue(
-        //     new ClimbCommand(0.9, 2) // Used to be 0.9, 12
-        // );
-        // m_driver1.povDown().onTrue(
-        //     new ClimbCommand(0.300, 2) // Used to be .3, 9
-        //         .andThen(new CoordinationCommand(ScoringPos.START))
-        // );
-        // m_driver1.povRight().onTrue(
-        //     new ClimbCommand(0.1, 2) // Used to be .1, 3
-        // );
+        m_driver.povUp().onTrue(
+            new ClimbCommand(0.88, 12)
+        );
+        m_driver.povDown().onTrue(
+            new ClimbCommand(0.33, 8) 
+                .andThen(new CoordinationCommand(ScoringPos.START))
+        );
+        m_driver.povRight().onTrue(
+            new ClimbCommand(0.153, 4) // Used to be .1, 3
+        );
         // m_driver.povLeft().toggleOnTrue(
         //     new FieldCentricCommand(
         //         drivetrain,
@@ -396,6 +396,7 @@ public class RobotContainer {
     public void registeredCommands() {
         // Intake Commands
         NamedCommands.registerCommand("IntakeHold", new InstantCommand(() -> intake.setVoltage(2)));
+        NamedCommands.registerCommand("Outtake", new InstantCommand(() -> intake.setVoltage(-2)));
         NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand(false)));
         NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand(true)));
 

@@ -93,6 +93,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     private boolean onlyOnce;
     private boolean combinedAlgae;
 
+    public boolean flipping;
     private int tid;
     /**
      * gets the starting angle / position of the encoders
@@ -324,7 +325,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         elbowEncoder = Elbow.getAngle();
         elevEncoder = Elev.getPosition();
         
-        if (!allAtSetpoints || justChanged || combinedAlgae || justACoupleMore < 20) { // remove justACoupleMore
+        if (!allAtSetpoints || justChanged || combinedAlgae || justACoupleMore < 20 && !flipping) { // remove justACoupleMore
             
             justChanged = false;
             if (!allAtSetpoints || justChanged) {
@@ -520,11 +521,11 @@ public class CoordinationSubsytem extends SubsystemBase{
             //     rollToClosestSide();
             // }
             rollToClosestSide();
-            if (lastPos != ScoringPos.INTAKE_CORAL && !DW.atRollSetpoint()) {
-                Elbow.setSetpoint(50);
-            } else {
+            // if (lastPos != ScoringPos.INTAKE_CORAL && !DW.atRollSetpoint()) {
+            //     Elbow.setSetpoint(50);
+            // } else {
                 Elbow.setSetpoint(90);
-            }
+            //}
             if (lastPos == ScoringPos.INTAKE_VERTICAL_CORAL) {
                 if (elbowEncoder > 30) 
                 DW.setPitchSetpoint(-150);
@@ -982,10 +983,13 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     public void rollToOtherSide() {
+        Logger.recordOutput("Reefscape/Debugging/Flip/coralSideLeft?", coralSideLeft);
         if (coralSideLeft) {
+            flipping = true;
             DW.setRollSetpoint(-94);
             coralSideLeft = false;
         } else if (!coralSideLeft) {
+            flipping = true;
             DW.setRollSetpoint(90);
             coralSideLeft = true;
         }

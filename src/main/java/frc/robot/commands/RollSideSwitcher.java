@@ -1,5 +1,7 @@
 package frc.robot.commands;
 
+import org.littletonrobotics.junction.Logger;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
@@ -20,6 +22,8 @@ public class RollSideSwitcher extends Command{
 
     private boolean left;
 
+    private String debuggingNoRoll = "Null";
+
     /* ----------- Initialization ----------- */
 
     public RollSideSwitcher(boolean left) {
@@ -37,13 +41,17 @@ public class RollSideSwitcher extends Command{
     public void execute() {
         if (!hasAlgae) {
             if (CT.getPos() == ScoringPos.CORAL_STORE && CT.getDesiredLevel() == 4) {
+                debuggingNoRoll = "Pre-L4";
                 CT.setL4RollSide(left);
                 finished = true;
-            } else if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4)) {
-                if (!finished)
+            } else if ((CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE) || ((CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4))) {
+                debuggingNoRoll = "At All Setpoints && Store || GO_SCORE_CORAL && L4";
+                if (!finished){
                     CT.rollToOtherSide();
+                }
                 finished = true;
             } else if (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() != 1) {
+                debuggingNoRoll = "Score && !L1";
                 wrist.setPitchSetpoint(-130);
                 if (wrist.atPitchSetpoint() && !finished) {
                     CT.rollToOtherSide();
@@ -51,6 +59,9 @@ public class RollSideSwitcher extends Command{
                 }
             }
         }
+        Logger.recordOutput("Reefscape/Debugging/Flip/RollSetpoint", wrist.atRollSetpoint());
+        Logger.recordOutput("Reefscape/Debugging/Flip/Finished?", finished);
+        Logger.recordOutput("Reefscape/Debugging/Flip/Flip No Roll D:", debuggingNoRoll);
     }
 
     /* ----------- Finishers ----------- */
@@ -68,6 +79,7 @@ public class RollSideSwitcher extends Command{
 
     @Override
     public void end(boolean interrupted) {
+        CT.flipping = false;
         if (CT.getPos() == ScoringPos.GO_SCORE_CORAL && (CT.getScoringLevel() == 3 || CT.getScoringLevel() == 2) && !interrupted) {
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }

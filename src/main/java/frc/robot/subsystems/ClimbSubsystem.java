@@ -181,10 +181,11 @@ public class ClimbSubsystem extends SubsystemBase {
     // private TalonFX temporaryEncoderTestingThingyMagigySoICanSeeIfTheEncoderNeedsToBeATalonFXInsteadOfACANCoder = new TalonFX(28, Constants.CTRE_BUS);
 
 
-    private double maxVolts = 12;
+    private double maxVolts = 4;
 
     public ClimbSubsystem() {
         configuration();
+        pid.setSetpoint(0.153);
     }
 
     public void configuration() {
@@ -199,7 +200,7 @@ public class ClimbSubsystem extends SubsystemBase {
     public void periodic() {
         if (runClimber) {
             double voltage = updatePIDs(climbEncoder.getPosition());
-            //setVoltage(-voltage);
+            setVoltage(-voltage);
 
             if (debugging.ClimberPos) {
                 Logger.recordOutput("Reefscape/Climbers/Motor Revolutions", climbEncoder.getPosition());

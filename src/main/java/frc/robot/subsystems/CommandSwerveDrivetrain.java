@@ -275,6 +275,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //     setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         // }
         visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
+        usingBackLL = false;
         setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         if (visionPose == null || visionPose.tagCount == 0) {
             visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-back");
@@ -282,6 +283,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (visionPose == null) {
                 return;
             }
+        }
+
+        if (!DriverStation.isAutonomous()) {
+            completeVisionOverride = false;
+            backVisionOverride = false;
+            frontVisionOverride = false;
         }
 
         boolean dontUpdate = false;
