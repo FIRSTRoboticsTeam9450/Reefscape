@@ -166,7 +166,7 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.debugging;
-import frc.robot.commands.CancelCommand;
+
 
 public class ClimbSubsystem extends SubsystemBase {
 

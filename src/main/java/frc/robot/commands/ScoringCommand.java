@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.subsystems.CoordinationSubsytem;
@@ -20,7 +21,7 @@ public class ScoringCommand extends Command {
     private final CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
     private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
     private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
-    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
+    private final SequentialCommandGroup elev = new SequentialCommandGroup(new WaitCommand(.7), new CoordinationCommand(ScoringPos.ScoreL4));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
     // ----- Variables -----
@@ -67,7 +68,7 @@ public class ScoringCommand extends Command {
     /** Main execution logic - monitors subsystem state before initiating score. */
     @Override
     public void execute() {
-        if (runDelay > -1) {
+        if (runDelay > 2) {
             if (running && scoreSub.getAllAtSetpoints()) {
                 score();
                 running = false;
