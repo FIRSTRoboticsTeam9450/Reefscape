@@ -34,7 +34,7 @@
   "eventMarkers": [
     {
       "name": "Outtake",
-      "waypointRelativePos": 0,
+      "waypointRelativePos": 0.20256583389600796,
       "endWaypointRelativePos": null,
       "command": {
         "type": "named",
@@ -57,7 +57,7 @@
   ],
   "globalConstraints": {
     "maxVelocity": 3.0,
-    "maxAcceleration": 2.0,
+    "maxAcceleration": 2.5,
     "maxAngularVelocity": 540.0,
     "maxAngularAcceleration": 720.0,
     "nominalVoltage": 12.0,

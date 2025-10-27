@@ -25,6 +25,7 @@ public class DriverIntakeCommand extends Command {
 
     @Override
     public void initialize() {
+        boolean hasCoral = intake.hasCoral();
         if (score.getPos() == ScoringPos.INTAKE_CORAL) {
             if (driveController.getLeftTriggerAxis() > 0.05) {
                 if (!forward.isScheduled()) {
@@ -33,8 +34,12 @@ public class DriverIntakeCommand extends Command {
             } else {
                 forward.cancel();
             }
-        } else {
+        } else if (hasCoral) {
             new GoToScorePosCommand().schedule();
+        } else {
+            new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+            .andThen(new DualIntakeCommand(false))
+            .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)).schedule();
         }
 
         // if (!score.getAlgae()) {

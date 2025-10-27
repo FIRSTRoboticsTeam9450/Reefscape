@@ -199,16 +199,11 @@ public class RobotContainer {
         );
 
         // D-pad
-        m_driver.povUp().onTrue(
-            new ClimbCommand(0.88, 12)
-        );
-        m_driver.povDown().onTrue(
-            new ClimbCommand(0.33, 8) 
-                .andThen(new CoordinationCommand(ScoringPos.START))
-        );
         m_driver.povRight().onTrue(
-            new ClimbCommand(0.153, 4) // Used to be .1, 3
+            new ClimbCommand(0.13, 4) // Used to be .1, 3
         );
+
+
         // m_driver.povLeft().toggleOnTrue(
         //     new FieldCentricCommand(
         //         drivetrain,
@@ -262,6 +257,7 @@ public class RobotContainer {
         
 
         // === Intake & Storage Controls ===
+
         // // Trigger coral intake and then store it
         m_operator.rightTrigger().onTrue(
             new CoordinationCommand(ScoringPos.INTAKE_CORAL)
@@ -289,6 +285,14 @@ public class RobotContainer {
         // );
         m_operator.povDown().onTrue(
             new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        );
+
+        m_operator.povLeft().onTrue(
+            new ClimbCommand(0.88, 12)
+        );
+        m_operator.povRight().onTrue(
+            new ClimbCommand(0.33, 8) 
+                .andThen(new CoordinationCommand(ScoringPos.START))
         );
         // m_operator.povRight().onTrue(
         //     new CoordinationCommand(ScoringPos.LOLIPOP_INTAKE_ALGAE)

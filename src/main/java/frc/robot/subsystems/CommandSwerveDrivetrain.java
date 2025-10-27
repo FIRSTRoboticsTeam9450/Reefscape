@@ -303,7 +303,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             if (!completeVisionOverride) {
                 if (!frontVisionOverride && !usingBackLL) {
                     addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
-                } else if (!backVisionOverride && usingBackLL) {
+                } else if (!DriverStation.isAutonomous() && usingBackLL) {
                     addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
                 }
             }

@@ -227,6 +227,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      */
     public void setRollSetpoint(double setpoint) {
         setpoint /= 360;
+        setpoint /= 1.05;
         rollPID.setSetpoint(setpoint);
     }
 
@@ -252,7 +253,7 @@ public class DiffWristSubsystem extends SubsystemBase {
      * @return angle of roll
      */
     public double getRollSetpoint() {
-        return rollPID.getSetpoint() * 360; // / 1.4;
+        return rollPID.getSetpoint() * 360 * 1.05; // / 1.4;
     }
 
     public boolean getIfDoingPIDS() {

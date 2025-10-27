@@ -185,7 +185,7 @@ public class ClimbSubsystem extends SubsystemBase {
 
     public ClimbSubsystem() {
         configuration();
-        pid.setSetpoint(0.153);
+        pid.setSetpoint(0.115);
     }
 
     public void configuration() {

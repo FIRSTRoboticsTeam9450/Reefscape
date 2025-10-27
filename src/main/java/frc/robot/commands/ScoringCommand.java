@@ -4,6 +4,7 @@ import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.ScoringPos;
@@ -23,11 +24,13 @@ public class ScoringCommand extends Command {
     private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
     private final SequentialCommandGroup elev = new SequentialCommandGroup(new WaitCommand(.7), new CoordinationCommand(ScoringPos.ScoreL4));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
+    private final InstantCommand outtake = new InstantCommand(() -> intake.setVoltage(-2));
 
     // ----- Variables -----
     private final Timer timer = new Timer();
     private ScoringPos position;
     private boolean algae;
+    private boolean coral;
     private double runDelay;
     private boolean running;
 
@@ -35,6 +38,7 @@ public class ScoringCommand extends Command {
     @Override
     public void initialize() {
         runDelay = 0;
+        
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
         if(position == ScoringPos.GO_SCORE_CORAL)
@@ -52,10 +56,10 @@ public class ScoringCommand extends Command {
     /** Handles the actual scoring based on detected conditions. */
     public void score() {
         if (algae || position == ScoringPos.ALGAE_STORE) {
-            intake.setVoltage(scoreSub.getAlgaeNet() ? -10.5 : -3);
+            intake.setVoltage(scoreSub.getAlgaeNet() ? (DriverStation.isAutonomous() ? -12 :-10.5) : -3);
         } else if (scoreSub.getScoringLevel() == 4) {
             elev.schedule();
-            intake.setVoltage(0.5);
+            intake.setVoltage(0);
         } else if (scoreSub.getScoringLevel() == 1) {
             intake.setVoltage(-2);
         } else {
@@ -76,6 +80,10 @@ public class ScoringCommand extends Command {
         } else {
             scoreSub.checkAllAtSetpoints();
             runDelay++;
+        }
+        if (!coral) {
+            outtake.schedule();
+            running = false;
         }
         Logger.recordOutput("Reefscape/Debugging/Scoring Run Delay", runDelay);
     }

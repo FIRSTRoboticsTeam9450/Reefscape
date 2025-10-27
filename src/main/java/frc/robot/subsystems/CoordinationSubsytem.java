@@ -699,7 +699,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         if (algae) {
             //Elev.setSlow();
             if (algaeNet) { // net
-                coralScorePitch = -130; //-145
+                coralScorePitch = -105;
                 coralScoreElbow = 76;
                 coralScoreElev = Constants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
@@ -731,7 +731,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 5;
                     } else {
-                        coralScoreElev = 4; //Comp: 3.75
+                        coralScoreElev = 4.5; //Comp: 3.75
                     }
                     //rollToClosestSide();
                     break;
@@ -741,7 +741,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 13.75;
                     } else {
-                        coralScoreElev = 12.75;
+                        coralScoreElev = 13.50;
 
                     }
                     //rollToClosestSide();
@@ -955,7 +955,7 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     private void rollToL4() {
         if (l4RollLeft) {
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(102);
             coralSideLeft = true;
         } else {
             DW.setRollSetpoint(-94);
@@ -974,7 +974,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             DW.setRollSetpoint(-94); // Just multiply the original values by 1.4 the gear ratio
             coralSideLeft = false;
         } else if (rollEncoder > 5) {
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(102);
             coralSideLeft = true;
         } else {
             DW.setRollSetpoint(-94);
@@ -990,7 +990,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             coralSideLeft = false;
         } else if (!coralSideLeft) {
             flipping = true;
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(102);
             coralSideLeft = true;
         }
     }
