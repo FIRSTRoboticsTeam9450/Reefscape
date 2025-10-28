@@ -96,6 +96,12 @@ public final class Constants {
     public static final double procIn = 0.75;
   }
 
+  public enum ClimbPos {
+    STORE,
+    ENGAGING,
+    CLIMBING
+  }
+
   // =========================
   // Enumerations
   // =========================
@@ -140,15 +146,15 @@ public final class Constants {
   // =========================
 
   public static class debugging {
-    public static final boolean SwerveDebugging = false;
-    public static final boolean LimelightDebugging = false;
-    public static final boolean CoordAllowedPathsDebugging = false;
-    public static final boolean CoordPositionDebugging = false;
-    public static final boolean CoordAllAtSetpoint = false;
-    public static final boolean ClimberPos = false;
-    public static final boolean CurrentPos = false;
-    public static final boolean DiffyTuningValues = true;
-    public static final boolean AlignDebugging = true;
-    public static final boolean IntakeDebugging = false;
+    public static boolean SwerveDebugging = false;
+    public static boolean LimelightDebugging = false;
+    public static boolean CoordAllowedPathsDebugging = false;
+    public static boolean CoordPositionDebugging = false;
+    public static boolean CoordAllAtSetpoint = false;
+    public static boolean ClimberPos = false;
+    public static boolean CurrentPos = false;
+    public static boolean DiffyTuningValues = false;
+    public static boolean AlignDebugging = false;
+    public static boolean IntakeDebugging = false;
   }
 }

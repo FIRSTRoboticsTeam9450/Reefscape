@@ -25,6 +25,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
 import frc.robot.Constants.AlignPos;
+import frc.robot.Constants.ClimbPos;
 import frc.robot.Constants.ScoringPos;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
@@ -218,6 +219,14 @@ public class RobotContainer {
                     .withRotationalRate(-rotateBezier.getOutput(m_driver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
+        // drivetrain.setDefaultCommand(
+        //     // Drivetrain will execute this command periodically
+        //     drivetrain.applyRequest(() ->
+        //         drive.withVelocityX(-driveBezier.getOutput(m_EXPDriver.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
+        //             .withVelocityY(-driveBezier.getOutput(m_EXPDriver.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+        //             .withRotationalRate(-rotateBezier.getOutput(m_EXPDriver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+        //     )
+        // );
 
         //Manual pitch and Elev adjustments on Operator
         // scoreSub.setDefaultCommand(new ManualPitchCommand(() -> -m_driver2.getLeftY()));
@@ -266,13 +275,13 @@ public class RobotContainer {
         //     new RollSideSwitcher(true)
         // );
         
-        // m_driver.leftBumper().onTrue(
-        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
-        // );
+        m_driver.leftBumper().whileTrue(
+            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        );
 
-        // m_driver.rightBumper().onTrue(
-        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
-        // );
+        m_driver.rightBumper().whileTrue(
+            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
+        );
 
         //Sticks
         m_driver.leftStick().whileTrue(
@@ -298,7 +307,7 @@ public class RobotContainer {
 
         //Store climber
         m_driver.povRight().onTrue(
-            new ClimbCommand(0.822, 4) //12
+            new ClimbCommand(ClimbPos.STORE)
         );
 
         // m_driver.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
@@ -399,13 +408,10 @@ public class RobotContainer {
         m_operator.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
 
         m_operator.povLeft().onTrue(
-            new ClimbCommand(0.257, 12) //8 degree angle going away from robot
-                .andThen(new CoordinationCommand(ScoringPos.START))
+            new ClimbCommand(ClimbPos.ENGAGING) //8 degree angle going away from robot
         );
         m_operator.povRight().onTrue(
-            new ClimbCommand(0.702, 8) //10.5
-            .andThen(new CoordinationCommand(ScoringPos.START))
-            .andThen(new InstantCommand(() -> intake.setVoltage(0))) 
+            new CoordinationCommand(ScoringPos.ALGAE_STORE)
         );
 
         m_operator.povUp().whileTrue(
@@ -415,31 +421,88 @@ public class RobotContainer {
 
 
 
+        /*
+         * 
+         *  Experimental 1 Controller Keybinds
+         * 
+         * 
+         */
 
 
+        /*
+         * Left
+         */
 
-
-
-
-        m_EXPDriver.rightTrigger().onTrue(
-            new ScoreOrIntakeCommand()
-        );
         m_EXPDriver.leftTrigger().onTrue(
-            new DriverIntakeCommand(m_EXPDriver, drivetrain)
+            new DriverIntakeCommand(m_EXPDriver, drivetrain) // Go To Score, Drive Forward if coral intaking, or Algae Intake
         );
-
-        m_EXPDriver.leftStick().whileTrue(
+        m_EXPDriver.leftBumper().whileTrue(
             new AlignCommand(drivetrain, AlignPos.LEFT, m_EXPDriver)
         );
-        m_EXPDriver.rightStick().whileTrue(
+        m_EXPDriver.back().onTrue(
+            new InstantCommand(() -> scoreSub.setAlgaeNet(true))
+        );
+        m_EXPDriver.leftStick().onTrue(
+            new RollSideSwitcher(true)
+        );
+
+        /*
+         * Right
+         */
+        m_EXPDriver.rightTrigger().onTrue(
+            new ScoreOrIntakeCommand() // Score, or coral intake
+        );
+
+        m_EXPDriver.rightBumper().whileTrue(
             new AlignCommand(drivetrain, AlignPos.RIGHT, m_EXPDriver)
         );
-
-        m_EXPDriver.povRight().onTrue(
-            new ClimbCommand(0.822, 4) //12
+        m_EXPDriver.start().onTrue(
+            new InstantCommand(() -> scoreSub.setAlgaeNet(false))
+        );
+        m_EXPDriver.rightStick().onTrue(
+            new InstantCommand(() -> intake.setVoltage(0))
+                .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
+                .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
         );
 
-        m_EXPDriver.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
+        /*
+         * Y-X-A-B Buttons
+         */
+        m_EXPDriver.y().onTrue(
+            new CoordinationCommand(ScoringPos.AlgaeL3)
+            .andThen(new DualIntakeCommand(true))
+        );
+        m_EXPDriver.b().onTrue(
+            new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
+        );
+        m_EXPDriver.x().onTrue(
+            new ClimbCommand(ClimbPos.CLIMBING)
+        );
+        m_EXPDriver.a().whileTrue(
+            new RotationLock(drivetrain, m_driver, driveBezier, MaxSpeed)
+        );
+
+        /*
+         * D-Pad
+         */
+        m_EXPDriver.povRight().onTrue(
+            new ClimbCommand(ClimbPos.STORE)
+        );
+
+        /*
+         *  Paddles
+         */
+        m_EXPDriverExtra.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        m_EXPDriverExtra.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        m_EXPDriverExtra.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        m_EXPDriverExtra.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+
+
+
+
+
+
+
             
 
     }

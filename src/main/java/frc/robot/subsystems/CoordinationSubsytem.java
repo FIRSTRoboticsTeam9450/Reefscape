@@ -147,6 +147,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Algae_Intake_Set.add(ScoringPos.ALGAE_COMBINED);
         Algae_Intake_Set.add(ScoringPos.INTAKE_CORAL);
         Algae_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Algae_Intake_Set.add(ScoringPos.GO_SCORE_CORAL);
 
         Algae_Store_Set.add(ScoringPos.SCORE_NET);
         Algae_Store_Set.add(ScoringPos.SCORE_PROCESSOR);
@@ -238,6 +239,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Coral_Score_Go_Set.add(ScoringPos.SCORE_CORAL);
         Coral_Score_Go_Set.add(ScoringPos.GO_SCORE_CORAL);
         Coral_Score_Go_Set.add(ScoringPos.ScoreL4);
+        Coral_Score_Go_Set.add(ScoringPos.ALGAE_STORE);
 
         Algae_Grabbed_Set.add(ScoringPos.ALGAE_STORE);
         Algae_Grabbed_Set.add(ScoringPos.CORAL_STORE);
@@ -695,7 +697,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 coralScoreElev = Constants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
             } else { // processor
-                coralScorePitch = -84;
+                coralScorePitch = -90;
                 coralScoreElbow = 15;
                 coralScoreElev = 0;
                 DW.setRollSetpoint(0);
@@ -1016,6 +1018,10 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void setAlgaeNet(boolean net) {
         desiredAlgaeNet = net;
+    }
+
+    public boolean getDesiredAlgaeNet() {
+        return desiredAlgaeNet;
     }
 
     public boolean getAlgaeNet() {

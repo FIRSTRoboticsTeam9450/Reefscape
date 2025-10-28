@@ -91,15 +91,16 @@ public class DualIntakeCommand extends Command{
             return;
         }
         if (algae) {
-            if (!DriverStation.isAutonomous()) {
+            if (!DriverStation.isAutonomous() && (score.getDesiredAlgaeNet() || score.getPos() == ScoringPos.ALGAE_COMBINED)) {
                 wristUpGround.schedule();
             }
-            if (score.getPos() == ScoringPos.INTAKE_ALGAE || true) {
-                //wristUpGround.schedule();
+            if (score.getPos() == ScoringPos.INTAKE_ALGAE && !score.getDesiredAlgaeNet()) {
+                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
             }
         } else {
             DI.setVoltage(6);
-            new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0.5))).schedule();;
+            
+            new WaitCommand(0.25).andThen(new InstantCommand(() -> DI.setVoltage(0))).schedule();;
         }
     }
     

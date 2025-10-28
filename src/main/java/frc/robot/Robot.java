@@ -4,6 +4,8 @@
 
 package frc.robot;
 
+import edu.wpi.first.hal.simulation.RoboRioDataJNI;
+import edu.wpi.first.units.measure.Current;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.IterativeRobotBase;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -48,6 +50,19 @@ public class Robot extends LoggedRobot {
 
   private final SendableChooser<Boolean> experimentalKeybindsChooser;
 
+  private final SendableChooser<Boolean> doWeCareAboutDebuggingChooser;
+
+  private final SendableChooser<Boolean> debuggingSwerve;
+  private final SendableChooser<Boolean> debuggingLimeLight;
+  private final SendableChooser<Boolean> debuggingAllowedPaths;
+  private final SendableChooser<Boolean> debuggingPosition;
+  private final SendableChooser<Boolean> debuggingAllAtSetpoint;
+  private final SendableChooser<Boolean> debuggingClimber;
+  private final SendableChooser<Boolean> debuggingCurrentPos;
+  private final SendableChooser<Boolean> debuggingDiffy;
+  private final SendableChooser<Boolean> debuggingAlign;
+  private final SendableChooser<Boolean> debuggingIntake;
+
   //public static PowerDistribution pdh = new PowerDistribution(50, ModuleType.kRev);
 
   public Robot() {
@@ -56,8 +71,17 @@ public class Robot extends LoggedRobot {
     Logger.start();
 
     experimentalKeybindsChooser = new SendableChooser<>();
-    experimentalKeybindsChooser.addOption("Experimentla Keybinds", true);
-    experimentalKeybindsChooser.setDefaultOption("Normal Keybinds", false);
+    doWeCareAboutDebuggingChooser = new SendableChooser<>();
+    debuggingSwerve = new SendableChooser<>();
+    debuggingLimeLight = new SendableChooser<>();
+    debuggingAllowedPaths = new SendableChooser<>();
+    debuggingPosition = new SendableChooser<>();
+    debuggingAllAtSetpoint = new SendableChooser<>();
+    debuggingClimber = new SendableChooser<>();
+    debuggingCurrentPos = new SendableChooser<>();
+    debuggingDiffy = new SendableChooser<>();
+    debuggingAlign = new SendableChooser<>();
+    debuggingIntake = new SendableChooser<>();
 
     m_robotContainer = new RobotContainer();
     // CameraServer.startAutomaticCapture();
@@ -74,6 +98,42 @@ public class Robot extends LoggedRobot {
     elev.putParams();
     elbow.putParams();
     dWrist.putParams(Constants.defaultNeutral);
+
+    experimentalKeybindsChooser.addOption("Experimental Keybinds", true);
+    experimentalKeybindsChooser.setDefaultOption("Normal Keybinds", false);
+
+    doWeCareAboutDebuggingChooser.addOption("Update Debugging", true);
+    doWeCareAboutDebuggingChooser.setDefaultOption("Dont Update Debugging", false);
+
+    debuggingSwerve.addOption("Show Swerve Data", true);
+    debuggingSwerve.setDefaultOption("Hide Swerve Data", false);
+
+    debuggingLimeLight.addOption("Show LimeLight Data", true);
+    debuggingLimeLight.setDefaultOption("Hide LimeLight Data", false);
+
+    debuggingAllowedPaths.addOption("Show Allowed Paths Data", true);
+    debuggingAllowedPaths.setDefaultOption("Hide Allowed Paths Data", false);
+
+    debuggingPosition.addOption("Show Position Data", true);
+    debuggingPosition.setDefaultOption("Hide Position Data", false);
+
+    debuggingAllAtSetpoint.addOption("Show All At Setpoint Data", true);
+    debuggingAllAtSetpoint.setDefaultOption("Hide All At Setpoint Data", false);
+
+    debuggingClimber.addOption("Show Climber Data", true);
+    debuggingClimber.setDefaultOption("Hide Climber Data", false);
+
+    debuggingCurrentPos.addOption("Show Current Position Data", true);
+    debuggingCurrentPos.setDefaultOption("Hide Current Position Data", false);
+
+    debuggingDiffy.addOption("Show Diffy Data", true);
+    debuggingDiffy.setDefaultOption("Hide Diffy Data", false);
+
+    debuggingAlign.addOption("Show Align Data", true);
+    debuggingAlign.setDefaultOption("Hide Align Data", false);
+
+    debuggingIntake.addOption("Show Intake Data", true);
+    debuggingIntake.setDefaultOption("Hide Intake Data", false);
 
     try {
       Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");
@@ -96,14 +156,97 @@ public class Robot extends LoggedRobot {
     }
     SignalLogger.stop();
     SmartDashboard.putData("Experimental Keybinds", experimentalKeybindsChooser);
-    SmartDashboard.putBoolean("Experimental Keybinds choosen setting", experimentalKeybindsChooser.getSelected());
+
+    SmartDashboard.putData("Debugging", doWeCareAboutDebuggingChooser);
+
+    SmartDashboard.putData("Debugging Swerve", debuggingSwerve);
+
+    SmartDashboard.putData("Debugging LimeLight", debuggingLimeLight);
+
+    SmartDashboard.putData("Debugging Allowed Paths", debuggingAllowedPaths);
+
+    SmartDashboard.putData("Debugging Position", debuggingPosition);
+
+    SmartDashboard.putData("Debugging All At Setpoints", debuggingAllAtSetpoint);
+
+    SmartDashboard.putData("Debugging Climber", debuggingClimber);
+
+    SmartDashboard.putData("Debugging Current Position", debuggingCurrentPos);
+
+    SmartDashboard.putData("Debugging Diffy", debuggingDiffy);
+
+    SmartDashboard.putData("Debugging Align", debuggingAlign);
+
+    SmartDashboard.putData("Debugging Intake", debuggingIntake);
   }
 
   @Override
   public void disabledPeriodic() {
+
     m_robotContainer.driveBezier.checkAndupdateCurve();
     m_robotContainer.rotateBezier.checkAndupdateCurve();
     dWrist.updateParams();
+
+    SmartDashboard.putBoolean("Experimental Keybinds choosen setting", experimentalKeybindsChooser.getSelected());
+    SmartDashboard.putBoolean("Debugging Setting", doWeCareAboutDebuggingChooser.getSelected());
+    SmartDashboard.putBoolean("Debugging Swerve Setting", debuggingSwerve.getSelected());
+    SmartDashboard.putBoolean("Debugging LimeLight Setting", debuggingLimeLight.getSelected());
+    SmartDashboard.putBoolean("Debugging Allowed Paths Setting", debuggingAllowedPaths.getSelected());
+    SmartDashboard.putBoolean("Debugging Position Setting", debuggingPosition.getSelected());
+    SmartDashboard.putBoolean("Debugging All At Setpoints Setting", debuggingAllAtSetpoint.getSelected());
+    SmartDashboard.putBoolean("Debugging Climber Setting", debuggingClimber.getSelected());
+    SmartDashboard.putBoolean("Debugging Current Position Setting", debuggingCurrentPos.getSelected());
+    SmartDashboard.putBoolean("Debugging Diffy Setting", debuggingDiffy.getSelected());
+    SmartDashboard.putBoolean("Debugging Align Setting", debuggingAlign.getSelected());
+    SmartDashboard.putBoolean("Debugging Intake Setting", debuggingIntake.getSelected());
+
+
+
+    boolean doWeCareAboutDebuggingBoolean = SmartDashboard.getBoolean("Debugging Setting", false);
+    boolean swerveSetting = SmartDashboard.getBoolean("Debugging Swerve Setting", false);
+    boolean limelightSetting = SmartDashboard.getBoolean("Debugging LimeLight Setting", false);
+    boolean allowedPathsSetting = SmartDashboard.getBoolean("Debugging Allowed Paths Setting", false);
+    boolean positionSetting = SmartDashboard.getBoolean("Debugging Position Setting", false);
+    boolean allAtSetpointSetting = SmartDashboard.getBoolean("Debugging All At Setpoint Setting", false);
+    boolean climberSetting = SmartDashboard.getBoolean("Debugging Climber Setting", false);
+    boolean currentPositionSetting = SmartDashboard.getBoolean("Debugging Current Position Setting", false);
+    boolean diffySetting = SmartDashboard.getBoolean("Debugging Diffy Setting", false);
+    boolean alignSetting = SmartDashboard.getBoolean("Debugging Align Setting", false);
+    boolean intakeSetting = SmartDashboard.getBoolean("Debugging Intake Setting", false);
+
+
+    if (doWeCareAboutDebuggingBoolean) {
+      if (Constants.debugging.SwerveDebugging != swerveSetting) {
+        Constants.debugging.SwerveDebugging = swerveSetting;
+      }
+      if (Constants.debugging.LimelightDebugging != limelightSetting) {
+        Constants.debugging.LimelightDebugging = limelightSetting;
+      }
+      if (Constants.debugging.CoordAllowedPathsDebugging != allowedPathsSetting) {
+        Constants.debugging.CoordAllowedPathsDebugging = allowedPathsSetting;
+      }
+      if (Constants.debugging.CoordPositionDebugging != positionSetting) {
+        Constants.debugging.CoordPositionDebugging = positionSetting;
+      }
+      if (Constants.debugging.CoordAllAtSetpoint != allAtSetpointSetting) {
+        Constants.debugging.CoordAllAtSetpoint = allAtSetpointSetting;
+      }
+      if (Constants.debugging.ClimberPos != climberSetting) {
+        Constants.debugging.ClimberPos = climberSetting;
+      }
+      if (Constants.debugging.CurrentPos != currentPositionSetting) {
+        Constants.debugging.CurrentPos = currentPositionSetting;
+      }
+      if (Constants.debugging.DiffyTuningValues != diffySetting) {
+        Constants.debugging.DiffyTuningValues = diffySetting;
+      }
+      if (Constants.debugging.AlignDebugging != alignSetting) {
+        Constants.debugging.AlignDebugging = alignSetting;
+      }
+      if (Constants.debugging.IntakeDebugging != intakeSetting) {
+        Constants.debugging.IntakeDebugging = intakeSetting;
+      }
+    }
   }
 
   @Override
