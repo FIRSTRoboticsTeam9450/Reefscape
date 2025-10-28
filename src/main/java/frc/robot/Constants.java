@@ -147,7 +147,7 @@ public final class Constants {
     public static final boolean CoordAllAtSetpoint = false;
     public static final boolean ClimberPos = false;
     public static final boolean CurrentPos = false;
-    public static final boolean DiffyTuningValues = false;
+    public static final boolean DiffyTuningValues = true;
     public static final boolean AlignDebugging = true;
     public static final boolean IntakeDebugging = false;
   }
