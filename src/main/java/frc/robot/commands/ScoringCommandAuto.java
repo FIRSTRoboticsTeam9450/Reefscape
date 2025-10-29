@@ -23,7 +23,7 @@ public class ScoringCommandAuto extends Command {
     private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
     private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
     //private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new CoordinationCommand(ScoringPos.ScoreL4));
-    private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.ScoreL4).andThen(new WaitCommand(0.1))));
+    private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.4).andThen(new CoordinationCommand(ScoringPos.ScoreL4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
     // ----- Variables -----

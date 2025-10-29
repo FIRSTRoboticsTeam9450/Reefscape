@@ -594,7 +594,7 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void goToAlgaeIntake() {
         algae = true;
         DW.setPitchSetpoint(-100.7);
-        Elbow.setSetpoint(-7.2); // Used to be -11.4
+        Elbow.setSetpoint(-11.68); // Used to be -11.4
         Elev.setSetpoint(0);
         DW.setRollSetpoint(0);
 
