@@ -32,8 +32,6 @@ import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
-import frc.robot.commands.FieldCentricCommand;
-import frc.robot.commands.KeyboardInputTestCommand;
 import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
 import frc.robot.commands.ResetIMUCommand;
@@ -308,6 +306,10 @@ public class RobotContainer {
         //Store climber
         m_driver.povRight().onTrue(
             new ClimbCommand(ClimbPos.STORE)
+        );
+
+        m_driver.y().onTrue(
+            new ResetIMUCommand(drivetrain)
         );
 
         // m_driver.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));

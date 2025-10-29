@@ -31,6 +31,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
 import frc.robot.LimelightHelpers;
+import frc.robot.Robot;
 import frc.robot.RobotContainer;
 import frc.robot.generated.TunerConstants.TunerSwerveDrivetrain;
 
@@ -262,23 +263,21 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //Logger.recordOutput("Reefscape/PDH/Channel Currents", Robot.pdh.getAllCurrents());
         //Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
         Logger.recordOutput("Drive Pose", getState().Pose);
+        Logger.recordOutput("Reefscape/IDK/Test", getOperatorForwardDirection());
     }
 
     private void updateVision() {
-        LimelightHelpers.SetRobotOrientation("limelight-coral", getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset, 0, 0, 0, 0, 0);
+        // double robotRot = getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset;
+        double robotRot = getPigeon2().getYaw().getValueAsDouble();
+        LimelightHelpers.SetRobotOrientation("limelight-coral", robotRot, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
-        // if (!DriverStation.isEnabled() || DriverStation.isAutonomous()) {
-        //     visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-old");
-        //     setVisionMeasurementStdDevs(VecBuilder.fill(.7,.7,9999999));
-        // } else {
-        //     visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-old");
-        //     setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
-        // }
-        visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
+
+        visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-coral");
         usingBackLL = false;
         setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
         if (visionPose == null || visionPose.tagCount == 0) {
-            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-back");
+            LimelightHelpers.SetRobotOrientation("limelight-back", robotRot, 0, 0, 0, 0, 0);
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-back");
             usingBackLL = true;
             if (visionPose == null) {
                 return;

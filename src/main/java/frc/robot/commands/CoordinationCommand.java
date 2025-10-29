@@ -46,7 +46,7 @@ public class CoordinationCommand extends Command {
         currentPos = CT.getPos(); 
         boolean validPath = false;
         Set<ScoringPos> connectedPathsSet = CT.allowedPaths.get(currentPos);
-        if(mode == false) {
+        if(!mode) {
             if (justCancelled) {
                 if (CT.getAllAtSetpoints()) {
                     justCancelled = false;

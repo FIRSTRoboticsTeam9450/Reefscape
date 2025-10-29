@@ -59,7 +59,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
         TalonFXConfigurator configurator = motor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = NeutralModeValue.Coast;
+        config.MotorOutput.NeutralMode = Constants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 80;

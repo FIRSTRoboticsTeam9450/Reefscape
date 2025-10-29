@@ -391,7 +391,7 @@ public class AlignCommand extends Command {
             }
 
             // Rumble controller to let driver know robot is ready to score
-            if (atSetpoint()) {
+            if (atSetpoint(0.1, 0.2)) {
                 controller.setRumble(RumbleType.kBothRumble, 0.5);
                 if (up && !hasScored && score.getDesiredLevel() != 1) {
                     if (score.getScoringLevel() == 3) {
