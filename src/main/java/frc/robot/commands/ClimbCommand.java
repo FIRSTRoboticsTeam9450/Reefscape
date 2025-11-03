@@ -2,8 +2,7 @@ package frc.robot.commands;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
-import frc.robot.Constants.ClimbPos;
-import frc.robot.Constants.ScoringPos;
+import frc.robot.Constants.robotConstants.*;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 

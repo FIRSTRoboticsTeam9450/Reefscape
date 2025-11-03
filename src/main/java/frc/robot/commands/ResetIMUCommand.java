@@ -22,6 +22,7 @@ public class ResetIMUCommand extends Command {
 
     @Override
     public void initialize() {
+        drive.runCoupleTimes = 0;
         drive.seedFieldCentric();
         if (DriverStation.getAlliance().get() == Alliance.Blue) {
             RobotContainer.pigeonOffset = drive.getPigeon2().getRotation2d().getDegrees();

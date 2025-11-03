@@ -30,6 +30,7 @@ import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine;
+import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 import frc.robot.Robot;
 import frc.robot.RobotContainer;
@@ -63,6 +64,8 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public static boolean frontVisionOverride = false;;
     public static boolean backVisionOverride = false;
     public boolean usingBackLL;
+
+    public double runCoupleTimes = 0;
 
     /* SysId routine for characterizing translation. This is used to find PID gains for the drive motors. */
     private final SysIdRoutine m_sysIdRoutineTranslation = new SysIdRoutine(
@@ -258,17 +261,53 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
                 m_hasAppliedOperatorPerspective = true;
             });
         }
-
+        if (runCoupleTimes < 25) {
+            updateIMUThroughVision();
+        }
         updateVision();
         //Logger.recordOutput("Reefscape/PDH/Channel Currents", Robot.pdh.getAllCurrents());
         //Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
         Logger.recordOutput("Drive Pose", getState().Pose);
         Logger.recordOutput("Reefscape/IDK/Test", getOperatorForwardDirection());
+        if (Constants.robotConstants.debugging.SwerveDebugging) {
+            logPigeonOffset();
+        }
+    }
+
+    private void updateIMUThroughVision() {
+        double robotRot = getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset;
+        LimelightHelpers.SetRobotOrientation("limelight-coral", robotRot, 0, 0, 0, 0, 0);
+        LimelightHelpers.PoseEstimate visionPose = null;
+
+        visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
+        usingBackLL = false;
+        setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
+        if (visionPose == null || visionPose.tagCount == 0) {
+            LimelightHelpers.SetRobotOrientation("limelight-back", robotRot, 0, 0, 0, 0, 0);
+            visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-back");
+            usingBackLL = true;
+            if (visionPose == null) {
+                return;
+            }
+        }
+
+        boolean dontUpdate = false;
+        if (getState().Speeds.omegaRadiansPerSecond > 4 * Math.PI) {
+            dontUpdate = true;
+        }
+        if (visionPose.tagCount == 0) {
+            dontUpdate = true;
+        }
+        if (!dontUpdate) {
+            runCoupleTimes++;
+            addVisionMeasurement(visionPose.pose, Utils.fpgaToCurrentTime(visionPose.timestampSeconds));
+        }
+        Logger.recordOutput("Reefscape/Drive Pose/Vision IMU Updation", runCoupleTimes);
     }
 
     private void updateVision() {
         // double robotRot = getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset;
-        double robotRot = getPigeon2().getYaw().getValueAsDouble();
+        double robotRot = getPigeon2().getYaw().getValueAsDouble() - 60;
         LimelightHelpers.SetRobotOrientation("limelight-coral", robotRot, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
 
@@ -356,6 +395,10 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
     public void resetPoseKevin(Pose2d pose) {
         RobotContainer.pigeonOffset = getPigeon2().getRotation2d().getDegrees() - pose.getRotation().getDegrees();
         resetPose(pose);
+    }
+
+    private void logPigeonOffset() {
+        Logger.recordOutput("Reefscape/Drive Pose/Pigeon Offset", RobotContainer.pigeonOffset);
     }
 
 }

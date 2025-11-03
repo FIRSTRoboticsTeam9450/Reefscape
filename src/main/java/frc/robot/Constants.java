@@ -4,7 +4,10 @@
 package frc.robot;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
+
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 /**
  * A central place to declare constants used across the robot project.
@@ -12,149 +15,171 @@ import edu.wpi.first.wpilibj.RobotController;
  */
 public final class Constants {
 
-  // =========================
-  // General Robot Configuration
-  // =========================
+  /**
+   * Constants that are robot specific
+   */
+  public static class robotConstants {
+    // =========================
+    // General Robot Configuration
+    // =========================
 
-  /** Select configuration based on the RoboRIO serial number */
-  public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("0329F2BF")
-      ? new ThingOneConfig()
-      : new ThingTwoConfig();
+    /** Select configuration based on the RoboRIO serial number */
+    public static RobotConfig robotConfig = RobotController.getSerialNumber().equals("0329F2BF")
+        ? new ThingOneConfig()
+        : new ThingTwoConfig();
 
-  /** Enables L4 scoring behavior */
-  public static boolean l4mode = false;
+    /** Enables L4 scoring behavior */
+    public static boolean l4mode = false;
 
-  /** Default CAN bus used for CTRE devices */
-  public static final String RIO_BUS = "Rio";
-  public static final String CTRE_BUS = "CantDrive";
+    /** Default CAN bus used for CTRE devices */
+    public static final String RIO_BUS = "Rio";
+    public static final String CTRE_BUS = "CantDrive";
 
-  /** Default neutral mode for motors */
-  public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake;
+    /** Default neutral mode for motors */
+    public static final NeutralModeValue defaultNeutral = NeutralModeValue.Brake;
 
-  /** Read-only serial number of the RoboRIO */
-  public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
+    /** Read-only serial number of the RoboRIO */
+    public static final String RIO_SERIAL_NUMBER = RobotController.getSerialNumber();
 
-  // =========================
-  // Controller Ports
-  // =========================
+    // =========================
+    // Controller Ports
+    // =========================
 
-  public static class OperatorConstants {
-    public static final int kDriverControllerPort = 0;
+    public static class OperatorConstants {
+      public static final int kDriverControllerPort = 0;
+    }
+
+    // =========================
+    // Subsystem CAN IDs
+    // =========================
+
+    public static class IntakeIDs {
+      public static final int kDualIntakeMotorID = 25;
+      public static final int kDualIntakeCoralLaserID = 34;
+      public static final int kDualIntakeAlgaeLaserID = 35;
+    }
+
+    public static class WristIDs {
+      public static final int kDiffWristLeftMotorID = 23;
+      public static final int kDiffWristRightMotorID = 24;
+      public static final int kDiffWristPitchCANCoderID = 32;
+      public static final int kDiffWristRollCANCoderID = 33;
+      public static final int kElbowWristMotorID = 22;
+      public static final int kElbowWristEncoderID = 31;
+    }
+
+    public static class ElevatorIDs {
+      public static final int kLeftMotorID = 20;
+      public static final int kRightMotorID = 21;
+      public static final int kCANdiID = 30;
+    }
+
+    public static class ClimberIDs {
+      public static final int kMotorID = 27;
+      public static final int kEncoderID = 28;
+    }
+
+    public static class AlignConstants {
+      public static final boolean runFrontLL = true;
+      public static final boolean runBackLL = true;
+    }
+
+    // =========================
+    // Field Alignment Offsets
+    // =========================
+
+    public static class AlignOffsets {
+      public static final double leftReef = 0.173; //0.173
+      public static final double rightReef = -0.173; //-0.173
+      public static final double leftReefL1 = 0.2;
+      public static final double rightReefL1 = -0.2;
+      public static final double firstCoralBack = 0.6;
+      public static final double tripleL1CoralBack = 0.7;
+      public static final double scoreCoralBack = 0.44;
+      public static final double scoreL3Back = 0.465;
+      public static final double algaeIn = 0.65;
+      public static final double algaeBack = 0.7;
+      public static final double algaeLeft = 0.0;
+      public static final double procOut = 1.5;
+      public static final double procIn = 0.75;
+    }
+
+    public enum ClimbPos {
+      STORE,
+      ENGAGING,
+      CLIMBING
+    }
+
+    // =========================
+    // Enumerations
+    // =========================
+
+    /** Describes robot's current scoring or intake position */
+    public enum ScoringPos {
+      START,
+      INTAKE_CORAL,
+      INTAKE_ALGAE,
+      INTAKE_SOURCE,
+      CORAL_STORE,
+      ALGAE_STORE,
+      SCORE_NET,
+      SCORE_PROCESSOR,
+      SCORE_CORAL,
+      ScoreL4,
+      ALGAEL1,
+      ALGAEL2,
+      AlgaeL3,
+      ALGAE_COMBINED,
+      GRABBED_ALGAE,
+      GO_SCORE_CORAL,
+      INTAKE_VERTICAL_CORAL,
+      PRE_L4,
+      LOLIPOP_INTAKE_ALGAE
+    }
+
+    /** Used for aligning robot to field features */
+    public enum AlignPos {
+      LEFT,
+      RIGHT,
+      CENTER
+    }
+
+    /** Reserved for future scoring tier/priority logic */
+    public enum ScoringLevel {
+      // Empty – define levels if needed
+    }
+
+    // =========================
+    // Debugging Controls
+    // =========================
+
+    public static class debugging {
+      public static boolean SwerveDebugging = false;
+      public static boolean LimelightDebugging = false;
+      public static boolean CoordAllowedPathsDebugging = false;
+      public static boolean CoordPositionDebugging = false;
+      public static boolean CoordAllAtSetpoint = false;
+      public static boolean ClimberPos = false;
+      public static boolean CurrentPos = false;
+      public static boolean DiffyTuningValues = false;
+      public static boolean AlignDebugging = false;
+      public static boolean IntakeDebugging = false;
+    }
   }
 
-  // =========================
-  // Subsystem CAN IDs
-  // =========================
 
-  public static class IntakeIDs {
-    public static final int kDualIntakeMotorID = 25;
-    public static final int kDualIntakeCoralLaserID = 34;
-    public static final int kDualIntakeAlgaeLaserID = 35;
-  }
+  /**
+   * Constants that are specific to Field
+   */
+  public static class FieldConstants {
+    public static class ReefConstants {
 
-  public static class WristIDs {
-    public static final int kDiffWristLeftMotorID = 23;
-    public static final int kDiffWristRightMotorID = 24;
-    public static final int kDiffWristPitchCANCoderID = 32;
-    public static final int kDiffWristRollCANCoderID = 33;
-    public static final int kElbowWristMotorID = 22;
-    public static final int kElbowWristEncoderID = 31;
-  }
+      public static boolean isBlueAlliance = (DriverStation.getAlliance().equals(Alliance.Blue));
 
-  public static class ElevatorIDs {
-    public static final int kLeftMotorID = 20;
-    public static final int kRightMotorID = 21;
-    public static final int kCANdiID = 30;
-  }
+      public static class BlueReefConstants {
+        // public static 
+      }
 
-  public static class ClimberIDs {
-    public static final int kMotorID = 27;
-    public static final int kEncoderID = 28;
-  }
-
-  public static class AlignConstants {
-    public static final boolean runFrontLL = true;
-    public static final boolean runBackLL = true;
-  }
-
-  // =========================
-  // Field Alignment Offsets
-  // =========================
-
-  public static class AlignOffsets {
-    public static final double leftReef = 0.173; //0.173
-    public static final double rightReef = -0.173; //-0.173
-    public static final double leftReefL1 = 0.224;
-    public static final double rightReefL1 = -0.224;
-    public static final double firstCoralBack = 0.6;
-    public static final double scoreCoralBack = 0.44;
-    public static final double scoreL3Back = 0.465;
-    public static final double algaeIn = 0.65;
-    public static final double algaeBack = 0.7;
-    public static final double algaeLeft = 0.0;
-    public static final double procOut = 1.5;
-    public static final double procIn = 0.75;
-  }
-
-  public enum ClimbPos {
-    STORE,
-    ENGAGING,
-    CLIMBING
-  }
-
-  // =========================
-  // Enumerations
-  // =========================
-
-  /** Describes robot's current scoring or intake position */
-  public enum ScoringPos {
-    START,
-    INTAKE_CORAL,
-    INTAKE_ALGAE,
-    INTAKE_SOURCE,
-    CORAL_STORE,
-    ALGAE_STORE,
-    SCORE_NET,
-    SCORE_PROCESSOR,
-    SCORE_CORAL,
-    ScoreL4,
-    ALGAEL1,
-    ALGAEL2,
-    AlgaeL3,
-    ALGAE_COMBINED,
-    GRABBED_ALGAE,
-    GO_SCORE_CORAL,
-    INTAKE_VERTICAL_CORAL,
-    PRE_L4,
-    LOLIPOP_INTAKE_ALGAE
-  }
-
-  /** Used for aligning robot to field features */
-  public enum AlignPos {
-    LEFT,
-    RIGHT,
-    CENTER
-  }
-
-  /** Reserved for future scoring tier/priority logic */
-  public enum ScoringLevel {
-    // Empty – define levels if needed
-  }
-
-  // =========================
-  // Debugging Controls
-  // =========================
-
-  public static class debugging {
-    public static boolean SwerveDebugging = false;
-    public static boolean LimelightDebugging = false;
-    public static boolean CoordAllowedPathsDebugging = false;
-    public static boolean CoordPositionDebugging = false;
-    public static boolean CoordAllAtSetpoint = false;
-    public static boolean ClimberPos = false;
-    public static boolean CurrentPos = false;
-    public static boolean DiffyTuningValues = false;
-    public static boolean AlignDebugging = false;
-    public static boolean IntakeDebugging = false;
+    }
   }
 }

@@ -24,9 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.button.InternalButton
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.AlignPos;
-import frc.robot.Constants.ClimbPos;
-import frc.robot.Constants.ScoringPos;
+import frc.robot.Constants.robotConstants;
+import frc.robot.Constants.robotConstants.*;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
@@ -408,6 +407,7 @@ public class RobotContainer {
         m_operator.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
         m_operator.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
         m_operator.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        m_operator.start().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(0)));
 
         m_operator.povLeft().onTrue(
             new ClimbCommand(ClimbPos.ENGAGING) //8 degree angle going away from robot

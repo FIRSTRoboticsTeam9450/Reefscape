@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.Watchdog;
 
-import frc.robot.Constants.ScoringPos;
+import frc.robot.Constants.robotConstants;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -97,7 +97,7 @@ public class Robot extends LoggedRobot {
     m_robotContainer.rotateBezier.dashboardInitialSettings();
     elev.putParams();
     elbow.putParams();
-    dWrist.putParams(Constants.defaultNeutral);
+    dWrist.putParams(robotConstants.defaultNeutral);
 
     experimentalKeybindsChooser.addOption("Experimental Keybinds", true);
     experimentalKeybindsChooser.setDefaultOption("Normal Keybinds", false);
@@ -149,9 +149,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     RobotContainer.toggleDrive(true);
-    if (coordSub.getPos() != ScoringPos.START) {
+    if (coordSub.getPos() != robotConstants.ScoringPos.START) {
       intake.setVoltage(0);
-      coordSub.setPosition(ScoringPos.CORAL_STORE);
+      coordSub.setPosition(robotConstants.ScoringPos.CORAL_STORE);
       CommandScheduler.getInstance().cancelAll();
     }
     SignalLogger.stop();
@@ -216,35 +216,35 @@ public class Robot extends LoggedRobot {
 
 
     if (doWeCareAboutDebuggingBoolean) {
-      if (Constants.debugging.SwerveDebugging != swerveSetting) {
-        Constants.debugging.SwerveDebugging = swerveSetting;
+      if (robotConstants.debugging.SwerveDebugging != swerveSetting) {
+        robotConstants.debugging.SwerveDebugging = swerveSetting;
       }
-      if (Constants.debugging.LimelightDebugging != limelightSetting) {
-        Constants.debugging.LimelightDebugging = limelightSetting;
+      if (robotConstants.debugging.LimelightDebugging != limelightSetting) {
+        robotConstants.debugging.LimelightDebugging = limelightSetting;
       }
-      if (Constants.debugging.CoordAllowedPathsDebugging != allowedPathsSetting) {
-        Constants.debugging.CoordAllowedPathsDebugging = allowedPathsSetting;
+      if (robotConstants.debugging.CoordAllowedPathsDebugging != allowedPathsSetting) {
+        robotConstants.debugging.CoordAllowedPathsDebugging = allowedPathsSetting;
       }
-      if (Constants.debugging.CoordPositionDebugging != positionSetting) {
-        Constants.debugging.CoordPositionDebugging = positionSetting;
+      if (robotConstants.debugging.CoordPositionDebugging != positionSetting) {
+        robotConstants.debugging.CoordPositionDebugging = positionSetting;
       }
-      if (Constants.debugging.CoordAllAtSetpoint != allAtSetpointSetting) {
-        Constants.debugging.CoordAllAtSetpoint = allAtSetpointSetting;
+      if (robotConstants.debugging.CoordAllAtSetpoint != allAtSetpointSetting) {
+        robotConstants.debugging.CoordAllAtSetpoint = allAtSetpointSetting;
       }
-      if (Constants.debugging.ClimberPos != climberSetting) {
-        Constants.debugging.ClimberPos = climberSetting;
+      if (robotConstants.debugging.ClimberPos != climberSetting) {
+        robotConstants.debugging.ClimberPos = climberSetting;
       }
-      if (Constants.debugging.CurrentPos != currentPositionSetting) {
-        Constants.debugging.CurrentPos = currentPositionSetting;
+      if (robotConstants.debugging.CurrentPos != currentPositionSetting) {
+        robotConstants.debugging.CurrentPos = currentPositionSetting;
       }
-      if (Constants.debugging.DiffyTuningValues != diffySetting) {
-        Constants.debugging.DiffyTuningValues = diffySetting;
+      if (robotConstants.debugging.DiffyTuningValues != diffySetting) {
+        robotConstants.debugging.DiffyTuningValues = diffySetting;
       }
-      if (Constants.debugging.AlignDebugging != alignSetting) {
-        Constants.debugging.AlignDebugging = alignSetting;
+      if (robotConstants.debugging.AlignDebugging != alignSetting) {
+        robotConstants.debugging.AlignDebugging = alignSetting;
       }
-      if (Constants.debugging.IntakeDebugging != intakeSetting) {
-        Constants.debugging.IntakeDebugging = intakeSetting;
+      if (robotConstants.debugging.IntakeDebugging != intakeSetting) {
+        robotConstants.debugging.IntakeDebugging = intakeSetting;
       }
     }
   }

@@ -9,9 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.debugging;
-import frc.robot.Constants.ScoringLevel;
-import frc.robot.Constants.ScoringPos;
+import frc.robot.Constants.robotConstants.*;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 
@@ -497,7 +495,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         l4Extend = false;
         if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE) {
             goToPreL4();
-        } else if (desiredLevel == 1) {
+        } else if (desiredLevel == 1 || desiredLevel == 0) {
             if (lastPos == ScoringPos.INTAKE_CORAL || lastPos == ScoringPos.GO_SCORE_CORAL) {
                 goScoreLevel();
             } else {
@@ -576,9 +574,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(Constants.robotConfig.getPitchGroundPos()); // OLD: -129
+        DW.setPitchSetpoint(Constants.robotConstants.robotConfig.getPitchGroundPos()); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(Constants.robotConfig.getElbowGroundPos()); // Old: 2
+        Elbow.setSetpoint(Constants.robotConstants.robotConfig.getElbowGroundPos()); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -694,7 +692,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             if (algaeNet) { // net
                 coralScorePitch = -130; //-145
                 coralScoreElbow = 76;
-                coralScoreElev = Constants.robotConfig.getElevatorNetPos();
+                coralScoreElev = Constants.robotConstants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
             } else { // processor
                 coralScorePitch = -90;
@@ -704,6 +702,12 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
         } else {
             switch (level) {
+                case 0:
+                    coralScoreElev = 3.75;
+                    coralScorePitch = -130;
+                    coralScoreElbow = 35;
+                    DW.setRollSetpoint(0);
+                    break;
                 case 1:
                     coralScorePitch = -184;
                     coralScoreElbow = 60;
@@ -736,9 +740,9 @@ public class CoordinationSubsytem extends SubsystemBase{
                         coralScoreElbow = 37;
                         coralScoreElev = 36;
                     } else {
-                        coralScorePitch = Constants.robotConfig.getL4Pitch();
-                        coralScoreElbow = Constants.robotConfig.getL4Elbow();
-                        coralScoreElev = Constants.robotConfig.getL4Elevator();
+                        coralScorePitch = Constants.robotConstants.robotConfig.getL4Pitch();
+                        coralScoreElbow = Constants.robotConstants.robotConfig.getL4Elbow();
+                        coralScoreElev = Constants.robotConstants.robotConfig.getL4Elevator();
                     }
                     break;
             }
@@ -1044,6 +1048,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Pitch atSetpoint?", DW.atPitchSetpoint());
             Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Roll atSetpoint?", DW.atRollSetpoint());
             Logger.recordOutput("Reefscape/Debugging/AtSetpoint?/Elevator atSetpoint?", Elev.atSetpoint());
+            Logger.recordOutput("Reefscape/Debugging/Position/Desired Level", getDesiredLevel());
         }
         if (debugging.CoordAllAtSetpoint) {
             Logger.recordOutput("Reefscape/Debugging/All At Setpoints", allAtSetpoints);

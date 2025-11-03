@@ -14,9 +14,7 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Constants.WristIDs;
-import frc.robot.Constants.debugging;
+import frc.robot.Constants.robotConstants;
 
 public class DiffWristSubsystem extends SubsystemBase {
 
@@ -32,12 +30,12 @@ public class DiffWristSubsystem extends SubsystemBase {
     private PIDController rollPID = new PIDController(50, 0, 0);
 
     // // Motors
-    private TalonFX leftMotor = new TalonFX(WristIDs.kDiffWristLeftMotorID, Constants.RIO_BUS);
-    private TalonFX rightMotor = new TalonFX(WristIDs.kDiffWristRightMotorID, Constants.RIO_BUS);
+    private TalonFX leftMotor = new TalonFX(robotConstants.WristIDs.kDiffWristLeftMotorID, robotConstants.RIO_BUS);
+    private TalonFX rightMotor = new TalonFX(robotConstants.WristIDs.kDiffWristRightMotorID, robotConstants.RIO_BUS);
 
     //Encoders
-    private CANcoder pitchEncoder = new CANcoder(WristIDs.kDiffWristPitchCANCoderID, Constants.RIO_BUS);
-    private CANcoder rollEncoder = new CANcoder(WristIDs.kDiffWristRollCANCoderID, Constants.RIO_BUS);
+    private CANcoder pitchEncoder = new CANcoder(robotConstants.WristIDs.kDiffWristPitchCANCoderID, robotConstants.RIO_BUS);
+    private CANcoder rollEncoder = new CANcoder(robotConstants.WristIDs.kDiffWristRollCANCoderID, robotConstants.RIO_BUS);
 
     private double pitchPos;
     private double rollPos;
@@ -54,7 +52,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     double leftStatorPull;
     double rightStatorPull;
 
-    private NeutralModeValue currentNeutralModeValue = Constants.defaultNeutral;
+    private NeutralModeValue currentNeutralModeValue = robotConstants.defaultNeutral;
 
     // Variables
     private boolean runPID = true;
@@ -65,7 +63,7 @@ public class DiffWristSubsystem extends SubsystemBase {
     private DiffWristSubsystem() {
 
         neutralModeChooser = new SendableChooser<>();
-        neutralModeChooser.setDefaultOption("Default", Constants.defaultNeutral);
+        neutralModeChooser.setDefaultOption("Default", robotConstants.defaultNeutral);
         neutralModeChooser.addOption("Brake", NeutralModeValue.Brake);
         neutralModeChooser.addOption("Coast", NeutralModeValue.Coast);
 
@@ -141,7 +139,7 @@ public class DiffWristSubsystem extends SubsystemBase {
         if (runPID) {
             updatePID(pitchPos, rollPos);
         }
-        if (debugging.DiffyTuningValues) {
+        if (robotConstants.debugging.DiffyTuningValues) {
             Logger.recordOutput("Diffy Tuning/Pitch at Setpoint?", atPitchSetpoint());
             Logger.recordOutput("Diffy Tuning/Roll at Setpoint?", atRollSetpoint());
             Logger.recordOutput("Diffy Tuning/Pitch Setpoint", pitchSetpoint);

@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.ScoringPos;
+import frc.robot.Constants.robotConstants.*;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
@@ -54,8 +54,18 @@ public class ScoringCommand extends Command {
         } else if (scoreSub.getScoringLevel() == 4) {
             elevAndWait.schedule();
             intake.setVoltage(0.5);
-        } else if (scoreSub.getScoringLevel() == 1) {
-            intake.setVoltage(-3);
+        } else if (scoreSub.getScoringLevel() == 1 || scoreSub.getDesiredLevel() == 0) {
+            switch (scoreSub.getDesiredLevel()) {
+                case 0:
+                    intake.setVoltage(-4.125);
+                    break;
+                case 1:
+                    intake.setVoltage(-3);
+                    break;
+                default:
+                    intake.setVoltage(-3);
+                    break;
+            }
         } else {
             score.schedule();
             intake.setVoltage(0);
