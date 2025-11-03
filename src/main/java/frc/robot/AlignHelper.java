@@ -95,14 +95,14 @@ public class AlignHelper {
      */
     public static double[] getAlignPos(double[] targetPos, AlignPos position) {
         // Retrieve default offsets
-        double tagForwardOffset = Constants.AlignOffsets.scoreCoralBack;
-        double tagLeftOffset = Constants.AlignOffsets.leftReef;
+        double tagForwardOffset = Constants.robotConstants.AlignOffsets.scoreCoralBack;
+        double tagLeftOffset = Constants.robotConstants.AlignOffsets.leftReef;
 
         if (position == AlignPos.RIGHT) {
-            tagLeftOffset = Constants.AlignOffsets.rightReef;
+            tagLeftOffset = Constants.robotConstants.AlignOffsets.rightReef;
         } else if (position == AlignPos.CENTER) {
-            tagForwardOffset = Constants.AlignOffsets.algaeBack;
-            tagLeftOffset = Constants.AlignOffsets.algaeLeft;
+            tagForwardOffset = Constants.robotConstants.AlignOffsets.algaeBack;
+            tagLeftOffset = Constants.robotConstants.AlignOffsets.algaeLeft;
         }
 
         // Calculate robot rotation relative to the tag
