@@ -177,13 +177,13 @@ public class PositionAlignCommand extends Command {
                     calculateAlignPosition(currentFieldPose, forwardOffset)));
         }
         /* ---------- Algae ---------- */
-         else if (atSetpoint(0.06, 0.3) && !haveCoral && currentState != ScoringPos.GO_SCORE_CORAL) {
+         else if (atSetpoint(0.06, 0.3) && !haveCoral && currentState != ScoringPos.GO_TO_SCORE) {
             forwardOffset = AlignOffsets.algaeIn;
             setSwerveRequest(
                 calculateDrivePower(
                     calculateAlignPosition(currentFieldPose, forwardOffset)));
         }
-         else if (atSetpoint(0.06, 0.3) && haveAlgae && currentState == ScoringPos.GO_SCORE_CORAL) {
+         else if (atSetpoint(0.06, 0.3) && haveAlgae && currentState == ScoringPos.GO_TO_SCORE) {
             forwardOffset = AlignOffsets.procIn;
             setSwerveRequest(
                 calculateDrivePower(
@@ -213,7 +213,7 @@ public class PositionAlignCommand extends Command {
 
         /* ---------- Algae Intake from Reef ---------- */  
         if (!haveCoral && time > 0.05 && !algaeIntakeStateChange) {
-            new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();;
+            new CoordinationCommand(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC).schedule();;
             algaeIntakeStateChange = true;
         }
         if (!haveCoral && coordSubInstance.getAllAtSetpoints() && time > 0.06 && !haveStartedIntaking) {
@@ -224,22 +224,22 @@ public class PositionAlignCommand extends Command {
         /* ---------- L1-L1.5 and Proc Score ---------- */
         if (
             (!hasStateChanged && !haveAlgae && haveCoral && (desiredLevel == 0 || desiredLevel == 1))
-             || (haveAlgae && currentState != ScoringPos.ALGAE_COMBINED))
+             || (haveAlgae && currentState != ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC))
         {
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
             hasStateChanged = true;
         }
 
         /* ---------- Non-L4 Coral ---------- */
         if (atSetpoint(0.5, 0.8) && desiredLevel != 4 && !hasStateChanged && haveCoral && !haveAlgae) {
             hasStateChanged = true;
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
 
         /* ---------- L4 Coral ---------- */
         if (atSetpoint(0.3, 0.6) && !hasStateChanged && desiredLevel == 4 && haveCoral && !haveAlgae) {
             hasStateChanged = true;
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
     }
 
@@ -284,12 +284,12 @@ public class PositionAlignCommand extends Command {
         /* --------------- Offset Calculations --------------- */
         //Calculate how far in and to the side we wish to be relative to the april tag
         double tagLeftOffset;
-        if (haveCoral && !haveAlgae && currentState != ScoringPos.ALGAE_COMBINED) {
+        if (haveCoral && !haveAlgae && currentState != ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC) {
             tagLeftOffset = (desiredLevel == 1  || desiredLevel == 0) ? RobotConstants.AlignOffsets.leftReefL1 :RobotConstants.AlignOffsets.leftReef;
             if (alignPos == AlignPos.RIGHT) {
                 tagLeftOffset = (desiredLevel == 1  || desiredLevel == 0) ? RobotConstants.AlignOffsets.rightReefL1 :RobotConstants.AlignOffsets.rightReef;
             }
-        } else if (!haveCoral && currentState != ScoringPos.GO_SCORE_CORAL) {
+        } else if (!haveCoral && currentState != ScoringPos.GO_TO_SCORE) {
             tagLeftOffset = AlignOffsets.algaeLeft;
             tagForwardOffset = AlignOffsets.algaeBack;
         } else {
@@ -335,10 +335,10 @@ public class PositionAlignCommand extends Command {
         double yPower = pidY.calculate(currentFieldPose.getY()) * (MathUtil.clamp(time * 0.7, 1, 0));
 
         //Adjustments of the power depending on certain conditions
-        if (currentState == ScoringPos.GO_SCORE_CORAL && desiredLevel == 4) {
+        if (currentState == ScoringPos.GO_TO_SCORE && desiredLevel == 4) {
             xPower = MathUtil.clamp(xPower, -1, 1);
             yPower = MathUtil.clamp(yPower, -1, 1);
-        } else if (!haveCoral && currentState == ScoringPos.ALGAE_COMBINED) {
+        } else if (!haveCoral && currentState == ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC) {
             xPower = MathUtil.clamp(xPower, -1.5, 1.5);
             yPower = MathUtil.clamp(yPower, -1.5, 1.5);
         } else {

@@ -51,7 +51,7 @@ public class DualIntakeCommand extends Command{
             if (DI.hasAlgae()) {
                 DI.setVoltage(12);
                 finished = true;
-                if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
+                if (score.getPos() != ScoringPos.ALGAE_INTAKE_GROUND) {
                     //wristUpReef.schedule();
                 } 
                 algaeTimer.restart();
@@ -91,11 +91,11 @@ public class DualIntakeCommand extends Command{
             return;
         }
         if (algae) {
-            if (!DriverStation.isAutonomous() && (score.getDesiredAlgaeNet() || score.getPos() == ScoringPos.ALGAE_COMBINED)) {
+            if (!DriverStation.isAutonomous() && (score.getDesiredAlgaeNet() || score.getPos() == ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC)) {
                 wristUpGround.schedule();
             }
-            if (score.getPos() == ScoringPos.INTAKE_ALGAE && !score.getDesiredAlgaeNet()) {
-                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            if (score.getPos() == ScoringPos.ALGAE_INTAKE_GROUND && !score.getDesiredAlgaeNet()) {
+                new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
             }
         } else {
             DI.setVoltage(6);

@@ -51,7 +51,7 @@ public class AlignCommand extends Command {
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
     private SequentialCommandGroup L1ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.1).andThen(new ScoringCommand()));
-    private SequentialCommandGroup L3UpAndWait = new SequentialCommandGroup(new WaitCommand(0.15)).andThen(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
+    private SequentialCommandGroup L3UpAndWait = new SequentialCommandGroup(new WaitCommand(0.15)).andThen(new CoordinationCommand(ScoringPos.GO_TO_SCORE));
     private SequentialCommandGroup L3ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.25).andThen(new ScoringCommand()));
 
     /* ----- Variables ----- */
@@ -228,12 +228,12 @@ public class AlignCommand extends Command {
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
         double tagLeftOffset;
-        if (hasCoral && !algae && score.getPos() != ScoringPos.ALGAE_COMBINED) {
+        if (hasCoral && !algae && score.getPos() != ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC) {
             tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?RobotConstants.AlignOffsets.leftReefL1 :RobotConstants.AlignOffsets.leftReef;
             if (position == AlignPos.RIGHT) {
                 tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?RobotConstants.AlignOffsets.rightReefL1 :RobotConstants.AlignOffsets.rightReef;
             }
-        } else  if (!score.getAlgaeNet() && score.getPos() != ScoringPos.GO_SCORE_CORAL && !hasCoral){
+        } else  if (!score.getAlgaeNet() && score.getPos() != ScoringPos.GO_TO_SCORE && !hasCoral){
             // Algae
             tagLeftOffset = RobotConstants.AlignOffsets.algaeLeft; // Set left offset for center
             tagForwardOffset = RobotConstants.AlignOffsets.algaeBack; //temp: 0.65 is old value of algaeBack // 0.45
@@ -285,7 +285,7 @@ public class AlignCommand extends Command {
         double time = timer.get();
 
         if (!hasCoral && time > .05 && !wentup && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL)) {
-            new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
+            new CoordinationCommand(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC).schedule();
             wentup = true;
         }
         if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL)) {
@@ -302,9 +302,9 @@ public class AlignCommand extends Command {
         }
 
         // Raise elevator right away for L1-L1.5
-        if (!score.getAlgae() && (score.getDesiredLevel() == 1 || score.getDesiredLevel() == 0) && !up && hasCoral && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_COMBINED)) {
+        if (!score.getAlgae() && (score.getDesiredLevel() == 1 || score.getDesiredLevel() == 0) && !up && hasCoral && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC)) {
             up = true;
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
 
         if (algae) {
@@ -358,7 +358,7 @@ public class AlignCommand extends Command {
                 BpidY.setSetpoint(pose[1]);
                 BpidRotate.setSetpoint(pose[2]);
             }
-            else if (atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
+            else if (atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_TO_SCORE) {
                 double[] pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.algaeIn);
                 debuggingCenterAlignIssue = "Algae";
                 FpidX.setSetpoint(pose[0]);
@@ -368,7 +368,7 @@ public class AlignCommand extends Command {
                 BpidY.setSetpoint(pose[1]);
                 BpidRotate.setSetpoint(pose[2]);
             }
-            else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
+            else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_TO_SCORE) {
                 double[] pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.procIn);
                 debuggingCenterAlignIssue = "Proc";
                 FpidX.setSetpoint(pose[0]);
@@ -383,7 +383,7 @@ public class AlignCommand extends Command {
             if (atSetpoint(0.5, 0.8)) {
                 if (score.getDesiredLevel() != 4 && !up && !score.getAlgae() && hasCoral) {
                     up = true;
-                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                    new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
                 }
             }
 
@@ -391,7 +391,7 @@ public class AlignCommand extends Command {
             if (atSetpoint(0.3, 0.6)) {
                 if (score.getDesiredLevel() == 4 && !up && !score.getAlgae() && hasCoral) {
                     up = true;
-                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                    new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
                 }
             }
 
@@ -424,11 +424,11 @@ public class AlignCommand extends Command {
             }
 
             // Slow down at L4
-            if (score.getScoringLevel() == 4 && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
+            if (score.getScoringLevel() == 4 && score.getPos() == ScoringPos.GO_TO_SCORE) {
                 powerX = MathUtil.clamp(powerX, -1, 1);
                 powerY = MathUtil.clamp(powerY, -1, 1);
             } 
-            else if(!hasCoral && score.getPos() == ScoringPos.ALGAE_COMBINED) {
+            else if(!hasCoral && score.getPos() == ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC) {
                 powerX = MathUtil.clamp(powerX, -1.5, 1.5);
                 powerY = MathUtil.clamp(powerY, -1.5, 1.5);
             }
@@ -489,7 +489,7 @@ public class AlignCommand extends Command {
             if (stuckCounter > 5 && hasCoral) {
                 score.setCoralInFront(true);
                 if (!up) {
-                    new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+                    new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
                     up = true;
                 }
             }

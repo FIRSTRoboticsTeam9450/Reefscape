@@ -19,11 +19,11 @@ public class ScoringCommandAuto extends Command {
     // ----- Subsystem Instances -----
     private final DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
     private final CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
-    private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
-    private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
-    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
+    private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_TO_SCORE);
+    private final CoordinationCommand score = new CoordinationCommand(ScoringPos.CORAL_SCORE);
+    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.CORAL_SCORE_L4);
     //private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new CoordinationCommand(ScoringPos.ScoreL4));
-    private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.4).andThen(new CoordinationCommand(ScoringPos.ScoreL4).andThen(new WaitCommand(0.1))));
+    private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.4).andThen(new CoordinationCommand(ScoringPos.CORAL_SCORE_L4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
     // ----- Variables -----
@@ -40,8 +40,8 @@ public class ScoringCommandAuto extends Command {
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
 
-        if (position != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+        if (position != ScoringPos.GO_TO_SCORE && !DriverStation.isAutonomous()) {
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
             running = true;
         } else {
             score(); // Direct scoring if already in correct state

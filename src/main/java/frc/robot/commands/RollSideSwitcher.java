@@ -39,11 +39,11 @@ public class RollSideSwitcher extends Command{
             if (CT.getPos() == ScoringPos.CORAL_STORE && CT.getDesiredLevel() == 4) {
                 CT.setL4RollSide(left);
                 finished = true;
-            } else if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() == 4)) {
+            } else if (CT.getAllAtSetpoints() && CT.getPos() == ScoringPos.CORAL_STORE || (CT.getPos() == ScoringPos.GO_TO_SCORE && CT.getScoringLevel() == 4)) {
                 if (!finished)
                     CT.rollToOtherSide();
                 finished = true;
-            } else if (CT.getPos() == ScoringPos.GO_SCORE_CORAL && CT.getScoringLevel() != 1) {
+            } else if (CT.getPos() == ScoringPos.GO_TO_SCORE && CT.getScoringLevel() != 1) {
                 wrist.setPitchSetpoint(-130);
                 if (wrist.atPitchSetpoint() && !finished) {
                     CT.rollToOtherSide();
@@ -68,8 +68,8 @@ public class RollSideSwitcher extends Command{
 
     @Override
     public void end(boolean interrupted) {
-        if (CT.getPos() == ScoringPos.GO_SCORE_CORAL && (CT.getScoringLevel() == 3 || CT.getScoringLevel() == 2) && !interrupted) {
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+        if (CT.getPos() == ScoringPos.GO_TO_SCORE && (CT.getScoringLevel() == 3 || CT.getScoringLevel() == 2) && !interrupted) {
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
     }
 

@@ -13,9 +13,9 @@ public class GoToScorePosCommand extends Command {
     @Override
     public void initialize() {
         if (score.getDesiredLevel() == 4 && !RobotConstants.l4mode && !score.getAlgae()) {
-            new CoordinationCommand(ScoringPos.PRE_L4).schedule();
+            new CoordinationCommand(ScoringPos.CORAL_PRE_L4).schedule();
         } else {
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
     }
 

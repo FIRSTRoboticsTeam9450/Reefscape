@@ -124,38 +124,50 @@ public final class Constants {
     // =========================
 
     /** Describes robot's current scoring or intake position */
+    // public enum ScoringPos {
+    //   START,
+    //   INTAKE_CORAL,
+    //   INTAKE_ALGAE,
+    //   INTAKE_SOURCE,
+    //   CORAL_STORE,
+    //   ALGAE_STORE,
+    //   SCORE_NET,
+    //   SCORE_PROCESSOR,
+    //   SCORE_CORAL,
+    //   ScoreL4,
+    //   ALGAEL1,
+    //   ALGAEL2,
+    //   AlgaeL3,
+    //   ALGAE_COMBINED,
+    //   GRABBED_ALGAE,
+    //   GO_SCORE_CORAL,
+    //   INTAKE_VERTICAL_CORAL,
+    //   PRE_L4,
+    //   LOLIPOP_INTAKE_ALGAE
+    // }
     public enum ScoringPos {
       START,
-      INTAKE_CORAL,
-      INTAKE_ALGAE,
-      INTAKE_SOURCE,
+      GO_TO_SCORE,
       CORAL_STORE,
+      CORAL_INTAKE_GROUND,
+      CORAL_INTAKE_VERTICAL,
+      CORAL_SCORE,
+      CORAL_SCORE_L4,
+      CORAL_PRE_L4,
       ALGAE_STORE,
-      SCORE_NET,
-      SCORE_PROCESSOR,
-      SCORE_CORAL,
-      ScoreL4,
-      ALGAEL1,
-      ALGAEL2,
-      AlgaeL3,
-      ALGAE_COMBINED,
-      GRABBED_ALGAE,
-      GO_SCORE_CORAL,
-      INTAKE_VERTICAL_CORAL,
-      PRE_L4,
-      LOLIPOP_INTAKE_ALGAE
+      ALGAE_INTAKE_GROUND,
+      ALGAE_INTAKE_REEF_LOW,
+      ALGAE_INTAKE_REEF_HIGH,
+      ALGAE_INTAKE_REEF_DYNAMIC,
+      ALGAE_INTAKE_PROC,
     }
+
 
     /** Used for aligning robot to field features */
     public enum AlignPos {
       LEFT,
       RIGHT,
       CENTER
-    }
-
-    /** Reserved for future scoring tier/priority logic */
-    public enum ScoringLevel {
-      // Empty – define levels if needed
     }
 
     // =========================

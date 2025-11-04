@@ -22,7 +22,7 @@ public class ScoreOrIntakeCommand extends Command{
             if (hasCoral) {
                 new ScoringCommand().schedule();
             } else {
-                new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                new CoordinationCommand(ScoringPos.CORAL_INTAKE_GROUND)
                     .andThen(new DualIntakeCommand(false))
                     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)).schedule();
             }

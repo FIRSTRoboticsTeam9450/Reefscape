@@ -31,7 +31,7 @@ public class DriverIntakeCommand extends Command {
         boolean use1Controller = SmartDashboard.getBoolean("Experimental Keybinds choosen setting", false);
         if (use1Controller) {
             hasCoral = intake.hasCoral();
-            if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+            if (score.getPos() == ScoringPos.CORAL_INTAKE_GROUND) {
                 if (driveController.getLeftTriggerAxis() > 0.05) {
                     if (!forward.isScheduled()) {
                         forward.schedule();
@@ -42,11 +42,11 @@ public class DriverIntakeCommand extends Command {
             } else if (hasCoral) {
                 new GoToScorePosCommand().schedule();
             } else {
-                new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                new CoordinationCommand(ScoringPos.ALGAE_INTAKE_GROUND)
                     .andThen(new DualIntakeCommand(true)).schedule();
             }
         } else {
-            if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+            if (score.getPos() == ScoringPos.CORAL_INTAKE_GROUND) {
                 if (driveController.getLeftTriggerAxis() > 0.05) {
                     if (!forward.isScheduled()) {
                         forward.schedule();
