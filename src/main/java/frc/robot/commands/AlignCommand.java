@@ -21,10 +21,9 @@ import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.Constants.robotConstants.*;
-import frc.robot.Constants.robotConstants;
+import frc.robot.Constants.RobotConstants.*;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -75,6 +74,7 @@ public class AlignCommand extends Command {
 
     private double robotRotation;
     private int[] possibleTags = new int[2];
+    private boolean careAboutRotation;
     private boolean usedBackLL;
     private double currentX;
     
@@ -155,8 +155,8 @@ public class AlignCommand extends Command {
         usedBackLL = false;
         currentX = currentPose.getX();
 
-        runFrontLL = robotConstants.AlignConstants.runFrontLL;
-        runBackLL = robotConstants.AlignConstants.runBackLL;
+        runFrontLL = RobotConstants.AlignConstants.runFrontLL;
+        runBackLL = RobotConstants.AlignConstants.runBackLL;
 
         if (currentX > 8.775) {
             onRedSide = true;
@@ -183,7 +183,7 @@ public class AlignCommand extends Command {
         // if tag not a reef tag ignore it
         if (aprilTagLocationMap.containsKey(tid) || (algae)) {
             hasTarget = true;
-            double offset = robotConstants.AlignOffsets.firstCoralBack;
+            double offset = RobotConstants.AlignOffsets.firstCoralBack;
             // Initial position is back ~1 coral width
             if (algae) {
                 if (onRedSide) {
@@ -191,11 +191,11 @@ public class AlignCommand extends Command {
                 } else {
                     tid = 16;
                 }
-                offset = robotConstants.AlignOffsets.procOut;
+                offset = RobotConstants.AlignOffsets.procOut;
                 usedBackLL = false;
             }
             if (!algae && score.getDesiredLevel() == 0) {
-                offset = robotConstants.AlignOffsets.tripleL1CoralBack;
+                offset = RobotConstants.AlignOffsets.tripleL1CoralBack;
             }
             double[] pose = getAlignPos(aprilTagLocationMap.get(tid), offset);
             debuggingCenterAlignIssue = "In Initialization";
@@ -214,6 +214,8 @@ public class AlignCommand extends Command {
         possibleTags[1] = -1;
 
         robotRotation = 0;
+
+        careAboutRotation = LimelightHelpers.getTargetCount("limelight-coral") > 1;
     }
 
     /* ----------- Updaters ----------- */
@@ -227,21 +229,21 @@ public class AlignCommand extends Command {
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
         double tagLeftOffset;
         if (hasCoral && !algae && score.getPos() != ScoringPos.ALGAE_COMBINED) {
-            tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?robotConstants.AlignOffsets.leftReefL1 :robotConstants.AlignOffsets.leftReef;
+            tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?RobotConstants.AlignOffsets.leftReefL1 :RobotConstants.AlignOffsets.leftReef;
             if (position == AlignPos.RIGHT) {
-                tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?robotConstants.AlignOffsets.rightReefL1 :robotConstants.AlignOffsets.rightReef;
+                tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?RobotConstants.AlignOffsets.rightReefL1 :RobotConstants.AlignOffsets.rightReef;
             }
         } else  if (!score.getAlgaeNet() && score.getPos() != ScoringPos.GO_SCORE_CORAL && !hasCoral){
             // Algae
-            tagLeftOffset = robotConstants.AlignOffsets.algaeLeft; // Set left offset for center
-            tagForwardOffset = robotConstants.AlignOffsets.algaeBack; //temp: 0.65 is old value of algaeBack // 0.45
+            tagLeftOffset = RobotConstants.AlignOffsets.algaeLeft; // Set left offset for center
+            tagForwardOffset = RobotConstants.AlignOffsets.algaeBack; //temp: 0.65 is old value of algaeBack // 0.45
         } else {
             tagLeftOffset = 0;
         }
 
         debuggingTagForwardOffset = tagForwardOffset;
         debuggingTagLeftOffset = tagLeftOffset;
-
+        
 
         // Calculate rotation relative to the target position
         double rotation = targetPos[2] - Math.PI;
@@ -275,16 +277,18 @@ public class AlignCommand extends Command {
             onRedSide = false;
         }
 
+        careAboutRotation = LimelightHelpers.getTargetCount("limelight-coral") > 1;
+
         // hasCoral = intake.hasCoral();
         robotRotation = drive.getState().Pose.getRotation().getDegrees();
 
         double time = timer.get();
 
-        if (!hasCoral && time > .05 && !wentup && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
+        if (!hasCoral && time > .05 && !wentup && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL)) {
             new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
             wentup = true;
         }
-        if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
+        if(!hasCoral && time > .06 && score.getAllAtSetpoints() && !intaking && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL)) {
             new DualIntakeCommand(true).schedule();
             intaking = true;
         }
@@ -297,8 +301,8 @@ public class AlignCommand extends Command {
             drive.runVision = true;
         }
 
-        // Raise elevator right away for L1-3
-        if (!score.getAlgae() && (score.getDesiredLevel() == 1 || score.getDesiredLevel() == 0) && !up && hasCoral && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_COMBINED)) {
+        // Raise elevator right away for L1-L1.5
+        if (!score.getAlgae() && (score.getDesiredLevel() == 1 || score.getDesiredLevel() == 0) && !up && hasCoral && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL) || (algae && score.getPos() != ScoringPos.ALGAE_COMBINED)) {
             up = true;
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
@@ -337,14 +341,14 @@ public class AlignCommand extends Command {
             }
         }
 
-        if (hasTarget && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (possibleTags[0] == 3 || possibleTags[0] == 16)) {
+        if (hasTarget && ((!careAboutRotation || (tid == possibleTags[0] || tid == possibleTags[1])) || usedBackLL) || (possibleTags[0] == 3 || possibleTags[0] == 16)) {
             // Scoot forward to scoring position once initial target is reached
             if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
-                double[] pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.scoreCoralBack);
+                double[] pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.scoreCoralBack);
                 if (score.getDesiredLevel() == 0) {
-                    pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.tripleL1CoralBack);
+                    pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.tripleL1CoralBack);
                 } else if (score.getDesiredLevel() == 3) {
-                    pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.scoreL3Back);
+                    pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.scoreL3Back);
                 }
                 debuggingCenterAlignIssue = "Scoot";
                 FpidX.setSetpoint(pose[0]);
@@ -355,7 +359,7 @@ public class AlignCommand extends Command {
                 BpidRotate.setSetpoint(pose[2]);
             }
             else if (atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
-                double[] pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.algaeIn);
+                double[] pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.algaeIn);
                 debuggingCenterAlignIssue = "Algae";
                 FpidX.setSetpoint(pose[0]);
                 FpidY.setSetpoint(pose[1]);
@@ -365,7 +369,8 @@ public class AlignCommand extends Command {
                 BpidRotate.setSetpoint(pose[2]);
             }
             else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
-                double[] pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.procIn);
+                double[] pose = getAlignPos(aprilTagLocationMap.get(tid),RobotConstants.AlignOffsets.procIn);
+                debuggingCenterAlignIssue = "Proc";
                 FpidX.setSetpoint(pose[0]);
                 FpidY.setSetpoint(pose[1]);
                 FpidRotate.setSetpoint(pose[2]);
@@ -374,6 +379,7 @@ public class AlignCommand extends Command {
                 BpidRotate.setSetpoint(pose[2]);
             }
 
+            // Non l4 coral go to score
             if (atSetpoint(0.5, 0.8)) {
                 if (score.getDesiredLevel() != 4 && !up && !score.getAlgae() && hasCoral) {
                     up = true;
@@ -498,7 +504,7 @@ public class AlignCommand extends Command {
             drive.setControl(request);
         }
 
-        if (robotConstants.debugging.AlignDebugging) {
+        if (RobotConstants.debugging.AlignDebugging) {
             debugging();
         }
     }

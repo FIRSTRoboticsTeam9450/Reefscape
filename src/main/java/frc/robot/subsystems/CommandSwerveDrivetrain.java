@@ -269,7 +269,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         //Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
         Logger.recordOutput("Drive Pose", getState().Pose);
         Logger.recordOutput("Reefscape/IDK/Test", getOperatorForwardDirection());
-        if (Constants.robotConstants.debugging.SwerveDebugging) {
+        if (Constants.RobotConstants.debugging.SwerveDebugging) {
             logPigeonOffset();
         }
     }
@@ -307,7 +307,7 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
 
     private void updateVision() {
         // double robotRot = getPigeon2().getRotation2d().getDegrees() - RobotContainer.pigeonOffset;
-        double robotRot = getPigeon2().getYaw().getValueAsDouble() - 60;
+        double robotRot = getPigeon2().getYaw().getValueAsDouble() - RobotContainer.pigeonOffset;
         LimelightHelpers.SetRobotOrientation("limelight-coral", robotRot, 0, 0, 0, 0, 0);
         LimelightHelpers.PoseEstimate visionPose = null;
 

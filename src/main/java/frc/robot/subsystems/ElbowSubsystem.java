@@ -8,7 +8,7 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.*;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.robotConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.Log;
 
 /**
@@ -24,8 +24,8 @@ public class ElbowSubsystem extends SubsystemBase {
     RadioSoftware radio = RadioSoftware.getInstance();
 
     // Motor and encoder
-    private final TalonFX motor = new TalonFX(robotConstants.WristIDs.kElbowWristMotorID, robotConstants.RIO_BUS);
-    private final CANcoder encoder = new CANcoder(robotConstants.WristIDs.kElbowWristEncoderID, robotConstants.RIO_BUS);
+    private final TalonFX motor = new TalonFX(RobotConstants.WristIDs.kElbowWristMotorID, RobotConstants.RIO_BUS);
+    private final CANcoder encoder = new CANcoder(RobotConstants.WristIDs.kElbowWristEncoderID, RobotConstants.RIO_BUS);
 
     // Measurement and control variables
     private double elbowAngle;
@@ -63,7 +63,7 @@ public class ElbowSubsystem extends SubsystemBase {
         CANcoderConfiguration cc_cfg = new CANcoderConfiguration();
         cc_cfg.MagnetSensor.AbsoluteSensorDiscontinuityPoint = 0.5;
         cc_cfg.MagnetSensor.SensorDirection = SensorDirectionValue.CounterClockwise_Positive;
-        cc_cfg.MagnetSensor.MagnetOffset = robotConstants.robotConfig.getElbowOffset();
+        cc_cfg.MagnetSensor.MagnetOffset = RobotConstants.robotConfig.getElbowOffset();
         encoder.getConfigurator().apply(cc_cfg);
     }
 
@@ -85,7 +85,7 @@ public class ElbowSubsystem extends SubsystemBase {
         // Feedback configuration
         config.Feedback.FeedbackRemoteSensorID = encoder.getDeviceID();
         config.Feedback.FeedbackSensorSource = FeedbackSensorSourceValue.FusedCANcoder;
-        config.Feedback.SensorToMechanismRatio = robotConstants.robotConfig.getElbowRatio();
+        config.Feedback.SensorToMechanismRatio = RobotConstants.robotConfig.getElbowRatio();
         config.Feedback.RotorToSensorRatio = 30;
 
         // Motion Magic parameters
@@ -95,7 +95,7 @@ public class ElbowSubsystem extends SubsystemBase {
         mm.MotionMagicJerk = jerk;
 
         // Motor output settings
-        config.MotorOutput.NeutralMode = robotConstants.defaultNeutral;
+        config.MotorOutput.NeutralMode = RobotConstants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         motor.getConfigurator().apply(config);

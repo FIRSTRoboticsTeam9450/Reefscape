@@ -4,7 +4,7 @@ import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class ScoreOrIntakeCommand extends Command{

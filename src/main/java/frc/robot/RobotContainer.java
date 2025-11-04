@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.button.InternalButton
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.robotConstants;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
@@ -127,7 +127,7 @@ public class RobotContainer {
     private ClimbSubsystem climber = ClimbSubsystem.getInstance();
 
     private RadioSoftware radio = RadioSoftware.getInstance();
-    public static double pigeonOffset = 0;
+    public static double pigeonOffset = 60;
 
     public RobotContainer() {
         configureBindings();

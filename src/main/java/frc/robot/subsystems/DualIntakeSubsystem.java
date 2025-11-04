@@ -13,8 +13,8 @@ import com.ctre.phoenix6.hardware.TalonFX;
 import com.ctre.phoenix6.signals.InvertedValue;
 import com.ctre.phoenix6.signals.NeutralModeValue;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.robotConstants;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.RobotConstants.*;
 
 public class DualIntakeSubsystem extends SubsystemBase{
 
@@ -26,7 +26,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
     CANrange laser = new CANrange(IntakeIDs.kDualIntakeCoralLaserID);
 
     /* ----- Motors ----- */
-    private TalonFX motor = new TalonFX(IntakeIDs.kDualIntakeMotorID, robotConstants.RIO_BUS);
+    private TalonFX motor = new TalonFX(IntakeIDs.kDualIntakeMotorID, RobotConstants.RIO_BUS);
 
     boolean hasCoral;
     boolean hasAlgae;
@@ -59,7 +59,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
 
         TalonFXConfigurator configurator = motor.getConfigurator();
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = robotConstants.defaultNeutral;
+        config.MotorOutput.NeutralMode = RobotConstants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
         config.CurrentLimits.StatorCurrentLimitEnable = true;
         config.CurrentLimits.StatorCurrentLimit = 80;
@@ -121,7 +121,7 @@ public class DualIntakeSubsystem extends SubsystemBase{
     @Override
     public void periodic() {
         updateLasers();
-        if (robotConstants.debugging.IntakeDebugging) {
+        if (RobotConstants.debugging.IntakeDebugging) {
             debugging();
         }
     }

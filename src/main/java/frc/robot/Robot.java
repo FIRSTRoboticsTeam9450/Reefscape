@@ -15,7 +15,7 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj.Watchdog;
 
-import frc.robot.Constants.robotConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DiffWristSubsystem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -97,7 +97,7 @@ public class Robot extends LoggedRobot {
     m_robotContainer.rotateBezier.dashboardInitialSettings();
     elev.putParams();
     elbow.putParams();
-    dWrist.putParams(robotConstants.defaultNeutral);
+    dWrist.putParams(RobotConstants.defaultNeutral);
 
     experimentalKeybindsChooser.addOption("Experimental Keybinds", true);
     experimentalKeybindsChooser.setDefaultOption("Normal Keybinds", false);
@@ -149,9 +149,9 @@ public class Robot extends LoggedRobot {
   @Override
   public void disabledInit() {
     RobotContainer.toggleDrive(true);
-    if (coordSub.getPos() != robotConstants.ScoringPos.START) {
+    if (coordSub.getPos() != RobotConstants.ScoringPos.START) {
       intake.setVoltage(0);
-      coordSub.setPosition(robotConstants.ScoringPos.CORAL_STORE);
+      coordSub.setPosition(RobotConstants.ScoringPos.CORAL_STORE);
       CommandScheduler.getInstance().cancelAll();
     }
     SignalLogger.stop();
@@ -216,35 +216,35 @@ public class Robot extends LoggedRobot {
 
 
     if (doWeCareAboutDebuggingBoolean) {
-      if (robotConstants.debugging.SwerveDebugging != swerveSetting) {
-        robotConstants.debugging.SwerveDebugging = swerveSetting;
+      if (RobotConstants.debugging.SwerveDebugging != swerveSetting) {
+        RobotConstants.debugging.SwerveDebugging = swerveSetting;
       }
-      if (robotConstants.debugging.LimelightDebugging != limelightSetting) {
-        robotConstants.debugging.LimelightDebugging = limelightSetting;
+      if (RobotConstants.debugging.LimelightDebugging != limelightSetting) {
+        RobotConstants.debugging.LimelightDebugging = limelightSetting;
       }
-      if (robotConstants.debugging.CoordAllowedPathsDebugging != allowedPathsSetting) {
-        robotConstants.debugging.CoordAllowedPathsDebugging = allowedPathsSetting;
+      if (RobotConstants.debugging.CoordAllowedPathsDebugging != allowedPathsSetting) {
+        RobotConstants.debugging.CoordAllowedPathsDebugging = allowedPathsSetting;
       }
-      if (robotConstants.debugging.CoordPositionDebugging != positionSetting) {
-        robotConstants.debugging.CoordPositionDebugging = positionSetting;
+      if (RobotConstants.debugging.CoordPositionDebugging != positionSetting) {
+        RobotConstants.debugging.CoordPositionDebugging = positionSetting;
       }
-      if (robotConstants.debugging.CoordAllAtSetpoint != allAtSetpointSetting) {
-        robotConstants.debugging.CoordAllAtSetpoint = allAtSetpointSetting;
+      if (RobotConstants.debugging.CoordAllAtSetpoint != allAtSetpointSetting) {
+        RobotConstants.debugging.CoordAllAtSetpoint = allAtSetpointSetting;
       }
-      if (robotConstants.debugging.ClimberPos != climberSetting) {
-        robotConstants.debugging.ClimberPos = climberSetting;
+      if (RobotConstants.debugging.ClimberPos != climberSetting) {
+        RobotConstants.debugging.ClimberPos = climberSetting;
       }
-      if (robotConstants.debugging.CurrentPos != currentPositionSetting) {
-        robotConstants.debugging.CurrentPos = currentPositionSetting;
+      if (RobotConstants.debugging.CurrentPos != currentPositionSetting) {
+        RobotConstants.debugging.CurrentPos = currentPositionSetting;
       }
-      if (robotConstants.debugging.DiffyTuningValues != diffySetting) {
-        robotConstants.debugging.DiffyTuningValues = diffySetting;
+      if (RobotConstants.debugging.DiffyTuningValues != diffySetting) {
+        RobotConstants.debugging.DiffyTuningValues = diffySetting;
       }
-      if (robotConstants.debugging.AlignDebugging != alignSetting) {
-        robotConstants.debugging.AlignDebugging = alignSetting;
+      if (RobotConstants.debugging.AlignDebugging != alignSetting) {
+        RobotConstants.debugging.AlignDebugging = alignSetting;
       }
-      if (robotConstants.debugging.IntakeDebugging != intakeSetting) {
-        robotConstants.debugging.IntakeDebugging = intakeSetting;
+      if (RobotConstants.debugging.IntakeDebugging != intakeSetting) {
+        RobotConstants.debugging.IntakeDebugging = intakeSetting;
       }
     }
   }

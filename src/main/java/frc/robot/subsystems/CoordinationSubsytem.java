@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 
@@ -574,9 +574,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
  
     public void goToCoralIntake() {
-        DW.setPitchSetpoint(Constants.robotConstants.robotConfig.getPitchGroundPos()); // OLD: -129
+        DW.setPitchSetpoint(Constants.RobotConstants.robotConfig.getPitchGroundPos()); // OLD: -129
         DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(Constants.robotConstants.robotConfig.getElbowGroundPos()); // Old: 2
+        Elbow.setSetpoint(Constants.RobotConstants.robotConfig.getElbowGroundPos()); // Old: 2
         Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -692,7 +692,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             if (algaeNet) { // net
                 coralScorePitch = -130; //-145
                 coralScoreElbow = 76;
-                coralScoreElev = Constants.robotConstants.robotConfig.getElevatorNetPos();
+                coralScoreElev = Constants.RobotConstants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
             } else { // processor
                 coralScorePitch = -90;
@@ -740,9 +740,9 @@ public class CoordinationSubsytem extends SubsystemBase{
                         coralScoreElbow = 37;
                         coralScoreElev = 36;
                     } else {
-                        coralScorePitch = Constants.robotConstants.robotConfig.getL4Pitch();
-                        coralScoreElbow = Constants.robotConstants.robotConfig.getL4Elbow();
-                        coralScoreElev = Constants.robotConstants.robotConfig.getL4Elevator();
+                        coralScorePitch = Constants.RobotConstants.robotConfig.getL4Pitch();
+                        coralScoreElbow = Constants.RobotConstants.robotConfig.getL4Elbow();
+                        coralScoreElev = Constants.RobotConstants.robotConfig.getL4Elevator();
                     }
                     break;
             }
