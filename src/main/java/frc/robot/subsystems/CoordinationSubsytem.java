@@ -285,6 +285,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         
         if (!allAtSetpoints || justChanged || combinedAlgae) {
             justChanged = false;
+            
             updatePositionState();
             recordSetpoints();
         } else if (allAtSetpoints && justFinished) {
@@ -297,7 +298,7 @@ public class CoordinationSubsytem extends SubsystemBase{
         Logger.recordOutput("Reefscape/Scoring/AutoIntakeMode", autoGround);
         Logger.recordOutput("Reefscape/Scoring/State", pos);
     }
-
+    
 
     private void updatePositionState() {
         
@@ -837,7 +838,6 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
-
     /* ----- Setters and Getters ----- */
 
     public void setPosition(ScoringPos pos) {
@@ -925,6 +925,17 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void setScoringLevel(int level) {
         desiredLevel = level;
         if (pos == ScoringPos.CORAL_STORE) {
+            justChanged = true;
+        }
+    }
+
+    public void toggleCoralInFront() {
+        setCoralInFront(!l4Extend);
+    }
+
+    public void setCoralInFront(boolean coral) {
+        l4Extend = coral;
+        if (pos == ScoringPos.GO_TO_SCORE) {
             justChanged = true;
         }
     }
