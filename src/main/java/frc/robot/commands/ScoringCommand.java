@@ -6,7 +6,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
@@ -19,10 +19,10 @@ public class ScoringCommand extends Command {
     // ----- Subsystem Instances -----
     private final DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
     private final CoordinationSubsytem scoreSub = CoordinationSubsytem.getInstance();
-    private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_SCORE_CORAL);
-    private final CoordinationCommand score = new CoordinationCommand(ScoringPos.SCORE_CORAL);
-    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.ScoreL4);
-    private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.ScoreL4).andThen(new WaitCommand(0.1))));
+    private final CoordinationCommand retry = new CoordinationCommand(ScoringPos.GO_TO_SCORE);
+    private final CoordinationCommand score = new CoordinationCommand(ScoringPos.CORAL_SCORE);
+    private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.CORAL_SCORE_L4);
+    private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.CORAL_SCORE_L4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
 
     // ----- Variables -----
@@ -39,8 +39,8 @@ public class ScoringCommand extends Command {
         algae = scoreSub.getAlgae();
         position = scoreSub.getPos();
 
-        if (position != ScoringPos.GO_SCORE_CORAL && !DriverStation.isAutonomous()) {
-            new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+        if (position != ScoringPos.GO_TO_SCORE && !DriverStation.isAutonomous()) {
+            new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
             running = true;
         } else {
             score(); // Direct scoring if already in correct state
@@ -110,13 +110,13 @@ public class ScoringCommand extends Command {
             if (scoreSub.getDesiredLevel() != 1) {
                 new CoordinationCommand(ScoringPos.CORAL_STORE)
                     .andThen(new WaitCommand(0.455))
-                    .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                    .andThen(new CoordinationCommand(ScoringPos.CORAL_INTAKE_GROUND)
                         .andThen(new DualIntakeCommand(false))
                         .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
                     .schedule();
             } else {
                 new CoordinationCommand(ScoringPos.CORAL_STORE)
-                .andThen(new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+                .andThen(new CoordinationCommand(ScoringPos.CORAL_INTAKE_GROUND)
                     .andThen(new DualIntakeCommand(false))
                     .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE)))
                 .schedule();

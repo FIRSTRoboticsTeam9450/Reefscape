@@ -24,8 +24,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 // import edu.wpi.first.wpilibj2.command.button.InternalButton
 import edu.wpi.first.wpilibj2.command.sysid.SysIdRoutine.Direction;
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.robot.Constants.robotConstants;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
@@ -127,7 +127,7 @@ public class RobotContainer {
     private ClimbSubsystem climber = ClimbSubsystem.getInstance();
 
     private RadioSoftware radio = RadioSoftware.getInstance();
-    public static double pigeonOffset = 0;
+    public static double pigeonOffset = 60;
 
     public RobotContainer() {
         configureBindings();
@@ -371,13 +371,13 @@ public class RobotContainer {
         // === Intake & Storage Controls ===
         // Trigger coral intake and then store it
         m_operator.rightTrigger().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_CORAL)
+            new CoordinationCommand(ScoringPos.CORAL_INTAKE_GROUND)
                 .andThen(new DualIntakeCommand(false))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
 
         m_operator.leftStick().onTrue(
-            new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+            new CoordinationCommand(ScoringPos.ALGAE_INTAKE_GROUND)
                 .andThen(new DualIntakeCommand(true))
         );
         
@@ -471,7 +471,7 @@ public class RobotContainer {
          * Y-X-A-B Buttons
          */
         m_EXPDriver.y().onTrue(
-            new CoordinationCommand(ScoringPos.AlgaeL3)
+            new CoordinationCommand(ScoringPos.ALGAE_INTAKE_PROC)
             .andThen(new DualIntakeCommand(true))
         );
         m_EXPDriver.b().onTrue(
@@ -543,8 +543,7 @@ public class RobotContainer {
         NamedCommands.registerCommand("IntakeHold", new InstantCommand(() -> intake.setVoltage(2)));
         NamedCommands.registerCommand("Outtake", new InstantCommand(() -> intake.setVoltage(-2)));
         NamedCommands.registerCommand("IntakeStop", new InstantCommand(() -> intake.setVoltage(0)));
-        NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.INTAKE_VERTICAL_CORAL).andThen(new AutoIntakeCommand(false)));
-        NamedCommands.registerCommand("IntakeSource", new CoordinationCommand(ScoringPos.INTAKE_SOURCE).andThen(new AutoIntakeCommand(true)));
+        NamedCommands.registerCommand("CoralIntake", new CoordinationCommand(ScoringPos.CORAL_INTAKE_VERTICAL).andThen(new AutoIntakeCommand(false)));
 
         NamedCommands.registerCommand("FlipIntake", new RollSideSwitcher(true));
 
@@ -557,12 +556,12 @@ public class RobotContainer {
         // Scoring Actions
         NamedCommands.registerCommand("Score", new ScoringCommand().andThen(new InstantCommand(() -> intake.setHasCoral(false))));
         NamedCommands.registerCommand("ScoreAndStay", new ScoringCommandAuto().andThen(new InstantCommand(() -> intake.setHasCoral(false))));
-        NamedCommands.registerCommand("GoToScore", new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
+        NamedCommands.registerCommand("GoToScore", new CoordinationCommand(ScoringPos.GO_TO_SCORE));
         NamedCommands.registerCommand("CoralStore", new CoordinationCommand(ScoringPos.CORAL_STORE));
 
         // Algae Related
-        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAEL2).andThen(new DualIntakeCommand(true)));
-        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAEL1).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("HighAlgae", new CoordinationCommand(ScoringPos.ALGAE_INTAKE_REEF_HIGH).andThen(new DualIntakeCommand(true)));
+        NamedCommands.registerCommand("LowAlgae", new CoordinationCommand(ScoringPos.ALGAE_INTAKE_REEF_LOW).andThen(new DualIntakeCommand(true)));
         NamedCommands.registerCommand("AlgaeStore", new CoordinationCommand(ScoringPos.ALGAE_STORE).andThen(new InstantCommand(() -> intake.setVoltage(12))));
 
         NamedCommands.registerCommand("Net", new InstantCommand(() -> scoreSub.setAlgaeNet(true)));

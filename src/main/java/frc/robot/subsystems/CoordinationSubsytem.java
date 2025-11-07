@@ -9,7 +9,7 @@ import org.littletonrobotics.junction.Logger;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
 
@@ -50,12 +50,11 @@ public class CoordinationSubsytem extends SubsystemBase{
     private Set<ScoringPos> Algae_L1_Set = new HashSet<>();
     private Set<ScoringPos> Algae_L2_Set = new HashSet<>();
     private Set<ScoringPos> Algae_L3_Set = new HashSet<>();
-    private Set<ScoringPos> Algae_Combined_Set = new HashSet<>();
+    private Set<ScoringPos> ALGAE_INTAKE_REEF_DYNAMIC_Set = new HashSet<>();
     private Set<ScoringPos> Algae_Grabbed_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Score_Go_Set = new HashSet<>();
     private Set<ScoringPos> Coral_Intake_Vertical_Set = new HashSet<>();
-    private Set<ScoringPos> Pre_L4_Set = new HashSet<>();
-    private Set<ScoringPos> Lolipop_Intake_Set = new HashSet<>();
+    private Set<ScoringPos> CORAL_PRE_L4_Set = new HashSet<>();
     
     boolean algae;
 
@@ -106,196 +105,158 @@ public class CoordinationSubsytem extends SubsystemBase{
         elevEncoder = Elev.getPosition();
 
         Start_Set.add(ScoringPos.CORAL_STORE);
-        Start_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Start_Set.add(ScoringPos.GO_TO_SCORE);
         
-        Coral_Store_Set.add(ScoringPos.PRE_L4);
+        Coral_Store_Set.add(ScoringPos.CORAL_PRE_L4);
 
         Coral_Store_Set.add(ScoringPos.START);
-        Coral_Store_Set.add(ScoringPos.INTAKE_CORAL);
-        Coral_Store_Set.add(ScoringPos.INTAKE_ALGAE);
-        Coral_Store_Set.add(ScoringPos.INTAKE_SOURCE);
-        Coral_Store_Set.add(ScoringPos.INTAKE_VERTICAL_CORAL);
-        Coral_Store_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
-        Coral_Store_Set.add(ScoringPos.ALGAE_COMBINED);
-        Coral_Store_Set.add(ScoringPos.ALGAEL1);
-        Coral_Store_Set.add(ScoringPos.ALGAEL2);
-        Coral_Store_Set.add(ScoringPos.AlgaeL3);
-        Coral_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Coral_Store_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
+        Coral_Store_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
+        Coral_Store_Set.add(ScoringPos.CORAL_INTAKE_VERTICAL);
+        Coral_Store_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Coral_Store_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Coral_Store_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Coral_Store_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Coral_Store_Set.add(ScoringPos.GO_TO_SCORE);
 
         Coral_Store_Set.add(ScoringPos.CORAL_STORE);
 
         Coral_Intake_Set.add(ScoringPos.START);
         Coral_Intake_Set.add(ScoringPos.CORAL_STORE);
-        Coral_Intake_Set.add(ScoringPos.INTAKE_SOURCE);
-        Coral_Intake_Set.add(ScoringPos.ALGAEL1);
-        Coral_Intake_Set.add(ScoringPos.ALGAEL2);
-        Coral_Intake_Set.add(ScoringPos.AlgaeL3);
-        Coral_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
-        Coral_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Coral_Intake_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Coral_Intake_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Coral_Intake_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Coral_Intake_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
 
 
         Source_Intake_Set.add(ScoringPos.CORAL_STORE);
-        Source_Intake_Set.add(ScoringPos.INTAKE_CORAL);
+        Source_Intake_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         Algae_Intake_Set.add(ScoringPos.CORAL_STORE);
         Algae_Intake_Set.add(ScoringPos.ALGAE_STORE);
-        Algae_Intake_Set.add(ScoringPos.ALGAEL1);
-        Algae_Intake_Set.add(ScoringPos.ALGAEL2);
-        Algae_Intake_Set.add(ScoringPos.AlgaeL3);
-        Algae_Intake_Set.add(ScoringPos.ALGAE_COMBINED);
-        Algae_Intake_Set.add(ScoringPos.INTAKE_CORAL);
-        Algae_Intake_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
-        Algae_Intake_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Algae_Intake_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Algae_Intake_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Algae_Intake_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Algae_Intake_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Algae_Intake_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
+        Algae_Intake_Set.add(ScoringPos.GO_TO_SCORE);
 
-        Algae_Store_Set.add(ScoringPos.SCORE_NET);
-        Algae_Store_Set.add(ScoringPos.SCORE_PROCESSOR);
-        Algae_Store_Set.add(ScoringPos.INTAKE_ALGAE); //temp... maybe
+        Algae_Store_Set.add(ScoringPos.ALGAE_INTAKE_GROUND); //temp... maybe
         Algae_Store_Set.add(ScoringPos.CORAL_STORE); //temp
-        Algae_Store_Set.add(ScoringPos.ALGAEL1);
-        Algae_Store_Set.add(ScoringPos.ALGAEL2);
-        Algae_Store_Set.add(ScoringPos.AlgaeL3);
-        Algae_Store_Set.add(ScoringPos.ALGAE_COMBINED);
-        Algae_Store_Set.add(ScoringPos.GRABBED_ALGAE);
-        Algae_Store_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Algae_Store_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Algae_Store_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Algae_Store_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Algae_Store_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Algae_Store_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Algae_Store_Set.add(ScoringPos.GO_TO_SCORE);
         
         Coral_ScoreL1_Set.add(ScoringPos.CORAL_STORE);
         Coral_ScoreL2_Set.add(ScoringPos.CORAL_STORE);
         Coral_ScoreL3_Set.add(ScoringPos.CORAL_STORE);
         Coral_ScoreL4_Set.add(ScoringPos.CORAL_STORE);
 
-        Coral_ScoreL1_Set.add(ScoringPos.SCORE_CORAL);
-        Coral_ScoreL2_Set.add(ScoringPos.SCORE_CORAL);
-        Coral_ScoreL3_Set.add(ScoringPos.SCORE_CORAL);
-        Coral_ScoreL4_Set.add(ScoringPos.ScoreL4);
+        Coral_ScoreL1_Set.add(ScoringPos.CORAL_SCORE);
+        Coral_ScoreL2_Set.add(ScoringPos.CORAL_SCORE);
+        Coral_ScoreL3_Set.add(ScoringPos.CORAL_SCORE);
+        Coral_ScoreL4_Set.add(ScoringPos.CORAL_SCORE_L4);
 
-        Coral_ScoreL1_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Coral_ScoreL2_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Coral_ScoreL3_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Coral_ScoreL4_Set.add(ScoringPos.GO_SCORE_CORAL);
+        Coral_ScoreL1_Set.add(ScoringPos.GO_TO_SCORE);
+        Coral_ScoreL2_Set.add(ScoringPos.GO_TO_SCORE);
+        Coral_ScoreL3_Set.add(ScoringPos.GO_TO_SCORE);
+        Coral_ScoreL4_Set.add(ScoringPos.GO_TO_SCORE);
 
         Coral_Score_Set.add(ScoringPos.CORAL_STORE);
-        Coral_Score_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Coral_Score_Set.add(ScoringPos.INTAKE_CORAL);
+        Coral_Score_Set.add(ScoringPos.GO_TO_SCORE);
+        Coral_Score_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         Algae_Net_Score_Set.add(ScoringPos.CORAL_STORE);
 
         Algae_Processor_Score_Set.add(ScoringPos.CORAL_STORE);
 
         Score_L4_Set.add(ScoringPos.CORAL_STORE);
-        Score_L4_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Score_L4_Set.add(ScoringPos.INTAKE_CORAL);
+        Score_L4_Set.add(ScoringPos.GO_TO_SCORE);
+        Score_L4_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         Algae_L1_Set.add(ScoringPos.ALGAE_STORE);
-        Algae_L1_Set.add(ScoringPos.SCORE_PROCESSOR);
-        Algae_L1_Set.add(ScoringPos.GRABBED_ALGAE);
         Algae_L1_Set.add(ScoringPos.CORAL_STORE);
-        Algae_L1_Set.add(ScoringPos.INTAKE_ALGAE);
-        Algae_L1_Set.add(ScoringPos.ALGAEL2);
-        Algae_L1_Set.add(ScoringPos.AlgaeL3);
-        Algae_L1_Set.add(ScoringPos.ALGAE_COMBINED);
-        Algae_L1_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Algae_L1_Set.add(ScoringPos.INTAKE_CORAL);
-        Algae_L1_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Algae_L1_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
+        Algae_L1_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Algae_L1_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Algae_L1_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Algae_L1_Set.add(ScoringPos.GO_TO_SCORE);
+        Algae_L1_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         Algae_L2_Set.add(ScoringPos.ALGAE_STORE);
-        Algae_L2_Set.add(ScoringPos.SCORE_PROCESSOR);
-        Algae_L2_Set.add(ScoringPos.GRABBED_ALGAE);
         Algae_L2_Set.add(ScoringPos.CORAL_STORE);
-        Algae_L2_Set.add(ScoringPos.INTAKE_ALGAE);
-        Algae_L2_Set.add(ScoringPos.ALGAEL1);
-        Algae_L2_Set.add(ScoringPos.AlgaeL3);
-        Algae_L2_Set.add(ScoringPos.ALGAE_COMBINED);
-        Algae_L2_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Algae_L2_Set.add(ScoringPos.INTAKE_CORAL);
-        Algae_L2_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Algae_L2_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
+        Algae_L2_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Algae_L2_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Algae_L2_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Algae_L2_Set.add(ScoringPos.GO_TO_SCORE);
+        Algae_L2_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         Algae_L3_Set.add(ScoringPos.ALGAE_STORE);
-        Algae_L3_Set.add(ScoringPos.SCORE_PROCESSOR);
-        Algae_L3_Set.add(ScoringPos.GRABBED_ALGAE);
         Algae_L3_Set.add(ScoringPos.CORAL_STORE);
-        Algae_L3_Set.add(ScoringPos.INTAKE_ALGAE);
-        Algae_L3_Set.add(ScoringPos.ALGAEL1);
-        Algae_L3_Set.add(ScoringPos.ALGAEL2);
-        Algae_L3_Set.add(ScoringPos.ALGAE_COMBINED);
-        Algae_L3_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Algae_L3_Set.add(ScoringPos.INTAKE_CORAL);
-        Algae_L3_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Algae_L3_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
+        Algae_L3_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Algae_L3_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Algae_L3_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Algae_L3_Set.add(ScoringPos.GO_TO_SCORE);
+        Algae_L3_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
-        Algae_Combined_Set.add(ScoringPos.ALGAE_STORE);
-        Algae_Combined_Set.add(ScoringPos.CORAL_STORE);
-        Algae_Combined_Set.add(ScoringPos.GRABBED_ALGAE);
-        Algae_Combined_Set.add(ScoringPos.INTAKE_ALGAE);
-        Algae_Combined_Set.add(ScoringPos.ALGAEL1);
-        Algae_Combined_Set.add(ScoringPos.ALGAEL2);
-        Algae_Combined_Set.add(ScoringPos.AlgaeL3);
-        Algae_Combined_Set.add(ScoringPos.SCORE_PROCESSOR);
-        Algae_Combined_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Algae_Combined_Set.add(ScoringPos.INTAKE_CORAL);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.ALGAE_STORE);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.CORAL_STORE);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.GO_TO_SCORE);
+        ALGAE_INTAKE_REEF_DYNAMIC_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         Coral_Score_Go_Set.add(ScoringPos.CORAL_STORE);
-        Coral_Score_Go_Set.add(ScoringPos.SCORE_CORAL);
-        Coral_Score_Go_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Coral_Score_Go_Set.add(ScoringPos.ScoreL4);
+        Coral_Score_Go_Set.add(ScoringPos.CORAL_SCORE);
+        Coral_Score_Go_Set.add(ScoringPos.GO_TO_SCORE);
+        Coral_Score_Go_Set.add(ScoringPos.CORAL_SCORE_L4);
         Coral_Score_Go_Set.add(ScoringPos.ALGAE_STORE);
 
         Algae_Grabbed_Set.add(ScoringPos.ALGAE_STORE);
         Algae_Grabbed_Set.add(ScoringPos.CORAL_STORE);
-        Algae_Grabbed_Set.add(ScoringPos.SCORE_NET);
-        Algae_Grabbed_Set.add(ScoringPos.ALGAEL1);
-        Algae_Grabbed_Set.add(ScoringPos.ALGAEL2);
-        Algae_Grabbed_Set.add(ScoringPos.AlgaeL3);
-        Algae_Grabbed_Set.add(ScoringPos.ALGAE_COMBINED);
-        Algae_Grabbed_Set.add(ScoringPos.INTAKE_ALGAE);
-        Algae_Grabbed_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Algae_Grabbed_Set.add(ScoringPos.LOLIPOP_INTAKE_ALGAE);
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_INTAKE_REEF_LOW);
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_INTAKE_REEF_HIGH);
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_INTAKE_PROC);
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
+        Algae_Grabbed_Set.add(ScoringPos.ALGAE_INTAKE_GROUND);
+        Algae_Grabbed_Set.add(ScoringPos.GO_TO_SCORE);
 
         Coral_Intake_Vertical_Set.add(ScoringPos.CORAL_STORE);
         Coral_Intake_Vertical_Set.add(ScoringPos.START);
 
-        Pre_L4_Set.add(ScoringPos.CORAL_STORE);
-        Pre_L4_Set.add(ScoringPos.GO_SCORE_CORAL);
-        Pre_L4_Set.add(ScoringPos.INTAKE_CORAL);
-
-        Lolipop_Intake_Set.add(ScoringPos.CORAL_STORE);
-        Lolipop_Intake_Set.add(ScoringPos.INTAKE_CORAL);
-        Lolipop_Intake_Set.add(ScoringPos.INTAKE_ALGAE);
-        Lolipop_Intake_Set.add(ScoringPos.ALGAEL1);
-        Lolipop_Intake_Set.add(ScoringPos.ALGAEL2);
-        Lolipop_Intake_Set.add(ScoringPos.AlgaeL3);
-        Lolipop_Intake_Set.add(ScoringPos.ALGAE_STORE);
+        CORAL_PRE_L4_Set.add(ScoringPos.CORAL_STORE);
+        CORAL_PRE_L4_Set.add(ScoringPos.GO_TO_SCORE);
+        CORAL_PRE_L4_Set.add(ScoringPos.CORAL_INTAKE_GROUND);
 
         allowedPaths.put(ScoringPos.START, Start_Set);
 
         allowedPaths.put(ScoringPos.CORAL_STORE, Coral_Store_Set);
 
-        allowedPaths.put(ScoringPos.INTAKE_CORAL, Coral_Intake_Set);
+        allowedPaths.put(ScoringPos.CORAL_INTAKE_GROUND, Coral_Intake_Set);
 
-        allowedPaths.put(ScoringPos.INTAKE_SOURCE, Source_Intake_Set);
-
-        allowedPaths.put(ScoringPos.INTAKE_ALGAE, Algae_Intake_Set);
-        allowedPaths.put(ScoringPos.LOLIPOP_INTAKE_ALGAE, Lolipop_Intake_Set);
+        allowedPaths.put(ScoringPos.ALGAE_INTAKE_GROUND, Algae_Intake_Set);
 
         allowedPaths.put(ScoringPos.ALGAE_STORE, Algae_Store_Set);
 
-        allowedPaths.put(ScoringPos.SCORE_NET, Algae_Net_Score_Set);
 
-        allowedPaths.put(ScoringPos.SCORE_PROCESSOR, Algae_Processor_Score_Set);
+        allowedPaths.put(ScoringPos.CORAL_SCORE_L4, Score_L4_Set);
+        allowedPaths.put(ScoringPos.CORAL_SCORE, Coral_Score_Set);
 
+        allowedPaths.put(ScoringPos.ALGAE_INTAKE_REEF_LOW, Algae_L1_Set);
+        allowedPaths.put(ScoringPos.ALGAE_INTAKE_REEF_HIGH, Algae_L2_Set);
+        allowedPaths.put(ScoringPos.ALGAE_INTAKE_PROC, Algae_L3_Set);
+        allowedPaths.put(ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC, ALGAE_INTAKE_REEF_DYNAMIC_Set);
 
-        allowedPaths.put(ScoringPos.ScoreL4, Score_L4_Set);
-        allowedPaths.put(ScoringPos.SCORE_CORAL, Coral_Score_Set);
+        allowedPaths.put(ScoringPos.GO_TO_SCORE, Coral_Score_Go_Set);
 
-        allowedPaths.put(ScoringPos.ALGAEL1, Algae_L1_Set);
-        allowedPaths.put(ScoringPos.ALGAEL2, Algae_L2_Set);
-        allowedPaths.put(ScoringPos.AlgaeL3, Algae_L3_Set);
-        allowedPaths.put(ScoringPos.ALGAE_COMBINED, Algae_Combined_Set);
-
-        allowedPaths.put(ScoringPos.GRABBED_ALGAE, Algae_Grabbed_Set);
-        allowedPaths.put(ScoringPos.GO_SCORE_CORAL, Coral_Score_Go_Set);
-
-        allowedPaths.put(ScoringPos.INTAKE_VERTICAL_CORAL, Coral_Intake_Vertical_Set);
-        allowedPaths.put(ScoringPos.PRE_L4, Pre_L4_Set);
+        allowedPaths.put(ScoringPos.CORAL_INTAKE_VERTICAL, Coral_Intake_Vertical_Set);
+        allowedPaths.put(ScoringPos.CORAL_PRE_L4, CORAL_PRE_L4_Set);
 
     }
 
@@ -314,11 +275,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             setScoringLevel(1);
         }
 
-        if (pos == ScoringPos.ALGAE_COMBINED) {
-            combinedAlgae = true;
-        } else {
-            combinedAlgae = false;
-        }
+        combinedAlgae = (pos == ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC);
 
         tid = (int)LimelightHelpers.getFiducialID("limelight-coral");
 
@@ -328,7 +285,8 @@ public class CoordinationSubsytem extends SubsystemBase{
         
         if (!allAtSetpoints || justChanged || combinedAlgae) {
             justChanged = false;
-            updatePosition();
+            
+            updatePositionState();
             recordSetpoints();
         } else if (allAtSetpoints && justFinished) {
             justFinished = false;
@@ -340,60 +298,75 @@ public class CoordinationSubsytem extends SubsystemBase{
         Logger.recordOutput("Reefscape/Scoring/AutoIntakeMode", autoGround);
         Logger.recordOutput("Reefscape/Scoring/State", pos);
     }
+    
 
+    private void updatePositionState() {
+        
+        justHitScore = (pos != ScoringPos.GO_TO_SCORE && pos != ScoringPos.CORAL_SCORE);
 
+        switch (pos) {
 
-    public void updatePosition() {
+            case START:
+                startPos();
+                break;
+            
+            case GO_TO_SCORE:
+                goToScorePos();
+                break;
 
-        if (pos != ScoringPos.GO_SCORE_CORAL && pos != ScoringPos.SCORE_CORAL) {
-            justHitScore = true;
+            case CORAL_STORE:
+                coralStorePos();
+                break;
+
+            case CORAL_INTAKE_GROUND:
+                coralIntakeGroundPos();
+                break;
+
+            case CORAL_INTAKE_VERTICAL:
+                coralIntakeVerticalPos();
+                break;
+
+            case CORAL_SCORE:
+                coralScorePos();
+                break;
+
+            case CORAL_SCORE_L4:
+                coralScoreL4Pos();
+                break;
+
+            case CORAL_PRE_L4:
+                coralPreL4Pos();
+                break;
+
+            case ALGAE_STORE:
+                algaeStorePos();
+                break;
+
+            case ALGAE_INTAKE_GROUND:
+                algaeIntakeGroundPos();
+                break;
+
+            case ALGAE_INTAKE_REEF_LOW:
+                algaeIntakeReefLowPos();
+                break;
+
+            case ALGAE_INTAKE_REEF_HIGH:
+                algaeIntakeReefHighPos();
+                break;
+
+            case ALGAE_INTAKE_REEF_DYNAMIC:
+                algaeIntakeReefDynamicPos();
+                break;
+
+            case ALGAE_INTAKE_PROC:
+                algaeIntakeProcPos();
+                break;
+
+            default:
+                coralStorePos();
+                break;
+
         }
-
-        if (pos == ScoringPos.CORAL_STORE) {
-            goToCoralStore();
-        } else if (pos == ScoringPos.ALGAE_STORE) {
-            goToAlgaeStore();
-        } else if (pos == ScoringPos.INTAKE_CORAL) {
-            goToCoralIntake();
-        } else if (pos == ScoringPos.INTAKE_SOURCE) {
-            goToSourceIntake();
-        } else if (pos == ScoringPos.INTAKE_ALGAE) {
-            goToAlgaeIntake();
-        } else if (pos == ScoringPos.SCORE_NET) {
-            goToScoreNet();
-        } else if(pos == ScoringPos.GO_SCORE_CORAL) {
-            if (justHitScore) {
-                justHitScore = false;
-                level = desiredLevel;
-                algaeNet = desiredAlgaeNet;
-            }
-            goScoreLevel();
-        }else if(pos == ScoringPos.SCORE_CORAL) {
-            goToScoreCoral();
-        } else if(pos == ScoringPos.ScoreL4) {
-            goScoreL4();
-        } else if(pos == ScoringPos.ALGAEL1) {
-            goL1Algae();
-        } else if(pos == ScoringPos.ALGAEL2) {
-            goL2Algae();
-        } else if (pos == ScoringPos.ALGAE_COMBINED) {
-            goCombinedAlgae();
-        } else if (pos == ScoringPos.SCORE_PROCESSOR) {
-
-        } else if (pos == ScoringPos.START) {
-            goToStart();
-        } else if (pos == ScoringPos.GRABBED_ALGAE) {
-            goToGrabbed();
-        } else if (pos == ScoringPos.INTAKE_VERTICAL_CORAL) {
-            goToIntakeVertical();
-        } else if (pos == ScoringPos.PRE_L4) {
-            goToPreL4();
-        } else if (pos == ScoringPos.LOLIPOP_INTAKE_ALGAE) {
-            goToLolipopAlgae();
-        } else if(pos == ScoringPos.AlgaeL3) {
-            goL3Algae();
-        }
-
     }
 
     public void pitchManualMovement(double change) {
@@ -428,14 +401,15 @@ public class CoordinationSubsytem extends SubsystemBase{
         pitchOriginalSetpoint = DW.getPitchSetpoint();
     }
 
-    public void goToStart() {
-        // if (elbowEncoder > 20 && (rollEncoder > -45 && rollEncoder < 45)) {
-            // Elbow.setSetpoint(19); 
-        // } else {
+    /**
+     * State the robot starts in upon match start, code deploy, or robot boot up
+     */
+    private void startPos() {
+
         rollToClosestSide();
         DW.setPitchSetpoint(-120);
         Elbow.setSetpoint(90);
-        // } 
+
         if (
             DW.atRollSetpoint()
             && DW.atPitchSetpoint()
@@ -443,186 +417,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             ) {
                 Elev.setSetpoint(0);
         }
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
 
-    public void goToPreL4() {
-        DW.setRollSetpoint(0);
-        DW.setPitchSetpoint(-70);
-        if (!DriverStation.isAutonomous()) {
-            Elev.setSetpoint(4.5);
-        } else {
-            Elev.setSetpoint(0);
-        }
-        Elbow.setSetpoint(67);
-
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goToL1Store() {
-        DW.setRollSetpoint(0);
-        DW.setPitchSetpoint(-70);
-        Elev.setSetpoint(0);
-        Elbow.setSetpoint(67);
-
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goToCoralStore() {
-        setL4RollSide(false);
-        algae = false;
-        l4Extend = false;
-        if ((desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral()) || lastPos == ScoringPos.INTAKE_SOURCE) {
-            goToPreL4();
-        } else if (desiredLevel == 1 || desiredLevel == 0) {
-            if (lastPos == ScoringPos.INTAKE_CORAL || lastPos == ScoringPos.GO_SCORE_CORAL) {
-                goScoreLevel();
-            } else {
-                goToL1Store();
-            }
-        } else {
-            if (lastPos == ScoringPos.INTAKE_CORAL) {
-                if (elbowEncoder > 15) {
-                    if (DriverStation.isAutonomous()) {
-                        rollToOtherSide();
-                    } else {
-                        rollToClosestSide();
-                    }
-                }
-            } else {
-                rollToClosestSide();
-            }
-            //DW.setRollSetpoint(0);
-            Elbow.setSetpoint(90);
-            if (lastPos == ScoringPos.INTAKE_VERTICAL_CORAL) {
-                if (DriverStation.isAutonomous()) {
-                    // rollToOtherSide();
-                }
-                if (elbowEncoder > 30)
-                DW.setPitchSetpoint(-150);
-
-            } else {
-                DW.setPitchSetpoint(-150);
-            }
-            Elev.setSetpoint(0);
-        }
-
-        
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goToSourceIntake() {
-        Elev.setSetpoint(5.9);
-        DW.setPitchSetpoint(-135);
-        Elbow.setSetpoint(100);
-        DW.setRollSetpoint(0);
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goToAlgaeStore() {
-        // DW.setPitchSetpoint(-152);
-        // DW.setRollSetpoint(0);
-        // Elbow.setSetpoint(75);
-
-        algae = true;
-        DW.setPitchSetpoint(-70);
-        Elbow.setSetpoint(56);
-        Elev.setSetpoint(3);
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
- 
-    public void goToCoralIntake() {
-        DW.setPitchSetpoint(Constants.robotConstants.robotConfig.getPitchGroundPos()); // OLD: -129
-        DW.setRollSetpoint(0); 
-        Elbow.setSetpoint(Constants.robotConstants.robotConfig.getElbowGroundPos()); // Old: 2
-        Elev.setSetpoint(0);
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    //elbow 28, pitch -80, roll 180
-    public void goToAlgaeIntake() {
-        algae = true;
-        DW.setPitchSetpoint(-100.7);
-        Elbow.setSetpoint(-11.68); // Used to be -11.4
-        Elev.setSetpoint(0);
-        DW.setRollSetpoint(0);
-
-
-        // DW.setPitchSetpoint(-129);
-        // DW.setRollSetpoint(0);
-        // Elbow.setSetpoint(0);
-        // Elev.setSetpoint(0);
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goToLolipopAlgae() {
-        algae = true;
-        DW.setPitchSetpoint(-100);
-        Elbow.setSetpoint(20);
-        Elev.setSetpoint(0);
-        DW.setRollSetpoint(0);
-
-
-        // DW.setPitchSetpoint(-129);
-        // DW.setRollSetpoint(0);
-        // Elbow.setSetpoint(0);
-        // Elev.setSetpoint(0);
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -634,67 +429,17 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
 
     /**
-     * [Insert good comments here]
+     * Dynamic Scoring state based of desired scoring area
      */
-    public void goToScoreNet() {
-        Elev.setSetpoint(38);
-        if (elevEncoder > 8) {
-            DW.setPitchSetpoint(-172);
-            DW.setRollSetpoint(0);
-            Elbow.setSetpoint(76);
-        }
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
+    private void goToScorePos() {
 
-    public void goToScoreProcessor() {
-        DW.setPitchSetpoint(-125.5);
-        DW.setRollSetpoint(0);
-        Elbow.setSetpoint(-17);
-        if (DW.atPitchSetpoint() && DW.atRollSetpoint() && Elbow.atSetpoint()) {
-            Elev.setSetpoint(0);
-        }
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goToIntakeVertical() {
-        DW.setPitchSetpoint(-65);
-        rollToClosestSide();
-        Elbow.setSetpoint(-28);
-        Elev.setSetpoint(0);
-        
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
-
-    public void goScoreLevel() {
         if (algae) {
-            //Elev.setSlow();
-            if (algaeNet) { // net
-                coralScorePitch = -130; //-145
+            if (algaeNet) {
+                coralScorePitch = -130;
                 coralScoreElbow = 76;
-                coralScoreElev = Constants.robotConstants.robotConfig.getElevatorNetPos();
+                coralScoreElev = Constants.RobotConstants.robotConfig.getElevatorNetPos();
                 DW.setRollSetpoint(0);
-            } else { // processor
+            } else {
                 coralScorePitch = -90;
                 coralScoreElbow = 15;
                 coralScoreElev = 0;
@@ -720,19 +465,17 @@ public class CoordinationSubsytem extends SubsystemBase{
                     if (l4Extend) {
                         coralScoreElev = 5.5;
                     } else {
-                        coralScoreElev = 4; //4.5 //Comp: 3.75
+                        coralScoreElev = 4;
                     }
-                    //rollToClosestSide();
                     break;
                 case 3:
                     coralScorePitch = -112;
                     coralScoreElbow = 78;
                     if (l4Extend) {
-                        coralScoreElev = 13.5; //14.25
+                        coralScoreElev = 13.5;
                     } else {
-                        coralScoreElev = 12.5; //13.25
+                        coralScoreElev = 12.5;
                     }
-                    //rollToClosestSide();
                     break;
                 case 4:
                     if (l4Extend) {
@@ -740,25 +483,23 @@ public class CoordinationSubsytem extends SubsystemBase{
                         coralScoreElbow = 37;
                         coralScoreElev = 36;
                     } else {
-                        coralScorePitch = Constants.robotConstants.robotConfig.getL4Pitch();
-                        coralScoreElbow = Constants.robotConstants.robotConfig.getL4Elbow();
-                        coralScoreElev = Constants.robotConstants.robotConfig.getL4Elevator();
+                        coralScorePitch = Constants.RobotConstants.robotConfig.getL4Pitch();
+                        coralScoreElbow = Constants.RobotConstants.robotConfig.getL4Elbow();
+                        coralScoreElev = Constants.RobotConstants.robotConfig.getL4Elevator();
                     }
                     break;
             }
         }
 
-        // elev 0
-        // pitch -71
-        // elbow -22
+
 
         if(algae) {
             if (algaeNet) {
                 Elbow.setSetpoint(coralScoreElbow);
                 Elev.setSetpoint(coralScoreElev);
-                DW.setPitchSetpoint(-110); //old pitch pos used while going up
+                DW.setPitchSetpoint(-110); 
                 if (Elev.getPosition() > 35) {
-                    DW.setPitchSetpoint(coralScorePitch); //pitch pos wanted when scoring
+                    DW.setPitchSetpoint(coralScorePitch);
                 }
             } else {
                 DW.setPitchSetpoint(coralScorePitch);
@@ -768,32 +509,50 @@ public class CoordinationSubsytem extends SubsystemBase{
                     Elev.setSetpoint(coralScoreElev);
                 }
             }
-        } else if (level == 1) {
-            DW.setPitchSetpoint(coralScorePitch);
-            Elbow.setSetpoint(coralScoreElbow);
-
-            if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
-                Elev.setSetpoint(coralScoreElev);
-            }
-        } else if (level == 4) {
-            Elev.setSetpoint(coralScoreElev);
-            if (elevEncoder > 25) {
-                DW.setPitchSetpoint(coralScorePitch);
-                rollToL4();
-                Elbow.setSetpoint(coralScoreElbow);
-            }
-        } else if (level == 3 || level == 2) {
-            DW.setPitchSetpoint(coralScorePitch);
-            Elbow.setSetpoint(coralScoreElbow);
-            Elev.setSetpoint(coralScoreElev);
-            if (DW.atPitchSetpoint() && Elbow.atSetpoint()) {
-                rollToClosestSide();
-            }
         } else {
-            DW.setPitchSetpoint(coralScorePitch);
-            Elbow.setSetpoint(coralScoreElbow);
-            Elev.setSetpoint(coralScoreElev);
+            switch (desiredLevel) {
+                case 0:
+                    DW.setPitchSetpoint(coralScorePitch); 
+                    Elbow.setSetpoint(coralScoreElbow);
+                    if (DW.atPitchSetpoint() && Elbow.atSetpoint()) Elev.setSetpoint(coralScoreElev);
+                    break;
+
+                case 1:
+                    DW.setPitchSetpoint(coralScorePitch); 
+                    Elbow.setSetpoint(coralScoreElbow);
+                    if (DW.atPitchSetpoint() && Elbow.atSetpoint()) Elev.setSetpoint(coralScoreElev);
+                    break;
+
+                case 2:
+                    DW.setPitchSetpoint(coralScorePitch);
+                    Elbow.setSetpoint(coralScoreElbow);
+                    Elev.setSetpoint(coralScoreElev);
+                    if (DW.atPitchSetpoint() && Elbow.atSetpoint()) rollToClosestSide();
+                    break;
+
+                case 3:
+                    DW.setPitchSetpoint(coralScorePitch);
+                    Elbow.setSetpoint(coralScoreElbow);
+                    Elev.setSetpoint(coralScoreElev);
+                    if (DW.atPitchSetpoint() && Elbow.atSetpoint()) rollToClosestSide();
+                    break;
+
+                case 4:
+                    Elev.setSetpoint(coralScoreElev);
+                    if (elevEncoder > 25) {
+                        DW.setPitchSetpoint(coralScorePitch);
+                        rollToL4();
+                        Elbow.setSetpoint(coralScoreElbow);
+                    }
+                    break;
+
+                default:
+                    DW.setPitchSetpoint(coralScorePitch);
+                    Elbow.setSetpoint(coralScoreElbow);
+                    Elev.setSetpoint(coralScoreElev);
+            }
         }
+        
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -805,28 +564,205 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
-    public void setCoralInFront(boolean coral) {
-        l4Extend = coral;
-        if (pos == ScoringPos.GO_SCORE_CORAL) {
-            justChanged = true;
+    /**
+     * Default/idle state
+     */
+    private void coralStorePos() {
+        
+        setL4RollSide(false);
+        algae = false;
+        l4Extend = false;
+
+        if (desiredLevel == 4 && DualIntakeSubsystem.getInstance().hasCoral) {
+            coralPreL4Pos();
+        } else if (desiredLevel == 0 || desiredLevel == 1) {
+            if (lastPos == ScoringPos.CORAL_INTAKE_GROUND) {
+                goToScorePos();
+            } else {
+                DW.setRollSetpoint(0);
+                DW.setPitchSetpoint(-70);
+                Elev.setSetpoint(0);
+                Elbow.setSetpoint(67);
+            }
+        } else {
+            if (lastPos == ScoringPos.CORAL_INTAKE_GROUND) {
+                if (elbowEncoder > 15) {
+                    if (DriverStation.isAutonomous()) {
+                        rollToOtherSide();
+                    } else {
+                        rollToClosestSide();
+                    }
+                }
+            } else {
+                rollToClosestSide();
+            }
+            Elbow.setSetpoint(90);
+            if (lastPos == ScoringPos.CORAL_INTAKE_VERTICAL) {
+                if (DriverStation.isAutonomous()) {
+                    // rollToOtherSide();
+                }
+                if (elbowEncoder > 30)
+                DW.setPitchSetpoint(-150);
+
+            } else {
+                DW.setPitchSetpoint(-150);
+            }
+            Elev.setSetpoint(0);
+        }
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
         }
     }
 
-    public void toggleCoralInFront() {
-        setCoralInFront(!l4Extend);
+    /**
+     * State used for intake coral off the ground
+     * Note for self: see if tieing things like intake into a state works
+     *      - Could use a dynamic system like experimental keybinds
+     */
+    private void coralIntakeGroundPos() {
+
+        DW.setPitchSetpoint(Constants.RobotConstants.robotConfig.getPitchGroundPos()); // OLD: -129
+        DW.setRollSetpoint(0); 
+        Elbow.setSetpoint(Constants.RobotConstants.robotConfig.getElbowGroundPos()); // Old: 2
+        Elev.setSetpoint(0);
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
+    private void coralIntakeVerticalPos() {
 
-    public void goScoreL4() {
+        DW.setPitchSetpoint(-65);
+        rollToClosestSide();
+        Elbow.setSetpoint(-28);
+        Elev.setSetpoint(0);
+        
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    private void coralScorePos() {
+
+        if (level == 2) {
+            DW.setPitchSetpoint(-128);
+        } else {
+            DW.setPitchSetpoint(-107.19);
+        }
+
+        Elbow.setSetpoint(32.91);
+
+        if (level == 3 && Elbow.atSetpoint()) {
+            Elev.setSetpoint(11.15);
+        }
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            && Elev.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    private void coralScoreL4Pos() {
+
         Elev.setSetpoint(21);
+
+        if (Elev.atSetpoint()){
+            allAtSetpoints = true;
+            justFinished = true;
+        }
     }
 
-    public void goL1Algae() {
+    private void coralPreL4Pos() {
+
+        DW.setRollSetpoint(0);
+        DW.setPitchSetpoint(-70);
+
+        if (!DriverStation.isAutonomous()) {
+            Elev.setSetpoint(4.5);
+        } else {
+            Elev.setSetpoint(0);
+        }
+
+        Elbow.setSetpoint(67);
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    private void algaeStorePos() {
+
         algae = true;
+
+        DW.setPitchSetpoint(-70);
+        Elbow.setSetpoint(56);
+        Elev.setSetpoint(3);
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    private void algaeIntakeGroundPos() {
+
+        algae = true;
+
+        DW.setPitchSetpoint(-100.7);
+        Elbow.setSetpoint(-11.68);
+        Elev.setSetpoint(0);
+        DW.setRollSetpoint(0);
+
+        if (DW.atRollSetpoint()
+            && DW.atPitchSetpoint()
+            && Elbow.atSetpoint()
+            )
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    private void algaeIntakeReefLowPos() {
+
+        algae = true;
+
         Elev.setSetpoint(11);
         DW.setPitchSetpoint(-110);
         Elbow.setSetpoint(37.09);
         DW.setRollSetpoint(0);
+
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -837,12 +773,15 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
-    public void goL2Algae() {
+    private void algaeIntakeReefHighPos() {
+        
         algae = true;
+
         Elev.setSetpoint(20);
         DW.setPitchSetpoint(-90);
         Elbow.setSetpoint(37.09);
         DW.setRollSetpoint(0);
+
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -853,27 +792,14 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
-    public void goL3Algae() {
-        algae = true;
-        Elev.setSetpoint(29);
-        DW.setPitchSetpoint(-90);
-        Elbow.setSetpoint(37.09);
-        DW.setRollSetpoint(0);
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
+    private void algaeIntakeReefDynamicPos() {
 
-    public void goCombinedAlgae() {
         algae = true;
+
         Elbow.setSetpoint(37.09);
         DW.setPitchSetpoint(-110);
         DW.setRollSetpoint(0);
+
         if(Elbow.atSetpoint()) {
             if (tid == 7 || tid == 9 || tid == 11 || tid == 18 || tid == 20 || tid == 22) {
                 Elev.setSetpoint(20);
@@ -881,6 +807,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 Elev.setSetpoint(11);
             }
         }
+
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint() 
@@ -892,33 +819,15 @@ public class CoordinationSubsytem extends SubsystemBase{
         }
     }
 
-    public void goToScoreCoral() {
-        if (level == 2) {
-            DW.setPitchSetpoint(-128);
-        } else {
-            
-            DW.setPitchSetpoint(-107.19);
-        }
-        Elbow.setSetpoint(32.91);
-        if (level == 3 && Elbow.atSetpoint()) {
-            Elev.setSetpoint(11.15);
-        }
-        if (level == 2 && Elbow.atSetpoint()) {
+    private void algaeIntakeProcPos() {
 
-        }
-        if (DW.atRollSetpoint()
-            && DW.atPitchSetpoint()
-            && Elbow.atSetpoint()
-            && Elev.atSetpoint()
-            )
-        {
-            allAtSetpoints = true;
-            justFinished = true;
-        }
-    }
+        algae = true;
 
-    public void goToGrabbed() {
-        Elev.setSetpoint(elbowOriginalSetpoint);
+        Elev.setSetpoint(29);
+        DW.setPitchSetpoint(-90);
+        Elbow.setSetpoint(37.09);
+        DW.setRollSetpoint(0);
+
         if (DW.atRollSetpoint()
             && DW.atPitchSetpoint()
             && Elbow.atSetpoint()
@@ -1016,6 +925,17 @@ public class CoordinationSubsytem extends SubsystemBase{
     public void setScoringLevel(int level) {
         desiredLevel = level;
         if (pos == ScoringPos.CORAL_STORE) {
+            justChanged = true;
+        }
+    }
+
+    public void toggleCoralInFront() {
+        setCoralInFront(!l4Extend);
+    }
+
+    public void setCoralInFront(boolean coral) {
+        l4Extend = coral;
+        if (pos == ScoringPos.GO_TO_SCORE) {
             justChanged = true;
         }
     }

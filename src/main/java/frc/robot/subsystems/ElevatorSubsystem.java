@@ -30,7 +30,7 @@ import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import frc.robot.Constants;
 import frc.robot.LimelightHelpers;
-import frc.robot.Constants.robotConstants;
+import frc.robot.Constants.RobotConstants;
 import frc.robot.RobotContainer;
 
 /**
@@ -46,8 +46,8 @@ public class ElevatorSubsystem extends SubsystemBase {
     private static ElevatorSubsystem instance;
 
     //Motor instances
-    private TalonFX leftMotor = new TalonFX(robotConstants.ElevatorIDs.kLeftMotorID, "CantDrive");
-    private TalonFX rightMotor = new TalonFX(robotConstants.ElevatorIDs.kRightMotorID, "CantDrive");
+    private TalonFX leftMotor = new TalonFX(RobotConstants.ElevatorIDs.kLeftMotorID, "CantDrive");
+    private TalonFX rightMotor = new TalonFX(RobotConstants.ElevatorIDs.kRightMotorID, "CantDrive");
 
     private double position;
     private double offset;
@@ -81,7 +81,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     //     when starting to move this will enable it get going then it is removed
     // kv is multiplied by desired velocity
     // ka is multi
-    private CANdi candi = new CANdi(robotConstants.ElevatorIDs.kCANdiID, "CantDrive");
+    private CANdi candi = new CANdi(RobotConstants.ElevatorIDs.kCANdiID, "CantDrive");
 
     public static ElevatorSubsystem getInstance() {
         if (instance == null) {
@@ -98,7 +98,7 @@ public class ElevatorSubsystem extends SubsystemBase {
     /* -------------------- Motor Configuration -------------------- */
     private void configureLeftMotor() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = robotConstants.defaultNeutral;
+        config.MotorOutput.NeutralMode = RobotConstants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.Clockwise_Positive;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;
@@ -119,7 +119,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     private void configureRightMotor() {
         TalonFXConfiguration config = new TalonFXConfiguration();
-        config.MotorOutput.NeutralMode = robotConstants.defaultNeutral;
+        config.MotorOutput.NeutralMode = RobotConstants.defaultNeutral;
         config.MotorOutput.Inverted = InvertedValue.CounterClockwise_Positive;
 
         config.CurrentLimits.StatorCurrentLimitEnable = true;

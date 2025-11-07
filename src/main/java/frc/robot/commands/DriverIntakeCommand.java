@@ -3,7 +3,7 @@ package frc.robot.commands;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -31,7 +31,7 @@ public class DriverIntakeCommand extends Command {
         boolean use1Controller = SmartDashboard.getBoolean("Experimental Keybinds choosen setting", false);
         if (use1Controller) {
             hasCoral = intake.hasCoral();
-            if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+            if (score.getPos() == ScoringPos.CORAL_INTAKE_GROUND) {
                 if (driveController.getLeftTriggerAxis() > 0.05) {
                     if (!forward.isScheduled()) {
                         forward.schedule();
@@ -42,11 +42,11 @@ public class DriverIntakeCommand extends Command {
             } else if (hasCoral) {
                 new GoToScorePosCommand().schedule();
             } else {
-                new CoordinationCommand(ScoringPos.INTAKE_ALGAE)
+                new CoordinationCommand(ScoringPos.ALGAE_INTAKE_GROUND)
                     .andThen(new DualIntakeCommand(true)).schedule();
             }
         } else {
-            if (score.getPos() == ScoringPos.INTAKE_CORAL) {
+            if (score.getPos() == ScoringPos.CORAL_INTAKE_GROUND) {
                 if (driveController.getLeftTriggerAxis() > 0.05) {
                     if (!forward.isScheduled()) {
                         forward.schedule();

@@ -14,8 +14,8 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import frc.robot.Constants.robotConstants;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants;
+import frc.robot.Constants.RobotConstants.*;
 
 
 public class ClimbSubsystem extends SubsystemBase {
@@ -23,12 +23,12 @@ public class ClimbSubsystem extends SubsystemBase {
     private static ClimbSubsystem instance;
     RadioSoftware radio = RadioSoftware.getInstance();
 
-    private final TalonFX climbMotor = new TalonFX(ClimberIDs.kMotorID, robotConstants.CTRE_BUS);
-    private final CANcoder climbEncoder = new CANcoder(ClimberIDs.kEncoderID, robotConstants.CTRE_BUS);
+    private final TalonFX climbMotor = new TalonFX(ClimberIDs.kMotorID, RobotConstants.CTRE_BUS);
+    private final CANcoder climbEncoder = new CANcoder(ClimberIDs.kEncoderID, RobotConstants.CTRE_BUS);
 
     private PIDController climberPID = new PIDController(55, 0, 0.5);
 
-    private boolean runClimber = robotConstants.robotConfig.getRunClimber();
+    private boolean runClimber = RobotConstants.robotConfig.getRunClimber();
 
     private double debuggingVoltage = 0;
 

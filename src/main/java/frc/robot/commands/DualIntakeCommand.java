@@ -5,7 +5,7 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
-import frc.robot.Constants.robotConstants.*;
+import frc.robot.Constants.RobotConstants.*;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
 
@@ -51,7 +51,7 @@ public class DualIntakeCommand extends Command{
             if (DI.hasAlgae()) {
                 DI.setVoltage(12);
                 finished = true;
-                if (score.getPos() != ScoringPos.INTAKE_ALGAE) {
+                if (score.getPos() != ScoringPos.ALGAE_INTAKE_GROUND) {
                     //wristUpReef.schedule();
                 } 
                 algaeTimer.restart();
@@ -91,11 +91,11 @@ public class DualIntakeCommand extends Command{
             return;
         }
         if (algae) {
-            if (!DriverStation.isAutonomous() && (score.getDesiredAlgaeNet() || score.getPos() == ScoringPos.ALGAE_COMBINED)) {
+            if (!DriverStation.isAutonomous() && (score.getDesiredAlgaeNet() || score.getPos() == ScoringPos.ALGAE_INTAKE_REEF_DYNAMIC)) {
                 wristUpGround.schedule();
             }
-            if (score.getPos() == ScoringPos.INTAKE_ALGAE && !score.getDesiredAlgaeNet()) {
-                new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
+            if (score.getPos() == ScoringPos.ALGAE_INTAKE_GROUND && !score.getDesiredAlgaeNet()) {
+                new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
             }
         } else {
             DI.setVoltage(6);
