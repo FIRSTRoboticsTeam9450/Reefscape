@@ -51,8 +51,6 @@ public class AlignCommand extends Command {
     private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
-    private SequentialCommandGroup L1ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.1).andThen(new ScoringCommand()));
-    private SequentialCommandGroup L3UpAndWait = new SequentialCommandGroup(new WaitCommand(0.15)).andThen(new CoordinationCommand(ScoringPos.GO_SCORE_CORAL));
     private SequentialCommandGroup L3ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.25).andThen(new ScoringCommand()));
 
     /* ----- Variables ----- */
@@ -95,7 +93,7 @@ public class AlignCommand extends Command {
     CommandXboxController controller;
 
     /* ----- Swerve Drive ----- */
-    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
+    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     /* ----------- Initialzation ----------- */
@@ -185,6 +183,7 @@ public class AlignCommand extends Command {
             hasTarget = true;
             double offset = robotConstants.AlignOffsets.firstCoralBack;
             // Initial position is back ~1 coral width
+            // Processer auto align if intake has an algae
             if (algae) {
                 if (onRedSide) {
                     tid = 3;
@@ -199,6 +198,8 @@ public class AlignCommand extends Command {
             }
             double[] pose = getAlignPos(aprilTagLocationMap.get(tid), offset);
             debuggingCenterAlignIssue = "In Initialization";
+
+            // Update PIDs
             FpidX.setSetpoint(pose[0]);
             FpidY.setSetpoint(pose[1]);
             FpidRotate.setSetpoint(pose[2]);
@@ -226,12 +227,14 @@ public class AlignCommand extends Command {
      */
     private double[] getAlignPos(double[] targetPos, double tagForwardOffset) {
         double tagLeftOffset;
-        if (hasCoral && !algae && score.getPos() != ScoringPos.ALGAE_COMBINED) {
+
+        // Check which mode its auto aligning to and set the offset from the tag
+        if (hasCoral && !algae && score.getPos() != ScoringPos.ALGAE_COMBINED) { // Normal coral mode
             tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?robotConstants.AlignOffsets.leftReefL1 :robotConstants.AlignOffsets.leftReef;
             if (position == AlignPos.RIGHT) {
                 tagLeftOffset = (score.getDesiredLevel() == 1  || score.getDesiredLevel() == 0) ?robotConstants.AlignOffsets.rightReefL1 :robotConstants.AlignOffsets.rightReef;
             }
-        } else  if (!score.getAlgaeNet() && score.getPos() != ScoringPos.GO_SCORE_CORAL && !hasCoral){
+        } else  if (!score.getAlgaeNet() && score.getPos() != ScoringPos.GO_SCORE_CORAL && !hasCoral){ // Processor auto align
             // Algae
             tagLeftOffset = robotConstants.AlignOffsets.algaeLeft; // Set left offset for center
             tagForwardOffset = robotConstants.AlignOffsets.algaeBack; //temp: 0.65 is old value of algaeBack // 0.45
@@ -280,6 +283,7 @@ public class AlignCommand extends Command {
 
         double time = timer.get();
 
+        // Intaking algae auto align, seperated actions to stop brownout
         if (!hasCoral && time > .05 && !wentup && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL)) {
             new CoordinationCommand(ScoringPos.ALGAE_COMBINED).schedule();
             wentup = true;
@@ -303,7 +307,10 @@ public class AlignCommand extends Command {
             new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
         }
 
-        if (algae) {
+    
+        // Tags it's allowed to align with based on rotation, If ex: if rotation matches tag 18 but the limelight can see both 18 and 19, it will go to 18
+        // Because there are 2 tags with the same rotation but are on opposite sides of the reef thats why there is possibleTags[0] and possibleTags[1]
+        if (algae) { // Processor possible tags
             if (onRedSide) {
                 possibleTags[0] = 3;
                 possibleTags[1] = -1;
@@ -337,9 +344,10 @@ public class AlignCommand extends Command {
             }
         }
 
+        // Auto align!!!
         if (hasTarget && ((tid == possibleTags[0] || tid == possibleTags[1]) || usedBackLL) || (possibleTags[0] == 3 || possibleTags[0] == 16)) {
             // Scoot forward to scoring position once initial target is reached
-            if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) {
+            if (atSetpoint(0.06, 0.3) && !score.getAlgae() && !(score.getScoringLevel() == 1)) { // Score coral
                 double[] pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.scoreCoralBack);
                 if (score.getDesiredLevel() == 0) {
                     pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.tripleL1CoralBack);
@@ -354,7 +362,7 @@ public class AlignCommand extends Command {
                 BpidY.setSetpoint(pose[1]);
                 BpidRotate.setSetpoint(pose[2]);
             }
-            else if (atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) {
+            else if (atSetpoint(0.06, 0.3) && !hasCoral && score.getPos() != ScoringPos.GO_SCORE_CORAL) { // Omtale a;gae
                 double[] pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.algaeIn);
                 debuggingCenterAlignIssue = "Algae";
                 FpidX.setSetpoint(pose[0]);
@@ -364,7 +372,7 @@ public class AlignCommand extends Command {
                 BpidY.setSetpoint(pose[1]);
                 BpidRotate.setSetpoint(pose[2]);
             }
-            else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_SCORE_CORAL) {
+            else if (atSetpoint(0.06, 0.3) && algae && score.getPos() == ScoringPos.GO_SCORE_CORAL) { // Processor
                 double[] pose = getAlignPos(aprilTagLocationMap.get(tid),robotConstants.AlignOffsets.procIn);
                 FpidX.setSetpoint(pose[0]);
                 FpidY.setSetpoint(pose[1]);
@@ -374,7 +382,7 @@ public class AlignCommand extends Command {
                 BpidRotate.setSetpoint(pose[2]);
             }
 
-            if (atSetpoint(0.5, 0.8)) {
+            if (atSetpoint(0.5, 0.8)) { // Make it go to score position when its within .5 m of the april tag
                 if (score.getDesiredLevel() != 4 && !up && !score.getAlgae() && hasCoral) {
                     up = true;
                     new CoordinationCommand(ScoringPos.GO_SCORE_CORAL).schedule();
@@ -390,7 +398,7 @@ public class AlignCommand extends Command {
             }
 
             // Rumble controller to let driver know robot is ready to score
-            if (atSetpoint(0.1, 0.2)) {
+            if (atSetpoint(0.1, 0.2)) { 
                 controller.setRumble(RumbleType.kBothRumble, 0.5);
                 if (up && !hasScored && (score.getDesiredLevel() != 1 || score.getDesiredLevel() != 0)) {
                     if (score.getScoringLevel() == 3) {
@@ -410,7 +418,7 @@ public class AlignCommand extends Command {
             double powerX;
             double powerY;
             if (!usedBackLL) {
-                powerX = FpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
+                powerX = FpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0)); // Multiply by time to ramp up instead of shooting up
                 powerY = FpidY.calculate(currentPose.getY()) * (MathUtil.clamp(time * 0.7, 1, 0));   
             } else {
                 powerX = BpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
@@ -431,6 +439,7 @@ public class AlignCommand extends Command {
                 powerY = MathUtil.clamp(powerY, -2, 2); // -2, 2
             }
 
+            // Base power so it moves when its too slow
             powerX += .05*Math.signum(powerX);
             powerY += .05*Math.signum(powerY);
             
@@ -503,6 +512,7 @@ public class AlignCommand extends Command {
         }
     }
 
+    // Default values
     public boolean atSetpoint() {
         return atSetpoint(0.03, 0.2);
     }
