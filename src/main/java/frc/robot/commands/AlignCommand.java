@@ -50,8 +50,6 @@ public class AlignCommand extends Command {
     private CoordinationSubsytem score = CoordinationSubsytem.getInstance();
     private DualIntakeSubsystem intake = DualIntakeSubsystem.getInstance();
 
-    private SequentialCommandGroup L1ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.1).andThen(new ScoringCommand()));
-    private SequentialCommandGroup L3UpAndWait = new SequentialCommandGroup(new WaitCommand(0.15)).andThen(new CoordinationCommand(ScoringPos.GO_TO_SCORE));
     private SequentialCommandGroup L3ScoreAndWait = new SequentialCommandGroup(new WaitCommand(0.25).andThen(new ScoringCommand()));
 
     /* ----- Variables ----- */
@@ -95,7 +93,7 @@ public class AlignCommand extends Command {
     CommandXboxController controller;
 
     /* ----- Swerve Drive ----- */
-    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
+    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
     .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
 
     /* ----------- Initialzation ----------- */
@@ -185,6 +183,7 @@ public class AlignCommand extends Command {
             hasTarget = true;
             double offset = RobotConstants.AlignOffsets.firstCoralBack;
             // Initial position is back ~1 coral width
+            // Processer auto align if intake has an algae
             if (algae) {
                 if (onRedSide) {
                     tid = 3;
@@ -199,6 +198,8 @@ public class AlignCommand extends Command {
             }
             double[] pose = getAlignPos(aprilTagLocationMap.get(tid), offset);
             debuggingCenterAlignIssue = "In Initialization";
+
+            // Update PIDs
             FpidX.setSetpoint(pose[0]);
             FpidY.setSetpoint(pose[1]);
             FpidRotate.setSetpoint(pose[2]);
@@ -307,7 +308,10 @@ public class AlignCommand extends Command {
             new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
 
-        if (algae) {
+    
+        // Tags it's allowed to align with based on rotation, If ex: if rotation matches tag 18 but the limelight can see both 18 and 19, it will go to 18
+        // Because there are 2 tags with the same rotation but are on opposite sides of the reef thats why there is possibleTags[0] and possibleTags[1]
+        if (algae) { // Processor possible tags
             if (onRedSide) {
                 possibleTags[0] = 3;
                 possibleTags[1] = -1;
@@ -379,7 +383,6 @@ public class AlignCommand extends Command {
                 BpidRotate.setSetpoint(pose[2]);
             }
 
-            // Non l4 coral go to score
             if (atSetpoint(0.5, 0.8)) {
                 if (score.getDesiredLevel() != 4 && !up && !score.getAlgae() && hasCoral) {
                     up = true;
@@ -396,7 +399,7 @@ public class AlignCommand extends Command {
             }
 
             // Rumble controller to let driver know robot is ready to score
-            if (atSetpoint(0.1, 0.2)) {
+            if (atSetpoint(0.1, 0.2)) { 
                 controller.setRumble(RumbleType.kBothRumble, 0.5);
                 if (up && !hasScored && (score.getDesiredLevel() != 1 || score.getDesiredLevel() != 0)) {
                     if (score.getScoringLevel() == 3) {
@@ -416,7 +419,7 @@ public class AlignCommand extends Command {
             double powerX;
             double powerY;
             if (!usedBackLL) {
-                powerX = FpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
+                powerX = FpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0)); // Multiply by time to ramp up instead of shooting up
                 powerY = FpidY.calculate(currentPose.getY()) * (MathUtil.clamp(time * 0.7, 1, 0));   
             } else {
                 powerX = BpidX.calculate(currentPose.getX()) * (MathUtil.clamp(time * 0.7, 1, 0));
@@ -437,6 +440,7 @@ public class AlignCommand extends Command {
                 powerY = MathUtil.clamp(powerY, -2, 2); // -2, 2
             }
 
+            // Base power so it moves when its too slow
             powerX += .05*Math.signum(powerX);
             powerY += .05*Math.signum(powerY);
             
@@ -509,6 +513,7 @@ public class AlignCommand extends Command {
         }
     }
 
+    // Default values
     public boolean atSetpoint() {
         return atSetpoint(0.03, 0.2);
     }
