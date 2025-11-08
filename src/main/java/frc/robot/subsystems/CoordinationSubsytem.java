@@ -300,6 +300,9 @@ public class CoordinationSubsytem extends SubsystemBase{
     }
     
 
+    /**
+     * Uses a switch-case to determine which method to call
+     */
     private void updatePositionState() {
         
         justHitScore = (pos != ScoringPos.GO_TO_SCORE && pos != ScoringPos.CORAL_SCORE);
@@ -446,7 +449,7 @@ public class CoordinationSubsytem extends SubsystemBase{
                 DW.setRollSetpoint(0);
             }
         } else {
-            switch (level) {
+            switch (desiredLevel) {
                 case 0:
                     coralScoreElev = 3.75;
                     coralScorePitch = -130;
@@ -586,7 +589,7 @@ public class CoordinationSubsytem extends SubsystemBase{
             }
         } else {
             if (lastPos == ScoringPos.CORAL_INTAKE_GROUND) {
-                if (elbowEncoder > 15) {
+                if (elbowEncoder > 25) {
                     if (DriverStation.isAutonomous()) {
                         rollToOtherSide();
                     } else {
@@ -866,23 +869,23 @@ public class CoordinationSubsytem extends SubsystemBase{
 
     public void rollToClosestSide() {
         if (rollEncoder <= -5) {
-            DW.setRollSetpoint(-94);
+            DW.setRollSetpoint(-86);
             coralSideLeft = false;
         } else if (rollEncoder > 5) {
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(98);
             coralSideLeft = true;
         } else {
-            DW.setRollSetpoint(-94);
+            DW.setRollSetpoint(-86);
             coralSideLeft = false;
         }
     }
 
     public void rollToOtherSide() {
         if (coralSideLeft) {
-            DW.setRollSetpoint(-94);
+            DW.setRollSetpoint(-86);
             coralSideLeft = false;
         } else if (!coralSideLeft) {
-            DW.setRollSetpoint(90);
+            DW.setRollSetpoint(98);
             coralSideLeft = true;
         }
     }

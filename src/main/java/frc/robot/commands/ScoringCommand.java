@@ -51,10 +51,10 @@ public class ScoringCommand extends Command {
     public void score() {
         if (algae || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(scoreSub.getAlgaeNet() ? -5 : -2);
-        } else if (scoreSub.getScoringLevel() == 4) {
+        } else if (scoreSub.getDesiredLevel() == 4) {
             elevAndWait.schedule();
             intake.setVoltage(0.5);
-        } else if (scoreSub.getScoringLevel() == 1 || scoreSub.getDesiredLevel() == 0) {
+        } else if (scoreSub.getDesiredLevel() == 1 || scoreSub.getDesiredLevel() == 0) {
             switch (scoreSub.getDesiredLevel()) {
                 case 0:
                     intake.setVoltage(-4.125);
@@ -69,7 +69,7 @@ public class ScoringCommand extends Command {
         } else {
             score.schedule();
             intake.setVoltage(0);
-            if (scoreSub.getScoringLevel() == 2) {
+            if (scoreSub.getDesiredLevel() == 2) {
                 intake.setVoltage(-0.5);
             }
         }
@@ -79,7 +79,7 @@ public class ScoringCommand extends Command {
     /** Main execution logic - monitors subsystem state before initiating score. */
     @Override
     public void execute() {
-        if (runDelay > 20 || scoreSub.getScoringLevel() != 4) {
+        if (runDelay > 20 || scoreSub.getDesiredLevel() != 4) {
             if (running && scoreSub.getAllAtSetpoints()) {
                 score();
                 running = false;
@@ -96,7 +96,7 @@ public class ScoringCommand extends Command {
         if (running) return false;
 
         double timeElapsed = timer.get();
-        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : scoreSub.getScoringLevel() == 4 ? timeElapsed > 1.45 : timeElapsed > 0.8;
+        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : scoreSub.getDesiredLevel() == 4 ? timeElapsed > 1.45 : timeElapsed > 0.8;
     }
 
     /** Logic to run at command end - retries or transitions to storage depending on state. */

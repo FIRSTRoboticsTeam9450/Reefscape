@@ -26,8 +26,8 @@ public class ThingTwoConfig implements RobotConfig {
     double elbowOffset = -0.3720703125;
     double elbowRatio = 92.99 / 90.0;
     
-    double elbowGroundSetpoint = -9.037;
-    double pitchGroundSetpoint = -146.899;
+    double elbowGroundSetpoint = -5.5;
+    double pitchGroundSetpoint = -148.899;
 
     double elevatorNetPos = 38;
 
