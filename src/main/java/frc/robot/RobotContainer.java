@@ -33,6 +33,7 @@ import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
+import frc.robot.commands.ObjectDetectionTest;
 import frc.robot.commands.PositionAlignCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
@@ -42,6 +43,7 @@ import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.ScoringCommandAuto;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
+// import frc.robot.subsystems.AlignSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
@@ -274,21 +276,26 @@ public class RobotContainer {
         // );
         
         DRIVER.leftBumper().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.LEFT, DRIVER)
+            new PositionAlignCommand(drivetrain, AlignPos.LEFT)
         );
 
         DRIVER.rightBumper().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.RIGHT, DRIVER)
+            new PositionAlignCommand(drivetrain, AlignPos.RIGHT)
         );
 
         //Sticks
-        DRIVER.leftStick().whileTrue(
-            // new AlignCommand(drivetrain, AlignPos.LEFT, DRIVER)
-            new PositionAlignCommand(drivetrain, AlignPos.LEFT)
+        // DRIVER.leftStick().whileTrue(
+            // new PositionAlignCommand(drivetrain, AlignPos.LEFT)
+        // );
+        // DRIVER.rightStick().whileTrue(
+            // new PositionAlignCommand(drivetrain, AlignPos.RIGHT)
+        // );
+
+        DRIVER.leftStick().toggleOnTrue(
+            new ObjectDetectionTest(drivetrain)
         );
-        DRIVER.rightStick().whileTrue(
-            // new AlignCommand(drivetrain, AlignPos.RIGHT, DRIVER)
-            new PositionAlignCommand(drivetrain, AlignPos.RIGHT)
+        DRIVER.rightStick().toggleOnTrue(
+            new ObjectDetectionTest(drivetrain)
         );
         
         // m_driver.a().whileTrue(

@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
+
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.RobotConstants.*;
@@ -24,6 +26,7 @@ public class ScoringCommand extends Command {
     private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.CORAL_SCORE_L4);
     private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.CORAL_SCORE_L4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
+    private final SequentialCommandGroup outtakeThenStop = new SequentialCommandGroup(new InstantCommand(() -> intake.setVoltage(-1.5)).andThen(new WaitCommand(0.44).andThen(new InstantCommand(() -> intake.setVoltage(0)))));
 
     // ----- Variables -----
     private final Timer timer = new Timer();
@@ -67,11 +70,11 @@ public class ScoringCommand extends Command {
                     break;
             }
         } else {
+            if (scoreSub.getDesiredLevel() == 2) {
+                // intake.setVoltage(-0.5);
+            }
             score.schedule();
             intake.setVoltage(0);
-            if (scoreSub.getDesiredLevel() == 2) {
-                intake.setVoltage(-0.5);
-            }
         }
         timer.restart();
     }
@@ -102,7 +105,12 @@ public class ScoringCommand extends Command {
     /** Logic to run at command end - retries or transitions to storage depending on state. */
     @Override
     public void end(boolean interrupted) {
-        intake.setVoltage(0);
+        if (scoreSub.getDesiredLevel() != 2) {
+            intake.setVoltage(0);
+        } else {
+            // outtakeThenStop.schedule();
+            intake.setVoltage(0);
+        }
 
         if (intake.hasCoral() && !DriverStation.isAutonomous()) {
             retry.schedule();

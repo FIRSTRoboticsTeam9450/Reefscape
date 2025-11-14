@@ -4,16 +4,21 @@
 package frc.robot;
 
 import java.lang.reflect.Field;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.ctre.phoenix6.signals.NeutralModeValue;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.robot.Constants.FieldConstants.ReefConstants.BlueReefConstants;
+import frc.robot.Constants.FieldConstants.ReefConstants.RedReefConstants;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 
 import edu.wpi.first.apriltag.AprilTagFieldLayout;
 import edu.wpi.first.apriltag.AprilTagFields;
+import edu.wpi.first.math.Pair;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Translation2d;
@@ -102,7 +107,7 @@ public final class Constants {
       public static final double rightReef = -0.173; //-0.173
       public static final double leftReefL1 = 0.2;
       public static final double rightReefL1 = -0.2;
-      public static final double firstCoralBack = 0.6;
+      public static final double firstCoralBack = 0.65;
       public static final double tripleL1CoralBack = 0.7;
       public static final double scoreCoralBack = 0.44;
       public static final double scoreL3Back = 0.465;
@@ -123,28 +128,6 @@ public final class Constants {
     // Enumerations
     // =========================
 
-    /** Describes robot's current scoring or intake position */
-    // public enum ScoringPos {
-    //   START,
-    //   INTAKE_CORAL,
-    //   INTAKE_ALGAE,
-    //   INTAKE_SOURCE,
-    //   CORAL_STORE,
-    //   ALGAE_STORE,
-    //   SCORE_NET,
-    //   SCORE_PROCESSOR,
-    //   SCORE_CORAL,
-    //   ScoreL4,
-    //   ALGAEL1,
-    //   ALGAEL2,
-    //   AlgaeL3,
-    //   ALGAE_COMBINED,
-    //   GRABBED_ALGAE,
-    //   GO_SCORE_CORAL,
-    //   INTAKE_VERTICAL_CORAL,
-    //   PRE_L4,
-    //   LOLIPOP_INTAKE_ALGAE
-    // }
     public enum ScoringPos {
       START,
       GO_TO_SCORE,
@@ -185,6 +168,50 @@ public final class Constants {
       public static boolean DiffyTuningValues = false;
       public static boolean AlignDebugging = false;
       public static boolean IntakeDebugging = false;
+    }
+
+
+    // =========================
+    // Standard Position Offsets
+    // =========================
+
+    public static class StatePositions {
+
+      // double[] testArr = new double[4];
+      // double[] testArr2 = {0.1, 0.2, 0.3, 0.4};
+
+      // Pair<double[], Boolean> test = new Pair<double[],Boolean>(testArr2, false);
+
+      /* ----------------------------------------------------- Elev -- Elbow --------------------------- DW Pitch -------------- DW Roll ------------- */
+      private static final double[] CORAL_INTAKE_GROUND_ARR = {0, robotConfig.getElbowGroundPos(), robotConfig.getPitchGroundPos(), 0};
+      /* ---------------------------------------------------------- Algae? -- Roll Closest Side? */
+      private static final boolean[] CORAL_INTAKE_GROUND_BOOLEAN_ARR = {false, false};
+      public static final Pair<double[], boolean[]> CORAL_INTAKE_GROUND_PAIR = new Pair<double[],boolean[]>(CORAL_INTAKE_GROUND_ARR, CORAL_INTAKE_GROUND_BOOLEAN_ARR);
+
+      private static final double[] CORAL_INTAKE_VERTICAL_ARR = {0, -28, -65, 0};
+      private static final boolean[] CORAL_INTAKE_VERTICAL_BOOLEAN_ARR = {false, true};
+      public static final Pair<double[], boolean[]> CORAL_INTAKE_VERTICAL_PAIR = new Pair<double[],boolean[]>(CORAL_INTAKE_VERTICAL_ARR, CORAL_INTAKE_VERTICAL_BOOLEAN_ARR);
+
+      private static final double[] ALGAE_STORE_ARR = {3, 56, -70, 0};
+      private static final boolean[] ALGAE_STORE_BOOLEAN_ARR = {true, false};
+      public static final Pair<double[], boolean[]> ALGAE_STORE_PAIR = new Pair<double[],boolean[]>(ALGAE_STORE_ARR, ALGAE_STORE_BOOLEAN_ARR);
+        
+      private static final double[] ALGAE_INTAKE_GROUND_ARR = {0, -11.68, -100.7, 0};
+      private static final boolean[] ALGAE_INTAKE_GROUND_BOOLEAN_ARR = {true, false};
+      public static final Pair<double[], boolean[]> ALGAE_INTAKE_GROUND_PAIR = new Pair<double[],boolean[]>(ALGAE_INTAKE_GROUND_ARR, ALGAE_INTAKE_GROUND_BOOLEAN_ARR);
+
+      private static final double[] ALGAE_INTAKE_REEF_LOW_ARR = {11, 37.09, -110, 0};
+      private static final boolean[] ALGAE_INTAKE_REEF_LOW_BOOLEAN_ARR = {true, false};
+      public static final Pair<double[], boolean[]> ALGAE_INTAKE_REEF_LOW_PAIR = new Pair<double[],boolean[]>(ALGAE_INTAKE_REEF_LOW_ARR, ALGAE_INTAKE_REEF_LOW_BOOLEAN_ARR);
+
+      private static final double[] ALGAE_INTAKE_REEF_HIGH_ARR = {20, 37.09, -110, 0};
+      private static final boolean[] ALGAE_INTAKE_REEF_HIGH_BOOLEAN_ARR = {true, false};
+      public static final Pair<double[], boolean[]> ALGAE_INTAKE_REEF_HIGH_PAIR = new Pair<double[],boolean[]>(ALGAE_INTAKE_REEF_HIGH_ARR, ALGAE_INTAKE_REEF_HIGH_BOOLEAN_ARR);
+
+      private static final double[] ALGAE_INTAKE_PROC_ARR = {29, 37.09, -90, 0};
+      private static final boolean[] ALGAE_INTAKE_PROC_BOOLEAN_ARR = {true, false};
+      public static final Pair<double[], boolean[]> ALGAE_INTAKE_PROC_PAIR = new Pair<double[],boolean[]>(ALGAE_INTAKE_PROC_ARR, ALGAE_INTAKE_PROC_BOOLEAN_ARR);
+
     }
   }
 

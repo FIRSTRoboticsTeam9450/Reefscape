@@ -8,17 +8,14 @@ import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
-import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.CoordinateSystem;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -55,8 +52,8 @@ public class PositionAlignCommand extends Command {
     private SequentialCommandGroup L3DelayedScore = new SequentialCommandGroup(new WaitCommand(0.25).andThen(new ScoringCommand()));
 
     /* --------------- PIDs --------------- */
-    private PIDController pidX = new PIDController(4.5, 0, 0);
-    private PIDController pidY = new PIDController(4, 0, 0);
+    private PIDController pidX = new PIDController(6.5, 0, 0.75);
+    private PIDController pidY = new PIDController(6, 0, 0.75);
     private PIDController pidR = new PIDController(8, 0, 0.5);
 
     /* --------------- Timer --------------- */
@@ -75,6 +72,10 @@ public class PositionAlignCommand extends Command {
     private boolean hasScoredYet;
     private double[] offsetArr = new double[3];
 
+    /* --------------- Calculation-only Lists ---------------- */
+    private List<Pose2d> blueAllianceApriltagPoseList = List.of();
+    private List<Pose2d> redAllianceApriltagPoseList = List.of();
+
     /* --------------- Debugging Variables --------------- */
     private double debuggingForwardOffset;
     private double debuggingLeftwardOffset;
@@ -82,7 +83,6 @@ public class PositionAlignCommand extends Command {
     private double debuggingYPower;
     private double debuggingRPower;
     private Pose3d debuggingTargetReefPose;
-    private double timesCalled;
 
     /* --------------- State Specific limitations --------------- */
     private boolean haveStartedIntaking;
@@ -90,7 +90,8 @@ public class PositionAlignCommand extends Command {
 
     /* --------------- Drive Request --------------- */
     private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+                                                                             .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+                                                                             .withDeadband(0.47);
 
 
     /*  ┌───────────────────────────┐
@@ -108,12 +109,15 @@ public class PositionAlignCommand extends Command {
         this.drivetrain = drivetrain;
         this.alignPos = alignPos;
 
+        blueAllianceApriltagPoseList = BlueReefConstants.blueAlliancePoseToTagIDsMap.keySet().stream().toList();
+        redAllianceApriltagPoseList = RedReefConstants.redAlliancePoseToTagIDsMap.keySet().stream().toList();
+
         pidR.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
     public void initialize() {
-        currentFieldPose = drivetrain.getState().Pose;
+        // currentFieldPose = drivetrain.getState().Pose;
         currentState = coordSubInstance.getPos();
 
         desiredLevel = coordSubInstance.getDesiredLevel();
@@ -133,7 +137,6 @@ public class PositionAlignCommand extends Command {
         debuggingXPower = 0;
         debuggingYPower = 0;
         debuggingRPower = 0;
-        timesCalled = 0;
 
         algaeIntakeStateChange = false;
         haveStartedIntaking = false;
@@ -182,7 +185,7 @@ public class PositionAlignCommand extends Command {
         double forwardOffset;
 
         /* ---------- Scoot ---------- */
-        if (atSetpoint(0.06, 0.3) && !haveAlgae && desiredLevel != 1) {
+        if (atSetpoint(0.1, 0.3) && !haveAlgae && desiredLevel != 1) {
             switch(desiredLevel) {
                 case 0:
                     forwardOffset = AlignOffsets.tripleL1CoralBack;
@@ -220,7 +223,7 @@ public class PositionAlignCommand extends Command {
 
          /* --------------- Scoring --------------- */
 
-        if (atSetpoint(0.1, 0.2) && hasStateChanged && !hasScoredYet && (desiredLevel != 1 || desiredLevel != 0)) {
+        if (atSetpoint(0.075, 0.2) && hasStateChanged && !hasScoredYet && !(desiredLevel == 1 || desiredLevel == 0)) {
             switch (desiredLevel) {
                 case 3:
                     L3DelayedScore.schedule();
@@ -229,6 +232,7 @@ public class PositionAlignCommand extends Command {
                     new ScoringCommand().schedule();
                     break;
             }
+            hasScoredYet = true;
         }
 
         setSwerveRequest(
@@ -267,7 +271,7 @@ public class PositionAlignCommand extends Command {
         }
 
         /* ---------- Non-L4 Coral ---------- */
-        if (atSetpoint(0.5, 0.8) && desiredLevel != 4 && !hasStateChanged && haveCoral && !haveAlgae) {
+        if (atSetpoint(0.55, 0.85) && desiredLevel != 4 && !hasStateChanged && haveCoral && !haveAlgae) {
             hasStateChanged = true;
             new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
@@ -396,8 +400,8 @@ public class PositionAlignCommand extends Command {
             xPower = MathUtil.clamp(xPower, -1.5, 1.5);
             yPower = MathUtil.clamp(yPower, -1.5, 1.5);
         } else {
-            xPower = MathUtil.clamp(xPower, -2, 2);
-            yPower = MathUtil.clamp(yPower, -2, 2);
+            xPower = MathUtil.clamp(xPower, -5, 5);
+            yPower = MathUtil.clamp(yPower, -5, 5);
         }
 
         xPower += .05*Math.signum(xPower);
@@ -417,8 +421,6 @@ public class PositionAlignCommand extends Command {
         debuggingXPower = out[0];
         debuggingYPower = out[1];
         debuggingRPower = out[2];
-
-        timesCalled++;
         
         return out;
     }
@@ -492,7 +494,6 @@ public class PositionAlignCommand extends Command {
         //Distance to targeted reef side
         Logger.recordOutput("Reefscape/Pose-Align/Distance to Target", Math.sqrt(Math.pow((debuggingTargetReefPose.getX() - currentFieldPose.getX()), 2) + Math.pow((debuggingTargetReefPose.getY() - currentFieldPose.getY()), 2)));
 
-        Logger.recordOutput("Reefscape/Pose-Align/Times Drive Power Calculations Called", timesCalled);
     }
 
 

@@ -1,0 +1,134 @@
+package frc.robot.commands;
+
+import org.littletonrobotics.junction.Logger;
+
+import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
+import com.ctre.phoenix6.swerve.SwerveRequest.FieldCentric;
+import com.ctre.phoenix6.swerve.SwerveRequest;
+
+import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj2.command.Command;
+import frc.robot.LimelightHelpers;
+import frc.robot.subsystems.CommandSwerveDrivetrain;
+
+public class ObjectDetectionTest extends Command{
+
+    private CommandSwerveDrivetrain drivetrain;
+
+    private final String LIMELIGHT_NAME = "limelight-coral";
+
+    PIDController pidX = new PIDController(0.1, 0, 0);
+    PIDController pidY = new PIDController(0.1, 0, 0);
+
+    Timer timer = new Timer();
+
+    NetworkTable limelightTable =  NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME);
+
+    Rotation2d robotRot;
+
+    int startingPipelineIndex;
+    int wantedPipelineIndex;
+    
+    double tx;
+    double ty;
+    double ta;
+    boolean tv;
+
+    boolean aligning;
+
+    private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric()
+                                                                             .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+
+    public ObjectDetectionTest(CommandSwerveDrivetrain drivetrain) {
+        this.drivetrain = drivetrain;
+    }
+
+    @Override
+    public void initialize() {
+
+
+        robotRot = drivetrain.getState().Pose.getRotation();
+
+        aligning = true;
+
+        pidX.setSetpoint(0);
+        pidY.setSetpoint(0);
+
+        startingPipelineIndex = 0;
+        wantedPipelineIndex = 1;
+
+        LimelightHelpers.setPipelineIndex(LIMELIGHT_NAME, wantedPipelineIndex);
+
+        tx = LimelightHelpers.getTX(LIMELIGHT_NAME);
+        ty = LimelightHelpers.getTY(LIMELIGHT_NAME);
+        tv = LimelightHelpers.getTV(LIMELIGHT_NAME);
+    }
+
+    @Override
+    public void execute() {
+        Logger.recordOutput("Reefscape/Object-Tracking/TX", tx);
+        Logger.recordOutput("Reefscape/Object-Tracking/TY", ty);
+
+        tx = LimelightHelpers.getTX(LIMELIGHT_NAME);
+        ty = LimelightHelpers.getTY(LIMELIGHT_NAME);
+        ta = LimelightHelpers.getTA(LIMELIGHT_NAME);
+
+        double[] in = {tx, ty};
+
+        double[] powerArr = updatePID(in);
+
+        Logger.recordOutput("Reefscape/Object-Tracking/Drive Power X", powerArr[0]);
+        Logger.recordOutput("Reefscape/Object-Tracking/Drive Power Y", powerArr[1]);
+        if (aligning && Math.abs(tx) < 0.15) {
+            aligning = false;
+        }
+
+        SwerveRequest request = driveRequest;
+        if (tv) {
+            if (aligning) {
+                request = driveRequest.withVelocityX(0).withVelocityY(powerArr[0]);
+            } else {
+                    request = driveRequest.withVelocityX(1).withVelocityY(0);
+            }
+        } else {
+            request = driveRequest.withVelocityX(0)
+                                    .withVelocityY(0)
+                                    .withRotationalRate(0);
+        }
+
+        drivetrain.setControl(request);
+    }
+
+    private double[] updatePID(double[] positions) {
+        double powerX = pidX.calculate(positions[0]);
+        powerX = MathUtil.clamp(powerX, -1, 1);
+
+        double powerY = pidY.calculate(positions[1]);
+        powerY = MathUtil.clamp(powerY, -1, 1);
+
+        double[] out = {powerX, powerY};
+        return out;
+    }
+
+    @Override
+    public boolean isFinished() {
+        return false;
+    }
+
+    @Override
+    public void end(boolean interrupted) {
+        limelightTable.getEntry("pipeline").setNumber(startingPipelineIndex);
+
+        SwerveRequest.FieldCentric stop = new FieldCentric().withVelocityX(0)
+                                                            .withVelocityY(0)
+                                                            .withRotationalRate(0)
+                                                            .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+        drivetrain.setControl(stop);
+    }
+
+}
