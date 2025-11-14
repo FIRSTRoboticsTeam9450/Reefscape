@@ -37,8 +37,8 @@ public class AlignCommand extends Command {
     private HashMap<Integer, double[]> aprilTagLocationMap = new HashMap<>();
 
     /* ----- PIDs ----- */
-    private PIDController FpidX = new PIDController(4.5, 0, 0);
-    private PIDController FpidY = new PIDController(4.5, 0, 0);
+    private PIDController FpidX = new PIDController(4.5, 0, 0.5);
+    private PIDController FpidY = new PIDController(4.5, 0, 0.5);
     private PIDController FpidRotate = new PIDController(5, 0, 0.5);
 
     private PIDController BpidX = new PIDController(4, 0, 0);
@@ -524,6 +524,7 @@ public class AlignCommand extends Command {
     }
 
     private void debugging() {
+        Logger.recordOutput("Reefscape/Align/Current Drivetrain Command", drive.getCurrentCommand().getName());
         Logger.recordOutput("Reefscape/Align/Tid", tid);
         Logger.recordOutput("Reefscape/Align/Tag Left offset", debuggingTagLeftOffset);
         Logger.recordOutput("Reefscape/Align/Tag Forawrd Offset", debuggingTagForwardOffset);

@@ -1,9 +1,11 @@
 package frc.robot.commands;
 
+
 import org.littletonrobotics.junction.Logger;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.RobotConstants.*;
@@ -24,6 +26,7 @@ public class ScoringCommand extends Command {
     private final CoordinationCommand elev = new CoordinationCommand(ScoringPos.CORAL_SCORE_L4);
     private final SequentialCommandGroup elevAndWait = new SequentialCommandGroup(new WaitCommand(0.2).andThen(new CoordinationCommand(ScoringPos.CORAL_SCORE_L4).andThen(new WaitCommand(0.1))));
     private final CoordinationCommand store = new CoordinationCommand(ScoringPos.CORAL_STORE);
+    private final SequentialCommandGroup outtakeThenStop = new SequentialCommandGroup(new InstantCommand(() -> intake.setVoltage(-1.5)).andThen(new WaitCommand(0.44).andThen(new InstantCommand(() -> intake.setVoltage(0)))));
 
     // ----- Variables -----
     private final Timer timer = new Timer();
@@ -51,10 +54,10 @@ public class ScoringCommand extends Command {
     public void score() {
         if (algae || position == ScoringPos.ALGAE_STORE) {
             intake.setVoltage(scoreSub.getAlgaeNet() ? -5 : -2);
-        } else if (scoreSub.getScoringLevel() == 4) {
+        } else if (scoreSub.getDesiredLevel() == 4) {
             elevAndWait.schedule();
             intake.setVoltage(0.5);
-        } else if (scoreSub.getScoringLevel() == 1 || scoreSub.getDesiredLevel() == 0) {
+        } else if (scoreSub.getDesiredLevel() == 1 || scoreSub.getDesiredLevel() == 0) {
             switch (scoreSub.getDesiredLevel()) {
                 case 0:
                     intake.setVoltage(-4.125);
@@ -67,11 +70,11 @@ public class ScoringCommand extends Command {
                     break;
             }
         } else {
+            if (scoreSub.getDesiredLevel() == 2) {
+                // intake.setVoltage(-0.5);
+            }
             score.schedule();
             intake.setVoltage(0);
-            if (scoreSub.getScoringLevel() == 2) {
-                intake.setVoltage(-0.5);
-            }
         }
         timer.restart();
     }
@@ -79,7 +82,7 @@ public class ScoringCommand extends Command {
     /** Main execution logic - monitors subsystem state before initiating score. */
     @Override
     public void execute() {
-        if (runDelay > 20 || scoreSub.getScoringLevel() != 4) {
+        if (runDelay > 20 || scoreSub.getDesiredLevel() != 4) {
             if (running && scoreSub.getAllAtSetpoints()) {
                 score();
                 running = false;
@@ -96,13 +99,18 @@ public class ScoringCommand extends Command {
         if (running) return false;
 
         double timeElapsed = timer.get();
-        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : scoreSub.getScoringLevel() == 4 ? timeElapsed > 1.45 : timeElapsed > 0.8;
+        return DriverStation.isAutonomous() || algae ? timeElapsed > 0.5 : scoreSub.getDesiredLevel() == 4 ? timeElapsed > 1.45 : timeElapsed > 0.8;
     }
 
     /** Logic to run at command end - retries or transitions to storage depending on state. */
     @Override
     public void end(boolean interrupted) {
-        intake.setVoltage(0);
+        if (scoreSub.getDesiredLevel() != 2) {
+            intake.setVoltage(0);
+        } else {
+            // outtakeThenStop.schedule();
+            intake.setVoltage(0);
+        }
 
         if (intake.hasCoral() && !DriverStation.isAutonomous()) {
             retry.schedule();

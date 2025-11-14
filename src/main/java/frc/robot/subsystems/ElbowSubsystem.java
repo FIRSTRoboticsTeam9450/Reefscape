@@ -135,7 +135,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     // Check if elbow has reached setpoint
     public boolean atSetpoint() {
-        return Math.abs(elbowAngle - setpoint) < 7;
+        return Math.abs(elbowAngle - setpoint) < 10;
     }
 
     // Singleton instance access

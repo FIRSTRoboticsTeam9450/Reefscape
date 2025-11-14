@@ -105,35 +105,35 @@ public class Robot extends LoggedRobot {
     doWeCareAboutDebuggingChooser.addOption("Update Debugging", true);
     doWeCareAboutDebuggingChooser.setDefaultOption("Dont Update Debugging", false);
 
-    debuggingSwerve.addOption("Show Swerve Data", true);
-    debuggingSwerve.setDefaultOption("Hide Swerve Data", false);
+    debuggingSwerve.addOption("Show", true);
+    debuggingSwerve.setDefaultOption("Hide", false);
 
-    debuggingLimeLight.addOption("Show LimeLight Data", true);
-    debuggingLimeLight.setDefaultOption("Hide LimeLight Data", false);
+    debuggingLimeLight.addOption("Show", true);
+    debuggingLimeLight.setDefaultOption("Hide", false);
 
-    debuggingAllowedPaths.addOption("Show Allowed Paths Data", true);
-    debuggingAllowedPaths.setDefaultOption("Hide Allowed Paths Data", false);
+    debuggingAllowedPaths.addOption("Show", true);
+    debuggingAllowedPaths.setDefaultOption("Hide", false);
 
-    debuggingPosition.addOption("Show Position Data", true);
-    debuggingPosition.setDefaultOption("Hide Position Data", false);
+    debuggingPosition.addOption("Show", true);
+    debuggingPosition.setDefaultOption("Hide", false);
 
-    debuggingAllAtSetpoint.addOption("Show All At Setpoint Data", true);
-    debuggingAllAtSetpoint.setDefaultOption("Hide All At Setpoint Data", false);
+    debuggingAllAtSetpoint.addOption("Show", true);
+    debuggingAllAtSetpoint.setDefaultOption("Hide", false);
 
-    debuggingClimber.addOption("Show Climber Data", true);
-    debuggingClimber.setDefaultOption("Hide Climber Data", false);
+    debuggingClimber.addOption("Show", true);
+    debuggingClimber.setDefaultOption("Hide", false);
 
-    debuggingCurrentPos.addOption("Show Current Position Data", true);
-    debuggingCurrentPos.setDefaultOption("Hide Current Position Data", false);
+    debuggingCurrentPos.addOption("Show", true);
+    debuggingCurrentPos.setDefaultOption("Hide", false);
 
-    debuggingDiffy.addOption("Show Diffy Data", true);
-    debuggingDiffy.setDefaultOption("Hide Diffy Data", false);
+    debuggingDiffy.addOption("Show", true);
+    debuggingDiffy.setDefaultOption("Hide", false);
 
-    debuggingAlign.addOption("Show Align Data", true);
-    debuggingAlign.setDefaultOption("Hide Align Data", false);
+    debuggingAlign.addOption("Show", true);
+    debuggingAlign.setDefaultOption("Hide", false);
 
-    debuggingIntake.addOption("Show Intake Data", true);
-    debuggingIntake.setDefaultOption("Hide Intake Data", false);
+    debuggingIntake.addOption("Show", true);
+    debuggingIntake.setDefaultOption("Hide", false);
 
     try {
       Field watchdogField = IterativeRobotBase.class.getDeclaredField("m_watchdog");

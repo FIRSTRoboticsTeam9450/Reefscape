@@ -2,6 +2,7 @@ package frc.robot.subsystems;
 
 import org.littletonrobotics.junction.Logger;
 
+import com.ctre.phoenix6.configs.CANcoderConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfiguration;
 import com.ctre.phoenix6.configs.TalonFXConfigurator;
 import com.ctre.phoenix6.hardware.CANcoder;
@@ -26,8 +27,8 @@ public class DiffWristSubsystem extends SubsystemBase {
     private static DiffWristSubsystem DW;
     
     // PID
-    private PIDController pitchPID = new PIDController(5, 0, 0); // Used to be 4, 0, 0.25
-    private PIDController rollPID = new PIDController(5, 0, 0);
+    private PIDController pitchPID = new PIDController(20, 0, 0); // Used to be 4, 0, 0.25
+    private PIDController rollPID = new PIDController(20, 0, 0);
 
     // // Motors
     private TalonFX leftMotor = new TalonFX(RobotConstants.WristIDs.kDiffWristLeftMotorID, RobotConstants.RIO_BUS);
@@ -79,6 +80,7 @@ public class DiffWristSubsystem extends SubsystemBase {
         radio.addMotor(rightMotor);
     }
 
+
     /**
      * Method used to confiure both CTRE Kraken x60 motors used in the differential wrist
      * @param neutralModeValue Neutral Mode Value (kBrake, kCoast), Default is kBrake
@@ -107,8 +109,8 @@ public class DiffWristSubsystem extends SubsystemBase {
         //Pitch voltage is being multiplied by 3 due to the fact that its on a 3:1 gear ration (3 times slower than roll)
         // pitchVoltage *= 3;
 
-        double lVolts = pitchVoltage - rollVoltage;
-        double rVolts = pitchVoltage + rollVoltage;
+        double lVolts = pitchVoltage + rollVoltage;
+        double rVolts = pitchVoltage - rollVoltage;
         lVolts = MathUtil.clamp(lVolts, -8, 8);
         rVolts = MathUtil.clamp(rVolts, -8, 8);
         
@@ -121,8 +123,9 @@ public class DiffWristSubsystem extends SubsystemBase {
 
         runPID = SmartDashboard.getBoolean("Reefscape/DiffWrist/RunPID?", false);
 
-        pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble();
+        pitchPos = pitchEncoder.getAbsolutePosition().getValueAsDouble() - 0.5833333;  //the number it gets subtracted by is (Angle) / 360, to find angle, just multiple # by 360
         rollPos = rollEncoder.getAbsolutePosition().getValueAsDouble();
+
 
         pitchSetpoint = getPitchSetpoint();
         rollSetpoint = getRollSetpoint();

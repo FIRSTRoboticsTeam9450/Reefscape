@@ -25,6 +25,8 @@ import edu.wpi.first.math.numbers.N1;
 import edu.wpi.first.math.numbers.N3;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj.Notifier;
 import edu.wpi.first.wpilibj.RobotController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -262,13 +264,12 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
             });
         }
         if (runCoupleTimes < 25) {
-            updateIMUThroughVision();
+            // updateIMUThroughVision();
         }
         updateVision();
         //Logger.recordOutput("Reefscape/PDH/Channel Currents", Robot.pdh.getAllCurrents());
         //Logger.recordOutput("Reefscape/PDH/Total Current", Robot.pdh.getTotalCurrent());
         Logger.recordOutput("Drive Pose", getState().Pose);
-        Logger.recordOutput("Reefscape/IDK/Test", getOperatorForwardDirection());
         if (Constants.RobotConstants.debugging.SwerveDebugging) {
             logPigeonOffset();
         }
@@ -312,11 +313,13 @@ public class CommandSwerveDrivetrain extends TunerSwerveDrivetrain implements Su
         LimelightHelpers.PoseEstimate visionPose = null;
 
         visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-coral");
+        // visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-coral");
         usingBackLL = false;
-        setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, .9));
+        setVisionMeasurementStdDevs(VecBuilder.fill(0.7,0.7, 9999999));
         if (visionPose == null || visionPose.tagCount == 0) {
             LimelightHelpers.SetRobotOrientation("limelight-back", robotRot, 0, 0, 0, 0, 0);
             visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue_MegaTag2("limelight-back");
+            // visionPose = LimelightHelpers.getBotPoseEstimate_wpiBlue("limelight-back");
             usingBackLL = true;
             if (visionPose == null) {
                 return;

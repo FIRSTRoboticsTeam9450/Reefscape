@@ -2,17 +2,20 @@ package frc.robot.commands;
 
 import java.util.HashMap;
 import java.util.List;
+import java.util.function.BooleanSupplier;
+
+import org.littletonrobotics.junction.Logger;
 
 import com.ctre.phoenix6.swerve.SwerveModule.DriveRequestType;
 import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.geometry.CoordinateSystem;
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Pose3d;
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.Timer;
-import edu.wpi.first.wpilibj.GenericHID.RumbleType;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -23,6 +26,7 @@ import frc.robot.Constants.FieldConstants.ReefConstants.BlueReefConstants;
 import frc.robot.Constants.FieldConstants.ReefConstants.RedReefConstants;
 import frc.robot.Constants.RobotConstants;
 import frc.robot.Constants.RobotConstants.ScoringPos;
+import frc.robot.Constants.RobotConstants.debugging;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
 import frc.robot.subsystems.DualIntakeSubsystem;
@@ -48,9 +52,9 @@ public class PositionAlignCommand extends Command {
     private SequentialCommandGroup L3DelayedScore = new SequentialCommandGroup(new WaitCommand(0.25).andThen(new ScoringCommand()));
 
     /* --------------- PIDs --------------- */
-    private PIDController pidX = new PIDController(2, 0, 0);
-    private PIDController pidY = new PIDController(2, 0, 0);
-    private PIDController pidR = new PIDController(3, 0, 0);
+    private PIDController pidX = new PIDController(6.5, 0, 0.75);
+    private PIDController pidY = new PIDController(6, 0, 0.75);
+    private PIDController pidR = new PIDController(8, 0, 0.5);
 
     /* --------------- Timer --------------- */
     private Timer timer = new Timer();
@@ -66,14 +70,28 @@ public class PositionAlignCommand extends Command {
     private boolean haveCoral;
     private boolean haveAlgae;
     private boolean hasScoredYet;
+    private double[] offsetArr = new double[3];
+
+    /* --------------- Calculation-only Lists ---------------- */
+    private List<Pose2d> blueAllianceApriltagPoseList = List.of();
+    private List<Pose2d> redAllianceApriltagPoseList = List.of();
+
+    /* --------------- Debugging Variables --------------- */
+    private double debuggingForwardOffset;
+    private double debuggingLeftwardOffset;
+    private double debuggingXPower;
+    private double debuggingYPower;
+    private double debuggingRPower;
+    private Pose3d debuggingTargetReefPose;
 
     /* --------------- State Specific limitations --------------- */
     private boolean haveStartedIntaking;
     private boolean algaeIntakeStateChange;
 
     /* --------------- Drive Request --------------- */
-    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric() // Add a 10% deadband
-    .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
+    private final SwerveRequest.FieldCentric driveRequest = new SwerveRequest.FieldCentric()
+                                                                             .withDriveRequestType(DriveRequestType.OpenLoopVoltage)
+                                                                             .withDeadband(0.47);
 
 
     /*  ┌───────────────────────────┐
@@ -91,12 +109,15 @@ public class PositionAlignCommand extends Command {
         this.drivetrain = drivetrain;
         this.alignPos = alignPos;
 
+        blueAllianceApriltagPoseList = BlueReefConstants.blueAlliancePoseToTagIDsMap.keySet().stream().toList();
+        redAllianceApriltagPoseList = RedReefConstants.redAlliancePoseToTagIDsMap.keySet().stream().toList();
+
         pidR.enableContinuousInput(-Math.PI, Math.PI);
     }
 
     @Override
     public void initialize() {
-        currentFieldPose = drivetrain.getState().Pose;
+        // currentFieldPose = drivetrain.getState().Pose;
         currentState = coordSubInstance.getPos();
 
         desiredLevel = coordSubInstance.getDesiredLevel();
@@ -109,6 +130,14 @@ public class PositionAlignCommand extends Command {
 
         hasStateChanged = false;
 
+        debuggingTargetReefPose = FieldConstants.getTag3dPose(targetID);
+
+        debuggingForwardOffset = 0;
+        debuggingLeftwardOffset = 0;
+        debuggingXPower = 0;
+        debuggingYPower = 0;
+        debuggingRPower = 0;
+
         algaeIntakeStateChange = false;
         haveStartedIntaking = false;
 
@@ -116,13 +145,7 @@ public class PositionAlignCommand extends Command {
 
         timer.restart();
 
-        initialAlignment();
-    }
-
-    /**
-     * Only use case is to make the @Overridden Initialize method less crowded
-     */
-    private void initialAlignment() {
+        /* ---------- Initial Alignment ---------- */
         double forwardOffset = AlignOffsets.firstCoralBack;
         if (haveAlgae) {
             targetID = FieldConstants.isBlueAlliance ? 16 : 3;
@@ -132,9 +155,10 @@ public class PositionAlignCommand extends Command {
             forwardOffset = AlignOffsets.tripleL1CoralBack;
         }
 
-        double[] tmpOffsetArr = calculateAlignPosition(FieldConstants.getTag3dPose(targetID).toPose2d(), forwardOffset);
-        double[] tmpPowerArr = calculateDrivePower(tmpOffsetArr);
-        setSwerveRequest(tmpPowerArr);
+        offsetArr = calculateAlignPosition(FieldConstants.getTag3dPose(targetID).toPose2d(), forwardOffset);
+        pidX.setSetpoint(offsetArr[0]);
+        pidY.setSetpoint(offsetArr[1]);
+        pidR.setSetpoint(offsetArr[2]);
     }
 
 
@@ -147,6 +171,7 @@ public class PositionAlignCommand extends Command {
     @Override
     public void execute() {
 
+        currentFieldPose = drivetrain.getState().Pose;
 
         /* --------------- State Changing --------------- */
         double time = timer.get();
@@ -160,7 +185,7 @@ public class PositionAlignCommand extends Command {
         double forwardOffset;
 
         /* ---------- Scoot ---------- */
-        if (atSetpoint(0.06, 0.3) && !haveAlgae && desiredLevel != 1) {
+        if (atSetpoint(0.1, 0.3) && !haveAlgae && desiredLevel != 1) {
             switch(desiredLevel) {
                 case 0:
                     forwardOffset = AlignOffsets.tripleL1CoralBack;
@@ -172,28 +197,33 @@ public class PositionAlignCommand extends Command {
                     forwardOffset = AlignOffsets.scoreCoralBack;
                     break;
             }
-            setSwerveRequest(
-                calculateDrivePower(
-                    calculateAlignPosition(currentFieldPose, forwardOffset)));
+            offsetArr = calculateAlignPosition(FieldConstants.getTag3dPose(targetID).toPose2d(), forwardOffset);
+            pidX.setSetpoint(offsetArr[0]);
+            pidY.setSetpoint(offsetArr[1]);
+            pidR.setSetpoint(offsetArr[2]);
         }
+
+
         /* ---------- Algae ---------- */
-         else if (atSetpoint(0.06, 0.3) && !haveCoral && currentState != ScoringPos.GO_TO_SCORE) {
+        else if (atSetpoint(0.06, 0.3) && !haveCoral && currentState != ScoringPos.GO_TO_SCORE) {
             forwardOffset = AlignOffsets.algaeIn;
-            setSwerveRequest(
-                calculateDrivePower(
-                    calculateAlignPosition(currentFieldPose, forwardOffset)));
+            offsetArr = calculateAlignPosition(FieldConstants.getTag3dPose(targetID).toPose2d(), forwardOffset);
+            pidX.setSetpoint(offsetArr[0]);
+            pidY.setSetpoint(offsetArr[1]);
+            pidR.setSetpoint(offsetArr[2]);
         }
          else if (atSetpoint(0.06, 0.3) && haveAlgae && currentState == ScoringPos.GO_TO_SCORE) {
             forwardOffset = AlignOffsets.procIn;
-            setSwerveRequest(
-                calculateDrivePower(
-                    calculateAlignPosition(currentFieldPose, forwardOffset)));
-         }
+            offsetArr = calculateAlignPosition(FieldConstants.getTag3dPose(targetID).toPose2d(), forwardOffset);
+            pidX.setSetpoint(offsetArr[0]);
+            pidY.setSetpoint(offsetArr[1]);
+            pidR.setSetpoint(offsetArr[2]);
+        }
 
 
          /* --------------- Scoring --------------- */
 
-         if (atSetpoint(0.1, 0.2) && hasStateChanged && !hasScoredYet && (desiredLevel != 1 || desiredLevel != 0)) {
+        if (atSetpoint(0.075, 0.2) && hasStateChanged && !hasScoredYet && !(desiredLevel == 1 || desiredLevel == 0)) {
             switch (desiredLevel) {
                 case 3:
                     L3DelayedScore.schedule();
@@ -202,7 +232,17 @@ public class PositionAlignCommand extends Command {
                     new ScoringCommand().schedule();
                     break;
             }
-         }
+            hasScoredYet = true;
+        }
+
+        setSwerveRequest(
+            calculateDrivePower());
+
+        /* --------------- Debugging --------------- */
+
+        if (debugging.AlignDebugging) {
+            logDebuggingValues();
+        }
     }
 
     /**
@@ -231,7 +271,7 @@ public class PositionAlignCommand extends Command {
         }
 
         /* ---------- Non-L4 Coral ---------- */
-        if (atSetpoint(0.5, 0.8) && desiredLevel != 4 && !hasStateChanged && haveCoral && !haveAlgae) {
+        if (atSetpoint(0.55, 0.85) && desiredLevel != 4 && !hasStateChanged && haveCoral && !haveAlgae) {
             hasStateChanged = true;
             new CoordinationCommand(ScoringPos.GO_TO_SCORE).schedule();
         }
@@ -271,6 +311,8 @@ public class PositionAlignCommand extends Command {
             closestTagID = RedReefConstants.redAlliancePoseToTagIDsMap.get(currentFieldPose.nearest(possibleReefSides));
         }
 
+        debuggingTargetReefPose = FieldConstants.getTag3dPose(closestTagID);
+
         return closestTagID;
     }
 
@@ -281,6 +323,7 @@ public class PositionAlignCommand extends Command {
      * @return Double array which holds the distance from robot to april tag of reef side in (X, Y, Rot)
      */
     private double[] calculateAlignPosition(Pose2d aprilTagPose, double tagForwardOffset) {
+
         /* --------------- Offset Calculations --------------- */
         //Calculate how far in and to the side we wish to be relative to the april tag
         double tagLeftOffset;
@@ -295,6 +338,9 @@ public class PositionAlignCommand extends Command {
         } else {
             tagLeftOffset = 0;
         }
+
+        debuggingForwardOffset = tagForwardOffset;
+        debuggingLeftwardOffset = tagLeftOffset;
 
         /* --------------- Setpoint Calculations --------------- */
 
@@ -315,6 +361,17 @@ public class PositionAlignCommand extends Command {
 
         double[] out = {xError, yError, rotationalError};
 
+        String debuggingString = "";
+
+        for (double elem : out) {
+            debuggingString += elem + ", ";
+        }
+
+        Pose2d offsetAugmentedPose = new Pose2d(new Translation2d(xError, yError), new Rotation2d(rotationalError));
+
+        Logger.recordOutput("Reefscape/Pose-Align/Robot go to Spot", offsetAugmentedPose);
+        Logger.recordOutput("Reefscape/Pose-Align/Align Errors", debuggingString);
+
         return out;
     }
 
@@ -326,7 +383,8 @@ public class PositionAlignCommand extends Command {
      * @param pidSetpoints Offsets that the CalculateAlignPositions method should have given
      * @return Double array of which the drive request should use (xVeloc, yVeloc, rotVeloc)
      */
-    private double[] calculateDrivePower(double[] pidSetpoints) {
+    private double[] calculateDrivePower() {
+
         //used for acceleration
         double time = timer.get();
 
@@ -342,8 +400,8 @@ public class PositionAlignCommand extends Command {
             xPower = MathUtil.clamp(xPower, -1.5, 1.5);
             yPower = MathUtil.clamp(yPower, -1.5, 1.5);
         } else {
-            xPower = MathUtil.clamp(xPower, -2, 2);
-            yPower = MathUtil.clamp(yPower, -2, 2);
+            xPower = MathUtil.clamp(xPower, -5, 5);
+            yPower = MathUtil.clamp(yPower, -5, 5);
         }
 
         xPower += .05*Math.signum(xPower);
@@ -359,6 +417,10 @@ public class PositionAlignCommand extends Command {
         }
 
         double[] out = {xPower, yPower, rPower};
+
+        debuggingXPower = out[0];
+        debuggingYPower = out[1];
+        debuggingRPower = out[2];
         
         return out;
     }
@@ -375,6 +437,15 @@ public class PositionAlignCommand extends Command {
      * @param powerArr array which contains calculated power values
      */
     private void setSwerveRequest(double[] powerArr) {
+
+        String debuggingString = "";
+
+        for (double elem : powerArr) {
+            debuggingString += elem + ", ";
+        }
+
+        Logger.recordOutput("Reefscape/Pose-Align/Swerve Request Debug", debuggingString);
+
         SwerveRequest swerveRequest = driveRequest
                                             .withVelocityX(powerArr[0])
                                             .withVelocityY(powerArr[1])
@@ -396,6 +467,33 @@ public class PositionAlignCommand extends Command {
 
     public boolean atSetpoint(double translationTolerance, double rotationTolerance) {
         return Math.abs(pidX.getSetpoint() - currentFieldPose.getX()) < translationTolerance && Math.abs(pidY.getSetpoint() - currentFieldPose.getY()) < translationTolerance && pidR.getError() < rotationTolerance;
+    }
+
+
+    /*  ┌───────────────────────────┐
+     *  |         Debugging         |
+     *  └───────────────────────────┘
+     */ 
+
+    private void logDebuggingValues() {
+
+        //Target Reef Side
+        Logger.recordOutput("Reefscape/Pose-Align/Target Reef ID", targetID);
+        Logger.recordOutput("Reefscape/Pose-Align/Target Reef 3D Pose", FieldConstants.getTag3dPose(targetID));
+
+        //Field Pose we use for calculations
+        Logger.recordOutput("Reefscape/Pose-Align/Assumed Field Pose", currentFieldPose);
+
+        //Different powers calculated off of offsets and other conditions
+        Logger.recordOutput("Reefscape/Pose-Align/Drive Power/X Power", debuggingXPower);
+        Logger.recordOutput("Reefscape/Pose-Align/Drive Power/Y Power", debuggingYPower);
+        Logger.recordOutput("Reefscape/Pose-Align/Drive Power/Rotation Power", debuggingRPower);
+
+        Logger.recordOutput("Reefscape/Pose-Align/Current Drive Command", drivetrain.getCurrentCommand().getName());
+
+        //Distance to targeted reef side
+        Logger.recordOutput("Reefscape/Pose-Align/Distance to Target", Math.sqrt(Math.pow((debuggingTargetReefPose.getX() - currentFieldPose.getX()), 2) + Math.pow((debuggingTargetReefPose.getY() - currentFieldPose.getY()), 2)));
+
     }
 
 

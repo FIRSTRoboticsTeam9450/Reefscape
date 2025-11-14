@@ -34,6 +34,8 @@ import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ManualElevatorCommand;
 import frc.robot.commands.ManualPitchCommand;
+import frc.robot.commands.ObjectDetectionTest;
+import frc.robot.commands.PositionAlignCommand;
 import frc.robot.commands.ResetIMUCommand;
 import frc.robot.commands.RollSideSwitcher;
 import frc.robot.commands.RotationLock;
@@ -42,6 +44,7 @@ import frc.robot.commands.ScoringCommand;
 import frc.robot.commands.ScoringCommandAuto;
 import frc.robot.commands.WaitForLaserCommand;
 import frc.robot.generated.TunerConstants;
+// import frc.robot.subsystems.AlignSubsystem;
 import frc.robot.subsystems.ClimbSubsystem;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
 import frc.robot.subsystems.CoordinationSubsytem;
@@ -97,7 +100,7 @@ public class RobotContainer {
      * 88.5
      * 0.896
      */
-    public BezierCurve driveBezier = new BezierCurve("drive", 117.4, 0.054, 91.4, 0.76, 0.07, 0.01); //deadbang original:0.07, minOutput: 0.03
+    public BezierCurve driveBezier = new BezierCurve("drive", 117.4, 0.054, 91.4, 0.76, 0.1, 0.01); //deadbang original:0.07, minOutput: 0.03
     public BezierCurve rotateBezier = new BezierCurve("drive", 120.1, 0.145, 92.2, 0.362, 0.035, 0.03);
     
     /* Setting up bindings for necessary control of the swerve drive platform */
@@ -109,8 +112,8 @@ public class RobotContainer {
 
     private final Telemetry logger = new Telemetry(MaxSpeed);
 
-    private final CommandXboxController m_operator = new CommandXboxController(1);
-    private final CommandXboxController m_driver = new CommandXboxController(0);
+    private final CommandXboxController OPERATOR = new CommandXboxController(1);
+    private final CommandXboxController DRIVER = new CommandXboxController(0);
 
     private final CommandXboxController m_EXPDriver = new CommandXboxController(4);
     private final CommandXboxController m_EXPDriverExtra = new CommandXboxController(5);
@@ -128,7 +131,7 @@ public class RobotContainer {
     private ClimbSubsystem climber = ClimbSubsystem.getInstance();
 
     private RadioSoftware radio = RadioSoftware.getInstance();
-    public static double pigeonOffset = 60;
+    public static double pigeonOffset = 0;
 
     public RobotContainer() {
         configureBindings();
@@ -212,9 +215,9 @@ public class RobotContainer {
         drivetrain.setDefaultCommand(
             // Drivetrain will execute this command periodically
             drivetrain.applyRequest(() ->
-                drive.withVelocityX(-driveBezier.getOutput(m_driver.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
-                    .withVelocityY(-driveBezier.getOutput(m_driver.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
-                    .withRotationalRate(-rotateBezier.getOutput(m_driver.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
+                drive.withVelocityX(-driveBezier.getOutput(DRIVER.getLeftY())  * MaxSpeed) // Drive forward with negative Y (forward)
+                    .withVelocityY(-driveBezier.getOutput(DRIVER.getLeftX()) * MaxSpeed) // Drive left with negative X (left)
+                    .withRotationalRate(-rotateBezier.getOutput(DRIVER.getRightX()) * MaxAngularRate) // Drive counterclockwise with negative X (left)
             )
         );
         // drivetrain.setDefaultCommand(
@@ -262,35 +265,38 @@ public class RobotContainer {
         // m_driver.rightTrigger().onTrue(
         //     new ScoringCommand()
         // );
-        m_driver.rightTrigger().onTrue(
+        DRIVER.rightTrigger().onTrue(
             new ScoreOrIntakeCommand()
         );
-        m_driver.leftTrigger().onTrue(
-            new DriverIntakeCommand(m_driver, drivetrain)
+        DRIVER.leftTrigger().onTrue(
+            new DriverIntakeCommand(DRIVER, drivetrain)
         );
 
         // m_driver.leftBumper().onTrue(
         //     new RollSideSwitcher(true)
         // );
         
-        // m_driver.leftBumper().whileTrue(
-        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        DRIVER.leftBumper().whileTrue(
+            new PositionAlignCommand(drivetrain, AlignPos.LEFT)
+        );
+
+        DRIVER.rightBumper().whileTrue(
+            new PositionAlignCommand(drivetrain, AlignPos.RIGHT)
+        );
+
+        //Sticks
+        // DRIVER.leftStick().whileTrue(
+            // new PositionAlignCommand(drivetrain, AlignPos.LEFT)
+        // );
+        // DRIVER.rightStick().whileTrue(
+            // new PositionAlignCommand(drivetrain, AlignPos.RIGHT)
         // );
 
-        // m_driver.rightBumper().whileTrue(
-        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
-        // );
-
-        // //Sticks
-        // m_driver.leftStick().whileTrue(
-        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
-        // );
-        // m_driver.rightStick().whileTrue(
-        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
-        // );
-        
-        m_driver.rightStick().whileTrue(
-            new ContinuousTrackerTest(drivetrain, m_driver)
+        DRIVER.leftStick().toggleOnTrue(
+            new ObjectDetectionTest(drivetrain)
+        );
+        DRIVER.rightStick().toggleOnTrue(
+            new ObjectDetectionTest(drivetrain)
         );
         // m_driver.a().whileTrue(
         //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
@@ -307,17 +313,17 @@ public class RobotContainer {
 
 
         //Store climber
-        m_driver.povRight().onTrue(
+        DRIVER.povRight().onTrue(
             new ClimbCommand(ClimbPos.STORE)
         );
 
-        m_driver.y().onTrue(
+        DRIVER.y().onTrue(
             new ResetIMUCommand(drivetrain)
         );
 
         // m_driver.y().onTrue(new CoordinationCommand(ScoringPos.AlgaeL3).andThen(new DualIntakeCommand(true)));
                 
-        m_driver.start().onTrue(
+        DRIVER.start().onTrue(
             new InstantCommand(() -> scoreSub.toggleCoralInFront())
         );
 
@@ -366,7 +372,7 @@ public class RobotContainer {
         * D-pad Right       → Climber climb
         */
         
-        m_operator.rightStick().onTrue(
+        OPERATOR.rightStick().onTrue(
             new InstantCommand(() -> intake.setVoltage(0))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
                 .andThen(new InstantCommand(() -> CommandScheduler.getInstance().cancelAll()))
@@ -374,13 +380,13 @@ public class RobotContainer {
 
         // === Intake & Storage Controls ===
         // Trigger coral intake and then store it
-        m_operator.rightTrigger().onTrue(
+        OPERATOR.rightTrigger().onTrue(
             new CoordinationCommand(ScoringPos.CORAL_INTAKE_GROUND)
                 .andThen(new DualIntakeCommand(false))
                 .andThen(new CoordinationCommand(ScoringPos.CORAL_STORE))
         );
 
-        m_operator.leftStick().onTrue(
+        OPERATOR.leftStick().onTrue(
             new CoordinationCommand(ScoringPos.ALGAE_INTAKE_GROUND)
                 .andThen(new DualIntakeCommand(true))
         );
@@ -388,40 +394,40 @@ public class RobotContainer {
 
         // === Algae Net Controls ===
         // Deactivate algae net
-        m_operator.leftTrigger().onTrue(
+        OPERATOR.leftTrigger().onTrue(
             new InstantCommand(() -> scoreSub.setAlgaeNet(false))
         );
 
         // Activate algae net
-        m_operator.leftBumper().onTrue(
+        OPERATOR.leftBumper().onTrue(
             new InstantCommand(() -> scoreSub.setAlgaeNet(true))
         );
 
-        m_operator.povDown().onTrue(
+        OPERATOR.povDown().onTrue(
             new InstantCommand(() -> CoordinationSubsytem.autoGround = !CoordinationSubsytem.autoGround)
         );
 
-        m_operator.rightBumper().onTrue(
+        OPERATOR.rightBumper().onTrue(
             new RollSideSwitcher(true)
         );
 
 
         // === Scoring Level Controls ===
-        m_operator.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
-        m_operator.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
-        m_operator.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
-        m_operator.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
-        m_operator.start().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(0)));
+        OPERATOR.a().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(1)));
+        OPERATOR.x().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(2)));
+        OPERATOR.b().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(3)));
+        OPERATOR.y().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(4)));
+        OPERATOR.start().onTrue(new InstantCommand(() -> scoreSub.setScoringLevel(0)));
 
-        m_operator.povLeft().onTrue(
+        OPERATOR.povLeft().onTrue(
             new ClimbCommand(ClimbPos.ENGAGING) //8 degree angle going away from robot
         );
-        m_operator.povRight().onTrue(
+        OPERATOR.povRight().onTrue(
             new CoordinationCommand(ScoringPos.ALGAE_STORE)
         );
 
-        m_operator.povUp().whileTrue(
-            new RotationLock(drivetrain, m_driver, driveBezier, MaxSpeed)
+        OPERATOR.povUp().whileTrue(
+            new RotationLock(drivetrain, DRIVER, driveBezier, MaxSpeed)
         );
 
 
@@ -485,7 +491,7 @@ public class RobotContainer {
             new ClimbCommand(ClimbPos.CLIMBING)
         );
         m_EXPDriver.a().whileTrue(
-            new RotationLock(drivetrain, m_driver, driveBezier, MaxSpeed)
+            new RotationLock(drivetrain, DRIVER, driveBezier, MaxSpeed)
         );
 
         /*

@@ -230,6 +230,7 @@ public class ElevatorSubsystem extends SubsystemBase {
         Logger.recordOutput("Elevator/LeftMotorSupply", leftMotor.getSupplyCurrent().getValueAsDouble());
         Logger.recordOutput("Elevator/RightMotorStator", rightMotor.getStatorCurrent().getValueAsDouble());
         Logger.recordOutput("Elevator/RightMotorSupply", rightMotor.getSupplyCurrent().getValueAsDouble());
+        Logger.recordOutput("Elevator/PID Setpoint", setpoint);
 
         boolean highUp = position >= 20;
 
