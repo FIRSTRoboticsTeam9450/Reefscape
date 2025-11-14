@@ -29,6 +29,7 @@ import frc.robot.Constants.RobotConstants.*;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ContinuousTrackerTest;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ManualElevatorCommand;
@@ -272,22 +273,25 @@ public class RobotContainer {
         //     new RollSideSwitcher(true)
         // );
         
-        m_driver.leftBumper().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
-        );
+        // m_driver.leftBumper().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        // );
 
-        m_driver.rightBumper().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
-        );
+        // m_driver.rightBumper().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
+        // );
 
-        //Sticks
-        m_driver.leftStick().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
-        );
-        m_driver.rightStick().whileTrue(
-            new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
-        );
+        // //Sticks
+        // m_driver.leftStick().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
+        // );
+        // m_driver.rightStick().whileTrue(
+        //     new AlignCommand(drivetrain, AlignPos.RIGHT, m_driver)
+        // );
         
+        m_driver.rightStick().whileTrue(
+            new ContinuousTrackerTest(drivetrain, m_driver)
+        );
         // m_driver.a().whileTrue(
         //     new AlignCommand(drivetrain, AlignPos.LEFT, m_driver)
         // );
