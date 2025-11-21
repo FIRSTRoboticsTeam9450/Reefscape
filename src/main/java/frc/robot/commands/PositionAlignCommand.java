@@ -345,32 +345,25 @@ public class PositionAlignCommand extends Command {
         /* --------------- Setpoint Calculations --------------- */
 
         //Calculate Rotational Error from robot to reef side
-        double rotationalError = aprilTagPose.getRotation().getRadians();
-        rotationalError -= Math.PI;
+        double rotationalSetpoint = aprilTagPose.getRotation().getRadians();
+        rotationalSetpoint -= Math.PI;
 
         //Normalize Error to ensure it wraps for shortest distance
-        if (rotationalError < -Math.PI) {
-            rotationalError += 2 * Math.PI;
-        } else if (rotationalError > Math.PI) {
-            rotationalError -= 2 * Math.PI;
+        if (rotationalSetpoint < -Math.PI) {
+            rotationalSetpoint += 2 * Math.PI;
+        } else if (rotationalSetpoint > Math.PI) {
+            rotationalSetpoint -= 2 * Math.PI;
         }
 
         //Calculate X & Y Error from robot to April Tag of Reef Side
-        double xError = aprilTagPose.getX() - tagForwardOffset * Math.cos(rotationalError) - tagLeftOffset * Math.sin(rotationalError);
-        double yError = aprilTagPose.getY() - tagForwardOffset * Math.sin(rotationalError) + tagLeftOffset * Math.cos(rotationalError);
+        double xSetpoint = aprilTagPose.getX() - tagForwardOffset * Math.cos(rotationalSetpoint) - tagLeftOffset * Math.sin(rotationalSetpoint);
+        double ySetpoint = aprilTagPose.getY() - tagForwardOffset * Math.sin(rotationalSetpoint) + tagLeftOffset * Math.cos(rotationalSetpoint);
 
-        double[] out = {xError, yError, rotationalError};
+        double[] out = {xSetpoint, ySetpoint, rotationalSetpoint};
 
-        String debuggingString = "";
-
-        for (double elem : out) {
-            debuggingString += elem + ", ";
-        }
-
-        Pose2d offsetAugmentedPose = new Pose2d(new Translation2d(xError, yError), new Rotation2d(rotationalError));
+        Pose2d offsetAugmentedPose = new Pose2d(new Translation2d(xSetpoint, ySetpoint), new Rotation2d(rotationalSetpoint));
 
         Logger.recordOutput("Reefscape/Pose-Align/Robot go to Spot", offsetAugmentedPose);
-        Logger.recordOutput("Reefscape/Pose-Align/Align Errors", debuggingString);
 
         return out;
     }

@@ -8,6 +8,7 @@ import com.ctre.phoenix6.swerve.SwerveRequest;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
@@ -15,21 +16,21 @@ import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.LimelightHelpers;
 import frc.robot.subsystems.CommandSwerveDrivetrain;
+import frc.robot.subsystems.DualIntakeSubsystem;
 
 public class ObjectDetectionTest extends Command{
 
     private CommandSwerveDrivetrain drivetrain;
+    private DualIntakeSubsystem intakeInstance = DualIntakeSubsystem.getInstance();
 
     private final String LIMELIGHT_NAME = "limelight-coral";
 
-    PIDController pidX = new PIDController(0.1, 0, 0);
+    PIDController pidX = new PIDController(0.5, 0, 0);
     PIDController pidY = new PIDController(0.1, 0, 0);
 
     Timer timer = new Timer();
 
     NetworkTable limelightTable =  NetworkTableInstance.getDefault().getTable(LIMELIGHT_NAME);
-
-    Rotation2d robotRot;
 
     int startingPipelineIndex;
     int wantedPipelineIndex;
@@ -39,7 +40,8 @@ public class ObjectDetectionTest extends Command{
     double ta;
     boolean tv;
 
-    boolean aligning;
+    boolean txAligning;
+
 
     private final SwerveRequest.RobotCentric driveRequest = new SwerveRequest.RobotCentric()
                                                                              .withDriveRequestType(DriveRequestType.OpenLoopVoltage);
@@ -51,10 +53,7 @@ public class ObjectDetectionTest extends Command{
     @Override
     public void initialize() {
 
-
-        robotRot = drivetrain.getState().Pose.getRotation();
-
-        aligning = true;
+        txAligning = true;
 
         pidX.setSetpoint(0);
         pidY.setSetpoint(0);
@@ -78,38 +77,36 @@ public class ObjectDetectionTest extends Command{
         ty = LimelightHelpers.getTY(LIMELIGHT_NAME);
         ta = LimelightHelpers.getTA(LIMELIGHT_NAME);
 
-        double[] in = {tx, ty};
 
-        double[] powerArr = updatePID(in);
+        double[] imageIn = {tx, ty};
+
+        double[] powerArr = updatePID(imageIn);
 
         Logger.recordOutput("Reefscape/Object-Tracking/Drive Power X", powerArr[0]);
         Logger.recordOutput("Reefscape/Object-Tracking/Drive Power Y", powerArr[1]);
-        if (aligning && Math.abs(tx) < 0.15) {
-            aligning = false;
+        if (txAligning && Math.abs(tx) < 0.6 && tx != 0.00) {
+            txAligning = false;
         }
 
         SwerveRequest request = driveRequest;
-        if (tv) {
-            if (aligning) {
-                request = driveRequest.withVelocityX(0).withVelocityY(powerArr[0]);
-            } else {
-                    request = driveRequest.withVelocityX(1).withVelocityY(0);
-            }
-        } else {
-            request = driveRequest.withVelocityX(0)
-                                    .withVelocityY(0)
-                                    .withRotationalRate(0);
-        }
+        // if (txAligning) {
+        //     request = driveRequest.withVelocityX(0).withVelocityY(powerArr[0]);
+        // } else {
+        //     request = driveRequest.withVelocityX(1).withVelocityY(0);
+        // }
+        request = driveRequest.withVelocityX(2).withVelocityY(powerArr[0]);
 
         drivetrain.setControl(request);
+
+        Logger.recordOutput("Reefscape/Object-Tracking/Image Aligning", txAligning);
     }
 
     private double[] updatePID(double[] positions) {
         double powerX = pidX.calculate(positions[0]);
-        powerX = MathUtil.clamp(powerX, -1, 1);
+        powerX = MathUtil.clamp(powerX, -2, 2);
 
         double powerY = pidY.calculate(positions[1]);
-        powerY = MathUtil.clamp(powerY, -1, 1);
+        powerY = MathUtil.clamp(powerY, -0.5, 0.5);
 
         double[] out = {powerX, powerY};
         return out;
@@ -117,7 +114,7 @@ public class ObjectDetectionTest extends Command{
 
     @Override
     public boolean isFinished() {
-        return false;
+        return intakeInstance.hasCoral();
     }
 
     @Override

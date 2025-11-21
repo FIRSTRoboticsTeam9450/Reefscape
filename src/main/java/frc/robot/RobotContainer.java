@@ -29,6 +29,8 @@ import frc.robot.Constants.RobotConstants.*;
 import frc.robot.commands.AlignCommand;
 import frc.robot.commands.AutoIntakeCommand;
 import frc.robot.commands.ClimbCommand;
+import frc.robot.commands.ContinuousAimAngleTest;
+import frc.robot.commands.ContinuousAimRotationTest;
 import frc.robot.commands.DualIntakeCommand;
 import frc.robot.commands.ElevatorCommand;
 import frc.robot.commands.ManualElevatorCommand;
@@ -291,11 +293,12 @@ public class RobotContainer {
             // new PositionAlignCommand(drivetrain, AlignPos.RIGHT)
         // );
 
-        DRIVER.leftStick().toggleOnTrue(
+        DRIVER.leftStick().whileTrue(
             new ObjectDetectionTest(drivetrain)
         );
         DRIVER.rightStick().toggleOnTrue(
-            new ObjectDetectionTest(drivetrain)
+            new ContinuousAimRotationTest(drivetrain, DRIVER, driveBezier, DefaultMaxSpeed)
+            .alongWith(new ContinuousAimAngleTest(drivetrain))
         );
         
         // m_driver.a().whileTrue(

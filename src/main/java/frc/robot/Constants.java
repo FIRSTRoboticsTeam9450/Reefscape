@@ -143,6 +143,7 @@ public final class Constants {
       ALGAE_INTAKE_REEF_HIGH,
       ALGAE_INTAKE_REEF_DYNAMIC,
       ALGAE_INTAKE_PROC,
+      DEBUGGING_ELBOW
     }
 
 

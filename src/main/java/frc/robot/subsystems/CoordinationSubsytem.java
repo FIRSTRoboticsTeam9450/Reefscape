@@ -34,7 +34,8 @@ public class CoordinationSubsytem extends SubsystemBase{
     private double elevEncoder;
 
     /* ----- Current / Targeting position ----- */
-    private ScoringPos pos = ScoringPos.START;
+    // private ScoringPos pos = ScoringPos.START;
+    private ScoringPos pos = ScoringPos.DEBUGGING_ELBOW;
     
     public Map<ScoringPos, Set<ScoringPos>> allowedPaths = new HashMap<>();
     private Set<ScoringPos> Start_Set = new HashSet<>();
@@ -383,6 +384,10 @@ public class CoordinationSubsytem extends SubsystemBase{
 
             case ALGAE_INTAKE_PROC:
                 algaeIntakeProcPos();
+                break;
+
+            case DEBUGGING_ELBOW:
+                debuggingElbowPos();
                 break;
 
             default:
@@ -923,6 +928,20 @@ public class CoordinationSubsytem extends SubsystemBase{
 
         if (Elbow.atSetpoint()
             && DW.atPitchSetpoint()
+            && DW.atRollSetpoint()
+            ) 
+        {
+            allAtSetpoints = true;
+            justFinished = true;
+        }
+    }
+
+    private void debuggingElbowPos() {
+        Elev.setSetpoint(0);
+        rollToClosestSide();
+        DW.setPitchSetpoint(-85);
+
+        if (DW.atPitchSetpoint()
             && DW.atRollSetpoint()
             ) 
         {
